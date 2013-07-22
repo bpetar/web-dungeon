@@ -1,0 +1,1292 @@
+<html>
+
+<head>
+<title>Level test</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="source/temp_glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src="source/temp_webgl-utils.js"></script>
+
+<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec2 vTextureCoord;
+
+    uniform sampler2D uSampler;
+
+    void main(void) {
+        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+    }
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec2 vTextureCoord;
+
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    var gl;
+
+    function initGL(canvas) {
+        try {
+            gl = canvas.getContext("experimental-webgl");
+            gl.viewportWidth = canvas.width;
+            gl.viewportHeight = canvas.height;
+        } catch (e) {
+        }
+        if (!gl) {
+            alert("Could not initialise WebGL, sorry :-(");
+        }
+    }
+
+
+    function getShader(gl, id) {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript) {
+            return null;
+        }
+
+        var str = "";
+        var k = shaderScript.firstChild;
+        while (k) {
+            if (k.nodeType == 3) {
+                str += k.textContent;
+            }
+            k = k.nextSibling;
+        }
+
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment") {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        } else if (shaderScript.type == "x-shader/x-vertex") {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        } else {
+            return null;
+        }
+
+        gl.shaderSource(shader, str);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+
+        return shader;
+    }
+
+
+    var shaderProgram;
+
+    function initShaders() {
+        var fragmentShader = getShader(gl, "shader-fs");
+        var vertexShader = getShader(gl, "shader-vs");
+
+        shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+
+        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+        }
+
+        gl.useProgram(shaderProgram);
+
+        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+        gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+
+        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    }
+
+
+    function handleLoadedTexture(texture) {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+
+    var wallTexture;
+	var ceilingTexture;
+	var floorTexture;
+	var doorTexture;
+
+    function initTexture() {
+        wallTexture = gl.createTexture();
+        wallTexture.image = new Image();
+        wallTexture.image.onload = function () {
+            handleLoadedTexture(wallTexture)
+        }
+
+        wallTexture.image.src = "media/wall.jpg";
+		
+		floorTexture = gl.createTexture();
+        floorTexture.image = new Image();
+        floorTexture.image.onload = function () {
+            handleLoadedTexture(floorTexture)
+        }
+
+        floorTexture.image.src = "media/floor.jpg";
+		
+		ceilingTexture = gl.createTexture();
+        ceilingTexture.image = new Image();
+        ceilingTexture.image.onload = function () {
+            handleLoadedTexture(ceilingTexture)
+        }
+
+        ceilingTexture.image.src = "media/ceiling.jpg";
+		
+		doorTexture = gl.createTexture();
+        doorTexture.image = new Image();
+        doorTexture.image.onload = function () {
+            handleLoadedTexture(doorTexture)
+        }
+
+        doorTexture.image.src = "media/door.jpg";
+    }
+
+
+    var mvMatrix = mat4.create();
+    var mvMatrixStack = [];
+    var pMatrix = mat4.create();
+
+    function mvPushMatrix() {
+        var copy = mat4.create();
+        mat4.set(mvMatrix, copy);
+        mvMatrixStack.push(copy);
+    }
+
+    function mvPopMatrix() {
+        if (mvMatrixStack.length == 0) {
+            throw "Invalid popMatrix!";
+        }
+        mvMatrix = mvMatrixStack.pop();
+    }
+
+
+    function setMatrixUniforms() {
+        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+    }
+
+
+    function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+    var wallsVertexPositionBuffer;
+    var wallsVertexTextureCoordBuffer;
+    var wallsVertexIndexBuffer;
+
+	var floorsVertexPositionBuffer;
+	var floorVertexTextureCoordBuffer;
+	var floorVertexIndexBuffer;
+	
+	var doorsVertexPositionBuffer = [];
+	var doorVertexTextureCoordBuffer = [];
+	var doorVertexIndexBuffer = [];
+	
+	var doorwayVertexPositionBuffer;
+	var doorwayVertexTextureCoordBuffer;
+	var doorwayVertexIndexBuffer;
+	
+	var ceilingsVertexPositionBuffer;
+	var ceilingVertexTextureCoordBuffer;
+	var ceilingVertexIndexBuffer;
+	
+	var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+	var wallsArr2D = [];
+	var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,y sliding pos, 
+
+    var teapotVertexPositionBuffer;
+    //var teapotVertexNormalBuffer;
+    var teapotVertexTextureCoordBuffer;
+    var teapotVertexIndexBuffer;
+
+    function handleLoadedTeapot(teapotData) {
+        /*teapotVertexNormalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexNormalBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexNormals), gl.STATIC_DRAW);
+        teapotVertexNormalBuffer.itemSize = 3;
+        teapotVertexNormalBuffer.numItems = teapotData.vertexNormals.length / 3;*/
+
+        teapotVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexTextureCoordBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexTextureCoords), gl.STATIC_DRAW);
+        teapotVertexTextureCoordBuffer.itemSize = 2;
+        teapotVertexTextureCoordBuffer.numItems = teapotData.vertexTextureCoords.length / 2;
+
+        teapotVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexPositions), gl.STATIC_DRAW);
+        teapotVertexPositionBuffer.itemSize = 3;
+        teapotVertexPositionBuffer.numItems = teapotData.vertexPositions.length / 3;
+
+        teapotVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(teapotData.indices), gl.STATIC_DRAW);
+        teapotVertexIndexBuffer.itemSize = 1;
+        teapotVertexIndexBuffer.numItems = teapotData.indices.length;
+
+        //document.getElementById("loadingtext").textContent = "";
+		//alert("pera");
+    }
+
+
+    function loadTeapot() {
+        var request = new XMLHttpRequest();
+        request.open("GET", "models/Teapot.json");
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                handleLoadedTeapot(JSON.parse(request.responseText));
+            }
+        }
+        request.send();
+    }
+	
+	function createWallsFromFloors() {
+		var i = 0;
+		var j = 0;
+		var k = 0;
+		//alert(floorsArr2D.length);
+		for(i=0; i < floorsArr2D.length; i++)
+		{
+			var leftWall = true;
+			var rightWall = true;
+			var frontWall = true;
+			var backWall = true;
+			var xTile = floorsArr2D[i][0];
+			var yTile = floorsArr2D[i][1];
+			//make walls around floor tile, but check if it has neighboring tile..
+			for(j=0; j < floorsArr2D.length; j++)
+			{
+				if(i!=j)
+				{
+					if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
+					{
+						//there is floor tile to the left - no LeftWall.
+						leftWall = false;
+					}
+					if((floorsArr2D[j][0] == xTile+1) && (floorsArr2D[j][1] == yTile))
+					{
+						//there is floor tile to the right - no RightWall.
+						rightWall = false;
+					}
+					if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile+1))
+					{
+						//there is floor tile to the front - no FrontWall.
+						frontWall = false;
+					}
+					if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile-1))
+					{
+						//there is floor tile to the back - no BackWall.
+						backWall = false;
+					}
+				}
+			}
+			
+			if(leftWall)
+			{
+				wallsArr2D[k] = [xTile,yTile,xTile,yTile+1];
+				k++;
+			}
+			if(rightWall)
+			{
+				wallsArr2D[k] = [xTile+1,yTile,xTile+1,yTile+1];
+				k++;
+			}
+			if(frontWall)
+			{
+				wallsArr2D[k] = [xTile,yTile+1,xTile+1,yTile+1];
+				k++;
+			}
+			if(backWall)
+			{
+				wallsArr2D[k] = [xTile,yTile,xTile+1,yTile];
+				k++;
+			}
+		}
+	}
+	
+    function initBuffers() {
+	
+		createWallsFromFloors();
+		//alert(wallsArr2D);
+		var i = 0;
+		var j = 0;
+		var k = 0;
+		
+		//doors
+		
+		var doorVertices = [];
+		while( i < doorsArr3D.length)
+		{
+			doorsVertexPositionBuffer[i] = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, doorsVertexPositionBuffer[i]);
+			
+			//front side
+			doorVertices[j] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+1] = 0; //y
+			doorVertices[j+2] = doorsArr3D[i][1]+0.45; //z
+			
+			doorVertices[j+3] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+4] = 0; //y
+			doorVertices[j+5] = doorsArr3D[i][1]+0.45; //z
+			
+			doorVertices[j+6] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+7] = 0.8; //y
+			doorVertices[j+8] = doorsArr3D[i][1]+0.45; //z
+			
+			doorVertices[j+9] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+10] = 0.8; //y
+			doorVertices[j+11] = doorsArr3D[i][1]+0.45; //z
+			
+			
+			//back side
+			doorVertices[j+12] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+13] = 0; //y
+			doorVertices[j+14] = doorsArr3D[i][1]+0.55; //z
+			
+			doorVertices[j+15] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+16] = 0; //y
+			doorVertices[j+17] = doorsArr3D[i][1]+0.55; //z
+			
+			doorVertices[j+18] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+19] = 0.8; //y
+			doorVertices[j+20] = doorsArr3D[i][1]+0.55; //z
+			
+			doorVertices[j+21] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+22] = 0.8; //y
+			doorVertices[j+23] = doorsArr3D[i][1]+0.55; //z
+			
+			//bottom side
+			doorVertices[j+24] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+25] = 0; //y
+			doorVertices[j+26] = doorsArr3D[i][1]+0.45; //z
+			
+			doorVertices[j+27] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+28] = 0; //y
+			doorVertices[j+29] = doorsArr3D[i][1]+0.45; //z
+			
+			doorVertices[j+30] = doorsArr3D[i][0]+0.2; //x
+			doorVertices[j+31] = 0; //y
+			doorVertices[j+32] = doorsArr3D[i][1]+0.55; //z
+			
+			doorVertices[j+33] = doorsArr3D[i][0]+0.8; //x
+			doorVertices[j+34] = 0; //y
+			doorVertices[j+35] = doorsArr3D[i][1]+0.55; //z
+			
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(doorVertices), gl.STATIC_DRAW);
+			doorsVertexPositionBuffer[i].itemSize = 3;
+			doorsVertexPositionBuffer[i].numItems = 4 * 3;
+			
+			i+=1;
+			j=0;
+		}
+		
+		
+		var textureCoords = [];
+		i = 0;
+		j = 0;
+		while( i < doorsArr3D.length)
+		{
+			doorVertexTextureCoordBuffer[i] = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, doorVertexTextureCoordBuffer[i]);
+			
+			textureCoords[j] = 0;
+			textureCoords[j+1] = 0;
+			textureCoords[j+2] = 1;
+			textureCoords[j+3] = 0;
+			textureCoords[j+4] = 1;
+			textureCoords[j+5] = 1;
+			textureCoords[j+6] = 0; //x
+			textureCoords[j+7] = 1; //y
+			
+			textureCoords[j+8] = 0;
+			textureCoords[j+9] = 0;
+			textureCoords[j+10] = 1;
+			textureCoords[j+11] = 0;
+			textureCoords[j+12] = 1;
+			textureCoords[j+13] = 1;
+			textureCoords[j+14] = 0; //x
+			textureCoords[j+15] = 1; //y
+			
+			textureCoords[j+16] = 0;
+			textureCoords[j+17] = 0;
+			textureCoords[j+18] = 1;
+			textureCoords[j+19] = 0;
+			textureCoords[j+20] = 1;
+			textureCoords[j+21] = 1;
+			textureCoords[j+22] = 0; //x
+			textureCoords[j+23] = 1; //y
+
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+			doorVertexTextureCoordBuffer[i].itemSize = 2;
+			doorVertexTextureCoordBuffer[i].numItems = 4 * 3;
+		
+			i+=1;
+			j=0;
+		}
+		
+        
+        var doorVertexIndices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < doorsArr3D.length)
+		{
+			doorVertexIndexBuffer[i] = gl.createBuffer();
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, doorVertexIndexBuffer[i]);
+			
+			doorVertexIndices[k] = j;
+			doorVertexIndices[k+1] = j+1;
+			doorVertexIndices[k+2] = j+2;
+			doorVertexIndices[k+3] = j;
+			doorVertexIndices[k+4] = j+2;
+			doorVertexIndices[k+5] = j+3;
+			
+			doorVertexIndices[k+6] = j+4;
+			doorVertexIndices[k+7] = j+5;
+			doorVertexIndices[k+8] = j+6;
+			doorVertexIndices[k+9] = j+4;
+			doorVertexIndices[k+10] = j+6;
+			doorVertexIndices[k+11] = j+7;
+			
+			doorVertexIndices[k+12] = j+8;
+			doorVertexIndices[k+13] = j+9;
+			doorVertexIndices[k+14] = j+10;
+			doorVertexIndices[k+15] = j+8;
+			doorVertexIndices[k+16] = j+10;
+			doorVertexIndices[k+17] = j+11;
+			
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(doorVertexIndices), gl.STATIC_DRAW);
+			doorVertexIndexBuffer[i].itemSize = 1;
+			doorVertexIndexBuffer[i].numItems = 6*3;
+			
+			j=0;
+			k=0;
+			i+=1;
+		}
+        
+		
+		//doorway doorwayVertexPositionBuffer
+		doorwayVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, doorwayVertexPositionBuffer);
+		var doorwayVertices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < doorsArr3D.length)
+		{
+			//right pillar, first side
+			doorwayVertices[j] = doorsArr3D[i][0]; //x
+			doorwayVertices[j+1] = 0; //y
+			doorwayVertices[j+2] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+3] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+4] = 0; //y
+			doorwayVertices[j+5] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+6] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+7] = 0.8; //y
+			doorwayVertices[j+8] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+9] = doorsArr3D[i][0]; //x
+			doorwayVertices[j+10] = 0.8; //y
+			doorwayVertices[j+11] = doorsArr3D[i][1]+0.4; //z
+			
+			
+			//right pillar, second side
+			doorwayVertices[j+12] = doorsArr3D[i][0]; //x
+			doorwayVertices[j+13] = 0; //y
+			doorwayVertices[j+14] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+15] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+16] = 0; //y
+			doorwayVertices[j+17] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+18] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+19] = 0.8; //y
+			doorwayVertices[j+20] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+21] = doorsArr3D[i][0]; //x
+			doorwayVertices[j+22] = 0.8; //y
+			doorwayVertices[j+23] = doorsArr3D[i][1]+0.6; //z
+			
+			//right pillar, third side
+			doorwayVertices[j+24] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+25] = 0; //y
+			doorwayVertices[j+26] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+27] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+28] = 0; //y
+			doorwayVertices[j+29] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+30] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+31] = 0.8; //y
+			doorwayVertices[j+32] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+33] = doorsArr3D[i][0]+0.2; //x
+			doorwayVertices[j+34] = 0.8; //y
+			doorwayVertices[j+35] = doorsArr3D[i][1]+0.4; //z
+			
+			//left pillar, first side
+			doorwayVertices[j+36] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+37] = 0; //y
+			doorwayVertices[j+38] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+39] = doorsArr3D[i][0]+1.0; //x
+			doorwayVertices[j+40] = 0; //y
+			doorwayVertices[j+41] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+42] = doorsArr3D[i][0]+1.0; //x
+			doorwayVertices[j+43] = 0.8; //y
+			doorwayVertices[j+44] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+45] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+46] = 0.8; //y
+			doorwayVertices[j+47] = doorsArr3D[i][1]+0.4; //z
+			
+			
+			//left pillar, second side
+			doorwayVertices[j+48] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+49] = 0; //y
+			doorwayVertices[j+50] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+51] = doorsArr3D[i][0]+1.0; //x
+			doorwayVertices[j+52] = 0; //y
+			doorwayVertices[j+53] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+54] = doorsArr3D[i][0]+1.0; //x
+			doorwayVertices[j+55] = 0.8; //y
+			doorwayVertices[j+56] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+57] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+58] = 0.8; //y
+			doorwayVertices[j+59] = doorsArr3D[i][1]+0.6; //z
+			
+			//left pillar, third side
+			doorwayVertices[j+60] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+61] = 0; //y
+			doorwayVertices[j+62] = doorsArr3D[i][1]+0.4; //z
+			
+			doorwayVertices[j+63] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+64] = 0; //y
+			doorwayVertices[j+65] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+66] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+67] = 0.8; //y
+			doorwayVertices[j+68] = doorsArr3D[i][1]+0.6; //z
+			
+			doorwayVertices[j+69] = doorsArr3D[i][0]+0.8; //x
+			doorwayVertices[j+70] = 0.8; //y
+			doorwayVertices[j+71] = doorsArr3D[i][1]+0.4; //z
+			
+			i+=1;
+			j+=72;
+		}
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(doorwayVertices), gl.STATIC_DRAW);
+        doorwayVertexPositionBuffer.itemSize = 3;
+        doorwayVertexPositionBuffer.numItems = doorsArr3D.length * 4 * 6;
+		
+		doorwayVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, doorwayVertexTextureCoordBuffer);
+		var textureCoords = [];
+		i = 0;
+		j = 0;
+		while( i < doorsArr3D.length)
+		{
+			textureCoords[j] = 0;
+			textureCoords[j+1] = 0;
+			textureCoords[j+2] = 1;
+			textureCoords[j+3] = 0;
+			textureCoords[j+4] = 1;
+			textureCoords[j+5] = 1;
+			textureCoords[j+6] = 0; //x
+			textureCoords[j+7] = 1; //y
+			
+			textureCoords[j+8] = 0;
+			textureCoords[j+9] = 0;
+			textureCoords[j+10] = 1;
+			textureCoords[j+11] = 0;
+			textureCoords[j+12] = 1;
+			textureCoords[j+13] = 1;
+			textureCoords[j+14] = 0; //x
+			textureCoords[j+15] = 1; //y
+			
+			textureCoords[j+16] = 0;
+			textureCoords[j+17] = 0;
+			textureCoords[j+18] = 1;
+			textureCoords[j+19] = 0;
+			textureCoords[j+20] = 1;
+			textureCoords[j+21] = 1;
+			textureCoords[j+22] = 0; //x
+			textureCoords[j+23] = 1; //y
+			
+			textureCoords[j+24] = 0;
+			textureCoords[j+25] = 0;
+			textureCoords[j+26] = 1;
+			textureCoords[j+27] = 0;
+			textureCoords[j+28] = 1;
+			textureCoords[j+29] = 1;
+			textureCoords[j+30] = 0; //x
+			textureCoords[j+31] = 1; //y
+			
+			textureCoords[j+32] = 0;
+			textureCoords[j+33] = 0;
+			textureCoords[j+34] = 1;
+			textureCoords[j+35] = 0;
+			textureCoords[j+36] = 1;
+			textureCoords[j+37] = 1;
+			textureCoords[j+38] = 0; //x
+			textureCoords[j+39] = 1; //y
+			
+			textureCoords[j+40] = 0;
+			textureCoords[j+41] = 0;
+			textureCoords[j+42] = 1;
+			textureCoords[j+43] = 0;
+			textureCoords[j+44] = 1;
+			textureCoords[j+45] = 1;
+			textureCoords[j+46] = 0; //x
+			textureCoords[j+47] = 1; //y
+
+			i+=1;
+			j+=48;
+		}
+		
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+        doorwayVertexTextureCoordBuffer.itemSize = 2;
+        doorwayVertexTextureCoordBuffer.numItems = doorsArr3D.length * 4 * 6;
+		
+        doorwayVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, doorwayVertexIndexBuffer);
+        var doorwayVertexIndices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < doorsArr3D.length)
+		{
+			doorwayVertexIndices[k] = j;
+			doorwayVertexIndices[k+1] = j+1;
+			doorwayVertexIndices[k+2] = j+2;
+			doorwayVertexIndices[k+3] = j;
+			doorwayVertexIndices[k+4] = j+2;
+			doorwayVertexIndices[k+5] = j+3;
+			
+			doorwayVertexIndices[k+6] = j+4;
+			doorwayVertexIndices[k+7] = j+5;
+			doorwayVertexIndices[k+8] = j+6;
+			doorwayVertexIndices[k+9] = j+4;
+			doorwayVertexIndices[k+10] = j+6;
+			doorwayVertexIndices[k+11] = j+7;
+			
+			doorwayVertexIndices[k+12] = j+8;
+			doorwayVertexIndices[k+13] = j+9;
+			doorwayVertexIndices[k+14] = j+10;
+			doorwayVertexIndices[k+15] = j+8;
+			doorwayVertexIndices[k+16] = j+10;
+			doorwayVertexIndices[k+17] = j+11;
+			
+			doorwayVertexIndices[k+18] = j+12;
+			doorwayVertexIndices[k+19] = j+13;
+			doorwayVertexIndices[k+20] = j+14;
+			doorwayVertexIndices[k+21] = j+12;
+			doorwayVertexIndices[k+22] = j+14;
+			doorwayVertexIndices[k+23] = j+15;
+			
+			doorwayVertexIndices[k+24] = j+16;
+			doorwayVertexIndices[k+25] = j+17;
+			doorwayVertexIndices[k+26] = j+18;
+			doorwayVertexIndices[k+27] = j+16;
+			doorwayVertexIndices[k+28] = j+18;
+			doorwayVertexIndices[k+29] = j+19;
+			
+			doorwayVertexIndices[k+30] = j+20;
+			doorwayVertexIndices[k+31] = j+21;
+			doorwayVertexIndices[k+32] = j+22;
+			doorwayVertexIndices[k+33] = j+20;
+			doorwayVertexIndices[k+34] = j+22;
+			doorwayVertexIndices[k+35] = j+23;
+			
+			j+=24;
+			k+=36;
+			i+=1;
+		}
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(doorwayVertexIndices), gl.STATIC_DRAW);
+        doorwayVertexIndexBuffer.itemSize = 1;
+        doorwayVertexIndexBuffer.numItems = doorsArr3D.length*6*6;
+		
+		//floors
+		floorsVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, floorsVertexPositionBuffer);
+		var floorVertices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < floorsArr2D.length)
+		{
+			floorVertices[j] = floorsArr2D[i][0]; //x
+			floorVertices[j+1] = 0; //y
+			floorVertices[j+2] = floorsArr2D[i][1]; //z
+			
+			floorVertices[j+3] = floorsArr2D[i][0]+1; //x
+			floorVertices[j+4] = 0; //y
+			floorVertices[j+5] = floorsArr2D[i][1]; //z
+			
+			floorVertices[j+6] = floorsArr2D[i][0]+1; //x
+			floorVertices[j+7] = 0; //y
+			floorVertices[j+8] = floorsArr2D[i][1]+1; //z
+			
+			floorVertices[j+9] = floorsArr2D[i][0]; //x
+			floorVertices[j+10] = 0; //y
+			floorVertices[j+11] = floorsArr2D[i][1]+1; //z
+			
+			i+=1;
+			j+=12;
+		}
+		
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(floorVertices), gl.STATIC_DRAW);
+        floorsVertexPositionBuffer.itemSize = 3;
+        floorsVertexPositionBuffer.numItems = floorsArr2D.length * 4;
+		
+		floorVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexTextureCoordBuffer);
+		var textureCoords = [];
+		i = 0;
+		j = 0;
+		while( i < floorsArr2D.length)
+		{
+			textureCoords[j] = 0;
+			textureCoords[j+1] = 0;
+			textureCoords[j+2] = 1;
+			textureCoords[j+3] = 0;
+			textureCoords[j+4] = 1;
+			textureCoords[j+5] = 1;
+			textureCoords[j+6] = 0; //x
+			textureCoords[j+7] = 1; //y
+			
+			i+=1;
+			j+=8;
+		}
+		
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+        floorVertexTextureCoordBuffer.itemSize = 2;
+        floorVertexTextureCoordBuffer.numItems = floorsArr2D.length * 4;
+		
+        floorVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorVertexIndexBuffer);
+        var floorVertexIndices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < floorsArr2D.length)
+		{
+			floorVertexIndices[k] = j;
+			floorVertexIndices[k+1] = j+1;
+			floorVertexIndices[k+2] = j+2;
+			floorVertexIndices[k+3] = j;
+			floorVertexIndices[k+4] = j+2;
+			floorVertexIndices[k+5] = j+3;
+			
+			j+=4;
+			k+=6;
+			i+=1;
+		}
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(floorVertexIndices), gl.STATIC_DRAW);
+        floorVertexIndexBuffer.itemSize = 1;
+        floorVertexIndexBuffer.numItems = floorsArr2D.length*6;
+		
+		//ceilings
+		ceilingsVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, ceilingsVertexPositionBuffer);
+		var ceilingVertices = [];
+		i = 0;
+		j = 0;
+		while( i < floorsArr2D.length)
+		{
+			ceilingVertices[j] = floorsArr2D[i][0]; //x
+			ceilingVertices[j+1] = 0.8; //y
+			ceilingVertices[j+2] = floorsArr2D[i][1]; //z
+			
+			ceilingVertices[j+3] = floorsArr2D[i][0]+1; //x
+			ceilingVertices[j+4] = 0.8; //y
+			ceilingVertices[j+5] = floorsArr2D[i][1]; //z
+			
+			ceilingVertices[j+6] = floorsArr2D[i][0]+1; //x
+			ceilingVertices[j+7] = 0.8; //y
+			ceilingVertices[j+8] = floorsArr2D[i][1]+1; //z
+			
+			ceilingVertices[j+9] = floorsArr2D[i][0]; //x
+			ceilingVertices[j+10] = 0.8; //y
+			ceilingVertices[j+11] = floorsArr2D[i][1]+1; //z
+			
+			i+=1;
+			j+=12;
+		}
+		
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ceilingVertices), gl.STATIC_DRAW);
+        ceilingsVertexPositionBuffer.itemSize = 3;
+        ceilingsVertexPositionBuffer.numItems = floorsArr2D.length * 4;
+		
+		ceilingVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, ceilingVertexTextureCoordBuffer);
+		var textureCoords = [];
+		i = 0;
+		j = 0;
+		while( i < floorsArr2D.length)
+		{
+			textureCoords[j] = 0;
+			textureCoords[j+1] = 0;
+			textureCoords[j+2] = 1;
+			textureCoords[j+3] = 0;
+			textureCoords[j+4] = 1;
+			textureCoords[j+5] = 1;
+			textureCoords[j+6] = 0; //x
+			textureCoords[j+7] = 1; //y
+			
+			i+=1;
+			j+=8;
+		}
+		
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+        ceilingVertexTextureCoordBuffer.itemSize = 2;
+        ceilingVertexTextureCoordBuffer.numItems = floorsArr2D.length * 4;
+		
+        ceilingVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ceilingVertexIndexBuffer);
+        var ceilingVertexIndices = [];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < floorsArr2D.length)
+		{
+			ceilingVertexIndices[k] = j;
+			ceilingVertexIndices[k+1] = j+1;
+			ceilingVertexIndices[k+2] = j+2;
+			ceilingVertexIndices[k+3] = j;
+			ceilingVertexIndices[k+4] = j+2;
+			ceilingVertexIndices[k+5] = j+3;
+			
+			j+=4;
+			k+=6;
+			i+=1;
+		}
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(ceilingVertexIndices), gl.STATIC_DRAW);
+        ceilingVertexIndexBuffer.itemSize = 1;
+        ceilingVertexIndexBuffer.numItems = floorsArr2D.length*6;
+		
+		//walls
+		i = 0;
+		j = 0;
+		var wallVertices = [];
+        wallsVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallsVertexPositionBuffer);
+		while( i < wallsArr2D.length)
+		{
+			wallVertices[j] = wallsArr2D[i][0]; //0
+			wallVertices[j+1] = 0; //1
+			wallVertices[j+2] = wallsArr2D[i][1]; //2
+			wallVertices[j+3] = wallsArr2D[i][2]; //3
+			wallVertices[j+4] = 0; //4
+			wallVertices[j+5] = wallsArr2D[i][3]; //5
+			
+			wallVertices[j+6] = wallsArr2D[i][2]; //6
+			wallVertices[j+7] = 0.8; //7
+			wallVertices[j+8] = wallsArr2D[i][3]; //8
+			wallVertices[j+9] = wallsArr2D[i][0]; //9
+			wallVertices[j+10] = 0.8; //10
+			wallVertices[j+11] = wallsArr2D[i][1]; //11
+			
+			i+=1;
+			j+=12;
+		}	
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(wallVertices), gl.STATIC_DRAW);
+        wallsVertexPositionBuffer.itemSize = 3;
+        wallsVertexPositionBuffer.numItems = wallsArr2D.length*4;
+
+        wallsVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallsVertexTextureCoordBuffer);
+		var textureCoords = [];
+		i = 0;
+		j = 0;
+		while( i < wallsArr2D.length)
+		{
+			textureCoords[j] = 0;
+			textureCoords[j+1] = 0;
+			textureCoords[j+2] = 1;
+			textureCoords[j+3] = 0;
+			textureCoords[j+4] = 1;
+			textureCoords[j+5] = 1;
+			textureCoords[j+6] = 0; //x
+			textureCoords[j+7] = 1; //y
+			
+			i+=1;
+			j+=8;
+		}
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+        wallsVertexTextureCoordBuffer.itemSize = 2;
+        wallsVertexTextureCoordBuffer.numItems = wallsArr2D.length*4;
+
+        wallsVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallsVertexIndexBuffer);
+        var wallVertexIndices = [
+            0, 1, 2,      0, 2, 3,    // Front face
+			4, 5, 6,      4, 6, 7,    // Front face
+			8, 9,10,      8,10,11,    // Front face
+		   12,13,14,     12,14,15,    // Front face
+		   16,17,18,     16,18,19,    // Front face
+        ];
+		i = 0;
+		j = 0;
+		k = 0;
+		while( i < wallsArr2D.length)
+		{
+			wallVertexIndices[k] = j;
+			wallVertexIndices[k+1] = j+1;
+			wallVertexIndices[k+2] = j+2;
+			wallVertexIndices[k+3] = j;
+			wallVertexIndices[k+4] = j+2;
+			wallVertexIndices[k+5] = j+3;
+			
+			j+=4;
+			k+=6;
+			i+=1;
+		}
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(wallVertexIndices), gl.STATIC_DRAW);
+        wallsVertexIndexBuffer.itemSize = 1;
+        wallsVertexIndexBuffer.numItems = wallsArr2D.length*6;
+    }
+
+
+    var xPos = 4.5;
+    var yPos = 0.38;
+    var zPos = 0.5;
+    var yaw = 180;
+	var currentPos = new Object();
+	
+    function drawScene() {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        mat4.perspective(47, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+
+        mat4.identity(mvMatrix);
+
+        mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
+		
+		//this recalculation moves camera back by 0.5 points to make the field of view better.
+		//for example if you are close to wall, you will not see it whole, so we have to move camera back
+		//with this, camera is not standing in the center of the square but on the square back egde
+		var zPosTmp = zPos;
+		var xPosTmp = xPos;
+		if(yaw == 0) zPosTmp = zPos + 0.5;
+        if((yaw == 90)||(yaw == -270)) xPosTmp = xPos + 0.5;
+		if((yaw == 180)||(yaw == -180)) zPosTmp = zPos - 0.5;
+		if((yaw == 270)||(yaw == -90)) xPosTmp = xPos - 0.5;
+			
+        mat4.translate(mvMatrix, [-xPosTmp, -yPos, -zPosTmp]);
+
+		//floors
+        gl.bindBuffer(gl.ARRAY_BUFFER, floorsVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, floorsVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, floorVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, floorTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, floorVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		
+		//doors
+		for(i=0; i < doorsArr3D.length; i++)
+		{
+			mat4.translate(mvMatrix, [0, doorsArr3D[i][4], 0]);
+			gl.bindBuffer(gl.ARRAY_BUFFER, doorsVertexPositionBuffer[i]);
+			gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, doorsVertexPositionBuffer[i].itemSize, gl.FLOAT, false, 0, 0);
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, doorVertexTextureCoordBuffer[i]);
+			gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, doorVertexTextureCoordBuffer[i].itemSize, gl.FLOAT, false, 0, 0);
+
+			gl.activeTexture(gl.TEXTURE0);
+			gl.bindTexture(gl.TEXTURE_2D, doorTexture);
+			gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, doorVertexIndexBuffer[i]);
+			setMatrixUniforms();
+			gl.drawElements(gl.TRIANGLES, doorVertexIndexBuffer[i].numItems, gl.UNSIGNED_SHORT, 0);
+			
+			mat4.translate(mvMatrix, [0, -doorsArr3D[i][4], 0]);
+		}
+		
+		//doorway
+        gl.bindBuffer(gl.ARRAY_BUFFER, doorwayVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, doorwayVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, doorwayVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, doorwayVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, wallTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, doorwayVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, doorwayVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		
+		//walls
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallsVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, wallsVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallsVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, wallsVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, wallTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wallsVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, wallsVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		
+		//ceilings
+        gl.bindBuffer(gl.ARRAY_BUFFER, ceilingsVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, ceilingsVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, ceilingVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, ceilingVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, ceilingTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ceilingVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, ceilingVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		
+		//teapot
+		mat4.translate(mvMatrix, [2.5, 0.1, 5.8]);
+		mat4.scale(mvMatrix, [0.01, 0.01, 0.01]);
+		gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, teapotVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+		gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, doorTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+		
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, teapotVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        //gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexNormalBuffer);
+        //gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, teapotVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+
+    }
+
+
+    var lastTime = 0;
+
+    function animate() {
+        var timeNow = new Date().getTime();
+        if (lastTime != 0) {
+            var elapsed = timeNow - lastTime;
+
+			for(i=0; i < doorsArr3D.length; i++)
+			{
+				if(doorsArr3D[i][5] == 1)
+				{
+					if(doorsArr3D[i][3] == 0) 
+					{
+						doorsArr3D[i][4] -= elapsed/4000;
+						if(doorsArr3D[i][4] < 0.01) 
+						{
+							doorsArr3D[i][5] = 0;
+						}
+					}
+					else 
+					{
+						doorsArr3D[i][4] += elapsed/4000;
+						if(doorsArr3D[i][4] > 0.75) 
+						{
+							doorsArr3D[i][5] = 0;
+						}
+					}
+				}
+			}
+        }
+        lastTime = timeNow;
+    }
+
+
+    function tick() {
+        requestAnimFrame(tick);
+        drawScene();
+        animate();
+    }
+
+	function canMoveTo(x, z)
+	{
+		var i = 0;
+		var j = 0;
+		for(i=0; i < floorsArr2D.length; i++)
+		{
+			if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
+			{
+				for(j=0; j < doorsArr3D.length; j++)
+				{
+					//if there are closed doors in that position..
+					if((doorsArr3D[j][0] == x) && (doorsArr3D[j][1] == z)) 
+					{
+						if(doorsArr3D[j][3] == 0) return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function handleKeyDown(event) {
+		//alert(event.keyCode);
+		if (event.keyCode == 88) {animateDoor = true;}
+		//Movement:
+		if (event.keyCode == 81) {
+            // Turn Left Q
+			if(yaw == 270) yaw = 0;
+            else yaw += 90;
+        } else if (event.keyCode == 69) {
+            // Turne Right E
+			if(yaw == -270) yaw = 0;
+            else yaw -= 90;
+        }
+		if ((event.keyCode == 38) || (event.keyCode == 87)) {
+            // Up cursor key or W
+			if((yaw == 0)&&(canMoveTo(currentPos.x, currentPos.z-1))) {zPos -=1; currentPos.z--;}
+            if(((yaw == 90)||(yaw == -270))&&(canMoveTo(currentPos.x-1, currentPos.z))) {xPos -= 1; currentPos.x--;}
+			if(((yaw == 180)||(yaw == -180))&&(canMoveTo(currentPos.x, currentPos.z+1))) {zPos += 1; currentPos.z++;}
+			if(((yaw == 270)||(yaw == -90))&&(canMoveTo(currentPos.x+1, currentPos.z))) {xPos += 1; currentPos.x++;}
+        } else if ((event.keyCode == 40) || (event.keyCode == 83)) {
+            // Down cursor key
+            if((yaw == 0)&&(canMoveTo(currentPos.x, currentPos.z+1))) {zPos +=1; currentPos.z++;}
+            if(((yaw == 90)||(yaw == -270))&&(canMoveTo(currentPos.x+1, currentPos.z))) {xPos += 1; currentPos.x++;}
+			if(((yaw == 180)||(yaw == -180))&&(canMoveTo(currentPos.x, currentPos.z-1))) {zPos -= 1; currentPos.z--;}
+			if(((yaw == 270)||(yaw == -90))&&(canMoveTo(currentPos.x-1, currentPos.z))) {xPos -= 1; currentPos.x--;}
+        }
+		if ((event.keyCode == 37) || (event.keyCode == 65)) {
+            // Left cursor key or A
+			if((yaw == 0)&&(canMoveTo(currentPos.x-1, currentPos.z))) {xPos -=1; currentPos.x--}
+            if(((yaw == 90)||(yaw == -270))&&(canMoveTo(currentPos.x, currentPos.z+1))) {zPos += 1; currentPos.z++}
+			if(((yaw == 180)||(yaw == -180))&&(canMoveTo(currentPos.x+1, currentPos.z))) {xPos += 1; currentPos.x++}
+			if(((yaw == 270)||(yaw == -90))&&(canMoveTo(currentPos.x, currentPos.z-1))) {zPos -= 1; currentPos.z--}
+        } else if ((event.keyCode == 39) || (event.keyCode == 68)) {
+            // Right cursor key or D
+			if((yaw == 0)&&(canMoveTo(currentPos.x+1, currentPos.z))) {xPos +=1; currentPos.x++}
+            if(((yaw == 90)||(yaw == -270))&&(canMoveTo(currentPos.x, currentPos.z-1))) {zPos -= 1; currentPos.z--}
+			if(((yaw == 180)||(yaw == -180))&&(canMoveTo(currentPos.x-1, currentPos.z))) {xPos -= 1; currentPos.x--}
+			if(((yaw == 270)||(yaw == -90))&&(canMoveTo(currentPos.x, currentPos.z+1))) {zPos += 1; currentPos.z++}
+        }
+    }
+	
+	function handleMouseClick(x,y) {
+		
+		//is player standing in front of door?
+		//currentPos.x, currentPos.z
+		var xDoor = 0;
+		var zDoor = 0;
+		if(yaw == 0) {xDoor = currentPos.x; zDoor = currentPos.z-1;}
+		if((yaw == 90)||(yaw == -270)) {xDoor = currentPos.x-1; zDoor = currentPos.z}
+		if((yaw == 180)||(yaw == -180)) {xDoor = currentPos.x; zDoor = currentPos.z+1;}
+		if((yaw == 270)||(yaw == -90)) {xDoor = currentPos.x+1; zDoor = currentPos.z}
+
+		for(i=0; i < doorsArr3D.length; i++)
+		{
+			if((doorsArr3D[i][0] == xDoor) && (doorsArr3D[i][1] == zDoor))
+			{
+				//if there are doors in that position..
+				/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
+				doorsArr3D[i][5] = 1; //animate flag
+				if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
+				else doorsArr3D[i][3] = 0;
+			}
+		}
+	}
+	
+	function onMouseClick(event) {
+
+		x_pos = event.clientX;
+		y_pos = event.clientY;
+		
+		var canvas = document.getElementById('webglcanvas');
+		var rect = canvas.getBoundingClientRect();// check if your browser supports this
+		//alert( rect.bottom );
+		if((x_pos > rect.left) && (x_pos < rect.right) && (y_pos > rect.top) && (y_pos < rect.bottom))
+		{
+			y_pos = rect.bottom - y_pos;
+			x_pos = x_pos - rect.left;
+			handleMouseClick(x_pos, y_pos);
+		}
+		
+	}
+
+    function webGLStart() {
+        var canvas = document.getElementById("webglcanvas");
+        initGL(canvas);
+        initShaders();
+        initBuffers();
+        initTexture();
+		loadTeapot();
+		
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+		
+		document.onkeydown = handleKeyDown;
+		document.onmousedown = onMouseClick;
+		
+		currentPos.x = 4;
+		currentPos.z = 0;
+
+        tick();
+    }
+
+
+</script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+
+    <canvas id="webglcanvas" style="border: none;" width="660" height="450"></canvas>
+
+</body>
+
+</html>
