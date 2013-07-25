@@ -40,7 +40,7 @@
 
 			var SQUARE_SIZE = 10;
 
-			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
 			var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,y sliding pos, 
 
@@ -236,12 +236,12 @@
 					{
 						if(i!=j)
 						{
-							if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
+							if((floorsArr2D[j][0] == xTile+1) && (floorsArr2D[j][1] == yTile))
 							{
 								//there is floor tile to the left - no LeftWall.
 								leftWall = false;
 							}
-							if((floorsArr2D[j][0] == xTile+1) && (floorsArr2D[j][1] == yTile))
+							if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
 							{
 								//there is floor tile to the right - no RightWall.
 								rightWall = false;
@@ -410,6 +410,13 @@
 					camera.position.add(looker);
 					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
 					camera.look.add(looker);
+					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
+					camera.lookAt(camera.look);
+				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
+					// Down cursor key or S
+					camera.position.sub(looker);
+					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
+					camera.look.sub(looker);
 					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
 					camera.lookAt(camera.look);
 				}
