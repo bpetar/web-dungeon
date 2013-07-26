@@ -41,7 +41,7 @@
 			var SQUARE_SIZE = 10;
 
 			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
-			var wallsArr2D = [];
+			//var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,y sliding pos, 
 
 			var container;
@@ -55,86 +55,27 @@
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
+			var current_position;
+			
 			init();
 			animate();
 
-			function createWallsFromFloors() {
-				var i = 0;
-				var j = 0;
-				var k = 0;
-				//alert(floorsArr2D.length);
-				for(i=0; i < floorsArr2D.length; i++)
-				{
-					var leftWall = true;
-					var rightWall = true;
-					var frontWall = true;
-					var backWall = true;
-					var xTile = floorsArr2D[i][0];
-					var yTile = floorsArr2D[i][1];
-					//make walls around floor tile, but check if it has neighboring tile..
-					for(j=0; j < floorsArr2D.length; j++)
-					{
-						if(i!=j)
-						{
-							if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
-							{
-								//there is floor tile to the left - no LeftWall.
-								leftWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile+1) && (floorsArr2D[j][1] == yTile))
-							{
-								//there is floor tile to the right - no RightWall.
-								rightWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile+1))
-							{
-								//there is floor tile to the front - no FrontWall.
-								frontWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile-1))
-							{
-								//there is floor tile to the back - no BackWall.
-								backWall = false;
-							}
-						}
-					}
-					
-					if(leftWall)
-					{
-						wallsArr2D[k] = [xTile,yTile,xTile,yTile+1];
-						k++;
-					}
-					if(rightWall)
-					{
-						wallsArr2D[k] = [xTile+1,yTile,xTile+1,yTile+1];
-						k++;
-					}
-					if(frontWall)
-					{
-						wallsArr2D[k] = [xTile,yTile+1,xTile+1,yTile+1];
-						k++;
-					}
-					if(backWall)
-					{
-						wallsArr2D[k] = [xTile,yTile,xTile+1,yTile];
-						k++;
-					}
-				}
-			}
 			function init() {
 
 				container = document.getElementById( 'container' );
 				
-				createWallsFromFloors();
+				//createWallsFromFloors();
 				
 				document.onkeydown = handleKeyDown;
 
 				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 40;
-				camera.position.y = 5;
+				camera.position.y = 4;
 				camera.position.z = -5;
-				camera.look = new THREE.Vector3(40,5,10);
+				camera.look = new THREE.Vector3(40,4,5);
 				camera.lookAt(camera.look);
+				
+				current_position = new THREE.Vector3(4,0,0);
 
 				scene = new THREE.Scene();
 
@@ -327,6 +268,32 @@
 
 			}
 
+			//decide weather step is possible (hitting walls)
+			function canMoveTo(x, z)
+			{
+				var i = 0;
+				var j = 0;
+				
+				//alert("pera " + x + " " + z);
+				for(i=0; i < floorsArr2D.length; i++)
+				{
+					if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
+					{
+						for(j=0; j < doorsArr3D.length; j++)
+						{
+							//if there are closed doors in that position..
+							if((doorsArr3D[j][0] == x) && (doorsArr3D[j][1] == z)) 
+							{
+								if(doorsArr3D[j][3] == 0) return false;
+							}
+						}
+						return true;
+					}
+				}
+				return false;
+			}
+
+			//
 			function handleKeyDown(event) {
 				//alert(event.keyCode);
 				//if (event.keyCode == 88) {animateDoor = true;}
@@ -394,6 +361,26 @@
 				} else if (event.keyCode == 69) {
 					// Turne Right E
 					
+					//back tile position modification requires to move front and to the left by half step, then rotate right
+					var mover = new THREE.Vector3( 0, 0, 0 );
+					mover.x = looker.x/2;
+					mover.y = looker.y;
+					mover.z = looker.z/2;
+					camera.position.add(mover);
+					mover.normalize();
+					//looker.normalize();
+					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
+					//looker.rotate(Math.PI/2);
+					var axis = new THREE.Vector3( 0, 1, 0 );
+					var angle = +Math.PI / 2;
+					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
+					mover.applyMatrix4( matrix );
+					if((mover.z<0.0001)&&(mover.z>-0.0001)) mover.z=0;
+					if((mover.x<0.0001)&&(mover.x>-0.0001)) mover.x=0;
+					mover.x *= 5;
+					mover.z *= 5;
+					camera.position.add(mover);
+					
 					//turn west
 					looker.normalize();
 					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
@@ -422,60 +409,74 @@
 					
 				} else if ((event.keyCode == 38) || (event.keyCode == 87)) {
 					// Up cursor key or W
-					
-					camera.position.add(looker);
-					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
-					camera.look.add(looker);
-					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
-					camera.lookAt(camera.look);
+					var lookie = new THREE.Vector3(0,0,0).add(looker);
+					lookie.normalize();
+					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
+					new_pos.add(current_position);
+					if(canMoveTo(new_pos.x, new_pos.z))
+					{
+						camera.position.add(looker);
+						camera.look.add(looker);
+						camera.lookAt(camera.look);
+						current_position.add(lookie);
+					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
-					
-					camera.position.sub(looker);
-					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
-					camera.look.sub(looker);
-					//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
-					camera.lookAt(camera.look);
+					var lookie = new THREE.Vector3(0,0,0).add(looker);
+					lookie.normalize();
+					var new_pos =new THREE.Vector3(0,0,0).sub(lookie);
+					new_pos.add(current_position);
+					if(canMoveTo(new_pos.x, new_pos.z))
+					{
+						camera.position.sub(looker);
+						camera.look.sub(looker);
+						camera.lookAt(camera.look);
+						current_position.sub(lookie);
+					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
 					
-					var left_pos_offset = new THREE.Vector3(0, 0, 0);
-					left_pos_offset.x = looker.x;
-					left_pos_offset.y = looker.y;
-					left_pos_offset.z = looker.z;
-					left_pos_offset.normalize();
+					var left_looker = new THREE.Vector3(0, 0, 0).add(looker);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = +Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
-					left_pos_offset.applyMatrix4( matrix );
-					if((left_pos_offset.z<0.0001)&&(left_pos_offset.z>-0.0001)) left_pos_offset.z=0;
-					if((left_pos_offset.x<0.0001)&&(left_pos_offset.x>-0.0001)) left_pos_offset.x=0;
-					left_pos_offset.x *= 10;
-					left_pos_offset.z *= 10;
+					left_looker.applyMatrix4( matrix );
+					if((left_looker.z<0.0001)&&(left_looker.z>-0.0001)) left_looker.z=0;
+					if((left_looker.x<0.0001)&&(left_looker.x>-0.0001)) left_looker.x=0;
 					
-					camera.position.add(left_pos_offset);
-					camera.look.add(left_pos_offset);
-					camera.lookAt(camera.look);
+					var lookie = new THREE.Vector3(0,0,0).add(left_looker);
+					lookie.normalize();
+					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
+					new_pos.add(current_position);
+					if(canMoveTo(new_pos.x, new_pos.z))
+					{
+						camera.position.add(left_looker);
+						camera.look.add(left_looker);
+						camera.lookAt(camera.look);
+						current_position.add(lookie);
+					}
 				} else if ((event.keyCode == 39) || (event.keyCode == 68)) {
 					// Right cursor key or D
 					
-					var right_pos_offset = new THREE.Vector3(0, 0, 0);
-					right_pos_offset.x = looker.x;
-					right_pos_offset.y = looker.y;
-					right_pos_offset.z = looker.z;
-					right_pos_offset.normalize();
+					var right_looker = new THREE.Vector3(0, 0, 0).add(looker);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = -Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
-					right_pos_offset.applyMatrix4( matrix );
-					if((right_pos_offset.z<0.0001)&&(right_pos_offset.z>-0.0001)) right_pos_offset.z=0;
-					if((right_pos_offset.x<0.0001)&&(right_pos_offset.x>-0.0001)) right_pos_offset.x=0;
-					right_pos_offset.x *= 10;
-					right_pos_offset.z *= 10;
+					right_looker.applyMatrix4( matrix );
+					if((right_looker.z<0.0001)&&(right_looker.z>-0.0001)) right_looker.z=0;
+					if((right_looker.x<0.0001)&&(right_looker.x>-0.0001)) right_looker.x=0;
 					
-					camera.position.add(right_pos_offset);
-					camera.look.add(right_pos_offset);
-					camera.lookAt(camera.look);
+					var lookie = new THREE.Vector3(0,0,0).add(right_looker);
+					lookie.normalize();
+					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
+					new_pos.add(current_position);
+					if(canMoveTo(new_pos.x, new_pos.z))
+					{
+						camera.position.add(right_looker);
+						camera.look.add(right_looker);
+						camera.lookAt(camera.look);
+						current_position.add(lookie);
+					}
 				}
 				
 				//alert("pera2 " + looker.x + " " + looker.y + " " + looker.z);
