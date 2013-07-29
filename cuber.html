@@ -31,12 +31,62 @@
 	</head>
 	<body>
 
-		<div id="container"></div>
+		<div id="container" style="position:absolute;"></div>
+		<div id="gui" style="position:absolute; left:70px; top:70px;">
+			<div id="player1" style="border:2px solid;">
+				<div id="player1top" style="border:1px solid red; float: left;">
+					<div id="player1topimg" style="float: left;">
+					<img src="media/profile1.jpg" onClick='inventory_show("Inventory will popup here!")'> 
+					</div>
+					<div id="player1tophand" style="margin-left: 110px;">
+					<img src="media/health.png"> 
+					<br>
+					<img src="media/mace.png" onClick='alert("Smash!")'> 
+					</div>
+				</div>
+				<br>
+				Drn Inatdzija
+			</div>
+		<br>
+		<br>
+			<div id="player2" style="border:2px solid;">
+				<div id="player1top" style="border:1px solid red; float: left;">
+					<div id="player1topimg" style="float: left;">
+					<img src="media/profile2.jpg" onClick='inventory_show("Inventory will popup here!")'> 
+					</div>
+					<div id="player1tophand" style="margin-left: 110px;">
+					<img src="media/health.png"> 
+					<br>
+					<img src="media/staff.png" onClick='alert("Swing!")'> 
+					</div>
+				</div>
+				<br>
+				Mech Cloaker
+			</div>
+		</div>
+		<div id="inventory" style="display:none; position:absolute; left:310px; top:70px;">
+			<img src="media/inventory.png" onClick='hide("Inventory not yet implemented!")'> 
+		</div>
 
 		<script src="./source/three.min.js"></script>
 
 		<script>
+		
+			clickConsumed = false;
 
+			function inventory_show(param) {
+				//alert(param + clickConsumed);
+				//clickConsumed = true;
+				var ele = document.getElementById("inventory");
+				ele.style.display = "block";
+			}
+			
+			function hide(param) {
+				alert(param);
+				//clickConsumed = true;
+				var ele = document.getElementById("inventory");
+				ele.style.display = "none";
+			}
 
 			var SQUARE_SIZE = 10;
 
@@ -45,6 +95,9 @@
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
 
 			var container;
+			
+						var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
+
 
 			var camera, scene, renderer;
 
@@ -113,6 +166,44 @@
 				document.addEventListener( 'mousedown', onMouseClick, false );
 
 				//
+				/////// draw text on canvas /////////
+
+				// create a canvas element
+				var canvas1 = document.createElement('canvas');
+				var context1 = canvas1.getContext('2d');
+				context1.font = "Bold 20px Arial";
+				//context1.fillStyle = "rgba(1,1,0,0.95)";
+				//context1.fillText('Hello, world!', 10, 20);
+				
+				context1.clearRect(0,0,640,480);
+				var message = "Pera";
+				var metrics = context1.measureText(message);
+				var width = metrics.width;
+				context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
+				context1.fillRect( 0,0, width+8,20+8);
+				context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
+				context1.fillRect( 2,2, width+4,20+4 );
+				context1.fillStyle = "rgba(0,0,0,1)"; // text color
+				context1.fillText( message, 4,20 );
+				
+				// canvas contents will be used for a texture
+				var texture1 = new THREE.Texture(canvas1) 
+				texture1.needsUpdate = true;
+				
+				////////////////////////////////////////
+				
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
+				
+				var sprite1 = new THREE.Sprite( spriteMaterial );
+				sprite1.scale.set(200,200,1.0);
+				sprite1.position.set( 50, 15, 0 );
+				scene.add( sprite1 );	
+				
+				/////// draw text on canvas /////////
+				
+				// initialize object to perform world/screen calculations
+				projector = new THREE.Projector();
+
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
@@ -581,12 +672,18 @@
 			}
 			
 			
+
+			
 			function onMouseClick(event) {
 
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
-				//alert("ima1!" + x_pos);
+				//alert("ima1!" + clickConsumed);
+				
+				// update the mouse variable
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
 				//var canvas = document.getElementById('webglcanvas');
 				//var rect = canvas.getBoundingClientRect();// check if your browser supports this
@@ -647,6 +744,46 @@
 		
 		
 				render();
+				
+				
+				
+				
+				// create a Ray with origin at the mouse position
+				//   and direction into the scene (camera direction)
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				projector.unprojectVector( vector, camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+				// create an array containing all objects in the scene with which the ray intersects
+				var intersects = ray.intersectObjects( scene.children );
+
+				// INTERSECTED = the object in the scene currently closest to the camera 
+				//		and intersected by the Ray projected from the mouse position 	
+				
+				// if there is one (or more) intersections
+				if ( intersects.length > 0 )
+				{
+					//alert("intersecting!" + intersects.length);
+					// if the closest object intersected is not the currently stored intersection object
+					if ( intersects[ 0 ].object != INTERSECTED ) 
+					{
+					//	alert("intersecting!");w
+						// restore previous intersection object (if it exists) to its original color
+						if ( INTERSECTED ) 
+							INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+						// store reference to closest object as current intersection object
+						INTERSECTED = intersects[ 0 ].object;
+						// store color of closest object (for later restoration)
+						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+						// set a new color for closest object
+						INTERSECTED.material.color.setHex( 0xffff00 );
+						
+						
+					}
+				}
+	
+	
+	
 
 			}
 
