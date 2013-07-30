@@ -68,6 +68,8 @@
 			<img src="media/inventory.png" onClick='hide("Inventory not yet implemented!")'> 
 		</div>
 
+		<script src="./source/pickables.js"></script>
+		<script src="./source/game_object.js"></script>
 		<script src="./source/three.min.js"></script>
 
 		<script>
@@ -147,6 +149,9 @@
 				light2.castShadow = true;
 				scene.add( light2 );
 
+				//load pickables
+				load_pickables();
+				
 				var loader = new THREE.JSONLoader();
 
 				//loader.load( "models/tost.js", createScene1 );
