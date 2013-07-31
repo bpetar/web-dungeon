@@ -98,6 +98,8 @@
 
 			var container;
 			
+			var pickable_at_hand;
+			
 						var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 
 
@@ -123,7 +125,7 @@
 				
 				document.onkeydown = handleKeyDown;
 
-				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, .1, 10000 );
 				camera.position.x = 40;
 				camera.position.y = 4;
 				camera.position.z = -5;
@@ -690,6 +692,15 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
+				if(event.clientX > 500)
+				{
+					pickable_at_hand = array_of_pickables[0].mesh;
+					
+					
+					
+//					alert("pera " + pos.x + " " + pos.y + " " + pos.z);
+				}
+				
 				//var canvas = document.getElementById('webglcanvas');
 				//var rect = canvas.getBoundingClientRect();// check if your browser supports this
 				//alert( rect.bottom );
@@ -746,6 +757,20 @@
         }
         lastTime = timeNow;
 		
+		
+				if(pickable_at_hand)
+				{
+					//alert("pora");
+										var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
+					projector.unprojectVector( vector, camera );
+					var dir = vector.sub( camera.position ).normalize();
+					var pos = camera.position.clone().add( dir );
+					pos.y = pos.y - 3.6;
+					pos.y *= 10;
+
+					pickable_at_hand.position = pos;
+				}
+				
 		
 		
 				render();

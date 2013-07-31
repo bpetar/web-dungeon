@@ -32,7 +32,7 @@ function create_game_object () {
 function loadObject( gobject ) {
 	return function (geometry, materials ) {
 
-		alert("pera object loader" + gobject.id);
+		//alert("pera object loader" + gobject.id);
 		materials[ 0 ].shading = THREE.FlatShading;
 		gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
 		gobject.mesh.position.x = gobject.position.x;
