@@ -37,7 +37,7 @@ function loadObject( gobject ) {
 		gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
 		gobject.mesh.position.x = gobject.position.x;
 		gobject.mesh.position.z = gobject.position.z;
-		gobject.mesh.position.y = 1;
+		gobject.mesh.position.y = 0;
 		scene.add( gobject.mesh );
 	}
 }
