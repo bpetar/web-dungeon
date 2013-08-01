@@ -99,6 +99,7 @@
 			var container;
 			
 			var pickable_at_hand;
+			var pickable_at_hand_icon;
 			
 						var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 
@@ -640,6 +641,12 @@
 
 				mouseX = ( event.clientX - windowHalfX );
 				mouseY = ( event.clientY - windowHalfY );
+				
+				x_pos = event.clientX;
+				y_pos = event.clientY;
+				
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
 			}
 
@@ -692,10 +699,11 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
-				if(event.clientX > 500)
+				if(event.clientX > 800)
 				{
 					pickable_at_hand = array_of_pickables[0].mesh;
-					
+					pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+					pickable_at_hand_icon.src = "media/healing.png";
 					
 					
 //					alert("pera " + pos.x + " " + pos.y + " " + pos.z);
@@ -761,14 +769,24 @@
 				if(pickable_at_hand)
 				{
 					//alert("pora");
-										var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
+					var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
 					projector.unprojectVector( vector, camera );
 					var dir = vector.sub( camera.position ).normalize();
+					dir.multiplyScalar( 10 );
 					var pos = camera.position.clone().add( dir );
-					pos.y = pos.y - 3.6;
-					pos.y *= 10;
+					//pos.y = pos.y - 3.5;
+					//pos.y *= 6.4;
+					//var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+					//looker.sub(camera.position);
+					//looker.x /=5;
+					//looker.z /=5;
+					//pos.add(looker.normalize());
+					//pos.z+=8;
 
 					pickable_at_hand.position = pos;
+					
+					pickable_at_hand_icon.style.left = x_pos + 'px';
+					pickable_at_hand_icon.style.top = y_pos + 'px';
 				}
 				
 		
@@ -826,5 +844,7 @@
 
 		</script>
 
+		<img id="pickable_at_hand_id" src="none.png" style="position:absolute; left:-170px;" />
+		
 	</body>
 </html>
