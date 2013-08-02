@@ -38,6 +38,15 @@ function loadObject( gobject ) {
 		gobject.mesh.position.x = gobject.position.x;
 		gobject.mesh.position.z = gobject.position.z;
 		gobject.mesh.position.y = 0;
+		
+		
+		
+		gobject.mesh.name = gobject.name;
+		//alert("object id before adding to scene: " + gobject.mesh.name);
+		gobject.id = gobject.mesh.id;
+		
 		scene.add( gobject.mesh );
+		
+		//alert("object id after adding to scene: " + gobject.mesh.visible);
 	}
 }
