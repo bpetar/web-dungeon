@@ -679,7 +679,7 @@
 						/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
 						doorsArr3D[i][5] = 1; //animate flag
 						//alert("ima!");
-						if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
+						if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flagww
 						else doorsArr3D[i][3] = 0;
 					}
 				}
@@ -699,11 +699,60 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
-				if(event.clientX > 800)
+				if(pickable_at_hand)
 				{
-					pickable_at_hand = array_of_pickables[0].mesh;
-					pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-					pickable_at_hand_icon.src = "media/healing.png";
+					//drop it on the ground
+					//var looker = new THREE.Vector3(0, 0, 0);
+					var looker = camera.look.clone().sub(camera.position);
+					looker.multiplyScalar(0.8);
+					//var pos = camera.position.clone().add(looker);
+					pickable_at_hand.position = camera.position.clone().add(looker);
+					pickable_at_hand.position.y = 0;
+					pickable_at_hand.visible = true;
+					pickable_at_hand = 0;
+
+					
+					pickable_at_hand_icon.style.left = "-170px";
+					pickable_at_hand_icon = 0;
+				}
+				else
+				{
+				
+					// create a Ray with origin at the mouse position
+					//   and direction into the scene (camera direction)
+					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+					projector.unprojectVector( vector, camera );
+					var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+					for (var i=0; i< array_of_pickables.length; i++)
+					{
+						//check if pickable is clicked on
+						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+						
+						// if there is one (or more) intersections
+						if ( intersects.length > 0 )
+						{
+							
+							// if the closest object intersected is not the currently stored intersection object
+							if ( intersects[0].object.id == array_of_pickables[i].id )
+							{
+								//alert("intersecting!" + i);
+								pickable_at_hand = array_of_pickables[i].mesh;
+								pickable_at_hand.visible = false;
+								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								pickable_at_hand_icon.src = "media/potion.png";
+								break;
+							}
+						}
+						else
+						{
+							//alert("not intersecting!" + array_of_pickables[i].mesh.id);
+						}
+					}
+					
+					//pickable_at_hand = array_of_pickables[0].mesh;
+					//pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+					//pickable_at_hand_icon.src = "media/healing.png";
 					
 					
 //					alert("pera " + pos.x + " " + pos.y + " " + pos.z);
@@ -768,27 +817,20 @@
 		
 				if(pickable_at_hand)
 				{
-					//alert("pora");
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
 					projector.unprojectVector( vector, camera );
 					var dir = vector.sub( camera.position ).normalize();
 					dir.multiplyScalar( 10 );
 					var pos = camera.position.clone().add( dir );
-					//pos.y = pos.y - 3.5;
-					//pos.y *= 6.4;
-					//var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
-					//looker.sub(camera.position);
-					//looker.x /=5;
-					//looker.z /=5;
-					//pos.add(looker.normalize());
-					//pos.z+=8;
-
 					pickable_at_hand.position = pos;
 					
-					pickable_at_hand_icon.style.left = x_pos + 'px';
-					pickable_at_hand_icon.style.top = y_pos + 'px';
 				}
 				
+				if(pickable_at_hand_icon)
+				{
+					pickable_at_hand_icon.style.left = (x_pos - 64) + 'px';
+					pickable_at_hand_icon.style.top = (y_pos - 64) + 'px';
+				}
 		
 		
 				render();
@@ -796,39 +838,6 @@
 				
 				
 				
-				// create a Ray with origin at the mouse position
-				//   and direction into the scene (camera direction)
-				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-				projector.unprojectVector( vector, camera );
-				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
-				// create an array containing all objects in the scene with which the ray intersects
-				var intersects = ray.intersectObjects( scene.children );
-
-				// INTERSECTED = the object in the scene currently closest to the camera 
-				//		and intersected by the Ray projected from the mouse position 	
-				
-				// if there is one (or more) intersections
-				if ( intersects.length > 0 )
-				{
-					//alert("intersecting!" + intersects.length);
-					// if the closest object intersected is not the currently stored intersection object
-					if ( intersects[ 0 ].object != INTERSECTED ) 
-					{
-					//	alert("intersecting!");w
-						// restore previous intersection object (if it exists) to its original color
-						if ( INTERSECTED ) 
-							INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-						// store reference to closest object as current intersection object
-						INTERSECTED = intersects[ 0 ].object;
-						// store color of closest object (for later restoration)
-						INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-						// set a new color for closest object
-						INTERSECTED.material.color.setHex( 0xffff00 );
-						
-						
-					}
-				}
 	
 	
 	
