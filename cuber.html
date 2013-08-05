@@ -74,10 +74,10 @@
 		&nbsp;
 		</div>
 		<div id="gui_left" style="position:absolute; left:-36px; bottom:-40px;">
-			<img src="media/left.png" onClick='inventory_show("Inventory will popup here!")'> 
+			<img src="media/left.png" > 
 		</div>
 		<div id="gui_right" style="position:absolute; right:-36px; bottom:-40px;">
-			<img src="media/right.png" onClick='inventory_show("Inventory will popup here!")'> 
+			<img src="media/right.png" > 
 		</div>
 
 		<div id="gui_slots" style="position:absolute; left:256px; bottom:-170px;">
@@ -125,17 +125,22 @@
 			clickConsumed = false;
 
 			function inventory_show(param) {
-				//alert(param + clickConsumed);
-				//clickConsumed = true;
-				var ele = document.getElementById("inventory");
-				ele.style.display = "block";
+				//show inventory if hidden, hide elsewhere
+				if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
+				{
+					inventorySlide = 1;
+				}
+				else
+				{
+					inventorySlide = -1;
+				}
 			}
 			
 			function hide(param) {
 				alert(param);
 				//clickConsumed = true;
-				var ele = document.getElementById("inventory");
-				ele.style.display = "none";
+				//var ele = document.getElementById("inventory");
+				//ele.style.display = "none";
 			}
 
 			var SQUARE_SIZE = 10;
@@ -848,10 +853,10 @@
 							if ( intersects[0].object.id == array_of_pickables[i].id )
 							{
 								pickable_at_hand = array_of_pickables[i];
-								alert("pickable_at_hand " + pickable_at_hand.icon);
 								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
+								//alert("pickable_at_hand " + pickable_at_hand.icon);
 								inventorySlide = 1;
 								break;
 							}

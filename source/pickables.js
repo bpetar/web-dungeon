@@ -17,7 +17,7 @@ function load_pickables () {
 		picki.position.x = pickables_array[i][3]*SQUARE_SIZE+2;
 		picki.position.z = pickables_array[i][4]*SQUARE_SIZE+4;
 		picki.icon = pickables_array[i][5];
-		alert("pera " + picki.icon);
+		//alert("pera " + picki.model);
 		loader.load( picki.model, picki.loadObject(picki) );
 		
 		array_of_pickables.push(picki);
