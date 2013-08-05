@@ -1,7 +1,7 @@
 
 
 // id, name, model, x, z
-var pickables_array = [[1,"healing","models/healing.js", 2,5], [2,"holy symbol","models/tost.js", 6,4]];
+var pickables_array = [[1,"healing","models/healing.js", 2,5, "media/potion.png"], [2,"holy symbol","models/tost.js", 6,4, "media/holy.png"]];
 var array_of_pickables = [];
 
 //load pickable 3d models on the map
@@ -16,9 +16,11 @@ function load_pickables () {
 		picki.model = pickables_array[i][2];
 		picki.position.x = pickables_array[i][3]*SQUARE_SIZE+2;
 		picki.position.z = pickables_array[i][4]*SQUARE_SIZE+4;
+		picki.icon = pickables_array[i][5];
+		alert("pera " + picki.icon);
 		loader.load( picki.model, picki.loadObject(picki) );
 		
-		array_of_pickables[i] = picki;
+		array_of_pickables.push(picki);
 	}
 
 	//alert("pera1");

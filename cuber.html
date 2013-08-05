@@ -31,7 +31,9 @@
 	</head>
 	<body>
 
-		<div id="container" style="position:absolute;"></div>
+		<div id="container" style="position:absolute;">
+		</div>
+		
 		<div id="gui" style="position:absolute; left:70px; top:70px;">
 			<div id="player1" style="border:2px solid;">
 				<div id="player1top" style="border:1px solid red; float: left;">
@@ -47,8 +49,8 @@
 				<br>
 				Drn Inatdzija
 			</div>
-		<br>
-		<br>
+			<br>
+			<br>
 			<div id="player2" style="border:2px solid;">
 				<div id="player1top" style="border:1px solid red; float: left;">
 					<div id="player1topimg" style="float: left;">
@@ -68,8 +70,54 @@
 			<img src="media/inventory.png" onClick='hide("Inventory not yet implemented!")'> 
 		</div>
 
+		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-37px;">
+		&nbsp;
+		</div>
+		<div id="gui_left" style="position:absolute; left:-36px; bottom:-40px;">
+			<img src="media/left.png" onClick='inventory_show("Inventory will popup here!")'> 
+		</div>
+		<div id="gui_right" style="position:absolute; right:-36px; bottom:-40px;">
+			<img src="media/right.png" onClick='inventory_show("Inventory will popup here!")'> 
+		</div>
+
+		<div id="gui_slots" style="position:absolute; left:256px; bottom:-170px;">
+			<div id="gui_slot1" style="float:left;">
+				<div id="gui_slot1_item" style="float:left;">
+					<img id="gui_slot1_item_icon" src="media/none.png"> 
+				</div>
+				<div id="gui_slot1_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div>
+			</div>
+			<div id="gui_slot2" style="float:left;">
+				<div id="gui_slot2_item" style="float:left;">
+					<img id="gui_slot2_item_icon" src="media/none.png"> 
+				</div>
+				<div id="gui_slot2_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+			<div id="gui_slot3" style="float:left;">
+				<div id="gui_slot3_item" style="float:left;">
+					<img id="gui_slot3_item_icon" src="media/none.png"> 
+				</div>
+				<div id="gui_slot3_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+			<div id="gui_slot41" style="float:left;">
+				<div id="gui_slot4_item" style="float:left;">
+					<img id="gui_slot4_item_icon" src="media/none.png"> 
+				</div>
+				<div id="gui_slot4_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+		</div>
+		
 		<script src="./source/pickables.js"></script>
 		<script src="./source/game_object.js"></script>
+		<script src="./source/inventory.js"></script>
 		<script src="./source/three.min.js"></script>
 
 		<script>
@@ -96,6 +144,7 @@
 			//var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
 
+			
 			var container;
 			
 			var pickable_at_hand;
@@ -114,6 +163,13 @@
 			var windowHalfY = window.innerHeight / 2;
 
 			var current_position;
+			var NUM_SLOTS_INVENTORY_ROW = 4;
+			var SLOT_WIDTH = 128;
+			var inventorySlide = 0;
+			var inventory_div;
+			var INVENTORY_POS_HIDDEN = -170;
+			var INVENTORY_POS_SHOWN = 8;
+			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
 			
 			init();
 			animate();
@@ -136,6 +192,9 @@
 				current_position = new THREE.Vector3(4,0,0);
 
 				scene = new THREE.Scene();
+				
+				inventory_div = document.getElementById('gui_slots');
+				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
 				light = new THREE.SpotLight();
 				light.position.set( -40, 60, 40 );
@@ -408,7 +467,20 @@
 					
 				looker.sub(camera.position);
 				
-				
+				//Key I = Inventory
+				//alert(event.keyCode);
+				if (event.keyCode == 73) {
+					//show inventory if hidden, hide elsewhere
+					if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
+					{
+						inventorySlide = 1;
+					}
+					else
+					{
+						inventorySlide = -1;
+					}
+					//alert(inventorySlide);
+				}
 				
 				if (event.keyCode == 81) {
 					// Turn Left Q
@@ -595,6 +667,12 @@
 
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
+				
+				//position inventory in the center of screen windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)
+				//alert("pera");
+				
+				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				//inventory_div.style.top = '100px';
 
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
@@ -686,7 +764,6 @@
 			}
 			
 			
-
 			
 			function onMouseClick(event) {
 
@@ -701,23 +778,57 @@
 				
 				if(pickable_at_hand)
 				{
-					//drop it on the ground
-					//var looker = new THREE.Vector3(0, 0, 0);
-					var looker = camera.look.clone().sub(camera.position);
-					looker.multiplyScalar(0.8);
-					//var pos = camera.position.clone().add(looker);
-					pickable_at_hand.position = camera.position.clone().add(looker);
-					pickable_at_hand.position.y = 0;
-					pickable_at_hand.visible = true;
-					pickable_at_hand = 0;
+					//alert("yo yo");
+					//check if item is placed in inventory
+					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
+					if(slot_index > 0)
+					{
+						//alert("yo yo " + pickable_at_hand);
+						add_to_inventory(pickable_at_hand, slot_index);
+						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon = 0;
+						pickable_at_hand = 0;
+					}
+					else
+					{
+						//drop it on the ground
+						//var looker = new THREE.Vector3(0, 0, 0);
+						var looker = camera.look.clone().sub(camera.position);
+						looker.multiplyScalar(0.8);
+						//var pos = camera.position.clone().add(looker);
+						pickable_at_hand.mesh.position = camera.position.clone().add(looker);
+						pickable_at_hand.mesh.position.y = 0;
+						pickable_at_hand.mesh.visible = true;
+						pickable_at_hand = 0;
 
-					
-					pickable_at_hand_icon.style.left = "-170px";
-					pickable_at_hand_icon = 0;
+						
+						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon = 0;
+						
+						inventorySlide = -1;
+					}
 				}
 				else
 				{
-				
+					//check if item from inventory is clicked
+					if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
+					{
+						var item = inventory_item_clicked(x_pos,y_pos);
+						if(item)
+						{
+							//alert("no no " + item);
+							
+							//place inventory item at hand
+							pickable_at_hand = item;
+							pickable_at_hand.mesh.visible = false;
+							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+							pickable_at_hand_icon.src = item.icon;
+							
+							//should we hide inventory right after item pickup?
+							//inventorySlide = -1;
+						}
+					}
+					
 					// create a Ray with origin at the mouse position
 					//   and direction into the scene (camera direction)
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
@@ -736,11 +847,12 @@
 							// if the closest object intersected is not the currently stored intersection object
 							if ( intersects[0].object.id == array_of_pickables[i].id )
 							{
-								//alert("intersecting!" + i);
-								pickable_at_hand = array_of_pickables[i].mesh;
-								pickable_at_hand.visible = false;
+								pickable_at_hand = array_of_pickables[i];
+								alert("pickable_at_hand " + pickable_at_hand.icon);
+								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-								pickable_at_hand_icon.src = "media/potion.png";
+								pickable_at_hand_icon.src = pickable_at_hand.icon;
+								inventorySlide = 1;
 								break;
 							}
 						}
@@ -786,35 +898,66 @@
 				
 				
 				var timeNow = new Date().getTime();
-        if (lastTime != 0) {
-            var elapsed = timeNow - lastTime;
+				if (lastTime != 0) {
+					var elapsed = timeNow - lastTime;
 
-			for(i=0; i < doorsArr3D.length; i++)
-			{
-				if(doorsArr3D[i][5] == 1)
-				{
-					if(doorsArr3D[i][3] == 0) 
+					for(i=0; i < doorsArr3D.length; i++)
 					{
-						doorsArr3D[i][4].position.y -= elapsed/800;
-						if(doorsArr3D[i][4].position.y < 0.01) 
+						if(doorsArr3D[i][5] == 1)
 						{
-							doorsArr3D[i][5] = 0;
+							if(doorsArr3D[i][3] == 0) 
+							{
+								doorsArr3D[i][4].position.y -= elapsed/800;
+								if(doorsArr3D[i][4].position.y < 0.01) 
+								{
+									doorsArr3D[i][5] = 0;
+								}
+							}
+							else 
+							{
+								doorsArr3D[i][4].position.y += elapsed/800;
+								if(doorsArr3D[i][4].position.y > 7.5) 
+								{
+									doorsArr3D[i][5] = 0;
+								}
+							}
 						}
 					}
-					else 
+					
+					//slide inventory up
+					if(inventorySlide == 1)
 					{
-						doorsArr3D[i][4].position.y += elapsed/800;
-						if(doorsArr3D[i][4].position.y > 7.5) 
+						inventory_div_vertical_pos += elapsed/3;
+						inventory_div.style.bottom = inventory_div_vertical_pos + 'px';
+						//alert(inventory_div.style.bottom);
+						if(inventory_div_vertical_pos > INVENTORY_POS_SHOWN)
 						{
-							doorsArr3D[i][5] = 0;
+							inventory_div.style.bottom = INVENTORY_POS_SHOWN + 'px';
+							inventory_div_vertical_pos = INVENTORY_POS_SHOWN;
+							inventorySlide = 0;
 						}
+						//inventory_div.style.top = '100px';
 					}
+					if(inventorySlide == -1)
+					{
+						inventory_div_vertical_pos -= elapsed/3;
+						inventory_div.style.bottom = inventory_div_vertical_pos +'px';
+						//alert(inventory_div.style.bottom);
+						if(inventory_div_vertical_pos < INVENTORY_POS_HIDDEN)
+						{
+							inventory_div.style.bottom = INVENTORY_POS_HIDDEN + 'px';
+							inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
+							inventorySlide = 0;
+						}
+						//inventory_div.style.top = '100px';
+					}
+					
 				}
-			}
-        }
-        lastTime = timeNow;
+				lastTime = timeNow;
 		
 		
+				/*
+				//move pickable 3d object on the screen under mouse
 				if(pickable_at_hand)
 				{
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
@@ -822,9 +965,9 @@
 					var dir = vector.sub( camera.position ).normalize();
 					dir.multiplyScalar( 10 );
 					var pos = camera.position.clone().add( dir );
-					pickable_at_hand.position = pos;
-					
-				}
+					pickable_at_hand.mesh.position = pos;
+					//alert("pickable_at_hand oooo" + pickable_at_hand);	
+				}*/
 				
 				if(pickable_at_hand_icon)
 				{
