@@ -69,7 +69,9 @@ function inventory_item_clicked(x_pos,y_pos)
 			{
 				var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
 				slot_icon.src = "media/none.png";
-				return inventory_array[i].gObject;
+				var ret = inventory_array[i].gObject;
+				inventory_array.splice(i,1);
+				return ret;
 			}
 		}
 	}	

@@ -793,6 +793,8 @@
 						pickable_at_hand_icon.style.left = "-170px";
 						pickable_at_hand_icon = 0;
 						pickable_at_hand = 0;
+						
+						return;
 					}
 					else
 					{
@@ -811,6 +813,8 @@
 						pickable_at_hand_icon = 0;
 						
 						inventorySlide = -1;
+						
+						return;
 					}
 				}
 				else
@@ -821,8 +825,6 @@
 						var item = inventory_item_clicked(x_pos,y_pos);
 						if(item)
 						{
-							//alert("no no " + item);
-							
 							//place inventory item at hand
 							pickable_at_hand = item;
 							pickable_at_hand.mesh.visible = false;
@@ -831,6 +833,9 @@
 							
 							//should we hide inventory right after item pickup?
 							//inventorySlide = -1;
+							
+							//dont do anything else if item is picked
+							return;
 						}
 					}
 					
@@ -842,6 +847,10 @@
 
 					for (var i=0; i< array_of_pickables.length; i++)
 					{
+						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
+						if(array_of_pickables[i].mesh.visible == false)
+							continue;
+							
 						//check if pickable is clicked on
 						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
 						
