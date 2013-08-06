@@ -148,6 +148,8 @@
 			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
 			//var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
+			
+			var holesArr = [[2,4], [4,2]];
 
 			
 			var container;
@@ -288,18 +290,33 @@
 				//floors
 				for(var i=0; i < floorsArr2D.length; i++)
 				{
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-					//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-					object.rotation.set(-Math.PI/2, 0, 0);
-					object.receiveShadow = true;
+					holeSpot = false;
+					for (var h=0; h<holesArr.length; h++)
+					{
+						if((holesArr[h][0] == floorsArr2D[i][0]) && (holesArr[h][1] == floorsArr2D[i][1]))
+						holeSpot = true;
+					}
+					//if this floor tile is hole, make a hole, else make floor
 					
+					if(holeSpot)
+					{
+						loader.load( "models/hole.js", loadModel(floorsArr2D[i][0]*SQUARE_SIZE, floorsArr2D[i][1]*SQUARE_SIZE) );
+					}
+					else
+					{
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
+						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+						object.rotation.set(-Math.PI/2, 0, 0);
+						object.receiveShadow = true;
+						
+					
+						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+						object.position.y = 0; //y
+						object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
 				
-					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-					object.position.y = 0; //y
-					object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
-			
-					//alert(object.position.x);
-					scene.add( object );
+						//alert(object.position.x);
+						scene.add( object );
+					}
 				}
 				
 				//ceiling
@@ -686,6 +703,17 @@
 
 			}
 
+			function loadModel(position_x, position_z) {
+				return function (geometry, materials ) {
+					materials[ 0 ].shading = THREE.FlatShading;
+					var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+					mesh.position.x = position_x;
+					mesh.position.z = position_z;
+					mesh.position.y = 0;
+					scene.add( mesh );
+				}
+			}
+			
 			function createScene1( geometry, materials ) {
 
 				materials[ 0 ].shading = THREE.FlatShading;
