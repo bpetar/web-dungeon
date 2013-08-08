@@ -150,7 +150,9 @@
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
 			
 			var holesArr = [[2,4], [4,2]];
-
+			var holeFallen = false;
+			
+			var alerted = false;
 			
 			var container;
 			
@@ -189,7 +191,7 @@
 				
 				document.onkeydown = handleKeyDown;
 
-				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, .1, 10000 );
+				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 40;
 				camera.position.y = 4;
 				camera.position.z = -5;
@@ -457,6 +459,10 @@
 				var i = 0;
 				var j = 0;
 				
+				//if player fell in hole, make sure he cant move around :)
+				if(holeFallen)
+					return false;
+					
 				//alert("pera " + x + " " + z);
 				for(i=0; i < floorsArr2D.length; i++)
 				{
@@ -475,6 +481,26 @@
 				}
 				return false;
 			}
+			
+			//check if that position is hole in the floor
+			function positionIsHole(x,z) {
+				
+				//loop through holes array
+				for(i=0;i<holesArr.length;i++)
+				{
+					if((holesArr[i][0] == x)&&(holesArr[i][1] == z))
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+			
+			function fallInHole()
+			{
+				holeFallen = true;
+			}
+			
 
 			//
 			function handleKeyDown(event) {
@@ -504,9 +530,12 @@
 					//alert(inventorySlide);
 				}
 				
-				if (event.keyCode == 81) {
+				if ((event.keyCode == 37) || (event.keyCode == 81)) {
 					// Turn Left Q
-					//if(looker.z>0) //looking north
+					
+					//if player is in the hole atm, he can not turn around because he is dead.
+					if(holeFallen)
+						return;
 					
 					//back tile position modification requires to move front and to the right by half step, then rotate
 					var mover = new THREE.Vector3( 0, 0, 0 );
@@ -554,8 +583,12 @@
 					//alert(pos.z);
 					camera.lookAt(camera.look);
 				
-				} else if (event.keyCode == 69) {
+				} else if ((event.keyCode == 39) || (event.keyCode == 69)) {
 					// Turne Right E
+					
+					//if player is in the hole atm, he can not turn around because he is dead.
+					if(holeFallen)
+						return;
 					
 					//back tile position modification requires to move front and to the left by half step, then rotate right
 					var mover = new THREE.Vector3( 0, 0, 0 );
@@ -615,6 +648,13 @@
 						camera.look.add(looker);
 						camera.lookAt(camera.look);
 						current_position.add(lookie);
+						
+						//check if player stepped onto hole in the ground
+						if(positionIsHole(new_pos.x, new_pos.z))
+						{
+							//animate fall into hole
+							fallInHole();
+						}
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
@@ -628,6 +668,13 @@
 						camera.look.sub(looker);
 						camera.lookAt(camera.look);
 						current_position.sub(lookie);
+						
+						//check if player stepped onto hole in the ground
+						if(positionIsHole(new_pos.x, new_pos.z))
+						{
+							//animate fall into hole
+							fallInHole();
+						}
 					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
@@ -650,6 +697,13 @@
 						camera.look.add(left_looker);
 						camera.lookAt(camera.look);
 						current_position.add(lookie);
+						
+						//check if player stepped onto hole in the ground
+						if(positionIsHole(new_pos.x, new_pos.z))
+						{
+							//animate fall into hole
+							fallInHole();
+						}
 					}
 				} else if ((event.keyCode == 39) || (event.keyCode == 68)) {
 					// Right cursor key or D
@@ -672,6 +726,13 @@
 						camera.look.add(right_looker);
 						camera.lookAt(camera.look);
 						current_position.add(lookie);
+						
+						//check if player stepped onto hole in the ground
+						if(positionIsHole(new_pos.x, new_pos.z))
+						{
+							//animate fall into hole
+							fallInHole();
+						}
 					}
 				}
 				
@@ -937,12 +998,14 @@
 
 				requestAnimationFrame( animate );
 
-				
-				
 				var timeNow = new Date().getTime();
+				
+				//..so it begins
 				if (lastTime != 0) {
+
 					var elapsed = timeNow - lastTime;
 
+					//animate doors opening/closing
 					for(i=0; i < doorsArr3D.length; i++)
 					{
 						if(doorsArr3D[i][5] == 1)
@@ -965,6 +1028,7 @@
 							}
 						}
 					}
+					
 					
 					//slide inventory up
 					if(inventorySlide == 1)
@@ -992,6 +1056,26 @@
 							inventorySlide = 0;
 						}
 						//inventory_div.style.top = '100px';
+					}
+					
+					
+					//animate hole fall
+					if(holeFallen)
+					{
+						if(camera.position.y > -6)
+						{
+							var looker = camera.look.clone().sub(camera.position);
+							camera.position.x += elapsed*looker.x/1200;
+							camera.position.z += elapsed*looker.z/1200;
+							camera.position.y -= elapsed/40;
+							camera.look.y += elapsed/60;
+							camera.lookAt(camera.look);
+						}
+						else if(!alerted)
+						{
+							alerted = true;
+							alert("game over");
+						}
 					}
 					
 				}
