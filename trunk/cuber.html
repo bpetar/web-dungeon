@@ -148,7 +148,7 @@
 			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
 			//var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
-			
+			var nicheArr = [[2,5,0], [4,1,1]];
 			var holesArr = [[2,4], [4,2]];
 			var holeFallen = false;
 			
@@ -387,63 +387,139 @@
 					
 					if(leftWall)
 					{
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-						object.rotation.set(0, Math.PI/2, 0);
-						object.receiveShadow = true;
+						var nicheIsOnTheWall = false;
+						//loop nicheArr
+						for (var n=0; n<nicheArr.length; n++)
+						{
+							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 3))
+							{
+								nicheIsOnTheWall = true;
+							}
+						}
 						
+						if(nicheIsOnTheWall)
+						{
+							//load niche model instead of regular wall
+						}
+						else
+						{
+							//load regular wall
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+							object.rotation.set(0, Math.PI/2, 0);
+							object.receiveShadow = true;
+							
+						
+							object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
+							object.position.y = 0.4*SQUARE_SIZE; //y
+							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
 					
-						object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-				
-						//alert(object.position.x);
-						scene.add( object );
+							//alert(object.position.x);
+							scene.add( object );
+						}
 					}
 					if(rightWall)
 					{
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-						object.rotation.set(0, Math.PI/2, 0);
-						object.receiveShadow = true;
+						var nicheIsOnTheWall = false;
+						//loop nicheArr
+						//alert("right wall");
+						for (var n=0; n<nicheArr.length; n++)
+						{
+							//alert("right wall for " + nicheArr[n][0] + "," + nicheArr[n][1] + " = " + floorsArr2D[i][0] + "," + floorsArr2D[i][1]);
+							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 1))
+							{
+								alert("right wall niche!");
+								nicheIsOnTheWall = true;
+							}
+						}
 						
+						if(nicheIsOnTheWall)
+						{
+							//load niche model instead of regular wall
+						}
+						else
+						{
+							//load regular wall
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+							object.rotation.set(0, Math.PI/2, 0);
+							object.receiveShadow = true;
+							
+						
+							object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
+							object.position.y = 0.4*SQUARE_SIZE; //y
+							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
 					
-						object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-				
-						//alert(object.position.x);
-						scene.add( object );
+							//alert(object.position.x);
+							scene.add( object );
+						}
 					}
 					if(frontWall)
 					{
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-						object.rotation.set(0, Math.PI, 0);
-						object.receiveShadow = true;
+						var nicheIsOnTheWall = false;
+						//loop nicheArr
+						for (var n=0; n<nicheArr.length; n++)
+						{
+							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 0))
+							{
+								nicheIsOnTheWall = true;
+							}
+						}
 						
+						if(nicheIsOnTheWall)
+						{
+							//load niche model instead of regular wall
+						}
+						else
+						{
+							//load regular wall
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+							object.rotation.set(0, Math.PI, 0);
+							object.receiveShadow = true;
+							
+						
+							object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+							object.position.y = 0.4*SQUARE_SIZE; //y
+							object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
 					
-						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
-				
-						//alert(object.position.x);
-						scene.add( object );
+							//alert(object.position.x);
+							scene.add( object );
+						}
 					}
 					if(backWall)
 					{
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-						object.rotation.set(0, Math.PI, 0);
-						object.receiveShadow = true;
+						var nicheIsOnTheWall = false;
+						//loop nicheArr
+						for (var n=0; n<nicheArr.length; n++)
+						{
+							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 2))
+							{
+								alert(" niche");
+								nicheIsOnTheWall = true;
+							}
+						}
 						
+						if(nicheIsOnTheWall)
+						{
+							//load niche model instead of regular wall
+						}
+						else
+						{
+							//load regular wall
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+							object.rotation.set(0, Math.PI, 0);
+							object.receiveShadow = true;
+							
+						
+							object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+							object.position.y = 0.4*SQUARE_SIZE; //y
+							object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
 					
-						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
-				
-						//alert(object.position.x);
-						scene.add( object );
+							//alert(object.position.x);
+							scene.add( object );
+						}
 					}
 					
 					
