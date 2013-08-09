@@ -119,6 +119,7 @@
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
 		<script src="./source/three.min.js"></script>
+		<script src="./source/niche.js"></script>
 
 		<script>
 		
@@ -148,8 +149,7 @@
 			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
 			//var wallsArr2D = [];
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
-			var nicheArr = [[2,5,0], [4,1,1]];
-			var holesArr = [[2,4], [4,2]];
+			var holesArr = [[2,4], [4,4]];
 			var holeFallen = false;
 			
 			var alerted = false;
@@ -222,6 +222,9 @@
 
 				//load pickables
 				load_pickables();
+				
+				//load niches
+				loadNiches();
 				
 				var loader = new THREE.JSONLoader();
 
@@ -302,7 +305,11 @@
 					
 					if(holeSpot)
 					{
-						loader.load( "models/hole.js", loadModel(floorsArr2D[i][0]*SQUARE_SIZE, floorsArr2D[i][1]*SQUARE_SIZE) );
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
+						pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
+						loader.load( "models/hole.js", loadModel(pos,rot) );
 					}
 					else
 					{
@@ -400,6 +407,11 @@
 						if(nicheIsOnTheWall)
 						{
 							//load niche model instead of regular wall
+							var pos = new THREE.Vector3(0, 0, 0);
+							var rot = new THREE.Vector3(0, 0, 0);
+							pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+							rot.set(0, -Math.PI/2, 0);
+							loader.load( "models/niche.js", loadModel(pos, rot) );
 						}
 						else
 						{
@@ -428,7 +440,6 @@
 							//alert("right wall for " + nicheArr[n][0] + "," + nicheArr[n][1] + " = " + floorsArr2D[i][0] + "," + floorsArr2D[i][1]);
 							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 1))
 							{
-								alert("right wall niche!");
 								nicheIsOnTheWall = true;
 							}
 						}
@@ -436,6 +447,11 @@
 						if(nicheIsOnTheWall)
 						{
 							//load niche model instead of regular wall
+							var pos = new THREE.Vector3(0, 0, 0);
+							var rot = new THREE.Vector3(0, 0, 0);
+							pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+							rot.set(0, Math.PI/2, 0);
+							loader.load( "models/niche.js", loadModel(pos, rot) );
 						}
 						else
 						{
@@ -469,6 +485,11 @@
 						if(nicheIsOnTheWall)
 						{
 							//load niche model instead of regular wall
+							var pos = new THREE.Vector3(0, 0, 0);
+							var rot = new THREE.Vector3(0, 0, 0);
+							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
+							rot.set(0, Math.PI, 0);
+							loader.load( "models/niche.js", loadModel(pos, rot) );
 						}
 						else
 						{
@@ -503,6 +524,11 @@
 						if(nicheIsOnTheWall)
 						{
 							//load niche model instead of regular wall
+							var pos = new THREE.Vector3(0, 0, 0);
+							var rot = new THREE.Vector3(0, 0, 0);
+							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
+							rot.set(0, 0, 0);
+							loader.load( "models/niche.js", loadModel(pos, rot) );
 						}
 						else
 						{
@@ -840,13 +866,12 @@
 
 			}
 
-			function loadModel(position_x, position_z) {
+			function loadModel(pos, rot) {
 				return function (geometry, materials ) {
 					materials[ 0 ].shading = THREE.FlatShading;
 					var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-					mesh.position.x = position_x;
-					mesh.position.z = position_z;
-					mesh.position.y = 0;
+					mesh.position = pos;
+					mesh.rotation = rot;
 					scene.add( mesh );
 				}
 			}
@@ -963,6 +988,11 @@
 					}
 					else
 					{
+						//check if player is trying to put it in the niche
+						
+						//...
+						
+						
 						//drop it on the ground
 						//var looker = new THREE.Vector3(0, 0, 0);
 						var looker = camera.look.clone().sub(camera.position);
@@ -1030,7 +1060,8 @@
 								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
-								//alert("pickable_at_hand " + pickable_at_hand.icon);
+								//if pickable belongs to niche, remove from niche array
+								if(pickable_at_hand.niched > -1) remove_from_niche(pickable_at_hand);
 								inventorySlide = 1;
 								break;
 							}
