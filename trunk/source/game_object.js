@@ -18,6 +18,7 @@ function create_game_object () {
 	gobject.model = "unnamed";
 	gobject.icon = "unnamed";
 	gobject.id = 0;
+	gobject.gameID = 0;
 	
 	gobject.mesh = 0;
 
@@ -35,12 +36,7 @@ function loadObject( gobject ) {
 		//alert("pera object loader" + gobject.id);
 		materials[ 0 ].shading = THREE.FlatShading;
 		gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-		gobject.mesh.position.x = gobject.position.x;
-		gobject.mesh.position.z = gobject.position.z;
-		gobject.mesh.position.y = 0;
-		
-		
-		
+		gobject.mesh.position = gobject.position;
 		gobject.mesh.name = gobject.name;
 		//alert("object id before adding to scene: " + gobject.mesh.name);
 		gobject.id = gobject.mesh.id;
