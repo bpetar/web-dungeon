@@ -116,6 +116,7 @@
 		</div>
 		
 		<script src="./source/pickables.js"></script>
+		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
 		<script src="./source/three.min.js"></script>
@@ -225,6 +226,9 @@
 				
 				//load niches
 				loadNiches();
+				
+				//load chests
+				load_containers();
 				
 				var loader = new THREE.JSONLoader();
 
