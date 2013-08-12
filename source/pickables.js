@@ -1,7 +1,7 @@
 
 
 // id, name, model, x, z, icon
-var pickables_array = [[1,"healing","models/healing.js", 2,5, "media/potion.png"], [2,"holy symbol","models/tost.js", 6,4, "media/holy.png"]];
+var pickables_array = [[1,"healing","models/healing.js", 2,5, "media/potion.png"], [2,"holy symbol","models/tost.js", 2,5, "media/holy.png"]];
 var array_of_pickables = [];
 
 //load pickable 3d models on the map

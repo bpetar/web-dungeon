@@ -222,7 +222,7 @@
 				scene.add( light2 );
 
 				//load pickables
-				load_pickables();
+				//load_pickables();
 				
 				//load niches
 				loadNiches();
@@ -614,11 +614,7 @@
 				//if (event.keyCode == 88) {animateDoor = true;}
 				
 				//Movement:
-				var looker = new THREE.Vector3(0, 0, 0);
-				looker.x = camera.look.x;
-				looker.y = camera.look.y;
-				looker.z = camera.look.z;
-					
+				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
 				
 				//Key I = Inventory
@@ -975,9 +971,9 @@
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
+				//if player is holding some item in hand (under mouse pointer)
 				if(pickable_at_hand)
 				{
-					//alert("yo yo");
 					//check if item is placed in inventory
 					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
 					if(slot_index > 0)
@@ -993,9 +989,14 @@
 					else
 					{
 						//check if player is trying to put it in the niche
-						
-						//...
-						
+						var nicheID = niche_clicked_in(x_pos,y_pos);
+						if(nicheID > -1)
+						{
+							//...
+							add_to_niche(nicheID,pickable_at_hand);
+							
+							return;
+						}
 						
 						//drop it on the ground
 						//var looker = new THREE.Vector3(0, 0, 0);
@@ -1233,7 +1234,7 @@
 
 		</script>
 
-		<img id="pickable_at_hand_id" src="none.png" style="position:absolute; left:-170px;" />
+		<img id="pickable_at_hand_id" src="media/none.png" style="position:absolute; left:-170px;" />
 		
 	</body>
 </html>
