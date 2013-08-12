@@ -1,7 +1,7 @@
 
 
 // id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 4,1,0], [2,"chest","models/chest.js", 6,4,1]];
+var containers_array = [[1,"crate","models/chest.js", 6,4,0]];
 var array_of_containers = [];
 
 //load chests on the map
