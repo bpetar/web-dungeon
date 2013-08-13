@@ -73,14 +73,36 @@ function add_to_niche (nicheID, gObject) {
 	niche_pickables[index][2] = gObject.model;
 	niche_pickables[index][3] = gObject.icon;
 			
+	var mover = -1+index/2;
 	//draw model in niche here
-	//...
-	//pickable_at_hand.mesh.position = camera.position.clone().add(looker);
-	//pickable_at_hand.mesh.position.y = 0;
-	//pickable_at_hand.mesh.visible = true;
-	//pickable_at_hand = 0;
-	//pickable_at_hand_icon.style.left = "-170px";
-	//pickable_at_hand_icon = 0;
+	//check niche position and place pickable in it accordingly
+			if(nicheArr[nicheID][2] == 0)
+			{
+				//front niche
+				gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE+mover;
+				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+6;
+			}
+			else if(nicheArr[nicheID][2] == 3)
+			{
+				//left niche
+				gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE+6;
+				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+mover;
+			}
+			else if(nicheArr[nicheID][2] == 1)
+			{
+				//right niche
+				gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE-6;
+				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+mover;
+			}
+			else if(nicheArr[nicheID][2] == 2)
+			{
+				//back niche
+				gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE+mover;
+				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE-6;
+			}
+			
+	gObject.mesh.position.y = 4.0;
+	gObject.mesh.visible = true;
 
 	
 }

@@ -9,6 +9,7 @@ function create_game_object () {
 
 	var gobject = new Object();
 	
+	//game object position is not updated with mesh position properly. this needs close attention.. do we need double position variable?
 	gobject.position = new THREE.Vector3(0, 0, 0);
 	gobject.rotation = new THREE.Vector3(0, 0, 0);
 	gobject.scale = new THREE.Vector3(1, 1, 1);
