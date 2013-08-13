@@ -115,6 +115,44 @@
 			</div>
 		</div>
 		
+		
+		<div id="container_slots" style="position:absolute; left:256px; top:100px; display: none;">
+			<div id="container_slots1" style="float:left;">
+				<div id="container_slots1_item" style="float:left;">
+					<img id="container_slots1_item_icon" src="media/none.png"> 
+				</div>
+				<div id="container_slots1_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div>
+			</div>
+			<div id="container_slots2" style="float:left;">
+				<div id="container_slots2_item" style="float:left;">
+					<img id="container_slots2_item_icon" src="media/none.png"> 
+				</div>
+				<div id="container_slots2_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+			<div id="container_slots3" style="float:left;">
+				<div id="container_slots3_item" style="float:left;">
+					<img id="container_slots3_item_icon" src="media/none.png"> 
+				</div>
+				<div id="container_slots3_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+			<div id="container_slots41" style="float:left;">
+				<div id="container_slots4_item" style="float:left;">
+					<img id="container_slots4_item_icon" src="media/none.png"> 
+				</div>
+				<div id="container_slots4_border" style="position:absolute;">
+					<img src="media/slot.png"> 
+				</div> 
+			</div>
+		</div>
+
+		
+		
 		<script src="./source/pickables.js"></script>
 		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
@@ -174,6 +212,7 @@
 
 			var current_position;
 			var NUM_SLOTS_INVENTORY_ROW = 4;
+			var NUM_CONTAINER_ROWS = 2;
 			var SLOT_WIDTH = 128;
 			var inventorySlide = 0;
 			var inventory_div;
@@ -205,6 +244,10 @@
 				
 				inventory_div = document.getElementById('gui_slots');
 				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				
+				container_div = document.getElementById('container_slots');
+				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				container_div.style.top = (windowHalfY - (NUM_CONTAINER_ROWS*SLOT_WIDTH)) +'px';
 
 				light = new THREE.SpotLight();
 				light.position.set( -40, 60, 40 );
@@ -222,7 +265,7 @@
 				scene.add( light2 );
 
 				//load pickables
-				//load_pickables();
+				load_pickables();
 				
 				//load niches
 				loadNiches();
@@ -617,6 +660,8 @@
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
 				
+				container_div.style.display = "none";
+				
 				//Key I = Inventory
 				//alert(event.keyCode);
 				if (event.keyCode == 73) {
@@ -859,6 +904,8 @@
 				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 				//inventory_div.style.top = '100px';
 
+				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
@@ -992,9 +1039,11 @@
 						var nicheID = niche_clicked_in(x_pos,y_pos);
 						if(nicheID > -1)
 						{
-							//...
+							//add pickable at hand to niche
 							add_to_niche(nicheID,pickable_at_hand);
-							
+							pickable_at_hand = 0;
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;							
 							return;
 						}
 						
@@ -1039,6 +1088,16 @@
 						}
 					}
 					
+					//check if player clicked on chest
+					var containerID = container_clicked_in(x_pos,y_pos);
+					if(containerID > -1)
+					{
+						//open container inventory, and player inventory
+						//alert("niche clicked!");
+						container_div.style.display = "inline-block";
+						inventorySlide = 1;
+					}
+					
 					// create a Ray with origin at the mouse position
 					//   and direction into the scene (camera direction)
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
@@ -1050,7 +1109,14 @@
 						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
 						if(array_of_pickables[i].mesh.visible == false)
 							continue;
-							
+						
+						//check if player is close to pickable
+						if((Math.abs(camera.position.x-array_of_pickables[i].mesh.position.x)>14) || (Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z)>14))
+						{
+							//alert("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
+							continue;
+						}
+						
 						//check if pickable is clicked on
 						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
 						
@@ -1064,6 +1130,7 @@
 								pickable_at_hand = array_of_pickables[i];
 								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								//alert("picked z = " + Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z));
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
 								//if pickable belongs to niche, remove from niche array
 								if(pickable_at_hand.niched > -1) remove_from_niche(pickable_at_hand);

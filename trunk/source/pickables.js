@@ -1,7 +1,9 @@
 
 
 // id, name, model, x, z, icon
-var pickables_array = [[1,"healing","models/healing.js", 2,5, "media/potion.png"], [2,"holy symbol","models/tost.js", 2,5, "media/holy.png"]];
+var pickables_array = [[1,"healing","models/healing.js", 4,1, "media/potion.png"], [2,"rock","models/rocky.js", 4,1, "media/rock.png"]];
+
+//this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
 var array_of_pickables = [];
 
 //load pickable 3d models on the map
@@ -16,6 +18,7 @@ function load_pickables () {
 		picki.model = pickables_array[i][2];
 		picki.position.x = pickables_array[i][3]*SQUARE_SIZE+2;
 		picki.position.z = pickables_array[i][4]*SQUARE_SIZE+4;
+		picki.position.y = 0;
 		picki.icon = pickables_array[i][5];
 		picki.niched = -1; //flag indicating if pickable is in the niche
 		//alert("pera " + picki.model);
