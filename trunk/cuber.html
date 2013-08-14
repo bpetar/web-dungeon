@@ -1093,7 +1093,18 @@
 					//check if item from container is clicked
 					if(container_div.style.display == "inline-block")
 					{
-						container_item_clicked(x_pos,y_pos);
+						var item = container_item_clicked(x_pos,y_pos);
+						if(item)
+						{
+							//place container item at hand
+							pickable_at_hand = item;
+							pickable_at_hand.mesh.visible = false;
+							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+							pickable_at_hand_icon.src = item.icon;
+
+							//dont do anything else if item is picked
+							return;
+						}
 					}
 					
 					//check if player clicked on chest (3d model)
