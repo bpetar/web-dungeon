@@ -21,6 +21,7 @@ function create_game_object () {
 	gobject.id = 0;
 	gobject.gameID = 0;
 	gobject.orientation = 0;
+	gobject.visible = true;
 	
 	gobject.mesh = 0;
 
@@ -42,7 +43,7 @@ function loadObject( gobject ) {
 		gobject.mesh.name = gobject.name;
 		//alert("object id before adding to scene: " + gobject.mesh.name);
 		gobject.id = gobject.mesh.id;
-		
+		gobject.mesh.visible = gobject.visible;
 		scene.add( gobject.mesh );
 		
 		//alert("object id after adding to scene: " + gobject.mesh.visible);

@@ -52,6 +52,30 @@ function container_item_clicked(x_pos,y_pos)
 	if(slot>0)
 	{
 		//get item from currently_opened_container and place it in hand..
+		var container_pickables_array = containers_array[currently_opened_container][6];
+		var picki = create_game_object();
+		picki.gameID = container_pickables_array[slot-1][0];
+		picki.name = container_pickables_array[slot-1][1];
+		picki.model = container_pickables_array[slot-1][2];
+		picki.icon = container_pickables_array[slot-1][3];
+		picki.niched = -1;
+		picki.visible = false;
+		
+		//lets make 3d model here in case player wants to drop it in 3D world.. 
+		var loader = new THREE.JSONLoader();
+		loader.load( picki.model, picki.loadObject(picki) );
+		
+		//remove image icon from gui
+		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
+		if(slot_icon)
+		{
+			slot_icon.src = "media/none.png";
+		}
+		
+		container_pickables_array.splice(slot-1,1);
+		
+		return picki;
+
 		/*for (var i=0; i<container_array.length; i++)
 		{
 			if(container_array[i].slot == slot)
@@ -63,7 +87,8 @@ function container_item_clicked(x_pos,y_pos)
 				return ret;
 			}
 		}*/
-	}	
+	}
+	
 	return 0;
 }
 
