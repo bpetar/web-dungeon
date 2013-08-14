@@ -212,7 +212,7 @@
 
 			var current_position;
 			var NUM_SLOTS_INVENTORY_ROW = 4;
-			var NUM_CONTAINER_ROWS = 2;
+			var NUM_CONTAINER_ROWS = 1;
 			var SLOT_WIDTH = 128;
 			var inventorySlide = 0;
 			var inventory_div;
@@ -247,7 +247,7 @@
 				
 				container_div = document.getElementById('container_slots');
 				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
-				container_div.style.top = (windowHalfY - (NUM_CONTAINER_ROWS*SLOT_WIDTH)) +'px';
+				container_div.style.top = SLOT_WIDTH +'px';
 
 				light = new THREE.SpotLight();
 				light.position.set( -40, 60, 40 );
@@ -1035,38 +1035,53 @@
 						
 						return;
 					}
-					else
+					
+					//check if player is trying to put it in the niche
+					var nicheID = niche_clicked_in(x_pos,y_pos);
+					if(nicheID > -1)
 					{
-						//check if player is trying to put it in the niche
-						var nicheID = niche_clicked_in(x_pos,y_pos);
-						if(nicheID > -1)
-						{
-							//add pickable at hand to niche
-							add_to_niche(nicheID,pickable_at_hand);
-							pickable_at_hand = 0;
-							pickable_at_hand_icon.style.left = "-170px";
-							pickable_at_hand_icon = 0;							
-							return;
-						}
-						
-						//drop it on the ground
-						//var looker = new THREE.Vector3(0, 0, 0);
-						var looker = camera.look.clone().sub(camera.position);
-						looker.multiplyScalar(0.92);
-						//var pos = camera.position.clone().add(looker);
-						pickable_at_hand.mesh.position = camera.position.clone().add(looker);
-						pickable_at_hand.mesh.position.y = 0;
-						pickable_at_hand.mesh.visible = true;
+						//add pickable at hand to niche
+						add_to_niche(nicheID,pickable_at_hand);
 						pickable_at_hand = 0;
-
-						
 						pickable_at_hand_icon.style.left = "-170px";
-						pickable_at_hand_icon = 0;
-						
-						inventorySlide = -1;
+						pickable_at_hand_icon = 0;	
 						
 						return;
 					}
+					
+					//check if pickable is being placed in container
+					if(container_div.style.display == "inline-block")
+					{
+						slot_index = container_clicked_in_slot(x_pos,y_pos);
+						if(slot_index > 0)
+						{
+							//alert("yo yo " + pickable_at_hand);
+							add_to_container(pickable_at_hand, slot_index);
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+							pickable_at_hand = 0;
+							
+							return;
+						}
+					}
+					
+					//drop it on the ground
+					//var looker = new THREE.Vector3(0, 0, 0);
+					var looker = camera.look.clone().sub(camera.position);
+					looker.multiplyScalar(0.92);
+					//var pos = camera.position.clone().add(looker);
+					pickable_at_hand.mesh.position = camera.position.clone().add(looker);
+					pickable_at_hand.mesh.position.y = 0;
+					pickable_at_hand.mesh.visible = true;
+					pickable_at_hand = 0;
+
+					
+					pickable_at_hand_icon.style.left = "-170px";
+					pickable_at_hand_icon = 0;
+					
+					inventorySlide = -1;
+					
+					return;
 				}
 				else
 				{

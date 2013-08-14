@@ -1,10 +1,10 @@
 
 //containers and their content..
 
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png"]];// id, name, model, icon
+// id, name, model, icon, slot
+var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1]];// id, name, model, icon
 // id, name, model, x, z, orientation
 var containers_array = [[1,"chest","models/chest.js", 6,4,0, container_pickables_array1]];
-var array_of_containers = [];
 var currently_opened_container = -1;
 
 //load chests on the map
@@ -23,7 +23,6 @@ function load_containers () {
 		chest.position.z = containers_array[i][4]*SQUARE_SIZE+4;
 		chest.orientation = containers_array[i][5];
 		loader.load( chest.model, chest.loadObject(chest) );
-		array_of_containers.push(chest);
 	}
 }
 
@@ -31,11 +30,11 @@ function load_containers () {
 function container_fill_gui(containerID)
 {
 	var container_pickables_array = containers_array[containerID][6];
-	//var container_pickables_array = containers_array[i][6];
 	
 	for(var c=0; c<container_pickables_array.length; c++)
 	{
-		var slot_icon = document.getElementById("container_slots" + 1 + "_item_icon");
+		var slot = container_pickables_array[c][4];
+		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
 		if(slot_icon)
 		{
 			slot_icon.src = container_pickables_array[c][3];
@@ -43,6 +42,34 @@ function container_fill_gui(containerID)
 	}
 	container_div.style.display = "inline-block";
 	currently_opened_container = containerID;
+}
+
+//add pickable item to current container
+function add_to_container(gObject, slot) 
+{
+
+	if(currently_opened_container>-1)
+	{
+		var container_pickables_array = containers_array[currently_opened_container][6];
+		
+		var newContainerItem = new Array();
+		newContainerItem[0] = gObject.id;
+		newContainerItem[1] = gObject.name;
+		newContainerItem[2] = gObject.model;
+		newContainerItem[3] = gObject.icon;
+		newContainerItem[4] = slot;
+		
+		//TODO check if container slot is occupied
+		//if occupied, make switch between object in hand and object in container
+		//alert("pera " + gObject.icon);
+		
+		//if container slot is free, place object in container
+		container_pickables_array.push(newContainerItem);
+		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
+		slot_icon.src = gObject.icon;
+	}
+	//TODO: start timer for automatic inventory draw back at later time..
+
 }
 
 function container_item_clicked(x_pos,y_pos)
@@ -53,40 +80,36 @@ function container_item_clicked(x_pos,y_pos)
 	{
 		//get item from currently_opened_container and place it in hand..
 		var container_pickables_array = containers_array[currently_opened_container][6];
-		var picki = create_game_object();
-		picki.gameID = container_pickables_array[slot-1][0];
-		picki.name = container_pickables_array[slot-1][1];
-		picki.model = container_pickables_array[slot-1][2];
-		picki.icon = container_pickables_array[slot-1][3];
-		picki.niched = -1;
-		picki.visible = false;
-		
-		//lets make 3d model here in case player wants to drop it in 3D world.. 
-		var loader = new THREE.JSONLoader();
-		loader.load( picki.model, picki.loadObject(picki) );
-		
-		//remove image icon from gui
-		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
-		if(slot_icon)
+		for(var i=0; i<container_pickables_array.length; i++)
 		{
-			slot_icon.src = "media/none.png";
-		}
-		
-		container_pickables_array.splice(slot-1,1);
-		
-		return picki;
-
-		/*for (var i=0; i<container_array.length; i++)
-		{
-			if(container_array[i].slot == slot)
+			if(container_pickables_array[i][4] == slot)
 			{
-				var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
-				slot_icon.src = "media/none.png";
-				var ret = container_array[i].gObject;
-				container_array.splice(i,1);
-				return ret;
+				var picki = create_game_object();
+				picki.gameID = container_pickables_array[i][0];
+				picki.name = container_pickables_array[i][1];
+				picki.model = container_pickables_array[i][2];
+				picki.icon = container_pickables_array[i][3];
+				picki.niched = -1;
+				picki.visible = false;
+				
+				//lets make 3d model here in case player wants to drop it in 3D world.. 
+				var loader = new THREE.JSONLoader();
+				loader.load( picki.model, picki.loadObject(picki) );
+				
+				array_of_pickables.push(picki);
+				
+				//remove image icon from gui
+				var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
+				if(slot_icon)
+				{
+					slot_icon.src = "media/none.png";
+				}
+				
+				container_pickables_array.splice(i,1);
+				
+				return picki;
 			}
-		}*/
+		}
 	}
 	
 	return 0;
@@ -95,7 +118,28 @@ function container_item_clicked(x_pos,y_pos)
 //check if player clicked in container gui
 function container_clicked_in_slot(x_pos,y_pos)
 {
-	return 1;
+	var left = windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
+	var right = windowHalfX + (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
+	var bottom = SLOT_WIDTH + NUM_CONTAINER_ROWS*SLOT_WIDTH;
+	var top = SLOT_WIDTH;
+	
+	if((x_pos > left)&&(x_pos < right))
+	{
+		if((y_pos > top) && (y_pos < bottom))
+		{
+			//clicked in the container gui.. 
+			if(x_pos < left+SLOT_WIDTH)
+				return 1;
+			if(x_pos < left+2*SLOT_WIDTH)
+				return 2;
+			if(x_pos < left+3*SLOT_WIDTH)
+				return 3;
+			if(x_pos < left+4*SLOT_WIDTH)
+				return 4;
+		}
+	}
+
+	return -1;
 }
 
 //check if player clicked on container 3d model
@@ -125,11 +169,10 @@ function container_clicked_on(x_pos,y_pos) {
 				if(containers_array[n][5] == 0)
 					return n;
 			}
-			
 		}
 	}
 	
-	//calculate position of mouse click within the container
+	//TODO calculate position of mouse click within the container
 	
 	return -1;
 }
