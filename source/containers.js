@@ -1,10 +1,11 @@
 
 //containers and their content..
 
-var container_pickables_array1 = [[1,"healing","models/healing.js", "media/potion.png"]];// id, name, model, icon
+var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png"]];// id, name, model, icon
 // id, name, model, x, z, orientation
-var containers_array = [[1,"crate","models/chest.js", 6,4,0, container_pickables_array1]];
+var containers_array = [[1,"chest","models/chest.js", 6,4,0, container_pickables_array1]];
 var array_of_containers = [];
+var currently_opened_container = -1;
 
 //load chests on the map
 function load_containers () {
@@ -16,6 +17,7 @@ function load_containers () {
 		chest.gameID = containers_array[i][0];
 		chest.name = containers_array[i][1];
 		chest.model = containers_array[i][2];
+		
 		//position depends on orientation
 		chest.position.x = containers_array[i][3]*SQUARE_SIZE;
 		chest.position.z = containers_array[i][4]*SQUARE_SIZE+4;
@@ -25,8 +27,54 @@ function load_containers () {
 	}
 }
 
-//check if player clicked in container
-function container_clicked_in(x_pos,y_pos) {
+//draw item icons in container gui
+function container_fill_gui(containerID)
+{
+	var container_pickables_array = containers_array[containerID][6];
+	//var container_pickables_array = containers_array[i][6];
+	
+	for(var c=0; c<container_pickables_array.length; c++)
+	{
+		var slot_icon = document.getElementById("container_slots" + 1 + "_item_icon");
+		if(slot_icon)
+		{
+			slot_icon.src = container_pickables_array[c][3];
+		}
+	}
+	container_div.style.display = "inline-block";
+	currently_opened_container = containerID;
+}
+
+function container_item_clicked(x_pos,y_pos)
+{
+	var slot = container_clicked_in_slot(x_pos,y_pos);
+	
+	if(slot>0)
+	{
+		//get item from currently_opened_container and place it in hand..
+		/*for (var i=0; i<container_array.length; i++)
+		{
+			if(container_array[i].slot == slot)
+			{
+				var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
+				slot_icon.src = "media/none.png";
+				var ret = container_array[i].gObject;
+				container_array.splice(i,1);
+				return ret;
+			}
+		}*/
+	}	
+	return 0;
+}
+
+//check if player clicked in container gui
+function container_clicked_in_slot(x_pos,y_pos)
+{
+	return 1;
+}
+
+//check if player clicked on container 3d model
+function container_clicked_on(x_pos,y_pos) {
 	//check if player is facing container first
 	for(var n=0; n<containers_array.length; n++)
 	{

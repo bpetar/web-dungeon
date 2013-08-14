@@ -1,7 +1,7 @@
 
 
 // id, name, model, x, z, icon
-var pickables_array = [[1,"healing","models/healing.js", 4,1, "media/potion.png"], [2,"rock","models/rocky.js", 4,1, "media/rock.png"]];
+var pickables_array = [[1,"ring","models/ring.js", 4,0, "media/ring.png"], [2,"rock","models/rocky.js", 4,1, "media/rock.png"]];
 
 //this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
 var array_of_pickables = [];
