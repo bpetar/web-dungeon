@@ -18,6 +18,7 @@ function create_game_object () {
 	gobject.description = "unnamed";
 	gobject.model = "unnamed";
 	gobject.icon = "unnamed";
+	gobject.slot = -1;
 	gobject.id = 0;
 	gobject.gameID = 0;
 	gobject.orientation = 0;
