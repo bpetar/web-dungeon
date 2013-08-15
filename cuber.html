@@ -186,8 +186,8 @@
 
 			var SQUARE_SIZE = 10;
 
-			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
-			//var wallsArr2D = [];
+			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+			var secretWallsArr = [[6,2,3]]; //x,y,orientation
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
 			var holesArr = [[2,4], [4,4]];
 			var holeFallen = false;
@@ -409,6 +409,25 @@
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
 				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+				
+				//secret walls
+				for(var s=0; s<secretWallsArr.length; s++)
+				{
+					//place wall depending on orientation
+					if(secretWallsArr[s][2] == 3)
+					{
+						//left secret wall
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						object.rotation.set(0, Math.PI/2, 0);
+						object.receiveShadow = true;
+						object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
+						object.position.y = 0.4*SQUARE_SIZE; //y
+						object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
+						scene.add( object );
+					}
+				}
+				
+				//regular walls
 				for(i=0; i < floorsArr2D.length; i++)
 				{
 					var leftWall = true;
