@@ -154,6 +154,7 @@
 		
 		
 		<script src="./source/pickables.js"></script>
+		<script src="./source/tapestries.js"></script>
 		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
@@ -269,6 +270,9 @@
 				
 				//load niches
 				loadNiches();
+				
+				//load tapestries
+				load_tapestries();
 				
 				//load chests
 				load_containers();
@@ -483,10 +487,8 @@
 					{
 						var nicheIsOnTheWall = false;
 						//loop nicheArr
-						//alert("right wall");
 						for (var n=0; n<nicheArr.length; n++)
 						{
-							//alert("right wall for " + nicheArr[n][0] + "," + nicheArr[n][1] + " = " + floorsArr2D[i][0] + "," + floorsArr2D[i][1]);
 							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 1))
 							{
 								nicheIsOnTheWall = true;
