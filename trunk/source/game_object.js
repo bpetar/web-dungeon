@@ -41,6 +41,7 @@ function loadObject( gobject ) {
 		materials[ 0 ].shading = THREE.FlatShading;
 		gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
 		gobject.mesh.position = gobject.position;
+		gobject.mesh.rotation = gobject.rotation;
 		gobject.mesh.name = gobject.name;
 		//alert("object id before adding to scene: " + gobject.mesh.name);
 		gobject.id = gobject.mesh.id;
