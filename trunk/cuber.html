@@ -195,12 +195,11 @@
 			var alerted = false;
 			
 			var container;
-			
+			var morphs = [];
 			var pickable_at_hand;
 			var pickable_at_hand_icon;
 			
-						var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
-
+			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 
 			var camera, scene, renderer;
 
@@ -220,6 +219,7 @@
 			var INVENTORY_POS_HIDDEN = -170;
 			var INVENTORY_POS_SHOWN = 8;
 			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
+			var clock = new THREE.Clock();
 			
 			init();
 			animate();
@@ -617,17 +617,55 @@
 							scene.add( object );
 						}
 					}
-					
-					
 				}
+				
+				var loader = new THREE.JSONLoader();
+				loader.load( "models/jelly2.js", function( geometry ) {
+
+					morphColorsToFaceColors( geometry );
+					geometry.computeMorphNormals();
+
+					var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, morphNormals: true, vertexColors: THREE.FaceColors, shading: THREE.SmoothShading } );
+					var meshAnim = new THREE.MorphAnimMesh( geometry, material );
+
+					meshAnim.duration = 5000;
+
+					meshAnim.scale.set( 1.5, 1.5, 1.5 );
+					meshAnim.rotation.set(0, -Math.PI/2, 0);
+					meshAnim.position.y = 0;
+					meshAnim.position.x = 40;
+					meshAnim.position.z = 10;
+
+					scene.add( meshAnim );
+					morphs.push( meshAnim );
+
+				} );
   
 				renderer.shadowMapEnabled = true;
 
 			}
 
+			function morphColorsToFaceColors( geometry ) {
+
+				if ( geometry.morphColors && geometry.morphColors.length ) {
+
+					var colorMap = geometry.morphColors[ 0 ];
+
+					for ( var i = 0; i < colorMap.colors.length; i ++ ) {
+
+						geometry.faces[ i ].color = colorMap.colors[ i ];
+						geometry.faces[ i ].color.offsetHSL( 0, 0.3, 0 );
+
+					}
+
+				}
+
+			}
+			
 			//decide weather step is possible (hitting walls)
 			function canMoveTo(x, z)
 			{
+				return true;
 				var i = 0;
 				var j = 0;
 				
@@ -1349,6 +1387,15 @@
 
 			function render() {
 
+			
+				var delta = clock.getDelta();
+
+				for ( var i = 0; i < morphs.length; i ++ ) {
+
+					morph = morphs[ i ];
+					morph.updateAnimation( 1000 * delta );
+
+				}
 
 				renderer.render( scene, camera );
 
