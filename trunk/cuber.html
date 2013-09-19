@@ -620,18 +620,32 @@
 				}
 				
 				var loader = new THREE.JSONLoader();
-				loader.load( "models/jelly2.js", function( geometry ) {
+				loader.load( "models/golem.js", function( geometry , materials) {
 
 					morphColorsToFaceColors( geometry );
+					//materials[ 0 ].shading = THREE.FlatShading;
 					geometry.computeMorphNormals();
 
-					var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, morphNormals: true, vertexColors: THREE.FaceColors, shading: THREE.SmoothShading } );
-					var meshAnim = new THREE.MorphAnimMesh( geometry, material );
+					//var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, morphNormals: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
+					
+					//materials[ 0 ].shading = THREE.FlatShading;
+					materials[ 0 ].morphTargets = true;
+					materials[ 0 ].morphNormals = true;
+					
+					//materials[ 1 ].shading = THREE.FlatShading;
+					materials[ 1 ].morphTargets = true;
+					//materials[ 1 ].morphNormals = true;
+					//materials[ 0 ].color = 0xffffff;
+					//materials[ 0 ].specular = 0xffffff;
+					
+					
+					
+					var meshAnim = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) /* material */ );
 
-					meshAnim.duration = 5000;
+					meshAnim.duration = 18000;
 
-					meshAnim.scale.set( 1.5, 1.5, 1.5 );
-					meshAnim.rotation.set(0, -Math.PI/2, 0);
+					meshAnim.scale.set( 1.2, 1.2, 1.2 );
+					meshAnim.rotation.set(0, Math.PI, 0);
 					meshAnim.position.y = 0;
 					meshAnim.position.x = 40;
 					meshAnim.position.z = 10;
