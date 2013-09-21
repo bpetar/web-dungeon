@@ -160,6 +160,7 @@
 		<script src="./source/inventory.js"></script>
 		<script src="./source/three.min.js"></script>
 		<script src="./source/niche.js"></script>
+		<script src="./source/monster.js"></script>
 
 		<script>
 		
@@ -638,12 +639,14 @@
 					//materials[ 0 ].color = 0xffffff;
 					//materials[ 0 ].specular = 0xffffff;
 					
-					
+					var golemko = new Monster();
+					//golemko.damage(13);
+					alert(golemko.hp);
 					
 					var meshAnim = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) /* material */ );
 
-					meshAnim.duration = 18000;
-
+					meshAnim.duration = 15000;
+					meshAnim.setFrameRange(140,180);
 					meshAnim.scale.set( 1.2, 1.2, 1.2 );
 					meshAnim.rotation.set(0, Math.PI, 0);
 					meshAnim.position.y = 0;
