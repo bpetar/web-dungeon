@@ -640,13 +640,13 @@
 					//materials[ 0 ].specular = 0xffffff;
 					
 					var golemko = new Monster();
-					//golemko.damage(13);
-					alert(golemko.hp);
+					golemko.damage(13);
+					console.log("golems hp: " + golemko.hp);
 					
 					var meshAnim = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) /* material */ );
 
-					meshAnim.duration = 15000;
-					meshAnim.setFrameRange(140,180);
+					meshAnim.duration = 5000;
+					meshAnim.setFrameRange(140,179);
 					meshAnim.scale.set( 1.2, 1.2, 1.2 );
 					meshAnim.rotation.set(0, Math.PI, 0);
 					meshAnim.position.y = 0;
