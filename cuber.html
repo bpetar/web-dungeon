@@ -641,7 +641,11 @@
 					
 					var golemko = new Monster();
 					golemko.damage(13);
-					console.log("golems hp: " + golemko.hp);
+					if(golemko.find_player())
+					{
+						console.log("golems hp: " + golemko.hp);
+					}
+					
 					
 					var meshAnim = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) /* material */ );
 
