@@ -39,6 +39,14 @@ Monster.prototype.damage = function ( dmg ) {
 
 };
 
+//find player
+Monster.prototype.find_player = function ( ) {
+
+	//this.hp -= dmg;
+	return false;
+
+};
+
 Monster.prototype.loadObject = function ( ) {
 
 	return function (geometry, materials ) {
