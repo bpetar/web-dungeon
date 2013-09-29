@@ -196,7 +196,7 @@
 			var alerted = false;
 			
 			var container;
-			var morphs = [];
+			//var morphs = [];
 			var pickable_at_hand;
 			var pickable_at_hand_icon;
 			
@@ -620,47 +620,7 @@
 					}
 				}
 				
-				var loader = new THREE.JSONLoader();
-				loader.load( "models/golem.js", function( geometry , materials) {
-
-					morphColorsToFaceColors( geometry );
-					//materials[ 0 ].shading = THREE.FlatShading;
-					geometry.computeMorphNormals();
-
-					//var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 20, morphTargets: true, morphNormals: true, vertexColors: THREE.FaceColors, shading: THREE.FlatShading } );
-					
-					//materials[ 0 ].shading = THREE.FlatShading;
-					materials[ 0 ].morphTargets = true;
-					materials[ 0 ].morphNormals = true;
-					
-					//materials[ 1 ].shading = THREE.FlatShading;
-					materials[ 1 ].morphTargets = true;
-					//materials[ 1 ].morphNormals = true;
-					//materials[ 0 ].color = 0xffffff;
-					//materials[ 0 ].specular = 0xffffff;
-					
-					var golemko = new Monster();
-					golemko.damage(13);
-					if(golemko.find_player())
-					{
-						console.log("golems hp: " + golemko.hp);
-					}
-					
-					
-					var meshAnim = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) /* material */ );
-
-					meshAnim.duration = 5000;
-					meshAnim.setFrameRange(140,179);
-					meshAnim.scale.set( 1.2, 1.2, 1.2 );
-					meshAnim.rotation.set(0, Math.PI, 0);
-					meshAnim.position.y = 0;
-					meshAnim.position.x = 40;
-					meshAnim.position.z = 10;
-
-					scene.add( meshAnim );
-					morphs.push( meshAnim );
-
-				} );
+				load_monsters ();
   
 				renderer.shadowMapEnabled = true;
 
@@ -1411,11 +1371,15 @@
 			
 				var delta = clock.getDelta();
 
-				for ( var i = 0; i < morphs.length; i ++ ) {
+				for ( var i = 0; i < array_of_monsters.length; i ++ ) {
 
-					morph = morphs[ i ];
-					morph.updateAnimation( 1000 * delta );
-
+					var monster = array_of_monsters[ i ];
+					if(monster.mesh != 0)
+					{
+						monster.mesh.updateAnimation( 1000 * delta );
+						monster.move(delta);
+					}
+					//console.log(" " + i)
 				}
 
 				renderer.render( scene, camera );
