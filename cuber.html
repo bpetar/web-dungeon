@@ -222,6 +222,10 @@
 			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
 			var clock = new THREE.Clock();
 			
+			var round_time = 0.01;
+			var ROUND_DURATION = 2; //2 seconds
+			
+			
 			init();
 			animate();
 
@@ -646,7 +650,7 @@
 			//decide weather step is possible (hitting walls)
 			function canMoveTo(x, z)
 			{
-				return true;
+				//return true;
 				var i = 0;
 				var j = 0;
 				
@@ -1370,6 +1374,23 @@
 
 			
 				var delta = clock.getDelta();
+				round_time += delta;
+				if(round_time > ROUND_DURATION)
+				{
+					console.log("round tick");
+					round_time = 0;
+					
+					for ( var i = 0; i < array_of_monsters.length; i ++ ) {
+
+						var monster = array_of_monsters[ i ];
+						if(monster.mesh != 0)
+						{
+							monster.find_player(current_position);
+						}
+						//console.log(" " + i)
+					}
+				
+				}
 
 				for ( var i = 0; i < array_of_monsters.length; i ++ ) {
 
@@ -1377,7 +1398,7 @@
 					if(monster.mesh != 0)
 					{
 						monster.mesh.updateAnimation( 1000 * delta );
-						monster.move(delta);
+						monster.move(round_time*SQUARE_SIZE/ROUND_DURATION);
 					}
 					//console.log(" " + i)
 				}
