@@ -127,11 +127,19 @@ Monster.prototype.find_player = function ( player_pos ) {
 		this.should_move = false;
 		if(this.position.z > this.target.z)
 		{
-			this.position.z -= 1;
+			this.position.z--;
 		}
 		else if(this.position.z < this.target.z)
 		{
-			this.position.z += 1;
+			this.position.z++;
+		}
+		else if(this.position.x > this.target.x)
+		{
+			this.position.x++;
+		}
+		else if(this.position.x < this.target.x)
+		{
+			this.position.x--;
 		}
 	}
 	
@@ -227,6 +235,40 @@ Monster.prototype.find_player = function ( player_pos ) {
 		//if monster and player are in line, monster should turn and walk toward player in straight line
 		if(z_dist == 0)
 		{
+			//player is south of monster
+			if((this.position.x > player_pos.x) && (this.position.x < player_pos.x + this.VIEW_DISTANCE))
+			{
+				if(this.rotation == 0) //monster looking north
+				{
+					//looking at north, while player is right, so turn around 90 degrees
+					this.should_turn = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("turn around 90 degrees to player x: " + player_pos.x);
+				}
+				else if(this.rotation == 1) //monster looking left
+				{
+					//looking at left, while player is right, so turn around 180 degrees
+					this.should_turn = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("turn around 180 degrees left to player x: " + player_pos.x);
+				}
+				else if(this.rotation == 2) //monster looking south
+				{
+					//looking at south, while player is right, so turn around 90 degrees
+					this.should_turn = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("turn around 90 degrees left to player x: " + player_pos.x);
+				}
+				else if(this.rotation == 3) //monster looking right
+				{
+					//looking at right, while player is right - just walk towards him
+					this.should_move = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					this.target = player_pos;
+					console.log("walk south towards player x: " + player_pos.x);
+				}
+			}
+
 		}
 		else if(x_dist == 0)
 		{
@@ -363,22 +405,12 @@ Monster.prototype.move = function ( delta ) {
 			
 		if(this.position.z < this.target.z)
 			this.mesh.position.z = this.position.z*SQUARE_SIZE + delta;
-		/*if(this.target.z>this.mesh.position.z)
-		{
-			this.mesh.position.z += delta;
-			if(this.target.z>this.mesh.position.z)
-			{
-				this.should_move = false;
-			}
-		}
-		else if(this.target.z<this.mesh.position.z)
-		{
-			this.mesh.position.z -= delta;
-			if(this.target.z>this.mesh.position.z)
-			{
-				this.should_move = false;
-			}
-		}*/
+			
+		if(this.position.x > this.target.x)
+			this.mesh.position.x = this.position.x*SQUARE_SIZE - delta;
+		
+		if(this.position.x < this.target.x)
+			this.mesh.position.x = this.position.x*SQUARE_SIZE + delta;
 		
 	}
 	
