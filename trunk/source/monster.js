@@ -80,7 +80,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.name = munster.name;
 		munster.id = munster.mesh.id;
 		munster.mesh.visible = munster.visible;
-		munster.mesh.duration = 5000;
+		munster.mesh.duration = 3000;
 		munster.mesh.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		console.log("adding monstere " + munster.mesh.name);
@@ -122,25 +122,33 @@ function load_monsters () {
 //find player
 Monster.prototype.find_player = function ( player_pos ) {
 
+	//console.log("find_player player_pos.x: " + player_pos.x);
+	//console.log("find_player player_pos.z: " + player_pos.z);
+	
 	//first, if monster is moving, check if it reached destination
 	if(this.should_move)
 	{
 		this.should_move = false;
+		console.log("end of move, this.position.x: " + this.position.x);
 		if(this.position.z > this.target.z)
 		{
 			this.position.z--;
+			console.log("end of move, position.z--: " + this.position.z);
 		}
 		else if(this.position.z < this.target.z)
 		{
 			this.position.z++;
+			console.log("end of move, position.z++: " + this.position.z);
 		}
 		else if(this.position.x > this.target.x)
 		{
-			this.position.x++;
+			this.position.x--;
+			console.log("end of move, position.x--: " + this.position.x);
 		}
 		else if(this.position.x < this.target.x)
 		{
-			this.position.x--;
+			this.position.x++;
+			console.log("end of move, position.x++: " + this.position.x);
 		}
 	}
 	
@@ -148,13 +156,40 @@ Monster.prototype.find_player = function ( player_pos ) {
 	{
 		//stop rotation 
 		this.should_turn = false;
-		this.rotation++;
-		if(this.rotation == 4) this.rotation = 0;
+		
+		if(this.target_rotation > this.rotation)
+		{
+			if(this.target_rotation - this.rotation == 3)
+			{
+				//this.mesh.rotation.y = -delta*Math.PI/20;
+				this.rotation = 3;
+			}
+			else
+			{
+				//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+				this.rotation++;
+			}
+		}
+		else
+		{
+			if(this.rotation - this.target_rotation == 3)
+			{
+				//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+				this.rotation = 0;
+			}
+			else
+			{
+				//this.mesh.rotation.y = this.rotation*Math.PI/2 - delta*Math.PI/20;
+				this.rotation--;
+			}
+		}
+		
 		console.log("end of turn: " + this.rotation);
+		
 	}
 	
 	
-	//check first line of squares
+	/*//check first line of squares
 	if(this.position.distanceTo(player_pos)< 1.1)
 	{
 		if(this.rotation == 0) //north
@@ -188,7 +223,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				//player is next to monster, but monster must turn toward player (its behind him of sideways)
 				this.should_turn = true;
 				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-				console.log("should just turn to attack player this.rotation left: " + this.rotation);
+				console.log("should just turn to attack player this.rotation left (4+1): " + player_pos.x);
 			}
 		}
 		if(this.rotation == 2) //south
@@ -227,13 +262,13 @@ Monster.prototype.find_player = function ( player_pos ) {
 		}
 	}
 	else
-	{
+	{*/
 	
 		//calc x and z distance
 		var x_dist = Math.abs(this.position.x - player_pos.x);
 		var z_dist = Math.abs(this.position.z - player_pos.z);
 	
-		//if monster and player are in line, monster should turn and walk toward player in straight line
+		/*//if monster and player are in line, monster should turn and walk toward player in straight line
 		if(z_dist == 0)
 		{
 			//player is right of monster
@@ -268,8 +303,9 @@ Monster.prototype.find_player = function ( player_pos ) {
 					//looking at right, while player is right - just walk towards him
 					this.should_move = true;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					this.target = player_pos;
-					console.log("walk south towards player x: " + player_pos.x);
+					this.target.x = this.position.x - 1;
+					this.target.z = this.position.z;
+					console.log("walk right towards player x: " + player_pos.x);
 				}
 			}
 			//player is left of monster
@@ -288,8 +324,9 @@ Monster.prototype.find_player = function ( player_pos ) {
 					//looking at left, while player is left - just walk towards him
 					this.should_move = true;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					this.target = player_pos;
-					console.log("walk north towards player x: " + player_pos.x);
+					this.target.x = this.position.x + 1;
+					this.target.z = this.position.z;
+					console.log("walk left towards player x: " + player_pos.x);
 					
 				}
 				else if(this.rotation == 2) //monster looking south
@@ -340,7 +377,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 					//looking at south, while player is south - just walk towards him
 					this.should_move = true;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					this.target = player_pos;
+					this.target.x = this.position.x;
+					this.target.z = this.position.z - 1;
 					console.log("walk south towards player z: " + player_pos.z);
 				}
 				else if(this.rotation == 3) //monster looking right
@@ -360,7 +398,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 					//looking at north, while player is north - just walk towards him
 					this.should_move = true;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					this.target = player_pos;
+					this.target.x = this.position.x;
+					this.target.z = this.position.z + 1;
 					console.log("walk north towards player z: " + player_pos.z);
 				}
 				else if(this.rotation == 1) //monster looking left
@@ -395,66 +434,146 @@ Monster.prototype.find_player = function ( player_pos ) {
 		}
 		//player is diagonaly positioned from monster
 		else
+		{*/
+	//console.log("diagonal");
+	//if player is not too far away, monster will try to reduce x or z distance between him self or player
+	if(this.position.distanceTo(player_pos) < 6)
+	{
+		console.log("diagonal, but close");
+		//reduce x if possible
+		if((player_pos.x > this.position.x) && canMoveTo(this.position.x+1,this.position.z))
 		{
-			console.log("diagonal");
-			//if player is not too far away, monster will try to reduce x or z distance between him self or player
-			if(this.position.distanceTo(player_pos) < 6)
+			//player is left from monster
+			if(this.rotation == 1)
 			{
-				console.log("diagonal, but close");
-				//reduce x if possible
-				if((player_pos.x > this.position.x) && canMoveTo(this.position.x+1,this.position.z))
+				this.target.x = this.position.x+1;
+				this.target.z = this.position.z;
+				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
 				{
-					//player is left from monster
-					if(this.rotation == 1)
-					{
-						this.target.x = this.position.x+1;
-						this.target.z = this.position.z;
-						this.should_move = true;
-						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-						console.log("diagonal, x increase");
-					}
-					else
-					{
-						//rotate monster to look left before moving
-						console.log("diagonal, rotating to look left before x increase");
-						this.should_turn = true;
-						this.target_rotation = 1;
-						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					}
+					//player is in front of monster - attack
+					this.should_attack = true;
+					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+					console.log("diagonal, x increase attack");
 				}
-				else if((player_pos.x < this.position.x) && canMoveTo(this.position.x-1,this.position.z))
+				else
 				{
-					this.target.x = this.position.x-1;
-					this.target.z = this.position.z;
 					this.should_move = true;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, x reduce");
-				}
-				//reduce z if possible
-				else if((player_pos.z < this.position.z) && canMoveTo(this.position.x,this.position.z-1))
-				{
-					this.target.x = this.position.x;
-					this.target.z = this.position.z-1;
-					this.should_move = true;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, z reduce");
-				}
-				else if((player_pos.z > this.position.z) && canMoveTo(this.position.x,this.position.z+1))
-				{
-					this.target.x = this.position.x;
-					this.target.z = this.position.z+1;
-					this.should_move = true;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, z increase");
+					console.log("diagonal, x increase move");
 				}
 			}
 			else
 			{
-				//player is too far away to draw attention of monster... so idle around
-				console.log("diagonal, too far away");
+				//rotate monster to look left before moving
+				console.log("diagonal, x increase rotate");
+				this.should_turn = true;
+				this.target_rotation = 1;
+				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 			}
 		}
+		else if((player_pos.x < this.position.x) && canMoveTo(this.position.x-1,this.position.z))
+		{
+			//player is right from monster
+			if(this.rotation == 3)
+			{
+				this.target.x = this.position.x-1;
+				this.target.z = this.position.z;
+				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+				{
+					//player is in front of monster - attack
+					this.should_attack = true;
+					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+					console.log("diagonal, x reduce attack");
+				}
+				else
+				{
+					this.should_move = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("diagonal, x reduce move");
+				}
+			}
+			else
+			{
+				//rotate monster to look right before moving
+				console.log("diagonal, x reduce rotate");
+				this.should_turn = true;
+				this.target_rotation = 3;
+				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+			}
+		}
+		//reduce z if possible
+		else if((player_pos.z < this.position.z) && canMoveTo(this.position.x,this.position.z-1))
+		{
+			//player is south from monster
+			if(this.rotation == 2)
+			{
+				this.target.x = this.position.x;
+				this.target.z = this.position.z-1;
+				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+				{
+					//player is in front of monster - attack
+					this.should_attack = true;
+					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+					console.log("diagonal, z reduce attack");
+				}
+				else
+				{
+					this.should_move = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("diagonal, z reduce move");
+				}
+			}
+			else
+			{
+				//rotate monster to look south before moving
+				console.log("diagonal, z reduce rotate");
+				this.should_turn = true;
+				this.target_rotation = 2;
+				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+			}
+		}
+		else if((player_pos.z > this.position.z) && canMoveTo(this.position.x,this.position.z+1))
+		{
+			//player is north from monster
+			if(this.rotation == 0)
+			{
+				this.target.x = this.position.x;
+				this.target.z = this.position.z+1;
+				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+				{
+					//player is in front of monster - attack
+					this.should_attack = true;
+					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+					console.log("diagonal, z increase attack");
+				}
+				else
+				{
+					this.should_move = true;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					console.log("diagonal, z increase move");
+				}
+			}
+			else
+			{
+				//rotate monster to look north before moving
+				console.log("diagonal, z increase rotate");
+				this.should_turn = true;
+				this.target_rotation = 0;
+				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+			}
+		}
+		else
+		{
+			console.log("diagonal, stuck");
+		}
 	}
+	else
+	{
+		//player is too far away to draw attention of monster... so idle around
+		console.log("diagonal, too far away");
+	}
+		//}
+	//}
 };
 
 //move monster by small amount and chek if it reached destination
@@ -481,7 +600,29 @@ Monster.prototype.move = function ( delta ) {
 	{
 		//rotate monster toward target rotation
 		//this.target_rotation = 0;
-		this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+		if(this.target_rotation > this.rotation)
+		{
+			if(this.target_rotation - this.rotation == 3)
+			{
+				this.mesh.rotation.y = -delta*Math.PI/20;
+			}
+			else
+			{
+				this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+			}
+		}
+		else
+		{
+			if(this.rotation - this.target_rotation == 3)
+			{
+				this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+			}
+			else
+			{
+				this.mesh.rotation.y = this.rotation*Math.PI/2 - delta*Math.PI/20;
+			}
+		}
+		//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
 	}
 
 };
