@@ -193,11 +193,16 @@
 			var holesArr = [[2,4], [4,4]];
 			var holeFallen = false;
 			var cameraMove = false;
+			var cameraRotate = false;
+			var cameraRotateMover = new THREE.Vector3(0,0,0);
+			var cameraRotateTurner = new THREE.Vector3(0,0,0);
 			var cameraLooker = new THREE.Vector3(0,0,0);
 			var cameraLookie = new THREE.Vector3(0,0,0);
 			var cameraOriginalPosition = new THREE.Vector3(0,0,0);
 			var cameraOriginalLook = new THREE.Vector3(0,0,0);
 			var cameraDelta = 0;
+			var cameraDeltaRotate = 0;
+			
 			var alerted = false;
 			
 			var container;
@@ -708,7 +713,7 @@
 				//alert(event.keyCode);
 				//if (event.keyCode == 88) {animateDoor = true;}
 				
-				if(cameraMove)
+				if(cameraMove || cameraRotate)
 					return;
 					
 				//Movement:
@@ -741,10 +746,13 @@
 					
 					//back tile position modification requires to move front and to the right by half step, then rotate
 					var mover = new THREE.Vector3( 0, 0, 0 );
+					var turner = new THREE.Vector3( 0, 0, 0 );
 					mover.x = looker.x/2;
 					mover.y = looker.y;
 					mover.z = looker.z/2;
-					camera.position.add(mover);
+					//camera.position.add(mover);
+					cameraRotateMover.add(mover);
+					turner.add(looker); 
 					mover.normalize();
 					//looker.normalize();
 					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
@@ -757,7 +765,8 @@
 					if((mover.x<0.0001)&&(mover.x>-0.0001)) mover.x=0;
 					mover.x *= 5;
 					mover.z *= 5;
-					camera.position.add(mover);
+					//camera.position.add(mover);
+					cameraRotateMover.add(mover);
 					
 					//turn west
 					looker.normalize();
@@ -774,6 +783,9 @@
 					//alert();
 					looker.x *= 10;
 					looker.z *= 10;
+					cameraRotateTurner.add(cameraRotateMover); 
+					cameraRotateTurner.multiplyScalar(-1);
+
 					
 					var pos = new THREE.Vector3(0, 0, 0);
 					pos.x = camera.position.x;
@@ -781,11 +793,17 @@
 					pos.z = camera.position.z;
 					//alert(pos.z); 40
 					//alert(looker.z); 10
-					camera.look = pos.add(looker);
+					//camera.look = pos.add(looker);
 					//alert(pos.z);
-					camera.lookAt(camera.look);
+					//camera.lookAt(camera.look);
 					
-					//startCameraRotation(camera.look);
+					//cameraRotateMover;
+					//cameraRotateTurner;
+					cameraLooker.add(looker);
+					//cameraLookie.add(lookie);
+					cameraOriginalPosition.add(camera.position);
+					cameraOriginalLook.add(camera.look);
+					cameraRotate = true;
 				
 				} else if ((event.keyCode == 39) || (event.keyCode == 69)) {
 					// Turne Right E
@@ -839,6 +857,8 @@
 					camera.look = pos.add(looker);
 					//alert(pos.z);
 					camera.lookAt(camera.look);
+					
+					cameraRotate = true;
 					
 				} else if ((event.keyCode == 38) || (event.keyCode == 87)) {
 					// Up cursor key or W
@@ -1331,6 +1351,45 @@
 							cameraDelta = 0;
 						}
 						
+					}
+					
+					//animate camera rotate
+					if(cameraRotate)
+					{
+						var deltaMove = elapsed*SQUARE_SIZE/STEP_MOVE_DURATION;
+						var deltaRotateMover = new THREE.Vector3(0,0,0).add(cameraRotateMover);
+						var deltaRotateTurner = new THREE.Vector3(0,0,0).add(cameraRotateTurner);
+						deltaRotateMover.multiplyScalar(deltaMove/cameraRotateMover.distanceTo(new THREE.Vector3(0,0,0))); //i don't know why i have to divide here by length?
+						deltaRotateTurner.multiplyScalar(deltaMove/cameraRotateTurner.distanceTo(new THREE.Vector3(0,0,0))); //i don't know why i have to divide here by length?
+						cameraDelta+=deltaMove;
+						
+						camera.position.add(deltaRotateMover);
+						camera.look.add(deltaRotateTurner);
+						camera.lookAt(camera.look);
+						//cameraRotateMover
+						//cameraLooker
+						//cameraOriginalLook
+						if (cameraDelta >= cameraRotateMover.distanceTo(new THREE.Vector3(0,0,0)))
+						{
+							var cameraRotLookie = new THREE.Vector3(0,0,0).add(cameraLooker);
+							cameraRotLookie.normalize();
+							console.log("stop rotate cameraRotateTurner.x: " + cameraRotateTurner.x);
+							console.log("stop rotate cameraRotateTurner.z: " + cameraRotateTurner.z);
+							cameraRotate = false;
+							camera.position.multiplyScalar(0);
+							camera.position.add(cameraOriginalPosition.add(cameraRotateMover));
+							camera.look.multiplyScalar(0);
+							camera.look.add(cameraOriginalLook.add(cameraRotateTurner));
+							camera.lookAt(camera.look);
+							current_position.add(cameraRotLookie);
+							cameraLooker.multiplyScalar(0);
+							cameraRotateMover.multiplyScalar(0);
+							cameraRotateTurner.multiplyScalar(0);
+							cameraRotLookie.multiplyScalar(0);
+							cameraOriginalPosition.multiplyScalar(0);
+							cameraOriginalLook.multiplyScalar(0);
+							cameraDelta = 0;
+						}
 					}
 					
 					//animate doors opening/closing
