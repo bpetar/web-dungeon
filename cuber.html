@@ -192,7 +192,12 @@
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
 			var holesArr = [[2,4], [4,4]];
 			var holeFallen = false;
-			
+			var cameraMove = false;
+			var cameraLooker = new THREE.Vector3(0,0,0);
+			var cameraLookie = new THREE.Vector3(0,0,0);
+			var cameraOriginalPosition = new THREE.Vector3(0,0,0);
+			var cameraOriginalLook = new THREE.Vector3(0,0,0);
+			var cameraDelta = 0;
 			var alerted = false;
 			
 			var container;
@@ -224,6 +229,7 @@
 			
 			var round_time = 0.01;
 			var ROUND_DURATION = 2; //2 seconds
+			var STEP_MOVE_DURATION = 150;
 			
 			
 			init();
@@ -702,6 +708,9 @@
 				//alert(event.keyCode);
 				//if (event.keyCode == 88) {animateDoor = true;}
 				
+				if(cameraMove)
+					return;
+					
 				//Movement:
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
@@ -775,6 +784,8 @@
 					camera.look = pos.add(looker);
 					//alert(pos.z);
 					camera.lookAt(camera.look);
+					
+					//startCameraRotation(camera.look);
 				
 				} else if ((event.keyCode == 39) || (event.keyCode == 69)) {
 					// Turne Right E
@@ -837,17 +848,23 @@
 					new_pos.add(current_position);
 					if(canMoveTo(new_pos.x, new_pos.z))
 					{
-						camera.position.add(looker);
-						camera.look.add(looker);
-						camera.lookAt(camera.look);
-						current_position.add(lookie);
+						//camera.position.add(looker);
+						//camera.look.add(looker);
+						//camera.lookAt(camera.look);
+						//current_position.add(lookie);
+						cameraLooker.add(looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+						cameraMove = true;
 						
+						console.log("start move z: " + cameraLooker.z);
 						//check if player stepped onto hole in the ground
-						if(positionIsHole(new_pos.x, new_pos.z))
-						{
+						//if(positionIsHole(new_pos.x, new_pos.z))
+						//{
 							//animate fall into hole
-							fallInHole();
-						}
+						//	fallInHole();
+						//}
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
@@ -857,17 +874,25 @@
 					new_pos.add(current_position);
 					if(canMoveTo(new_pos.x, new_pos.z))
 					{
-						camera.position.sub(looker);
-						camera.look.sub(looker);
-						camera.lookAt(camera.look);
-						current_position.sub(lookie);
+						//camera.position.sub(looker);
+						//camera.look.sub(looker);
+						//camera.lookAt(camera.look);
+						//current_position.sub(lookie);
 						
+						cameraLooker.add(looker);
+						cameraLooker.multiplyScalar(-1);
+						cameraLookie.add(lookie);
+						cameraLookie.multiplyScalar(-1);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+						cameraMove = true;
+
 						//check if player stepped onto hole in the ground
-						if(positionIsHole(new_pos.x, new_pos.z))
-						{
+						//if(positionIsHole(new_pos.x, new_pos.z))
+						//{
 							//animate fall into hole
-							fallInHole();
-						}
+						//	fallInHole();
+						//}
 					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
@@ -886,10 +911,16 @@
 					new_pos.add(current_position);
 					if(canMoveTo(new_pos.x, new_pos.z))
 					{
-						camera.position.add(left_looker);
-						camera.look.add(left_looker);
-						camera.lookAt(camera.look);
-						current_position.add(lookie);
+						//camera.position.add(left_looker);
+						//camera.look.add(left_looker);
+						//camera.lookAt(camera.look);
+						//current_position.add(lookie);
+
+						cameraLooker.add(left_looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+						cameraMove = true;
 						
 						//check if player stepped onto hole in the ground
 						if(positionIsHole(new_pos.x, new_pos.z))
@@ -915,10 +946,16 @@
 					new_pos.add(current_position);
 					if(canMoveTo(new_pos.x, new_pos.z))
 					{
-						camera.position.add(right_looker);
-						camera.look.add(right_looker);
-						camera.lookAt(camera.look);
-						current_position.add(lookie);
+						//camera.position.add(right_looker);
+						//camera.look.add(right_looker);
+						//camera.lookAt(camera.look);
+						//current_position.add(lookie);
+
+						cameraLooker.add(right_looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+						cameraMove = true;
 						
 						//check if player stepped onto hole in the ground
 						if(positionIsHole(new_pos.x, new_pos.z))
@@ -1262,6 +1299,40 @@
 
 					var elapsed = timeNow - lastTime;
 
+					//animate camera move
+					if(cameraMove)
+					{
+						//calculate delta position from start to end based on elapsed time
+						var deltaMove = elapsed*SQUARE_SIZE/STEP_MOVE_DURATION;
+						var deltaLooker = new THREE.Vector3(0,0,0).add(cameraLooker);
+						deltaLooker.multiplyScalar(deltaMove/10); //i don't know why i have to divide here by 10?
+						
+						//set camera position to delta
+						cameraDelta+=deltaMove;
+						camera.position.add(deltaLooker);
+						camera.look.add(deltaLooker);
+						camera.lookAt(camera.look);
+						
+						if (cameraDelta >= SQUARE_SIZE-0.3)
+						{
+							console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
+							console.log("stop move cameraLooker.x: " + cameraLooker.x);
+							cameraMove = false;
+							camera.position.multiplyScalar(0);
+							camera.position.add(cameraOriginalPosition.add(cameraLooker));
+							camera.look.multiplyScalar(0);
+							camera.look.add(cameraOriginalLook.add(cameraLooker));
+							camera.lookAt(camera.look);
+							current_position.add(cameraLookie);
+							cameraLooker.multiplyScalar(0);
+							cameraLookie.multiplyScalar(0);
+							cameraOriginalPosition.multiplyScalar(0);
+							cameraOriginalLook.multiplyScalar(0);
+							cameraDelta = 0;
+						}
+						
+					}
+					
 					//animate doors opening/closing
 					for(i=0; i < doorsArr3D.length; i++)
 					{
