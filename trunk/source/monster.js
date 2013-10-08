@@ -86,16 +86,40 @@ Monster.prototype.loadObject = function ( munster ) {
 		console.log("adding monstere " + munster.mesh.name);
 		scene.add( munster.mesh );
 		
+		//remove loading screen
+		loading_div.style.display = "none";
 	}
 
 };
 
-
+				
 //load monsters on the map
 function load_monsters () {
 
 	var loader = new THREE.JSONLoader();
-	
+
+
+	var callbackProgress = function( progress, result ) {
+
+		console.log("loading monstere kod pere");
+		
+		var bar = 250,
+			total = progress.totalModels + progress.totalTextures,
+			loaded = progress.loadedModels + progress.loadedTextures;
+
+		if ( total )
+			bar = Math.floor( bar * loaded / total );
+
+		console.log("bar: " + bar);//$( "bar" ).style.width = bar + "px";
+
+		//count = 0;
+		//for ( var m in result.materials ) count++;
+
+		//handle_update( result, Math.floor( count/total ) );
+
+	}
+
+	loader.callbackProgress = callbackProgress;
 	for(var i=0; i<monster_array.length; i++) {
 		var munster = new Monster();
 		munster.gameID = monster_array[i][0];
@@ -111,6 +135,7 @@ function load_monsters () {
 		console.log("loading monstere " + i);
 		loader.load( munster.model, munster.loadObject(munster) );
 		
+		loader.callbackProgress = callbackProgress;
 		
 		array_of_monsters.push(munster);
 
