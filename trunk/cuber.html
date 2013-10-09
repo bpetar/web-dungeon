@@ -194,10 +194,10 @@
 
 			var SQUARE_SIZE = 10;
 
-			var floorsArr2D = [[4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+			var floorsArr2D = [[2,-5], [3,-5], [4,-5], [5,-5], [6,-5], [6,-1], [1,2], [0,2], [0,1], [0,0], [0,-1], [0,-2], [0,-3], [0,-4], [1,-4], [2,-4], [3,-4], [4,-4], [5,-4], [6,-4], [2,-3], [3,-3], [4,-3], [5,-3], [6,-3], [4,-2], [5,-2], [3,-2], [6,-2], [2,-2], [4,-1], [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
 			var secretWallsArr = [[6,2,3]]; //x,y,orientation
 			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
-			var holesArr = [[2,4], [4,4]];
+			var holesArr = [[3,-4], [2,4]];
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -668,7 +668,7 @@
 			}
 			
 			//decide weather step is possible (hitting walls)
-			function canMoveTo(x, z)
+			function canMoveTo(id, x, z)
 			{
 				//return true;
 				var i = 0;
@@ -677,7 +677,19 @@
 				//if player fell in hole, make sure he cant move around :)
 				if(holeFallen)
 					return false;
-					
+				
+				//check if monster is in that position
+				for(i=0; i < array_of_monsters.length; i++)
+				{
+					if(array_of_monsters[i].gameID != id)
+					{
+						if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
+						{
+							return false;
+						}
+					}
+				}
+				
 				//alert("pera " + x + " " + z);
 				for(i=0; i < floorsArr2D.length; i++)
 				{
@@ -881,7 +893,7 @@
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
 					new_pos.add(current_position);
-					if(canMoveTo(new_pos.x, new_pos.z))
+					if(canMoveTo(0, new_pos.x, new_pos.z))
 					{
 						//camera.position.add(looker);
 						//camera.look.add(looker);
@@ -907,7 +919,7 @@
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).sub(lookie);
 					new_pos.add(current_position);
-					if(canMoveTo(new_pos.x, new_pos.z))
+					if(canMoveTo(0, new_pos.x, new_pos.z))
 					{
 						//camera.position.sub(looker);
 						//camera.look.sub(looker);
@@ -944,7 +956,7 @@
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
 					new_pos.add(current_position);
-					if(canMoveTo(new_pos.x, new_pos.z))
+					if(canMoveTo(0, new_pos.x, new_pos.z))
 					{
 						//camera.position.add(left_looker);
 						//camera.look.add(left_looker);
@@ -979,7 +991,7 @@
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
 					new_pos.add(current_position);
-					if(canMoveTo(new_pos.x, new_pos.z))
+					if(canMoveTo(0, new_pos.x, new_pos.z))
 					{
 						//camera.position.add(right_looker);
 						//camera.look.add(right_looker);
