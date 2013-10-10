@@ -151,6 +151,11 @@
 			</div>
 		</div>
 
+
+		<div id="info_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
+			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> Welcome to the Web Dungeon game test! Use QWEASD keys to move around and left mouse button to click. This is Browser game which excersizes 3D API WebGL making it possible to play full 3D games in your browser. Not all browsers are suporting this so if you see only blank screen behind this message, its not good. If you see squary corridors, go ahead and try to find all the items required to defeat Dungeon Guardian. Browser reload button will get you right back on start, so be careful not to lose your progress.</div>
+		</div>
+
 		<div id="loading_progress" style="position:absolute; font-size:28px; width:100%; height:100%; background-color: #000011; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
 
 			<div style="position:absolute; width:300px; height:200px; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
@@ -247,6 +252,12 @@
 			init();
 			animate();
 
+			function show_message(message) {
+				info_dialog_message_div.innerHTML = message;
+				info_dialog_div.style.display = "inline";
+			}
+			
+			
 			function init() {
 
 				container = document.getElementById( 'container' );
@@ -274,6 +285,9 @@
 				container_div.style.top = SLOT_WIDTH +'px';
 				
 				loading_div = document.getElementById('loading_progress');
+				
+				info_dialog_div = document.getElementById('info_dialog');
+				info_dialog_message_div = document.getElementById('info_message');
 
 				light = new THREE.SpotLight();
 				light.position.set( -40, 60, 40 );
@@ -737,6 +751,8 @@
 				if(cameraMove || cameraRotate)
 					return;
 					
+				//show_message("You pressed the key!");
+				
 				//Movement:
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
@@ -1101,6 +1117,9 @@
 			}
 
 			function handleMouseClick(x,y) {
+		
+				//remove dialog screen
+				info_dialog_div.style.display = "none";
 		
 				//is player standing in front of door?
 				//currentPos.x, currentPos.z
