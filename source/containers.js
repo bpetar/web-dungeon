@@ -4,7 +4,7 @@
 // id, name, model, icon, slot
 var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1]];// id, name, model, icon
 // id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 6,4,0, container_pickables_array1]];
+var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
 var currently_opened_container = -1;
 
 //load chests on the map
@@ -19,9 +19,32 @@ function load_containers () {
 		chest.model = containers_array[i][2];
 		
 		//position depends on orientation
-		chest.position.x = containers_array[i][3]*SQUARE_SIZE;
-		chest.position.z = containers_array[i][4]*SQUARE_SIZE+4;
 		chest.orientation = containers_array[i][5];
+		if(chest.orientation == 0)
+		{
+			chest.position.x = containers_array[i][3]*SQUARE_SIZE;
+			chest.position.z = containers_array[i][4]*SQUARE_SIZE+4;
+			chest.rotation.y = 0;
+		}
+		else if(chest.orientation == 1)
+		{
+			chest.position.x = containers_array[i][3]*SQUARE_SIZE-4;
+			chest.position.z = containers_array[i][4]*SQUARE_SIZE;
+			chest.rotation.y = -Math.PI/2;
+		}
+		else if(chest.orientation == 2)
+		{
+			chest.position.x = containers_array[i][3]*SQUARE_SIZE;
+			chest.position.z = containers_array[i][4]*SQUARE_SIZE-4;
+			chest.rotation.y = -Math.PI;
+		}
+		else if(chest.orientation == 3)
+		{
+			chest.position.x = containers_array[i][3]*SQUARE_SIZE+4;
+			chest.position.z = containers_array[i][4]*SQUARE_SIZE;
+			chest.rotation.y = Math.PI/2;
+		}
+		
 		loader.load( chest.model, chest.loadObject(chest) );
 	}
 }

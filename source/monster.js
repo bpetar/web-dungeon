@@ -2,7 +2,7 @@
 //monster class, attributes and methods
 
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 5,2,2, 90, 35, 20]];
+var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 90, 35, 20]];
 
 //lively moved and modified (populated from save file and should be saved to save file)
 var array_of_monsters = [];
@@ -28,7 +28,7 @@ Monster = function ( ) {
 	this.idle_startKeyframe = 0;
 	this.idle_endKeyframe = 90;
 	this.attack_startKeyframe = 90;
-	this.attack_endKeyframe = 140;
+	this.attack_endKeyframe = 138;
 	this.walk_startKeyframe = 140;
 	this.walk_endKeyframe = 179;
 	this.current_anim = 0; //idle
@@ -80,7 +80,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.name = munster.name;
 		munster.id = munster.mesh.id;
 		munster.mesh.visible = munster.visible;
-		munster.mesh.duration = 3000;
+		munster.mesh.duration = 6200;
 		munster.mesh.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		console.log("adding monstere " + munster.mesh.name);
@@ -236,6 +236,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				{
 					//player is in front of monster - attack
 					this.should_attack = true;
+					this.mesh.duration = 2000;
 					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 					//set target to own position because player checks monster target field to see if it is occupied
 					//while monster is attacking, his occupied space is only his position
@@ -246,6 +247,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				else
 				{
 					this.should_move = true;
+					this.mesh.duration = 1600;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 					//console.log("diagonal, x increase move");
 				}
@@ -256,6 +258,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				console.log("diagonal, x increase rotate");
 				this.should_turn = true;
 				this.target_rotation = 1;
+				this.mesh.duration = 2200;
 				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 				//set target to own position because player checks monster target field to see if it is occupied
 				//while monster is rotating, his occupied space is only his position
@@ -274,6 +277,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				{
 					//player is in front of monster - attack
 					this.should_attack = true;
+					this.mesh.duration = 2000;
 					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 					//console.log("diagonal, x reduce attack");
 					//set target to own position because player checks monster target field to see if it is occupied
@@ -284,6 +288,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				else
 				{
 					this.should_move = true;
+					this.mesh.duration = 1600;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 					console.log("diagonal, x reduce move");
 				}
@@ -298,6 +303,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				//while monster is rotating, his occupied space is only his position
 				this.target.x = this.position.x;
 				this.target.z = this.position.z;
+				this.mesh.duration = 2200;
 				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 			}
 		}
@@ -313,6 +319,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				{
 					//player is in front of monster - attack
 					this.should_attack = true;
+					this.mesh.duration = 2000;
 					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 					//set target to own position because player checks monster target field to see if it is occupied
 					//while monster is attacking, his occupied space is only his position
@@ -323,6 +330,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				else
 				{
 					this.should_move = true;
+					this.mesh.duration = 1600;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 					console.log("diagonal, z reduce move");
 				}
@@ -337,6 +345,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				//while monster is rotating, his occupied space is only his position
 				this.target.x = this.position.x;
 				this.target.z = this.position.z;
+				this.mesh.duration = 2200;
 				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 			}
 		}
@@ -351,6 +360,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				{
 					//player is in front of monster - attack
 					this.should_attack = true;
+					this.mesh.duration = 2000;
 					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 					//set target to own position because player checks monster target field to see if it is occupied
 					//while monster is attacking, his occupied space is only his position
@@ -361,6 +371,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 				else
 				{
 					this.should_move = true;
+					this.mesh.duration = 1600;
 					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 					console.log("diagonal, z increase move");
 				}
@@ -375,18 +386,23 @@ Monster.prototype.find_player = function ( player_pos ) {
 				//while monster is rotating, his occupied space is only his position
 				this.target.x = this.position.x;
 				this.target.z = this.position.z;
+				this.mesh.duration = 2200;
 				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
 			}
 		}
 		else
 		{
 			console.log("diagonal, stuck");
+			this.mesh.duration = 6200;
+			this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		}
 	}
 	else
 	{
 		//player is too far away to draw attention of monster... so idle around
 		console.log("diagonal, too far away");
+		this.mesh.duration = 6200;
+		this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 	}
 		//}
 	//}

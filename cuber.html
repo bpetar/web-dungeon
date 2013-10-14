@@ -199,10 +199,16 @@
 
 			var SQUARE_SIZE = 10;
 
-			var floorsArr2D = [[2,-5], [3,-5], [4,-5], [5,-5], [6,-5], [6,-1], [1,2], [0,2], [0,1], [0,0], [0,-1], [0,-2], [0,-3], [0,-4], [1,-4], [2,-4], [3,-4], [4,-4], [5,-4], [6,-4], [2,-3], [3,-3], [4,-3], [5,-3], [6,-3], [4,-2], [5,-2], [3,-2], [6,-2], [2,-2], [4,-1], [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+			//var floorsArr2D = [[2,-5], [3,-5], [4,-5], [5,-5], [6,-5], [6,-1], [1,2], [0,2], [0,1], [0,0], [0,-1], [0,-2], [0,-3], [0,-4], [1,-4], [2,-4], [3,-4], [4,-4], [5,-4], [6,-4], [2,-3], [3,-3], [4,-3], [5,-3], [6,-3], [4,-2], [5,-2], [3,-2], [6,-2], [2,-2], [4,-1], [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
+			var floorsArr2D = [[16,0], [9,0], [8,0], [16,1], [9,1], [8,1], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2], [12,2], [13,2], [15,2], [16,2], [15,3], [13,3], [6,3], [5,3], [4,3], [4,4], [10,4], [11,4], [12,4], [13,4], [14,4], [15,4], [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [4,5], [3,5], [10,6], [9,6], [8,6], [7,6], [4,6], [4,7], [5,7], [7,7], [8,7], [9,7], [10,7], [0,8], [1,8], [2,8], [5,8], [0,9], [1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9], [10,9], [13,9], [14,9], [15,9], [16,9], [17,9], [18,9], [19,9], [0,10], [1,10], [2,10], [8,10], [10,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10], [7,11], [8,11], [9,11], [10,11], [11,11], [12,11], [13,11], [14,11], [15,11], [16,11], [17,11], [18,11], [19,11], [20,11], [13,12], [14,12], [15,12], [16,12], [17,12], [18,12], [19,12], [13,13], [14,13], [15,13], [16,13], [17,13], [18,13], [19,13]];
 			var secretWallsArr = [[6,2,3]]; //x,y,orientation
-			var doorsArr3D = [[4,3,0,0,0], [2,3,0,0,0], [6,3,0,0,0]]; //x,z,rot,open,mesh, 
-			var holesArr = [[3,-4], [2,4]];
+			var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
+			var holesArr = [[7,7]];
+			
+			//secretWallsArr = []; //x,y,orientation
+			//var doorsArr3D = []; //x,z,rot,open,mesh, 
+			//var holesArr = [];
+			
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -267,13 +273,13 @@
 				document.onkeydown = handleKeyDown;
 
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.x = 40;
+				camera.position.x = 160;
 				camera.position.y = 4;
 				camera.position.z = -5;
-				camera.look = new THREE.Vector3(40,4,5);
+				camera.look = new THREE.Vector3(160,4,5);
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(4,0,0);
+				current_position = new THREE.Vector3(16,0,0);
 
 				scene = new THREE.Scene();
 				
@@ -410,7 +416,7 @@
 						object.rotation.set(-Math.PI/2, 0, 0);
 						object.receiveShadow = true;
 						
-					
+						console.log("pera " + i);
 						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
 						object.position.y = 0; //y
 						object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
@@ -1079,7 +1085,14 @@
 					mesh.position.x = doorsArr3D[i][0]*10;
 					mesh.position.z = doorsArr3D[i][1]*10;
 					mesh.position.y = 0;
-					mesh.rotation.set(0,Math.PI/2, 0);
+					if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
+					{
+						mesh.rotation.set(0,0, 0);
+					}
+					else
+					{
+						mesh.rotation.set(0,Math.PI/2, 0);
+					}
 					mesh.castShadow = true;
 					mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
 					scene.add( mesh );
@@ -1096,7 +1109,15 @@
 					doorsArr3D[i][4].position.x = doorsArr3D[i][0]*10;
 					doorsArr3D[i][4].position.z = doorsArr3D[i][1]*10;
 					doorsArr3D[i][4].position.y = 0;
-					doorsArr3D[i][4].rotation.set(0,Math.PI/2, 0);
+					if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
+					{
+						doorsArr3D[i][4].rotation.set(0,0,0);
+					}
+					else
+					{
+						doorsArr3D[i][4].rotation.set(0,Math.PI/2,0);
+					}
+					
 					doorsArr3D[i][4].castShadow = true;
 					doorsArr3D[i][4].scale.x = doorsArr3D[i][4].scale.y = doorsArr3D[i][4].scale.z = 1;
 					scene.add( doorsArr3D[i][4] );
