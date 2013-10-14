@@ -1,7 +1,7 @@
 
 
 // id, name, model, x, z, icon
-var tapestries_array = [["models/tapestry.js", 4,0,2], ["models/tapestry.js", 6,2,3], ["models/tapestry.js", 4,5,0]];
+var tapestries_array = [["models/tapestry.js", 16,0,2], ["models/tapestry.js", 20,11,3], ["models/tapestry.js", 0,9,1], ["models/tapestry.js", 6,2,3]];
 
 //load tapestie 3d models on the map
 function load_tapestries () {
