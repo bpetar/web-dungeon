@@ -173,10 +173,22 @@
 		<script src="./source/three.min.js"></script>
 		<script src="./source/niche.js"></script>
 		<script src="./source/monster.js"></script>
+		<script src="./source/stats.min.js"></script>
 
 		<script>
 		
 			clickConsumed = false;
+
+			var stats = new Stats();
+			stats.setMode(0); // 0: fps, 1: ms
+
+			// Align top-left
+			//stats.domElement.style.position = 'absolute';
+			//stats.domElement.style.left = '0px';
+			//stats.domElement.style.top = '0px';
+
+			document.body.appendChild( stats.domElement );
+
 
 			function inventory_show(param) {
 				//show inventory if hidden, hide elsewhere
@@ -1557,7 +1569,7 @@
 		
 		
 				render();
-				
+				stats.update();
 				
 				
 				
