@@ -40,10 +40,14 @@
 					<div id="player1topimg" style="float: left;">
 					<img src="media/profile1.jpg" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
-					<div id="player1tophand" style="margin-left: 110px;">
-					<img src="media/health.png"> 
-					<br>
-					<img src="media/mace.png" onClick='alert("Smash!")'> 
+					<div id="hpandweapon" style="border:1px solid green; margin-left: 110px;">
+						<div id="player1HP" style="background-color: #009900; border:1px solid blue; height:20px;">
+						<!-- <img src="media/health.png">  -->
+						</div>
+						<!-- <br> -->
+						<div id="player1tophand" style="border:1px solid blue; opacity:1.0;">
+						<img src="media/mace.png" onClick='player_attack()'> 
+						</div>
 					</div>
 				</div>
 				<br>
@@ -56,7 +60,7 @@
 					<div id="player1topimg" style="float: left;">
 					<img src="media/profile2.jpg" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
-					<div id="player1tophand" style="margin-left: 110px;">
+					<div id="player1tophand" style="border:1px solid blue; margin-left: 110px;">
 					<img src="media/health.png"> 
 					<br>
 					<img src="media/staff.png" onClick='alert("Swing!")'> 
@@ -198,6 +202,78 @@
 			document.body.appendChild( stats.domElement );
 
 
+			function DisplayMonsterDmg(dmg) {
+				//show some dmg blood flashy thing over monster
+				console.log("monster takes dmg: " + dmg);
+			}
+			
+			function monsterInFrontOfPlayer() {
+				//check if there is monster in front of player
+				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+				looker.sub(camera.position);
+				var lookie = new THREE.Vector3(0,0,0).add(looker);
+				lookie.normalize();
+				var new_pos =new THREE.Vector3(0,0,0).add(lookie);
+				new_pos.add(current_position);
+				console.log("player looks at x: " + new_pos.x + ", and z: " + new_pos.z);
+				//check if monster is in that position
+				for(i=0; i < array_of_monsters.length; i++)
+				{
+					//not precise calculation for monster position
+					if((array_of_monsters[i].position.x == new_pos.x) && (array_of_monsters[i].position.z == new_pos.z))
+					{
+						return array_of_monsters[i];
+					}
+				}
+				
+				
+				return 0;
+			}
+			
+			function player_attack() {
+				if(playerCanHit)
+				{
+					//cant attack for a while now
+					playerCanHit = false;
+					playerHitTimeout = WEAPON_SPEED*1000;
+					weaponDiv.style.opacity=0.5;
+					
+					//is monster in front of player?
+					var monster = monsterInFrontOfPlayer();
+					if(monster)
+					{
+						//swing that weapon
+						var att_roll = 50*Math.random()+PlayerAttack;
+						console.log("player swings whatever he's holding in hand, att_roll: " + att_roll);
+						if(att_roll > monster.defense)
+						{
+							//Hit!
+							var dmg_roll = WEAPON_DMG * Math.random();
+							monster.hp -= dmg_roll;
+							console.log("player makes dmg: " + dmg_roll + ", monster hp is now: " + monster.hp);
+							DisplayMonsterDmg(dmg_roll);
+							if(monster.hp < 0)
+							{
+								//Monster is dead!
+								//...
+								scene.remove(monster.mesh);
+								array_of_monsters.splice(0,1); //TODO fix hard coded for one monster!
+							}
+						}
+						else
+						{
+							//Miss!
+							DisplayMonsterDmg("Miss!");
+						}
+					}
+					else
+					{
+						//Miss!
+						DisplayMonsterDmg("Miss!");
+					}
+				}
+			}
+			
 			function inventory_show(param) {
 				//show inventory if hidden, hide elsewhere
 				if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
@@ -270,6 +346,22 @@
 			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
 			var clock = new THREE.Clock();
 			
+			var WEAPON_SPEED = 3; //should be taken from real item
+			var WEAPON_DMG = 10;
+			var showMonsterDmg = false;
+			var showPlayerDmg = false;
+			var SHOW_DAMAGE_TIME = 1;
+			var weaponDiv = 0; //id=player1tophand
+			
+			//player stats
+			var player_HP_div = 0;
+			var playerHPmax = 30;
+			var playerHPcurrent = 30;
+			var playerDead = false;
+			var playerCanHit = true;
+			var playerHitTimeout = WEAPON_SPEED;
+			var PlayerAttack = 30;
+			
 			var round_time = 0.01;
 			var ROUND_DURATION = 2; //2 seconds
 			var STEP_MOVE_DURATION = 150;
@@ -316,6 +408,13 @@
 				info_dialog_div = document.getElementById('info_dialog');
 				info_dialog_message_div = document.getElementById('info_message');
 
+				player_HP_div = document.getElementById('player1HP');
+				player_HP_div.style.width = "100%";
+				player_HP_div.style.backgroundColor = "#009900";
+				
+				weaponDiv = document.getElementById('player1tophand');
+				weaponDiv.style.opacity=1.0;
+				
 				light = new THREE.SpotLight();
 				light.position.set( -40, 60, 40 );
 				light.castShadow = true;
@@ -1383,6 +1482,18 @@
 
 					var elapsed = timeNow - lastTime;
 
+					if(playerCanHit == false)
+					{
+						playerHitTimeout -= elapsed;
+						if(playerHitTimeout < 0)
+						{
+							console.log("hit available again, elapsed: " + elapsed);
+							playerHitTimeout = 0;
+							playerCanHit = true;
+							weaponDiv.style.opacity=1.0;
+						}
+					}
+					
 					//animate camera move
 					if(cameraMove)
 					{
