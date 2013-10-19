@@ -153,7 +153,15 @@
 
 
 		<div id="info_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
-			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> Welcome to the Web Dungeon game test! Use QWEASD keys to move around and left mouse button to click. This is Browser game which excersizes 3D API WebGL making it possible to play full 3D games in your browser. Not all browsers are suporting this so if you see only blank screen behind this message, its not good. If you see squary corridors, go ahead and try to find all the items required to defeat Dungeon Guardian. Browser reload button will get you right back on start, so be careful not to lose your progress.</div>
+			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
+			<p>Welcome to the Web Dungeon game test!</p> 
+			
+			<p>Use QWEASD keys to move around and left mouse button to click. Browser reload button gets you back on start.</p>
+
+			<p>Please send me feedback about your Frame rate, OS, browser version, processor and GPU.</p>
+			<br>
+			<input type="button" value=" Ok ">
+			</div>
 		</div>
 
 		<div id="loading_progress" style="position:absolute; font-size:28px; width:100%; height:100%; background-color: #000011; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
@@ -303,6 +311,7 @@
 				container_div.style.top = SLOT_WIDTH +'px';
 				
 				loading_div = document.getElementById('loading_progress');
+				//loading_div.style.display = "none";
 				
 				info_dialog_div = document.getElementById('info_dialog');
 				info_dialog_message_div = document.getElementById('info_message');
@@ -940,12 +949,6 @@
 						cameraMove = true;
 						
 						console.log("start move z: " + cameraLooker.z);
-						//check if player stepped onto hole in the ground
-						//if(positionIsHole(new_pos.x, new_pos.z))
-						//{
-							//animate fall into hole
-						//	fallInHole();
-						//}
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
@@ -968,12 +971,6 @@
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
 
-						//check if player stepped onto hole in the ground
-						//if(positionIsHole(new_pos.x, new_pos.z))
-						//{
-							//animate fall into hole
-						//	fallInHole();
-						//}
 					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
@@ -1003,12 +1000,6 @@
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
 						
-						//check if player stepped onto hole in the ground
-						if(positionIsHole(new_pos.x, new_pos.z))
-						{
-							//animate fall into hole
-							fallInHole();
-						}
 					}
 				} else if ((event.keyCode == 39) || (event.keyCode == 68)) {
 					// Right cursor key or D
@@ -1038,12 +1029,6 @@
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
 						
-						//check if player stepped onto hole in the ground
-						if(positionIsHole(new_pos.x, new_pos.z))
-						{
-							//animate fall into hole
-							fallInHole();
-						}
 					}
 				}
 				
@@ -1428,6 +1413,12 @@
 							cameraOriginalPosition.multiplyScalar(0);
 							cameraOriginalLook.multiplyScalar(0);
 							cameraDelta = 0;
+							//check if player stepped onto hole in the ground
+							if(positionIsHole(current_position.x, current_position.z))
+							{
+								//animate fall into hole
+								fallInHole();
+							}
 						}
 						
 					}
@@ -1540,7 +1531,8 @@
 						else if(!alerted)
 						{
 							alerted = true;
-							alert("game over");
+							//alert("game over");
+							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again.");
 						}
 					}
 					
