@@ -411,6 +411,54 @@ Monster.prototype.find_player = function ( player_pos ) {
 //move monster by small amount and chek if it reached destination
 Monster.prototype.move = function ( delta ) {
 
+	if(this.should_attack)
+	{
+		//if the moment is right, make some attack roll
+		if(delta > 9)
+		{
+			this.should_attack = false;
+			//console.log("attack!" + delta);
+			
+			//check if player moved already from that position
+			
+			//roll monster attack
+			var att_roll = 50*Math.random()+this.attack;
+			if(att_roll>PlayerDefense)
+			{
+				var dmg_roll = Math.round(this.damage * Math.random());
+				playerHPcurrent -= dmg_roll;
+				player_wound_div.style.display = "inline-block";
+				player_wound_div.innerHTML = dmg_roll;
+				audio.play();
+				
+				//player death
+				if(playerHPcurrent <= 0)
+				{
+					playerHPcurrent = 0;
+					player_HP_div.style.width = "1%";
+					player_HP_div.style.backgroundColor = "#990000";
+					//player dies. pause the game and write apropriate message.
+				}
+				else
+				{
+					console.log("monster hits player: " + playerHPcurrent);
+					//update player health bar
+					var p = playerHPcurrent/playerHPmax*100;
+					player_HP_div.style.width = "" + p + "%";
+					if(p < 50)
+					{
+						//TODO: color green to red gradient can be smarter projection of percent
+						player_HP_div.style.backgroundColor = "#999900";
+					}
+				}
+			}
+			else
+			{
+				//miss
+			}
+		}
+	}
+	
 	if(this.should_move)
 	{
 		//move monster toward target position
