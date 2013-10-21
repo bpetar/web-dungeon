@@ -40,7 +40,7 @@
 					<div id="player1topimg" style="float: left;">
 					<img src="media/profile1.jpg" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
-					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:30px; padding-left:10px; position:absolute; left:10px; top:10px;  height:70px; width:170px; background: url(media/wound.png)">
+					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:30px; padding-left:10px; position:absolute; left:10px; top:10px;  height:65px; width:170px; background: url(media/wound.png)">
 					13
 					</div>
 					<div id="hpandweapon" style="border:1px solid green; margin-left: 110px;">
@@ -158,6 +158,9 @@
 			</div>
 		</div>
 
+		<div id="monster_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:30px; padding-left:10px; position:absolute; left:600px; top:300px;  height:65px; width:170px; background: url(media/wound.png)">
+		13
+		</div>
 
 		<div id="info_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
 			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
@@ -207,7 +210,23 @@
 
 			function DisplayMonsterDmg(dmg) {
 				//show some dmg blood flashy thing over monster
-				console.log("monster takes dmg: " + dmg);
+				monster_wound_div_top = windowHalfY - 100 + Math.random()*200;
+				var left = windowHalfX - 150 + Math.random()*200;
+				monster_wound_div.style.top = monster_wound_div_top + "px";
+				monster_wound_div.style.left = left + "px";
+				monster_wound_div.innerHTML = dmg;
+				monster_wound_div_top_lift = 0;
+				monster_wound_div.style.opacity = 1.0;
+				if(dmg == "Miss!")
+				{
+					monster_wound_div.style.backgroundImage = "url(media/miss.png)";
+				}
+				else
+				{
+					monster_wound_div.style.backgroundImage = "url(media/wound.png)";
+				}
+				monster_wound_div.style.display = "inline-block";
+				//console.log("monster takes top: " + top + ", monster_wound_div.style.top: " + monster_wound_div.style.top);
 			}
 			
 			function monsterInFrontOfPlayer() {
@@ -251,7 +270,7 @@
 						if(att_roll > monster.defense)
 						{
 							//Hit!
-							var dmg_roll = WEAPON_DMG * Math.random();
+							var dmg_roll = Math.round(WEAPON_DMG * Math.random());
 							monster.hp -= dmg_roll;
 							console.log("player makes dmg: " + dmg_roll + ", monster hp is now: " + monster.hp);
 							DisplayMonsterDmg(dmg_roll);
@@ -330,6 +349,9 @@
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 
 			var camera, scene, renderer;
+			
+			var monster_wound_div_top_lift = 0;
+			var monster_wound_div_top = 0;
 
 			var mesh, mesh2, mesh3, light;
 
@@ -399,11 +421,11 @@
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = -5;
-				camera.look = new THREE.Vector3(160,4,5);
+				camera.position.z = 105; //-5
+				camera.look = new THREE.Vector3(160,4,115); //160,4,5
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,0);
+				current_position = new THREE.Vector3(16,0,11); //16,0,0
 
 				scene = new THREE.Scene();
 				
@@ -426,6 +448,9 @@
 				
 				player_wound_div = document.getElementById('player_wound');
 				player_wound_div.style.display = 'none';
+				
+				monster_wound_div = document.getElementById('monster_wound');
+				monster_wound_div.style.display = 'none';
 				
 				weaponDiv = document.getElementById('player1tophand');
 				weaponDiv.style.opacity=1.0;
@@ -1515,9 +1540,26 @@
 
 					var elapsed = timeNow - lastTime;
 
+					if(monster_wound_div.style.display == "inline-block")
+					{
+						monster_wound_div_top_lift += elapsed;
+						if(monster_wound_div_top_lift < 3000)
+						{
+							var new_top = monster_wound_div_top - monster_wound_div_top_lift/20;
+							monster_wound_div.style.top = new_top + "px";
+							monster_wound_div.style.opacity -= monster_wound_div_top_lift/30000;
+						}
+						else
+						{
+							//wound should dissappear
+							monster_wound_div.style.display = 'none';
+						}
+					}
+					
 					if(playerCanHit == false)
 					{
 						playerHitTimeout -= elapsed;
+						
 						if(playerHitTimeout < 0)
 						{
 							console.log("hit available again, elapsed: " + elapsed);
