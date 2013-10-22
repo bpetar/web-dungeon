@@ -270,7 +270,7 @@
 						if(att_roll > monster.defense)
 						{
 							//Hit!
-							var dmg_roll = Math.round(WEAPON_DMG * Math.random());
+							var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
 							monster.hp -= dmg_roll;
 							console.log("player makes dmg: " + dmg_roll + ", monster hp is now: " + monster.hp);
 							DisplayMonsterDmg(dmg_roll);
@@ -397,8 +397,27 @@
 			init();
 			animate();
 
-			function show_message(message) {
+			function show_message(message, width, height) {
 				info_dialog_message_div.innerHTML = message;
+				
+				if((width != 'undefined') && (width > 0))
+				{
+					info_dialog_div.style.width = width + "px";
+				}
+				else
+				{
+					info_dialog_div.style.width = "750px";
+				}
+
+				if ((height != 'undefined') && (height > 0))
+				{
+					info_dialog_div.style.height = height + "px";
+				}
+				else
+				{
+					info_dialog_div.style.height = "450px";
+				}
+
 				info_dialog_div.style.display = "inline";
 			}
 			

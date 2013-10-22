@@ -18,10 +18,10 @@ Monster = function ( ) {
 	this.mesh = 0;
 	this.geometry = 0;
 	this.material = 0;
-	this.hp = 100; // milliseconds
+	this.hp = 60;
 	this.defense = 40;
 	this.attack = 30;
-	this.damage = 13;
+	this.damage = 53;
 	this.xp = 300; //how much xp player gets for killing it
 	
 	//animation keyframes
@@ -425,7 +425,7 @@ Monster.prototype.move = function ( delta ) {
 			var att_roll = 50*Math.random()+this.attack;
 			if(att_roll>PlayerDefense)
 			{
-				var dmg_roll = Math.round(this.damage * Math.random());
+				var dmg_roll = Math.round(this.damage * Math.random()) + 1;
 				playerHPcurrent -= dmg_roll;
 				player_wound_div.style.display = "inline-block";
 				player_wound_div.innerHTML = dmg_roll;
@@ -438,6 +438,8 @@ Monster.prototype.move = function ( delta ) {
 					player_HP_div.style.width = "1%";
 					player_HP_div.style.backgroundColor = "#990000";
 					//player dies. pause the game and write apropriate message.
+					playerDead = true;
+					show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br><input type='button' value=' Restart '>", 550, 350);
 				}
 				else
 				{
