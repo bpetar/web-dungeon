@@ -152,6 +152,13 @@ Monster.prototype.find_player = function ( player_pos ) {
 
 	//console.log("find_player player_pos.x: " + player_pos.x);
 	//console.log("find_player player_pos.z: " + player_pos.z);
+	if(playerDead)
+	{
+		console.log("player is dead, lets idle");
+		this.mesh.duration = 6200;
+		this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
+		return;
+	}
 	
 	//first, if monster is moving, check if it reached destination
 	if(this.should_move)
@@ -438,8 +445,8 @@ Monster.prototype.move = function ( delta ) {
 					player_HP_div.style.width = "1%";
 					player_HP_div.style.backgroundColor = "#990000";
 					//player dies. pause the game and write apropriate message.
-					playerDead = true;
-					show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br><input type='button' value=' Restart '>", 550, 350);
+					player_dies();
+					show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
 				}
 				else
 				{
