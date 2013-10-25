@@ -1808,7 +1808,14 @@
 						var monster = array_of_monsters[ i ];
 						if(monster.mesh != 0)
 						{
-							monster.find_player(current_position);
+							if(monster.mood == MONSTER_MAD)
+							{
+								monster.find_player(current_position);
+							}
+							else if(monster.mood == MONSTER_WALK)
+							{
+								//monster.walk_to();
+							}
 						}
 						//console.log(" " + i)
 					}
