@@ -7,6 +7,9 @@ var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 90, 35, 20]];
 //lively moved and modified (populated from save file and should be saved to save file)
 var array_of_monsters = [];
 
+var MONSTER_IDLE = 0;
+var MONSTER_MAD = 1;
+var MONSTER_WALK = 2;
 
 //monster class declaration
 Monster = function ( ) {
@@ -43,6 +46,8 @@ Monster = function ( ) {
 	this.target = new THREE.Vector3(4, 0, 2);
 	this.rotation = 0;
 	this.visible = true;
+	
+	this.mood = MONSTER_IDLE;
 	
 	this.should_move = false;
 	this.should_turn = false;
@@ -160,258 +165,262 @@ Monster.prototype.find_player = function ( player_pos ) {
 		return;
 	}
 	
-	//first, if monster is moving, check if it reached destination
-	if(this.should_move)
+	//Attack only if mad :)
+	if(this.mood == MONSTER_MAD)
 	{
-		this.should_move = false;
-		console.log("end of move, this.position.x: " + this.position.x);
-		if(this.position.z > this.target.z)
-		{
-			this.position.z--;
-			console.log("end of move, position.z--: " + this.position.z);
-		}
-		else if(this.position.z < this.target.z)
-		{
-			this.position.z++;
-			console.log("end of move, position.z++: " + this.position.z);
-		}
-		else if(this.position.x > this.target.x)
-		{
-			this.position.x--;
-			console.log("end of move, position.x--: " + this.position.x);
-		}
-		else if(this.position.x < this.target.x)
-		{
-			this.position.x++;
-			console.log("end of move, position.x++: " + this.position.x);
-		}
-	}
 	
-	if(this.should_turn)
-	{
-		//stop rotation 
-		this.should_turn = false;
-		
-		if(this.target_rotation > this.rotation)
+		//first, if monster is moving, check if it reached destination
+		if(this.should_move)
 		{
-			if(this.target_rotation - this.rotation == 3)
+			this.should_move = false;
+			console.log("end of move, this.position.x: " + this.position.x);
+			if(this.position.z > this.target.z)
 			{
-				//this.mesh.rotation.y = -delta*Math.PI/20;
-				this.rotation = 3;
+				this.position.z--;
+				console.log("end of move, position.z--: " + this.position.z);
+			}
+			else if(this.position.z < this.target.z)
+			{
+				this.position.z++;
+				console.log("end of move, position.z++: " + this.position.z);
+			}
+			else if(this.position.x > this.target.x)
+			{
+				this.position.x--;
+				console.log("end of move, position.x--: " + this.position.x);
+			}
+			else if(this.position.x < this.target.x)
+			{
+				this.position.x++;
+				console.log("end of move, position.x++: " + this.position.x);
+			}
+		}
+		
+		if(this.should_turn)
+		{
+			//stop rotation 
+			this.should_turn = false;
+			
+			if(this.target_rotation > this.rotation)
+			{
+				if(this.target_rotation - this.rotation == 3)
+				{
+					//this.mesh.rotation.y = -delta*Math.PI/20;
+					this.rotation = 3;
+				}
+				else
+				{
+					//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+					this.rotation++;
+				}
 			}
 			else
 			{
-				//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
-				this.rotation++;
+				if(this.rotation - this.target_rotation == 3)
+				{
+					//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
+					this.rotation = 0;
+				}
+				else
+				{
+					//this.mesh.rotation.y = this.rotation*Math.PI/2 - delta*Math.PI/20;
+					this.rotation--;
+				}
+			}
+			
+			console.log("end of turn: " + this.rotation);
+			
+		}
+		
+		//calc x and z distance
+		var x_dist = Math.abs(this.position.x - player_pos.x);
+		var z_dist = Math.abs(this.position.z - player_pos.z);
+		
+		//if player is not too far away, monster will try to reduce x or z distance between him self or player
+		if(this.position.distanceTo(player_pos) < 6)
+		{
+			//console.log("diagonal, but close");
+			//reduce x if possible
+			if((player_pos.x > this.position.x) && canMoveTo(this.gameID,this.position.x+1,this.position.z))
+			{
+				//player is left from monster
+				if(this.rotation == 1)
+				{
+					this.target.x = this.position.x+1;
+					this.target.z = this.position.z;
+					if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+					{
+						//player is in front of monster - attack
+						this.should_attack = true;
+						this.mesh.duration = 2000;
+						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+						//set target to own position because player checks monster target field to see if it is occupied
+						//while monster is attacking, his occupied space is only his position
+						this.target.x = this.position.x;
+						this.target.z = this.position.z;
+						//console.log("diagonal, x increase attack");
+					}
+					else
+					{
+						this.should_move = true;
+						this.mesh.duration = 1600;
+						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+						//console.log("diagonal, x increase move");
+					}
+				}
+				else
+				{
+					//rotate monster to look left before moving
+					console.log("diagonal, x increase rotate");
+					this.should_turn = true;
+					this.target_rotation = 1;
+					this.mesh.duration = 2200;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+					//set target to own position because player checks monster target field to see if it is occupied
+					//while monster is rotating, his occupied space is only his position
+					this.target.x = this.position.x;
+					this.target.z = this.position.z;
+				}
+			}
+			else if((player_pos.x < this.position.x) && canMoveTo(this.gameID,this.position.x-1,this.position.z))
+			{
+				//player is right from monster
+				if(this.rotation == 3)
+				{
+					this.target.x = this.position.x-1;
+					this.target.z = this.position.z;
+					if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+					{
+						//player is in front of monster - attack
+						this.should_attack = true;
+						this.mesh.duration = 2000;
+						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+						//console.log("diagonal, x reduce attack");
+						//set target to own position because player checks monster target field to see if it is occupied
+						//while monster is attacking, his occupied space is only his position
+						this.target.x = this.position.x;
+						this.target.z = this.position.z;
+					}
+					else
+					{
+						this.should_move = true;
+						this.mesh.duration = 1600;
+						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+						console.log("diagonal, x reduce move");
+					}
+				}
+				else
+				{
+					//rotate monster to look right before moving
+					console.log("diagonal, x reduce rotate");
+					this.should_turn = true;
+					this.target_rotation = 3;
+					//set target to own position because player checks monster target field to see if it is occupied
+					//while monster is rotating, his occupied space is only his position
+					this.target.x = this.position.x;
+					this.target.z = this.position.z;
+					this.mesh.duration = 2200;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+				}
+			}
+			//reduce z if possible
+			else if((player_pos.z < this.position.z) && canMoveTo(this.gameID,this.position.x,this.position.z-1))
+			{
+				//player is south from monster
+				if(this.rotation == 2)
+				{
+					this.target.x = this.position.x;
+					this.target.z = this.position.z-1;
+					if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+					{
+						//player is in front of monster - attack
+						this.should_attack = true;
+						this.mesh.duration = 2000;
+						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+						//set target to own position because player checks monster target field to see if it is occupied
+						//while monster is attacking, his occupied space is only his position
+						this.target.x = this.position.x;
+						this.target.z = this.position.z;
+						//console.log("diagonal, z reduce attack");
+					}
+					else
+					{
+						this.should_move = true;
+						this.mesh.duration = 1600;
+						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+						console.log("diagonal, z reduce move");
+					}
+				}
+				else
+				{
+					//rotate monster to look south before moving
+					console.log("diagonal, z reduce rotate");
+					this.should_turn = true;
+					this.target_rotation = 2;
+					//set target to own position because player checks monster target field to see if it is occupied
+					//while monster is rotating, his occupied space is only his position
+					this.target.x = this.position.x;
+					this.target.z = this.position.z;
+					this.mesh.duration = 2200;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+				}
+			}
+			else if((player_pos.z > this.position.z) && canMoveTo(this.gameID,this.position.x,this.position.z+1))
+			{
+				//player is north from monster
+				if(this.rotation == 0)
+				{
+					this.target.x = this.position.x;
+					this.target.z = this.position.z+1;
+					if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
+					{
+						//player is in front of monster - attack
+						this.should_attack = true;
+						this.mesh.duration = 2000;
+						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
+						//set target to own position because player checks monster target field to see if it is occupied
+						//while monster is attacking, his occupied space is only his position
+						this.target.x = this.position.x;
+						this.target.z = this.position.z;
+						//console.log("diagonal, z increase attack");
+					}
+					else
+					{
+						this.should_move = true;
+						this.mesh.duration = 1600;
+						this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+						console.log("diagonal, z increase move");
+					}
+				}
+				else
+				{
+					//rotate monster to look north before moving
+					console.log("diagonal, z increase rotate");
+					this.should_turn = true;
+					this.target_rotation = 0;
+					//set target to own position because player checks monster target field to see if it is occupied
+					//while monster is rotating, his occupied space is only his position
+					this.target.x = this.position.x;
+					this.target.z = this.position.z;
+					this.mesh.duration = 2200;
+					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
+				}
+			}
+			else
+			{
+				console.log("diagonal, stuck");
+				this.mesh.duration = 6200;
+				this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 			}
 		}
 		else
 		{
-			if(this.rotation - this.target_rotation == 3)
-			{
-				//this.mesh.rotation.y = this.rotation*Math.PI/2 + delta*Math.PI/20;
-				this.rotation = 0;
-			}
-			else
-			{
-				//this.mesh.rotation.y = this.rotation*Math.PI/2 - delta*Math.PI/20;
-				this.rotation--;
-			}
-		}
-		
-		console.log("end of turn: " + this.rotation);
-		
-	}
-	
-	//calc x and z distance
-	var x_dist = Math.abs(this.position.x - player_pos.x);
-	var z_dist = Math.abs(this.position.z - player_pos.z);
-	
-	//if player is not too far away, monster will try to reduce x or z distance between him self or player
-	if(this.position.distanceTo(player_pos) < 6)
-	{
-		//console.log("diagonal, but close");
-		//reduce x if possible
-		if((player_pos.x > this.position.x) && canMoveTo(this.gameID,this.position.x+1,this.position.z))
-		{
-			//player is left from monster
-			if(this.rotation == 1)
-			{
-				this.target.x = this.position.x+1;
-				this.target.z = this.position.z;
-				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
-				{
-					//player is in front of monster - attack
-					this.should_attack = true;
-					this.mesh.duration = 2000;
-					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
-					//set target to own position because player checks monster target field to see if it is occupied
-					//while monster is attacking, his occupied space is only his position
-					this.target.x = this.position.x;
-					this.target.z = this.position.z;
-					//console.log("diagonal, x increase attack");
-				}
-				else
-				{
-					this.should_move = true;
-					this.mesh.duration = 1600;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					//console.log("diagonal, x increase move");
-				}
-			}
-			else
-			{
-				//rotate monster to look left before moving
-				console.log("diagonal, x increase rotate");
-				this.should_turn = true;
-				this.target_rotation = 1;
-				this.mesh.duration = 2200;
-				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-				//set target to own position because player checks monster target field to see if it is occupied
-				//while monster is rotating, his occupied space is only his position
-				this.target.x = this.position.x;
-				this.target.z = this.position.z;
-			}
-		}
-		else if((player_pos.x < this.position.x) && canMoveTo(this.gameID,this.position.x-1,this.position.z))
-		{
-			//player is right from monster
-			if(this.rotation == 3)
-			{
-				this.target.x = this.position.x-1;
-				this.target.z = this.position.z;
-				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
-				{
-					//player is in front of monster - attack
-					this.should_attack = true;
-					this.mesh.duration = 2000;
-					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
-					//console.log("diagonal, x reduce attack");
-					//set target to own position because player checks monster target field to see if it is occupied
-					//while monster is attacking, his occupied space is only his position
-					this.target.x = this.position.x;
-					this.target.z = this.position.z;
-				}
-				else
-				{
-					this.should_move = true;
-					this.mesh.duration = 1600;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, x reduce move");
-				}
-			}
-			else
-			{
-				//rotate monster to look right before moving
-				console.log("diagonal, x reduce rotate");
-				this.should_turn = true;
-				this.target_rotation = 3;
-				//set target to own position because player checks monster target field to see if it is occupied
-				//while monster is rotating, his occupied space is only his position
-				this.target.x = this.position.x;
-				this.target.z = this.position.z;
-				this.mesh.duration = 2200;
-				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-			}
-		}
-		//reduce z if possible
-		else if((player_pos.z < this.position.z) && canMoveTo(this.gameID,this.position.x,this.position.z-1))
-		{
-			//player is south from monster
-			if(this.rotation == 2)
-			{
-				this.target.x = this.position.x;
-				this.target.z = this.position.z-1;
-				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
-				{
-					//player is in front of monster - attack
-					this.should_attack = true;
-					this.mesh.duration = 2000;
-					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
-					//set target to own position because player checks monster target field to see if it is occupied
-					//while monster is attacking, his occupied space is only his position
-					this.target.x = this.position.x;
-					this.target.z = this.position.z;
-					//console.log("diagonal, z reduce attack");
-				}
-				else
-				{
-					this.should_move = true;
-					this.mesh.duration = 1600;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, z reduce move");
-				}
-			}
-			else
-			{
-				//rotate monster to look south before moving
-				console.log("diagonal, z reduce rotate");
-				this.should_turn = true;
-				this.target_rotation = 2;
-				//set target to own position because player checks monster target field to see if it is occupied
-				//while monster is rotating, his occupied space is only his position
-				this.target.x = this.position.x;
-				this.target.z = this.position.z;
-				this.mesh.duration = 2200;
-				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-			}
-		}
-		else if((player_pos.z > this.position.z) && canMoveTo(this.gameID,this.position.x,this.position.z+1))
-		{
-			//player is north from monster
-			if(this.rotation == 0)
-			{
-				this.target.x = this.position.x;
-				this.target.z = this.position.z+1;
-				if((this.target.x == player_pos.x)&&(this.target.z == player_pos.z))
-				{
-					//player is in front of monster - attack
-					this.should_attack = true;
-					this.mesh.duration = 2000;
-					this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
-					//set target to own position because player checks monster target field to see if it is occupied
-					//while monster is attacking, his occupied space is only his position
-					this.target.x = this.position.x;
-					this.target.z = this.position.z;
-					//console.log("diagonal, z increase attack");
-				}
-				else
-				{
-					this.should_move = true;
-					this.mesh.duration = 1600;
-					this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-					console.log("diagonal, z increase move");
-				}
-			}
-			else
-			{
-				//rotate monster to look north before moving
-				console.log("diagonal, z increase rotate");
-				this.should_turn = true;
-				this.target_rotation = 0;
-				//set target to own position because player checks monster target field to see if it is occupied
-				//while monster is rotating, his occupied space is only his position
-				this.target.x = this.position.x;
-				this.target.z = this.position.z;
-				this.mesh.duration = 2200;
-				this.mesh.setFrameRange(this.walk_startKeyframe,this.walk_endKeyframe);
-			}
-		}
-		else
-		{
-			console.log("diagonal, stuck");
+			//player is too far away to draw attention of monster... so idle around
+			console.log("diagonal, too far away");
 			this.mesh.duration = 6200;
 			this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		}
 	}
-	else
-	{
-		//player is too far away to draw attention of monster... so idle around
-		console.log("diagonal, too far away");
-		this.mesh.duration = 6200;
-		this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
-	}
-		//}
 	//}
 };
 
