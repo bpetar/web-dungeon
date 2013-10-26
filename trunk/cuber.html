@@ -891,6 +891,7 @@
 				var i = 0;
 				var j = 0;
 				
+				//console.log("canMoveTo id:" + id + " x:" + x + " z:" + z);
 				//if player fell in hole, make sure he cant move around :)
 				if(holeFallen||playerDead)
 					return false;
@@ -907,7 +908,6 @@
 					}
 				}
 				
-				//alert("pera " + x + " " + z);
 				for(i=0; i < floorsArr2D.length; i++)
 				{
 					if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
@@ -1371,6 +1371,11 @@
 				y_pos = event.clientY;
 				
 				//alert("ima1!" + clickConsumed);
+				var look_offset = new THREE.Vector3(0, 0, 0).add(camera.look);
+				look_offset.sub(camera.position);
+				look_offset.normalize();
+				var look_pos =new THREE.Vector3(0,0,0).add(current_position);
+				look_pos.add(look_offset);
 				
 				// update the mouse variable
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -1403,6 +1408,28 @@
 						pickable_at_hand_icon = 0;	
 						
 						return;
+					}
+					
+					//check if player is clicking item on the monster
+					//var monsterID = monster_clicked_on(look_pos);
+					for ( var i = 0; i < array_of_monsters.length; i ++ ) {
+
+						var monster = array_of_monsters[ i ];
+						if(monster.mesh != 0)
+						{
+							//is monster standing in front of player?
+							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
+							{
+								console.log("player clicked on monster id: " + monster.gameID);
+								monster.clickedOn(pickable_at_hand);
+								
+								//if monster took the pickable - make it dissapear
+								//pickable_at_hand_icon.style.left = "-170px";
+								//pickable_at_hand_icon = 0;
+								//pickable_at_hand = 0;
+								//return
+							}
+						}
 					}
 					
 					//check if pickable is being placed in container
@@ -1814,7 +1841,8 @@
 							}
 							else if(monster.mood == MONSTER_WALK)
 							{
-								//monster.walk_to();
+								var destination = new THREE.Vector3(16,0,13);
+								monster.find_path(destination);
 							}
 						}
 						//console.log(" " + i)
