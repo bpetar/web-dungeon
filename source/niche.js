@@ -1,7 +1,7 @@
 
 
 // niches and their content..
-var niche_pickables_array1 = [[2,"holy symbol","models/tost.js", "media/holy.png"]];// id, name, model, icon
+var niche_pickables_array1 = [[4,"holy symbol","models/tost.js", "media/holy.png"]];// id, name, model, icon
 //var niche_pickables_array2 = [[1,"healing","models/healing.js", "media/potion.png"], [2,"healing","models/healing.js", "media/potion.png"], [3,"healing","models/healing.js", "media/potion.png"]];// id, name, model, icon
 var nicheArr = [[3,5,1,niche_pickables_array1]]; //x,z,rot,content
 
