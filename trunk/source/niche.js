@@ -1,9 +1,43 @@
 
 
 // niches and their content..
-var niche_pickables_array1 = [[4,"holy symbol","models/tost.js", "media/holy.png"]];// id, name, model, icon
+
+
+//this goes to map file
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+// id, name, model, icon
+var niche_pickables_array1 = [[4,"holy symbol","models/tost.js", "media/holy.png"]];
+var niche_pickables_array2 = [];
+var niche_pickables_array3 = [];
+var niche_pickables_array4 = [];
+
 //var niche_pickables_array2 = [[1,"healing","models/healing.js", "media/potion.png"], [2,"healing","models/healing.js", "media/potion.png"], [3,"healing","models/healing.js", "media/potion.png"]];// id, name, model, icon
-var nicheArr = [[3,5,1,niche_pickables_array1]]; //x,z,rot,content
+
+//x,z,rot,content, script, open, script func niche_onItemAdd
+var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, niche_onItemAdd]]; 
+
+NICHES_CLOSED = 0;
+
+function niche_onItemAdd (nicheID, itemID)
+{
+	//change state to closed
+	nicheArr[nicheID][4] = 0;
+	
+	//draw wall over niche
+	
+	NICHES_CLOSED++;
+	
+	if (NICHES_CLOSED == 3)
+	{
+		//open portal...
+		console.log("open portal...");
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//this stays in niche.js
 
 //load all niche pickables content
 function loadNiches() {
@@ -72,7 +106,15 @@ function add_to_niche (nicheID, gObject) {
 	niche_pickables[index][1] = gObject.name;
 	niche_pickables[index][2] = gObject.model;
 	niche_pickables[index][3] = gObject.icon;
-			
+	
+	//if there is script function for adding item, call it
+	if(nicheArr[nicheID].length>5)
+	{
+		var onItemAdd = nicheArr[nicheID][5];
+		onItemAdd(nicheID, gObject.gameID);
+	}
+
+
 	var mover = -1+index/2;
 	//draw model in niche here
 	//check niche position and place pickable in it accordingly
@@ -115,7 +157,6 @@ function remove_from_niche (gObject) {
 	for(var i=0; i<niche_pickables.length; i++) {
 		if(niche_pickables[i][0] == gObject.gameID)
 		{
-			//alert("removed from niche!");
 			niche_pickables.splice(i,1);
 			return;
 		}

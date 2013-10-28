@@ -73,9 +73,6 @@
 				Mech Cloaker
 			</div>
 		</div>
-		<div id="inventory" style="display:none; position:absolute; left:310px; top:70px;">
-			<img src="media/inventory.png" onClick='hide("Inventory not yet implemented!")'> 
-		</div>
 
 		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-37px;">
 		&nbsp;
@@ -281,6 +278,7 @@
 							//Hit!
 							var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
 							monster.hp -= dmg_roll;
+							monster.mood = MONSTER_MAD; //monster get angry
 							console.log("player makes dmg: " + dmg_roll + ", monster hp is now: " + monster.hp);
 							DisplayMonsterDmg(dmg_roll);
 							if(monster.hp < 0)
@@ -319,9 +317,6 @@
 			
 			function hide(param) {
 				alert(param);
-				//clickConsumed = true;
-				//var ele = document.getElementById("inventory");
-				//ele.style.display = "none";
 			}
 
 			var SQUARE_SIZE = 10;
@@ -609,16 +604,13 @@
 					{
 						//add floor tile
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 						object.rotation.set(-Math.PI/2, 0, 0);
 						object.receiveShadow = true;
 						
-						console.log("pera " + i);
 						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
 						object.position.y = 0; //y
 						object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
 				
-						//alert(object.position.x);
 						scene.add( object );
 					}
 				}
@@ -641,7 +633,6 @@
 					object.position.y = 0.8*SQUARE_SIZE; //y
 					object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
 			
-					//alert(object.position.x);
 					scene.add( object );
 				}
 				
@@ -740,7 +731,6 @@
 							object.position.y = 0.4*SQUARE_SIZE; //y
 							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
 					
-							//alert(object.position.x);
 							scene.add( object );
 						}
 					}
@@ -778,7 +768,6 @@
 							object.position.y = 0.4*SQUARE_SIZE; //y
 							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
 					
-							//alert(object.position.x);
 							scene.add( object );
 						}
 					}
@@ -816,7 +805,6 @@
 							object.position.y = 0.4*SQUARE_SIZE; //y
 							object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
 					
-							//alert(object.position.x);
 							scene.add( object );
 						}
 					}
@@ -828,7 +816,6 @@
 						{
 							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 2))
 							{
-								alert(" niche");
 								nicheIsOnTheWall = true;
 							}
 						}
@@ -855,7 +842,6 @@
 							object.position.y = 0.4*SQUARE_SIZE; //y
 							object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
 					
-							//alert(object.position.x);
 							scene.add( object );
 						}
 					}
@@ -948,14 +934,12 @@
 
 			//
 			function handleKeyDown(event) {
-				//alert(event.keyCode);
+				//console.log(event.keyCode);
 				//if (event.keyCode == 88) {animateDoor = true;}
 				
 				if(cameraMove || cameraRotate)
 					return;
 					
-				//show_message("You pressed the key!");
-				
 				//Movement:
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
@@ -990,13 +974,9 @@
 					mover.x = looker.x/2;
 					mover.y = looker.y;
 					mover.z = looker.z/2;
-					//camera.position.add(mover);
 					cameraRotateMover.add(mover);
 					turner.add(looker); 
 					mover.normalize();
-					//looker.normalize();
-					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
-					//looker.rotate(Math.PI/2);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = -Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
@@ -1005,13 +985,10 @@
 					if((mover.x<0.0001)&&(mover.x>-0.0001)) mover.x=0;
 					mover.x *= 5;
 					mover.z *= 5;
-					//camera.position.add(mover);
 					cameraRotateMover.add(mover);
 					
 					//turn west
 					looker.normalize();
-					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
-					//looker.rotate(Math.PI/2);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
@@ -1056,12 +1033,8 @@
 					mover.x = looker.x/2;
 					mover.y = looker.y;
 					mover.z = looker.z/2;
-					//camera.position.add(mover);
 					cameraRotateMover.add(mover);
 					mover.normalize();
-					//looker.normalize();
-					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
-					//looker.rotate(Math.PI/2);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = +Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
@@ -1070,22 +1043,16 @@
 					if((mover.x<0.0001)&&(mover.x>-0.0001)) mover.x=0;
 					mover.x *= 5;
 					mover.z *= 5;
-					//camera.position.add(mover);
 					cameraRotateMover.add(mover);
 					
 					//turn west
 					looker.normalize();
-					//alert("pera1 " + looker.x + " " + looker.y + " " + looker.z);
-					//looker.rotate(Math.PI/2);
 					var axis = new THREE.Vector3( 0, 1, 0 );
 					var angle = -Math.PI / 2;
 					var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
 					looker.applyMatrix4( matrix );
 					if((looker.z<0.0001)&&(looker.z>-0.0001)) looker.z=0;
 					if((looker.x<0.0001)&&(looker.x>-0.0001)) looker.x=0;
-					//alert("pera2 " + looker.x + " " + looker.y + " " + looker.z);
-					//alert(looker.y);
-					//alert();
 					looker.x *= 10;
 					looker.z *= 10;
 					cameraRotateTurner.add(cameraRotateMover); 
@@ -1225,14 +1192,6 @@
 						audio.play();
 					}
 				}
-				
-				//alert("pera2 " + looker.x + " " + looker.y + " " + looker.z);
-				//alert("pera2 " + camera.position.x + " " + camera.position.y + " " + camera.position.z);
-				//camera.position.sub(looker);
-				//camera.look.sub(looker);
-				//alert("pera2 " + camera.look.x + " " + camera.look.y + " " + camera.look.z);
-				//camera.lookAt(camera.look);
-				
 			}
 	
 
@@ -1241,11 +1200,7 @@
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
 				
-				//position inventory in the center of screen windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)
-				//alert("pera");
-				
 				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
-				//inventory_div.style.top = '100px';
 
 				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
@@ -1561,33 +1516,15 @@
 						}
 					}
 					
-					//pickable_at_hand = array_of_pickables[0].mesh;
-					//pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-					//pickable_at_hand_icon.src = "media/healing.png";
-					
-					
-//					alert("pera " + pos.x + " " + pos.y + " " + pos.z);
 				}
-				
-				//var canvas = document.getElementById('webglcanvas');
-				//var rect = canvas.getBoundingClientRect();// check if your browser supports this
-				//alert( rect.bottom );
-				//if((x_pos > rect.left) && (x_pos < rect.right) && (y_pos > rect.top) && (y_pos < rect.bottom))
-				{
-					//y_pos = rect.bottom - y_pos;
-					//x_pos = x_pos - rect.left;
-					handleMouseClick(x_pos, y_pos);
-				}
+
+				handleMouseClick(x_pos, y_pos);
 				
 			}
 	
-			//
 
 			    var lastTime = 0;
 
-    //function animate() {
-        
-    //}
 
 	
 			function animate() {
