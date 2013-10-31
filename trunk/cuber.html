@@ -450,11 +450,11 @@
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = 105; //-5
-				camera.look = new THREE.Vector3(160,4,115); //160,4,5
+				camera.position.z = -5; //105
+				camera.look = new THREE.Vector3(160,4,5); //160,4,115
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,11); //16,0,0
+				current_position = new THREE.Vector3(16,0,0); //16,0,11
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( 0x559955, 0.0125 );
