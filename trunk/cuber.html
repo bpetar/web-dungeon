@@ -284,9 +284,44 @@
 							if(monster.hp < 0)
 							{
 								//Monster is dead!
-								//...
+								
+								//Monster drops loot
+								if(monster.pickables != 0)
+								{
+									for(var i=0; i<monster.pickables.length; i++)
+									{
+										var picki = 0;
+										if(monster.pickables[i][4] == 0)
+										{
+											console.log("creating new item..");
+											picki = create_game_object();
+											picki.gameID = monster.pickables[i][0];
+											picki.name = monster.pickables[i][1];
+											picki.model = monster.pickables[i][2];
+											picki.icon = monster.pickables[i][3];
+											picki.position = monster.mesh.position.clone();
+											picki.position.y = 0;
+											picki.niched = -1;
+											picki.visible = true;
+											//lets make 3d model here
+											var loader = new THREE.JSONLoader();
+											loader.load( picki.model, picki.loadObject(picki) );
+										}
+										else
+										{
+											console.log("not creating item, but using object already created..");
+											picki = monster.pickables[i][4];
+											picki.mesh.position = monster.mesh.position.clone();
+											picki.mesh.position.y = 0;
+											picki.mesh.visible = true;
+										}
+										
+										array_of_pickables.push(picki);
+									}
+								}
 								scene.remove(monster.mesh);
 								array_of_monsters.splice(0,1); //TODO fix hard coded for one monster!
+								
 							}
 						}
 						else
@@ -1498,9 +1533,9 @@
 							continue;
 						
 						//check if player is close to pickable
-						if((Math.abs(camera.position.x-array_of_pickables[i].mesh.position.x)>14) || (Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z)>14))
+						if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
 						{
-							//alert("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
+							console.log("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
 							continue;
 						}
 						
