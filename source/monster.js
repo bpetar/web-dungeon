@@ -1,11 +1,11 @@
 //monster.js
 //monster class, attributes and methods
 
-//monster inventory items
-var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png"], [6,"rock","models/rocky.js", "media/rock.png"]];
+//monster inventory items: id, name, model, icon, picki
+var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
 
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 90, 35, 20, monster_pickables_array]];
+var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 1, 35, 20, monster_pickables_array]];
 
 //lively moved and modified (populated from save file and should be saved to save file)
 var array_of_monsters = [];
@@ -24,7 +24,7 @@ Monster = function ( ) {
 	this.mesh = 0;
 	this.geometry = 0;
 	this.material = 0;
-	this.hp = 60;
+	this.hp = 1;
 	this.defense = 40;
 	this.attack = 30;
 	this.damage = 53;
@@ -42,7 +42,7 @@ Monster = function ( ) {
 	this.move_speed = 0;
 	this.attack_speed = 0;
 	
-	this.pickables = new Array();
+	this.pickables = 0;
 	
 	//this.reached_destination = false;
 	
@@ -166,6 +166,16 @@ Monster.prototype.clickedOn = function ( pickable ) {
 	{
 		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
 		{
+			//add item to monster inventory, its his item now :)
+			
+			var newMonsterItem = new Array();
+			newMonsterItem[0] = pickable.id;
+			newMonsterItem[1] = pickable.name;
+			newMonsterItem[2] = pickable.model;
+			newMonsterItem[3] = pickable.icon;
+			newMonsterItem[4] = pickable;
+			this.pickables.push(newMonsterItem);
+			
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
 			console.log("monster will walk now");
@@ -176,9 +186,6 @@ Monster.prototype.clickedOn = function ( pickable ) {
 			this.mood = MONSTER_MAD;
 			console.log("monster got mad");
 		}
-		
-		//add item to monster inventory, its his item now :)
-		this.pickables.push(pickable);
 		
 		//return true if item is consumed
 		return true;

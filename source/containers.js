@@ -2,7 +2,7 @@
 //containers and their content..
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, picki
+var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation
 var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
 var currently_opened_container = -1;
@@ -76,11 +76,12 @@ function add_to_container(gObject, slot)
 		var container_pickables_array = containers_array[currently_opened_container][6];
 		
 		var newContainerItem = new Array();
-		newContainerItem[0] = gObject.id;
+		newContainerItem[0] = gObject.id; //gameID ???
 		newContainerItem[1] = gObject.name;
 		newContainerItem[2] = gObject.model;
 		newContainerItem[3] = gObject.icon;
 		newContainerItem[4] = slot;
+		newContainerItem[5] = gObject;
 		
 		//TODO check if container slot is occupied
 		//if occupied, make switch between object in hand and object in container
@@ -107,18 +108,27 @@ function container_item_clicked(x_pos,y_pos)
 		{
 			if(container_pickables_array[i][4] == slot)
 			{
-				//TODO: SHOULD WE CREATE GAME OBJECT HERE? WHAT IF IT IS ALREADY CREATED AND PLACED IN CONTAINER DURING THE GAME?
-				var picki = create_game_object();
-				picki.gameID = container_pickables_array[i][0];
-				picki.name = container_pickables_array[i][1];
-				picki.model = container_pickables_array[i][2];
-				picki.icon = container_pickables_array[i][3];
-				picki.niched = -1;
-				picki.visible = false;
-				
-				//lets make 3d model here in case player wants to drop it in 3D world.. 
-				var loader = new THREE.JSONLoader();
-				loader.load( picki.model, picki.loadObject(picki) );
+				//WE SHOULD NOT CREATE GAME OBJECT HERE IF IT IS ALREADY CREATED AND PLACED IN CONTAINER DURING THE GAME
+				var picki = 0;
+				if(container_pickables_array[i][5] == 0)
+				{
+					console.log("creating new item..");
+					picki = create_game_object();
+					picki.gameID = container_pickables_array[i][0];
+					picki.name = container_pickables_array[i][1];
+					picki.model = container_pickables_array[i][2];
+					picki.icon = container_pickables_array[i][3];
+					picki.niched = -1;
+					picki.visible = false;
+					//lets make 3d model here in case player wants to drop it in 3D world.. 
+					var loader = new THREE.JSONLoader();
+					loader.load( picki.model, picki.loadObject(picki) );
+				}
+				else
+				{
+					picki = container_pickables_array[i][5];
+					console.log("not creating item, but using object already created..");
+				}
 				
 				array_of_pickables.push(picki);
 				
