@@ -12,19 +12,66 @@ var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];
 
-//var niche_pickables_array2 = [[1,"healing","models/healing.js", "media/potion.png"], [2,"healing","models/healing.js", "media/potion.png"], [3,"healing","models/healing.js", "media/potion.png"]];// id, name, model, icon
 
-//x,z,rot,content, script, open, script func niche_onItemAdd
-var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, niche_onItemAdd]]; 
+//x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
+var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, 0, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, 0, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, 0, niche_onItemAdd]]; 
 
 NICHES_CLOSED = 0;
 
 function niche_onItemAdd (nicheID, itemID)
 {
+	console.log("item added to niche...");
+	
 	//change state to closed
 	nicheArr[nicheID][4] = 0;
 	
 	//draw wall over niche
+	var map = THREE.ImageUtils.loadTexture( 'media/wall.jpg' );
+	map.wrapS = map.wrapT = THREE.RepeatWrapping;
+	map.anisotropy = 16;
+	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+	nicheArr[nicheID][5] = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+	nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
+	nicheArr[nicheID][5].receiveShadow = true;
+	nicheArr[nicheID][5].position.y = 0.4*SQUARE_SIZE; //y
+	if(nicheArr[nicheID][2] == 1) 
+	{
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]-0.5)*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
+		nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
+	}
+	if(nicheArr[nicheID][2] == 3) 
+	{
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]+0.5)*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
+		nicheArr[nicheID][5].rotation.set(0, -Math.PI/2, 0);
+	}
+	if(nicheArr[nicheID][2] == 0) 
+	{
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0])*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]+0.5)*SQUARE_SIZE; //z
+		nicheArr[nicheID][5].rotation.set(0, 0, 0);
+	}
+	if(nicheArr[nicheID][2] == 2) 
+	{
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0])*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]-0.5)*SQUARE_SIZE; //z
+		nicheArr[nicheID][5].rotation.set(0, Math.PI, 0);
+	}
+	scene.add( nicheArr[nicheID][5] );
+	
+	//remove pickable item from game, this niche is eating items!
+	console.log("removing pickable..." + itemID);
+	for (var i=0; i< array_of_pickables.length; i++)
+	{
+		console.log("removing pickable in for..." + array_of_pickables[i].gameID);
+		if(array_of_pickables[i].gameID == itemID)
+		{
+			console.log("removing pickable..." + i);
+			array_of_pickables[i].mesh.visible = false;
+			array_of_pickables.splice(i,1);
+		}
+	}
 	
 	NICHES_CLOSED++;
 	
@@ -107,14 +154,6 @@ function add_to_niche (nicheID, gObject) {
 	niche_pickables[index][2] = gObject.model;
 	niche_pickables[index][3] = gObject.icon;
 	
-	//if there is script function for adding item, call it
-	if(nicheArr[nicheID].length>5)
-	{
-		var onItemAdd = nicheArr[nicheID][5];
-		onItemAdd(nicheID, gObject.gameID);
-	}
-
-
 	var mover = -1+index/2;
 	//draw model in niche here
 	//check niche position and place pickable in it accordingly
@@ -146,6 +185,12 @@ function add_to_niche (nicheID, gObject) {
 	gObject.mesh.position.y = 4.0;
 	gObject.mesh.visible = true;
 
+	//if there is script function for adding item, call it
+	if(nicheArr[nicheID].length>6)
+	{
+		var onItemAdd = nicheArr[nicheID][6];
+		onItemAdd(nicheID, gObject.gameID);
+	}
 	
 }
 
@@ -165,6 +210,7 @@ function remove_from_niche (gObject) {
 
 //check if player clicked in niche
 function niche_clicked_in(x_pos,y_pos) {
+
 	//check if player is facing niche first
 	for(var n=0; n<nicheArr.length; n++)
 	{
@@ -175,19 +221,19 @@ function niche_clicked_in(x_pos,y_pos) {
 			looker.sub(camera.position);
 			if (looker.x > 0) {
 				//facing left
-				if(nicheArr[n][2] == 3)
+				if((nicheArr[n][2] == 3)&&(nicheArr[n][4] != 0))
 					return n;
 			} else if (looker.x < 0) {
 				//facing right
-				if(nicheArr[n][2] == 1)
+				if((nicheArr[n][2] == 1)&&(nicheArr[n][4] != 0))
 					return n;
 			} else if (looker.z < 0) {
 				//facing back
-				if(nicheArr[n][2] == 2)
+				if((nicheArr[n][2] == 2)&&(nicheArr[n][4] != 0))
 					return n;
 			} else if (looker.z > 0) {
 				//facing front
-				if(nicheArr[n][2] == 0)
+				if((nicheArr[n][2] == 0)&&(nicheArr[n][4] != 0))
 					return n;
 			}
 			
