@@ -1,8 +1,11 @@
 //monster.js
 //monster class, attributes and methods
 
+//monster inventory items
+var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png"], [6,"rock","models/rocky.js", "media/rock.png"]];
+
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 90, 35, 20]];
+var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 90, 35, 20, monster_pickables_array]];
 
 //lively moved and modified (populated from save file and should be saved to save file)
 var array_of_monsters = [];
@@ -38,6 +41,8 @@ Monster = function ( ) {
 	
 	this.move_speed = 0;
 	this.attack_speed = 0;
+	
+	this.pickables = new Array();
 	
 	//this.reached_destination = false;
 	
@@ -139,6 +144,7 @@ function load_monsters () {
 		munster.hp = monster_array[i][6];
 		munster.ac = monster_array[i][7];
 		munster.attack = monster_array[i][8];
+		munster.pickables = monster_array[i][9];
 		console.log("loading monstere " + i);
 		loader.load( munster.model, munster.loadObject(munster) );
 		
@@ -158,7 +164,7 @@ Monster.prototype.clickedOn = function ( pickable ) {
 	//if golem is idle react to pickable click
 	if(this.mood == MONSTER_IDLE)
 	{
-		if(pickable.gameID == 1) //1 is ring in container!
+		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
 		{
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
@@ -170,9 +176,15 @@ Monster.prototype.clickedOn = function ( pickable ) {
 			this.mood = MONSTER_MAD;
 			console.log("monster got mad");
 		}
+		
+		//add item to monster inventory, its his item now :)
+		this.pickables.push(pickable);
+		
+		//return true if item is consumed
+		return true;
 	}
 	
-	//return true if item is consumed?
+	return false;
 }
 
 //find player

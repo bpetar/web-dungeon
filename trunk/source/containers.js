@@ -2,7 +2,7 @@
 //containers and their content..
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1]];// id, name, model, icon
+var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, picki
 // id, name, model, x, z, orientation
 var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
 var currently_opened_container = -1;
@@ -107,6 +107,7 @@ function container_item_clicked(x_pos,y_pos)
 		{
 			if(container_pickables_array[i][4] == slot)
 			{
+				//TODO: SHOULD WE CREATE GAME OBJECT HERE? WHAT IF IT IS ALREADY CREATED AND PLACED IN CONTAINER DURING THE GAME?
 				var picki = create_game_object();
 				picki.gameID = container_pickables_array[i][0];
 				picki.name = container_pickables_array[i][1];
