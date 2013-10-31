@@ -1352,6 +1352,22 @@
 						return;
 					}
 					
+					//check if pickable is being placed in container
+					if(container_div.style.display == "inline-block")
+					{
+						slot_index = container_clicked_in_slot(x_pos,y_pos);
+						if(slot_index > 0)
+						{
+							//alert("yo yo " + pickable_at_hand);
+							add_to_container(pickable_at_hand, slot_index);
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+							pickable_at_hand = 0;
+							
+							return;
+						}
+					}
+					
 					//check if player is trying to put it in the niche
 					var nicheID = niche_clicked_in(x_pos,y_pos);
 					if(nicheID > -1)
@@ -1376,37 +1392,36 @@
 							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
 							{
 								console.log("player clicked on monster id: " + monster.gameID);
-								monster.clickedOn(pickable_at_hand);
+								var taken = monster.clickedOn(pickable_at_hand);
 								
 								//if monster took the pickable - make it dissapear
-								//pickable_at_hand_icon.style.left = "-170px";
-								//pickable_at_hand_icon = 0;
-								//pickable_at_hand = 0;
-								//return
+								if(taken)
+								{
+									pickable_at_hand_icon.style.left = "-170px";
+									pickable_at_hand_icon = 0;
+									pickable_at_hand.mesh.visible = false;
+									pickable_at_hand = 0;
+									return;
+								}
 							}
-						}
-					}
-					
-					//check if pickable is being placed in container
-					if(container_div.style.display == "inline-block")
-					{
-						slot_index = container_clicked_in_slot(x_pos,y_pos);
-						if(slot_index > 0)
-						{
-							//alert("yo yo " + pickable_at_hand);
-							add_to_container(pickable_at_hand, slot_index);
-							pickable_at_hand_icon.style.left = "-170px";
-							pickable_at_hand_icon = 0;
-							pickable_at_hand = 0;
-							
-							return;
 						}
 					}
 					
 					//drop it on the ground
 					//var looker = new THREE.Vector3(0, 0, 0);
 					var looker = camera.look.clone().sub(camera.position);
-					looker.multiplyScalar(0.92);
+					
+					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
+					if(pickable_at_hand.name=="ring")
+					{
+						console.log("trti ring");
+						looker.multiplyScalar(0.97);
+					}
+					else
+					{
+						looker.multiplyScalar(0.92);
+					}
+					
 					//var pos = camera.position.clone().add(looker);
 					pickable_at_hand.mesh.position = camera.position.clone().add(looker);
 					pickable_at_hand.mesh.position.y = 0;

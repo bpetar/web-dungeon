@@ -68,7 +68,7 @@ function niche_onItemAdd (nicheID, itemID)
 		if(array_of_pickables[i].gameID == itemID)
 		{
 			console.log("removing pickable..." + i);
-			array_of_pickables[i].mesh.visible = false;
+			array_of_pickables[i].mesh.visible = false; //TODO: not really removing mesh from scene here, we should do it to free mem
 			array_of_pickables.splice(i,1);
 		}
 	}
