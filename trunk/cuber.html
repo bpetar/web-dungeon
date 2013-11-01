@@ -361,7 +361,8 @@
 			var secretWallsArr = [[6,2,3]]; //x,y,orientation
 			var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
 			var holesArr = [[7,7]];
-			
+			var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
+
 			//secretWallsArr = []; //x,y,orientation
 			//var doorsArr3D = []; //x,z,rot,open,mesh, 
 			//var holesArr = [];
@@ -673,10 +674,17 @@
 				
 				//walls
 				
+				//wall texture
 				map = THREE.ImageUtils.loadTexture( 'media/wall.jpg' );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
 				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+				
+				//writting on the wall texture
+				var mapwrit = THREE.ImageUtils.loadTexture( 'media/wallwrit.jpg' );
+				mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
+				mapwrit.anisotropy = 16;
+				materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
 				
 				//secret walls
 				for(var s=0; s<secretWallsArr.length; s++)
@@ -755,8 +763,27 @@
 						}
 						else
 						{
-							//load regular wall
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//check if writting is on the wall
+							var writtingIsOnTheWall = false;
+							//loop writtingsArr
+							for (var n=0; n<writtingsArr.length; n++)
+							{
+								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 3))
+								{
+									writtingIsOnTheWall = true;
+								}
+							}
+							
+							if(writtingIsOnTheWall)
+							{
+								//load wall with writting
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+							}
+							else
+							{
+								//load regular wall
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							}
 							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 							object.rotation.set(0, Math.PI/2, 0);
 							object.receiveShadow = true;
@@ -792,9 +819,28 @@
 						}
 						else
 						{
-							//load regular wall
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+							//check if writting is on the wall
+							var writtingIsOnTheWall = false;
+							//loop writtingsArr
+							for (var n=0; n<writtingsArr.length; n++)
+							{
+								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 1))
+								{
+									writtingIsOnTheWall = true;
+								}
+							}
+							
+							if(writtingIsOnTheWall)
+							{
+								//load wall with writting
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+							}
+							else
+							{
+								//load regular wall
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							}
+
 							object.rotation.set(0, Math.PI/2, 0);
 							object.receiveShadow = true;
 							
@@ -829,8 +875,27 @@
 						}
 						else
 						{
-							//load regular wall
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//check if writting is on the wall
+							var writtingIsOnTheWall = false;
+							//loop writtingsArr
+							for (var n=0; n<writtingsArr.length; n++)
+							{
+								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 0))
+								{
+									writtingIsOnTheWall = true;
+								}
+							}
+							
+							if(writtingIsOnTheWall)
+							{
+								//load wall with writting
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+							}
+							else
+							{
+								//load regular wall
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							}
 							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 							object.rotation.set(0, Math.PI, 0);
 							object.receiveShadow = true;
@@ -866,8 +931,27 @@
 						}
 						else
 						{
-							//load regular wall
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							//check if writting is on the wall
+							var writtingIsOnTheWall = false;
+							//loop writtingsArr
+							for (var n=0; n<writtingsArr.length; n++)
+							{
+								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 2))
+								{
+									writtingIsOnTheWall = true;
+								}
+							}
+							
+							if(writtingIsOnTheWall)
+							{
+								//load wall with writting
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+							}
+							else
+							{
+								//load regular wall
+								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+							}
 							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 							object.rotation.set(0, Math.PI, 0);
 							object.receiveShadow = true;
