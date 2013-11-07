@@ -444,27 +444,30 @@
 			}
 			
 			function show_message(message, width, height) {
-				info_dialog_message_div.innerHTML = message;
-				
-				if((width != 'undefined') && (width > 0))
+				if(info_dialog_div.style.display == "none")
 				{
-					info_dialog_div.style.width = width + "px";
-				}
-				else
-				{
-					info_dialog_div.style.width = "750px";
-				}
+					info_dialog_message_div.innerHTML = message;
+					
+					if((width != 'undefined') && (width > 0))
+					{
+						info_dialog_div.style.width = width + "px";
+					}
+					else
+					{
+						info_dialog_div.style.width = "750px";
+					}
 
-				if ((height != 'undefined') && (height > 0))
-				{
-					info_dialog_div.style.height = height + "px";
-				}
-				else
-				{
-					info_dialog_div.style.height = "450px";
-				}
+					if ((height != 'undefined') && (height > 0))
+					{
+						info_dialog_div.style.height = height + "px";
+					}
+					else
+					{
+						info_dialog_div.style.height = "450px";
+					}
 
-				info_dialog_div.style.display = "inline";
+					info_dialog_div.style.display = "inline";
+				}
 			}
 			
 			
@@ -1444,7 +1447,6 @@
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
-				//alert("ima1!" + clickConsumed);
 				var look_offset = new THREE.Vector3(0, 0, 0).add(camera.look);
 				look_offset.sub(camera.position);
 				look_offset.normalize();
@@ -1602,8 +1604,34 @@
 						//alert("niche clicked!");
 						container_fill_gui(containerID);
 						inventorySlide = 1;
+						return;
 					}
 					
+					//check if player clicked on writting on the wall
+					var writtingIsOnTheWall = false;
+					//loop writtingsArr
+					for (var n=0; n<writtingsArr.length; n++)
+					{
+						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
+						{
+							writtingIsOnTheWall = true;
+							
+							var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+							looker.sub(camera.position);
+							var lookie = new THREE.Vector3(0,0,0).add(looker);
+							lookie.normalize();
+							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
+							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
+							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
+							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 1)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 3))) //right
+							{
+								console.log("looking at writting!");
+								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+							}
+						}
+					}
+							
 					// create a Ray with origin at the mouse position
 					//   and direction into the scene (camera direction)
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
