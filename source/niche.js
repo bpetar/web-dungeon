@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // id, name, model, icon
-var niche_pickables_array1 = [[4,"holy symbol","models/tost.js", "media/holy.png"]];
+var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png"]];
 var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];
