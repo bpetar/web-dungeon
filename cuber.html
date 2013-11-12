@@ -1446,10 +1446,27 @@
 				}
 			}
 			
-			
-			
+			/*window.oncontextmenu = function ()
+			{
+				return false;     // cancel default menu
+			}*/
+
 			function onMouseClick(event) {
 
+				console.log("onMouseClick");
+
+				var isRightMB;
+				var e = event || window.event;
+				if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+					isRightMB = e.which == 3; 
+				else if ("button" in e)  // IE, Opera 
+					isRightMB = e.button == 2; 
+				if(isRightMB)
+				{
+					console.log("Right mouse button was clicked!");
+					return false;
+				}
+				
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
