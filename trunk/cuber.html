@@ -190,6 +190,7 @@
 		<script src="./source/niche.js"></script>
 		<script src="./source/monster.js"></script>
 		<script src="./source/stats.min.js"></script>
+		<script src="./source/particles.js"></script>
 
 		<script>
 		
@@ -396,6 +397,8 @@
 			var mesh, mesh2, mesh3, light;
 
 			var mouseX = 0, mouseY = 0;
+			
+			var teleport = 0;
 
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
@@ -489,11 +492,11 @@
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = -5; //105
-				camera.look = new THREE.Vector3(160,4,5); //160,4,115
+				camera.position.z = 105; //-5
+				camera.look = new THREE.Vector3(160,4,115); //160,4,5
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,0); //16,0,11
+				current_position = new THREE.Vector3(16,0,11); //16,0,0
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( 0x559955, 0.0125 );
@@ -552,6 +555,9 @@
 				
 				//load chests
 				load_containers();
+				
+				//load teleport();
+				load_teleport();
 				
 				var loader = new THREE.JSONLoader();
 
@@ -1700,6 +1706,8 @@
 
 					var elapsed = timeNow - lastTime;
 
+					update_teleport();
+					
 					if(monster_wound_div.style.display == "inline-block")
 					{
 						monster_wound_div_top_lift += elapsed;
