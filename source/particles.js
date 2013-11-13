@@ -38,13 +38,13 @@ function load_teleport()
 	}*/
 	
 	ggeometry = new THREE.Geometry();
-	var ssprite = THREE.ImageUtils.loadTexture( "media/particle.png" );
+	var ssprite = THREE.ImageUtils.loadTexture( "media/star2.png" );
 	for ( i = 0; i < 500; i ++ ) {
 		var vertex = new THREE.Vector3();
 		vertex.x = 10 * Math.random() + pos.x;
 		vertex.y = 10 * Math.random();
 		vertex.z = 10 * Math.random() + pos.z;
-		vertex.velocity = new THREE.Vector3(0, Math.random()*0.1, 0); //y going up
+		vertex.velocity = new THREE.Vector3(0, Math.random()*0.05, 0); //y going up
 		ggeometry.vertices.push( vertex );
 	}
 	var mmaterial = new THREE.ParticleBasicMaterial( { size: 16, sizeAttenuation: false, map: ssprite, transparent: true } );
@@ -53,7 +53,7 @@ function load_teleport()
 	scene.add( teleport );
 }
 
-function update_teleport()
+function update_teleport(elapsed)
 {
 	if(teleport != 0)
 	{
@@ -74,7 +74,9 @@ function update_teleport()
 
 			// update the velocity with
 			// a splat of randomniz
-			particle.velocity.y +=  Math.random() * .01;
+			var vely = Math.random() * elapsed;
+			//console.log("elapsedd " + vely);
+			particle.velocity.y +=  vely;
 
 			// and the position
 			particle.y += particle.velocity.y;
