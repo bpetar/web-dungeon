@@ -10,16 +10,133 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 //this stays in particles.js
-var ggeometry = 0;
+var particle_geometry = 0;
+var particle_geometry2 = 0;
+var particle_geometry3 = 0;
+var teleport = 0;
+var teleport2 = 0;
+var teleport3 = 0;
+var teleport_pos = new THREE.Vector3(180, 0, 110); //position on map
 
 //load teleport particles
 function load_teleport()
 {
-	//teleport parameters could be on the map file
-	//position on map
-	var pos = new THREE.Vector3(175, 0, 105);
-	//color
+	//first sprite system
+	particle_geometry = new THREE.Geometry();
+	var ssprite = THREE.ImageUtils.loadTexture( "media/star2.png" );
+	for ( i = 0; i < 500; i ++ ) {
+		var vertex = new THREE.Vector3();
+		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
+		vertex.y = 8 * Math.random();
+		vertex.z = 6 * Math.random() + teleport_pos.z - 3;
+		vertex.velocity = new THREE.Vector3(0, Math.random()*0.05, 0); //y going up
+		particle_geometry.vertices.push( vertex );
+	}
+	var mmaterial = new THREE.ParticleBasicMaterial( { size: 0.2, sizeAttenuation: true, map: ssprite, transparent: true } );
+	teleport = new THREE.ParticleSystem( particle_geometry, mmaterial );
+	teleport.sortParticles = true;
+	scene.add( teleport );
 	
+	//second sprite system
+	particle_geometry2 = new THREE.Geometry();
+	var sprite2 = THREE.ImageUtils.loadTexture( "media/star.png" );
+	for ( i = 0; i < 500; i ++ ) {
+		var vertex = new THREE.Vector3();
+		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
+		vertex.y = 8 * Math.random();
+		vertex.z = 6 * Math.random() + teleport_pos.z - 3;
+		vertex.velocity = new THREE.Vector3(0, Math.random()*0.03, 0); //y going up
+		particle_geometry2.vertices.push( vertex );
+	}
+	var material2 = new THREE.ParticleBasicMaterial( { size: 0.5, sizeAttenuation: true, map: sprite2, transparent: true } );
+	teleport2 = new THREE.ParticleSystem( particle_geometry2, material2 );
+	teleport2.sortParticles = true;
+	scene.add( teleport2 );
+
+	
+	//thrid sprite system
+	particle_geometry3 = new THREE.Geometry();
+	var sprite3 = THREE.ImageUtils.loadTexture( "media/spark1.png" );
+	for ( i = 0; i < 500; i ++ ) {
+		var vertex = new THREE.Vector3();
+		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
+		vertex.y = 8 * Math.random();
+		vertex.z = 6 * Math.random() + teleport_pos.z - 3;
+		vertex.velocity = new THREE.Vector3(0, Math.random()*0.03, 0); //y going up
+		particle_geometry3.vertices.push( vertex );
+	}
+	var material3 = new THREE.ParticleBasicMaterial( { size: 1.5, sizeAttenuation: true, map: sprite3, transparent: true } );
+	teleport3 = new THREE.ParticleSystem( particle_geometry3, material3 );
+	teleport3.sortParticles = true;
+	scene.add( teleport3 );
+
+	}
+
+function update_teleport(elapsed)
+{
+	if((teleport != 0) && (teleport2 != 0) && (elapsed<0.1))
+	{
+		
+		var pCount = 500;
+		while(pCount--) {
+
+			// get the particle
+			var particle = particle_geometry.vertices[pCount];
+			var particle2 = particle_geometry2.vertices[pCount];
+			var particle3 = particle_geometry3.vertices[pCount];
+
+			// check if we need to reset
+			if(particle.y > 8) {
+			  particle.y = 0;
+			  particle.velocity.y = 0;
+			}
+			// update the velocity with random acceleration
+			var vely = Math.random() * elapsed;
+			particle.velocity.y +=  vely;
+			// and the position
+			particle.y += particle.velocity.y;
+			
+			//rotating particle
+			//var teleport_pos_middle = new THREE.Vector3(5,0,5).add(teleport_pos);
+			var vector = new THREE.Vector3( particle.x, 0, particle.z ).sub(teleport_pos);
+			var axis = new THREE.Vector3( 0, 1, 0 );
+			var angle = Math.PI * elapsed;
+			var matrix = new THREE.Matrix4().makeRotationAxis( axis, angle );
+			vector.applyMatrix4( matrix );
+			particle.x = vector.x + teleport_pos.x;
+			particle.z = vector.z + teleport_pos.z;
+			
+			// check if we need to reset
+			if(particle2.y > 8) {
+			  particle2.y = 0;
+			  particle2.velocity.y = 0;
+			}
+			// update the velocity with
+			// a splat of randomniz
+			particle2.velocity.y += Math.random() * elapsed/6;
+			// and the position
+			particle2.y += particle2.velocity.y;
+
+			
+			// check if we need to reset
+			if(particle3.y > 8) {
+			  particle3.y = 0;
+			  particle3.velocity.y = 0;
+			}
+			// update the velocity with
+			// a splat of randomniz
+			particle3.velocity.y += Math.random() * elapsed/16;
+			// and the position
+			particle3.y += particle3.velocity.y;
+
+		}
+  
+		teleport.geometry.__dirtyVertices = true;
+		teleport2.geometry.__dirtyVertices = true;
+	}
+}
+
+
 
 	//load particles
 	
@@ -36,57 +153,6 @@ function load_teleport()
 	
 		scene.add( particle );
 	}*/
-	
-	ggeometry = new THREE.Geometry();
-	var ssprite = THREE.ImageUtils.loadTexture( "media/star2.png" );
-	for ( i = 0; i < 500; i ++ ) {
-		var vertex = new THREE.Vector3();
-		vertex.x = 10 * Math.random() + pos.x;
-		vertex.y = 10 * Math.random();
-		vertex.z = 10 * Math.random() + pos.z;
-		vertex.velocity = new THREE.Vector3(0, Math.random()*0.05, 0); //y going up
-		ggeometry.vertices.push( vertex );
-	}
-	var mmaterial = new THREE.ParticleBasicMaterial( { size: 16, sizeAttenuation: false, map: ssprite, transparent: true } );
-	teleport = new THREE.ParticleSystem( ggeometry, mmaterial );
-	teleport.sortParticles = true;
-	scene.add( teleport );
-}
-
-function update_teleport(elapsed)
-{
-	if(teleport != 0)
-	{
-		//teleport.rotation.y += 0.01;
-		
-		
-		var pCount = 500;
-		while(pCount--) {
-
-			// get the particle
-			var particle = ggeometry.vertices[pCount];
-
-			// check if we need to reset
-			if(particle.y > 10) {
-			  particle.y = 0;
-			  particle.velocity.y = 0;
-			}
-
-			// update the velocity with
-			// a splat of randomniz
-			var vely = Math.random() * elapsed;
-			//console.log("elapsedd " + vely);
-			particle.velocity.y +=  vely;
-
-			// and the position
-			particle.y += particle.velocity.y;
-		  }
-  
-		teleport.geometry.__dirtyVertices = true;
-	}
-}
-
-
 
 
 
