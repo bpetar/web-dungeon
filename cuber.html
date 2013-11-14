@@ -398,8 +398,6 @@
 
 			var mouseX = 0, mouseY = 0;
 			
-			var teleport = 0;
-
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
@@ -1723,7 +1721,7 @@
 
 					var elapsed = timeNow - lastTime;
 
-					update_teleport(0.01);
+					update_teleport(elapsed/10000);
 					
 					if(monster_wound_div.style.display == "inline-block")
 					{
