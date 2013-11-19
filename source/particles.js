@@ -23,7 +23,7 @@ function load_teleport()
 {
 	//first sprite system
 	particle_geometry = new THREE.Geometry();
-	var ssprite = THREE.ImageUtils.loadTexture( "media/star2.png" );
+	var ssprite = THREE.ImageUtils.loadTexture( "media/sparkle1.png" );
 	for ( i = 0; i < 500; i ++ ) {
 		var vertex = new THREE.Vector3();
 		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
@@ -32,14 +32,14 @@ function load_teleport()
 		vertex.velocity = new THREE.Vector3(0, Math.random()*0.05, 0); //y going up
 		particle_geometry.vertices.push( vertex );
 	}
-	var mmaterial = new THREE.ParticleBasicMaterial( { size: 0.2, sizeAttenuation: true, map: ssprite, transparent: true } );
+	var mmaterial = new THREE.ParticleBasicMaterial( { size: 0.4, sizeAttenuation: true, map: ssprite, transparent: true } );
 	teleport = new THREE.ParticleSystem( particle_geometry, mmaterial );
 	teleport.sortParticles = true;
 	scene.add( teleport );
 	
 	//second sprite system
 	particle_geometry2 = new THREE.Geometry();
-	var sprite2 = THREE.ImageUtils.loadTexture( "media/star.png" );
+	var sprite2 = THREE.ImageUtils.loadTexture( "media/sparkle2.png" );
 	for ( i = 0; i < 500; i ++ ) {
 		var vertex = new THREE.Vector3();
 		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
@@ -48,7 +48,7 @@ function load_teleport()
 		vertex.velocity = new THREE.Vector3(0, Math.random()*0.03, 0); //y going up
 		particle_geometry2.vertices.push( vertex );
 	}
-	var material2 = new THREE.ParticleBasicMaterial( { size: 0.5, sizeAttenuation: true, map: sprite2, transparent: true } );
+	var material2 = new THREE.ParticleBasicMaterial( { size: 0.3, sizeAttenuation: true, map: sprite2, transparent: true } );
 	teleport2 = new THREE.ParticleSystem( particle_geometry2, material2 );
 	teleport2.sortParticles = true;
 	scene.add( teleport2 );
@@ -56,7 +56,7 @@ function load_teleport()
 	
 	//thrid sprite system
 	particle_geometry3 = new THREE.Geometry();
-	var sprite3 = THREE.ImageUtils.loadTexture( "media/spark1.png" );
+	var sprite3 = THREE.ImageUtils.loadTexture( "media/sparkle3.png" );
 	for ( i = 0; i < 500; i ++ ) {
 		var vertex = new THREE.Vector3();
 		vertex.x = 6 * Math.random() + teleport_pos.x - 3;
@@ -65,7 +65,7 @@ function load_teleport()
 		vertex.velocity = new THREE.Vector3(0, Math.random()*0.03, 0); //y going up
 		particle_geometry3.vertices.push( vertex );
 	}
-	var material3 = new THREE.ParticleBasicMaterial( { size: 1.5, sizeAttenuation: true, map: sprite3, transparent: true } );
+	var material3 = new THREE.ParticleBasicMaterial( { size: 0.3, sizeAttenuation: true, map: sprite3, transparent: true } );
 	teleport3 = new THREE.ParticleSystem( particle_geometry3, material3 );
 	teleport3.sortParticles = true;
 	scene.add( teleport3 );
@@ -74,7 +74,7 @@ function load_teleport()
 
 function update_teleport(elapsed)
 {
-	if((teleport != 0) && (teleport2 != 0) && (elapsed<0.1))
+	if((teleport != 0) && (teleport2 != 0) && (teleport3 != 0) && (elapsed<0.1))
 	{
 		
 		var pCount = 500;
@@ -133,6 +133,7 @@ function update_teleport(elapsed)
   
 		teleport.geometry.__dirtyVertices = true;
 		teleport2.geometry.__dirtyVertices = true;
+		teleport3.geometry.__dirtyVertices = true;
 	}
 }
 

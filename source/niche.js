@@ -79,6 +79,9 @@ function niche_onItemAdd (nicheID, itemID)
 	{
 		//open portal...
 		console.log("open portal...");
+		//load teleport();
+		load_teleport();
+		
 	}
 }
 

@@ -159,6 +159,10 @@
 		13
 		</div>
 
+		<div id="level_complete_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; display: none;">
+			<p>Level Complete!<p>
+		</div>
+		
 		<div id="info_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
 			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
 			<p>Welcome to the Web Dungeon game test!</p> 
@@ -206,7 +210,12 @@
 
 			document.body.appendChild( stats.domElement );
 
-
+			//display level complete dialog
+			function displayLevelCompleteDialog() {
+				//add registration and feedback options
+				level_complete_div.style.display = "inline-block";
+			}
+			
 			function DisplayMonsterDmg(dmg) {
 				//show some dmg blood flashy thing over monster
 				monster_wound_div_top = windowHalfY - 100 + Math.random()*200;
@@ -398,6 +407,8 @@
 
 			var mouseX = 0, mouseY = 0;
 			
+			var m_GamePaused = false;
+			
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
@@ -418,6 +429,8 @@
 			var showPlayerDmg = false;
 			var SHOW_DAMAGE_TIME = 1;
 			var weaponDiv = 0; //id=player1tophand
+			
+			var level_complete_div = 0;
 			
 			//player stats
 			var player_HP_div = 0;
@@ -511,6 +524,8 @@
 				
 				player1_div = document.getElementById('player1');
 				
+				level_complete_div = document.getElementById('level_complete_dialog');
+				
 				info_dialog_div = document.getElementById('info_dialog');
 				info_dialog_message_div = document.getElementById('info_message');
 
@@ -542,6 +557,8 @@
 				light2.castShadow = true;
 				scene.add( light2 );
 
+				load_teleport();
+				
 				//load pickables
 				load_pickables();
 				
@@ -553,9 +570,6 @@
 				
 				//load chests
 				load_containers();
-				
-				//load teleport();
-				load_teleport();
 				
 				var loader = new THREE.JSONLoader();
 
@@ -618,10 +632,17 @@
 				window.addEventListener( 'resize', onWindowResize, false );
 
 				var map = THREE.ImageUtils.loadTexture( 'media/floor.jpg' );
+				var teleport_map = THREE.ImageUtils.loadTexture( 'media/teleport_floor.jpg' );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
+				
+				//teleport_map.wrapS = map.wrapT = THREE.RepeatWrapping;
+				teleport_map.anisotropy = 16;
+
 
 				var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+				
+				var teleport_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: teleport_map, side: THREE.DoubleSide } );
 
 				//floors
 				for(var i=0; i < floorsArr2D.length; i++)
@@ -646,7 +667,14 @@
 					else
 					{
 						//add floor tile
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
+						if(positionIsTeleport(floorsArr2D[i][0], floorsArr2D[i][1]))
+						{
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), teleport_material );
+						}
+						else
+						{
+							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
+						}
 						object.rotation.set(-Math.PI/2, 0, 0);
 						object.receiveShadow = true;
 						
@@ -1052,6 +1080,17 @@
 				return false;
 			}
 			
+			function positionIsTeleport(x,z) {
+				
+				console.log("entered teleport!");
+				if((x == teleport_pos.x/10)&&(z == teleport_pos.z/10))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+			
 			function fallInHole()
 			{
 				holeFallen = true;
@@ -1063,7 +1102,7 @@
 				//console.log(event.keyCode);
 				//if (event.keyCode == 88) {animateDoor = true;}
 				
-				if(cameraMove || cameraRotate)
+				if(cameraMove || cameraRotate || m_GamePaused)
 					return;
 					
 				//Movement:
@@ -1711,6 +1750,9 @@
 
 	
 			function animate() {
+			
+				if(m_GamePaused)
+					return;
 
 				requestAnimationFrame( animate );
 
@@ -1787,6 +1829,18 @@
 							{
 								//animate fall into hole
 								fallInHole();
+							}
+							
+							//check if player stepped onto teleport!
+							if(teleport != 0)
+							{
+								if(positionIsTeleport(current_position.x, current_position.z))
+								{
+									//pause game
+									m_GamePaused = true;
+									//show final register/feedback level complete screen!
+									displayLevelCompleteDialog();
+								}
 							}
 						}
 						
@@ -1986,6 +2040,7 @@
 				renderer.render( scene, camera );
 
 			}
+			
 
 		</script>
 
