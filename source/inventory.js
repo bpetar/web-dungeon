@@ -67,10 +67,10 @@ function inventory_item_clicked(x_pos,y_pos)
 		{
 			if(inventory_array[i].slot == slot)
 			{
-				var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
-				slot_icon.src = "media/none.png";
+				//var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
+				//slot_icon.src = "media/none.png";
 				var ret = inventory_array[i].gObject;
-				inventory_array.splice(i,1);
+				//inventory_array.splice(i,1);
 				return ret;
 			}
 		}
@@ -78,5 +78,17 @@ function inventory_item_clicked(x_pos,y_pos)
 	return 0;
 }
 
+function inventory_item_remove(item)
+{
+	for (var i=0; i<inventory_array.length; i++)
+	{
+		if(inventory_array[i].gObject == item)
+		{
+			var slot_icon = document.getElementById("gui_slot" + inventory_array[i].slot + "_item_icon");
+			slot_icon.src = "media/none.png";
+			inventory_array.splice(i,1);
+		}
+	}
+}
 
 

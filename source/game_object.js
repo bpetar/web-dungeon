@@ -25,6 +25,10 @@ function create_game_object () {
 	gobject.visible = true;
 	
 	gobject.mesh = 0;
+	
+	gobject.useHint = "Nothing seems to happen..";
+	gobject.useScript = 0;
+	gobject.consumable = false;
 
 	gobject.name_id = 0;
 	gobject.description_id = 0;

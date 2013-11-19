@@ -6,8 +6,14 @@
 //this goes to map file
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+function showScroll()
+{
+	console.log("Showing scroll content!");
+	show_message(" <br> " + "The world built on dreams reaches for the dreams built in this world. Are you in a dream?" + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+}
+
 // id, name, model, icon
-var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png"]];
+var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
 var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];
@@ -135,6 +141,12 @@ function loadNiches() {
 			
 			picki.icon = niche_pickables[i][3];
 			picki.niched = n; //flag indicating if pickable is in the niche
+			
+			picki.useHint = niche_pickables[i][4];
+			if(niche_pickables[i].length>5)
+			{
+				picki.useScript = niche_pickables[i][5];
+			}
 			
 			loader.load( picki.model, picki.loadObject(picki) );
 			

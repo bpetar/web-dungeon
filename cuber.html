@@ -400,6 +400,8 @@
 
 			var camera, scene, renderer;
 			
+			var m_RMBEventWasUsed = false;
+			
 			var monster_wound_div_top_lift = 0;
 			var monster_wound_div_top = 0;
 
@@ -1483,14 +1485,19 @@
 				}
 			}
 			
-			/*window.oncontextmenu = function ()
+			window.oncontextmenu = function ()
 			{
-				return false;     // cancel default menu
-			}*/
+				console.log("pera oncontextmenu");
+				if(m_RMBEventWasUsed)
+				{
+					m_RMBEventWasUsed = false;
+					return false;     // cancel default menu
+				}
+			}
 
 			function onMouseClick(event) {
 
-				console.log("onMouseClick");
+				//console.log("onMouseClick");
 
 				var isRightMB;
 				var e = event || window.event;
@@ -1498,15 +1505,26 @@
 					isRightMB = e.which == 3; 
 				else if ("button" in e)  // IE, Opera 
 					isRightMB = e.button == 2; 
-				if(isRightMB)
-				{
-					console.log("Right mouse button was clicked!");
-					return false;
-				}
 				
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
+				/*if(isRightMB)
+				{
+					console.log("Right mouse button was clicked!");
+					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
+					if(slot_index > 0)
+					{
+						
+						m_RMBEventWasUsed = true;
+					}
+					return false;
+				}
+				else
+				{
+					m_RMBEventWasUsed = false;
+				}*/
+					
 				var look_offset = new THREE.Vector3(0, 0, 0).add(camera.look);
 				look_offset.sub(camera.position);
 				look_offset.normalize();
@@ -1625,16 +1643,41 @@
 						var item = inventory_item_clicked(x_pos,y_pos);
 						if(item)
 						{
-							//place inventory item at hand
-							pickable_at_hand = item;
-							pickable_at_hand.mesh.visible = false;
-							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-							pickable_at_hand_icon.src = item.icon;
-							
-							//should we hide inventory right after item pickup?
-							//inventorySlide = -1;
-							
-							//dont do anything else if item is picked
+							if(isRightMB)
+							{
+								//use item
+								console.log("Use item " + item.name);
+								//print item use hint
+								console.log("Use item hint: " + item.useHint);
+								//run item usage script function
+								if(item.useScript != 0)
+								{
+									item.useScript();
+								}
+								//consume if expendable
+								if(item.consumable)
+								{
+									inventory_item_remove(item);
+								}
+								m_RMBEventWasUsed = true;
+							}
+							else
+							{
+								//remove picked from inventory
+								inventory_item_remove(item);
+								
+								//place inventory item at hand
+								pickable_at_hand = item;
+								pickable_at_hand.mesh.visible = false; //TODO remove this line?
+								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								pickable_at_hand_icon.src = item.icon;
+								
+								//should we hide inventory right after item pickup?
+								//inventorySlide = -1;
+								
+							}
+
+							//dont do anything else if item is clicked
 							return;
 						}
 					}
