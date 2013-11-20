@@ -3,7 +3,6 @@
 
 function healingScript()
 {
-	console.log("Healing is being drinked!");
 	playerHPcurrent += 15;
 	if (playerHPcurrent > playerHPmax)
 	{
@@ -12,7 +11,7 @@ function healingScript()
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"healing","models/healing.js", 9,0, "media/potion.png", "Player drinks healing potion", healingScript, 1]];
+var pickables_array = [[2,"rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"healing","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
 
 
 

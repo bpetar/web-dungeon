@@ -159,6 +159,10 @@
 		13
 		</div>
 
+		<div id="info_tip" style="text-align:left; font-size:20px; color: #BBFFBB; position:absolute; height:32px; width:512px;">
+		Game started..
+		</div>
+
 		<div id="level_complete_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; display: none;">
 			<p>Level Complete!<p>
 		</div>
@@ -214,6 +218,20 @@
 			function displayLevelCompleteDialog() {
 				//add registration and feedback options
 				level_complete_div.style.display = "inline-block";
+			}
+			
+			function DisplayInfoDiv(msg) {
+				//show some dmg blood flashy thing over monster
+				var info_tip_div_bottom = INVENTORY_POS_SHOWN + SLOT_WIDTH
+				var left = (windowHalfX - (SLOT_WIDTH*NUM_SLOTS_INVENTORY_ROW/2));
+				//info_tip_div.style.top = info_tip_div_top + "px";
+				info_tip_div.style.bottom = info_tip_div_bottom + "px";
+				info_tip_div.style.left = left + "px";
+				info_tip_div.innerHTML = msg;
+				info_tip_div_top_lift = 0;
+				info_tip_div.style.opacity = 1.0;
+				info_tip_div.style.display = "inline-block";
+				console.log("info: " + windowHalfX + ", left: " + left);
 			}
 			
 			function DisplayMonsterDmg(dmg) {
@@ -405,6 +423,9 @@
 			var monster_wound_div_top_lift = 0;
 			var monster_wound_div_top = 0;
 
+			var info_tip_div_top_lift = 0;
+			var info_tip_div_top = 0;
+
 			var mesh, mesh2, mesh3, light;
 
 			var mouseX = 0, mouseY = 0;
@@ -541,6 +562,9 @@
 				monster_wound_div = document.getElementById('monster_wound');
 				monster_wound_div.style.display = 'none';
 				
+				info_tip_div = document.getElementById('info_tip');
+				info_tip_div.style.display = 'none';
+
 				weaponDiv = document.getElementById('player1tophand');
 				weaponDiv.style.opacity=1.0;
 				
@@ -1125,7 +1149,6 @@
 					{
 						inventorySlide = -1;
 					}
-					//alert(inventorySlide);
 				}
 				
 				if ((event.keyCode == 37) || (event.keyCode == 81)) {
@@ -1509,22 +1532,6 @@
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
-				/*if(isRightMB)
-				{
-					console.log("Right mouse button was clicked!");
-					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
-					if(slot_index > 0)
-					{
-						
-						m_RMBEventWasUsed = true;
-					}
-					return false;
-				}
-				else
-				{
-					m_RMBEventWasUsed = false;
-				}*/
-					
 				var look_offset = new THREE.Vector3(0, 0, 0).add(camera.look);
 				look_offset.sub(camera.position);
 				look_offset.normalize();
@@ -1649,6 +1656,7 @@
 								console.log("Use item " + item.name);
 								//print item use hint
 								console.log("Use item hint: " + item.useHint);
+								DisplayInfoDiv(item.useHint);
 								//run item usage script function
 								if(item.useScript != 0)
 								{
@@ -1734,7 +1742,7 @@
 							}
 						}
 					}
-							
+
 					// create a Ray with origin at the mouse position
 					//   and direction into the scene (camera direction)
 					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
@@ -1808,6 +1816,7 @@
 
 					update_teleport(elapsed/10000);
 					
+					//lifting wound div up and opacitating it to transparent
 					if(monster_wound_div.style.display == "inline-block")
 					{
 						monster_wound_div_top_lift += elapsed;
@@ -1821,6 +1830,23 @@
 						{
 							//wound should dissappear
 							monster_wound_div.style.display = 'none';
+						}
+					}
+					
+					//lifting info div up and opacitating it to transparent
+					if(info_tip_div.style.display == "inline-block")
+					{
+						info_tip_div_top_lift += elapsed;
+						if(info_tip_div_top_lift < 6000)
+						{
+							var new_top = info_tip_div_top - info_tip_div_top_lift/20;
+							//info_tip_div.style.top = new_top + "px";
+							info_tip_div.style.opacity -= info_tip_div_top_lift/60000;
+						}
+						else
+						{
+							//wound should dissappear
+							info_tip_div.style.display = 'none';
 						}
 					}
 					
