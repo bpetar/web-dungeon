@@ -44,3 +44,94 @@ add tips dialog: "press i to open inventory"
 add menu icon and dialog! exit, help, save, load, keys ..!
 item info on mouse pause
 
+
+
+
+
+
+<div style="width:100%;float:left;position:relative">
+<h2>COMMENTS</h2>
+<?php 
+ 
+ if (isset($_POST['comment']) && ($_POST['comment']!=""))
+ {
+   $writingtime=date("Y-m-d H:i:s",mktime(date('H')+$TIMEZONE_OFFSET,date('i'),date('s'),date("m"),date("d"),date("Y")));
+   $commentcontent=$_POST['comment'];
+   
+   //one silly bot kept posting word 'USA' to my comments
+   //if(strcmp($commentcontent,"USA")!=0)
+   {
+     if(isset($_POST['name']) && ($_POST['name']!=""))
+       $name=$_POST['name'];
+     else
+       $name="Anonymous";
+     $website=$_POST['website'];
+     $moderated = 0;
+     $antibot = $_POST['antibut'];
+     if($antibot > 100)
+     {
+     	$qid = mysql_query("INSERT INTO turtle_comments (username,comment,moderated,website,writingdate) 
+                            VALUES ('$name','$commentcontent','$moderated','$website','$writingtime')");
+        $mail_subject = "New comment on Turtle Shepherd Game From: " + $name;
+        $mail_body = "Comment: " + $commentcontent;
+        mail('info@mystic-peanut.com', "New comment on Turtle Shepherd Game", $commentcontent);
+     }
+     else
+     {
+     	$antibootfail = 1;
+     }
+               
+     
+   }
+ }
+
+ $data = mysql_query("SELECT * FROM turtle_comments ORDER BY writingdate") 
+ or die(mysql_error()); 
+ while($info = mysql_fetch_array( $data )) 
+ {
+  if ($info['moderated'] == '1')
+  {
+	  Print $info['writingdate']; 
+	  Print "<br>";
+	  if ($info['website'] != "")
+	   Print "<a href='".$info['website']."'>".$info['username']."</a>".":";
+	  else
+	   Print $info['username'].":";
+	  Print " ".$info['comment'] . " "; 
+	  Print "<br>";
+	  Print "<br>";
+  }
+ }
+ 
+ if ($qid) {
+   Print "<p style='color:green'>";
+   Print "Your comment is awaiting moderation.";
+   Print "</p>";
+ }
+ if($antibootfail)
+ {
+   Print "<p style='color:red'>";
+   Print "<br> You failed to answer antibot question, please try again. <br><br>";
+   Print "</p>";
+ }
+
+?>
+<br><br>
+----------------------------------------
+<br>
+
+<form name="commentForm" action="turtle.php" method="post">
+You can leave a comment here. <br><br>
+Name: <br>
+<input type="text" name="name" title="Put your name here"><br><br>
+Website: <br>
+<input type="text" name="website" title="Put your website here and your name will link to it"><br><br>
+Comment: <br>
+<input type="text" name="comment" title="Put your comment here. This field is obligatory for post to work." style="width:330; height:120"><br><br>
+Antibot check: <br>
+Enter number larger then 100 
+<input type="text" name="antibut" title="Enter some big number here to prove you are human">
+<br><br>
+<input type="submit" value="Post">
+</form>
+</div>
