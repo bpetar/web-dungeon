@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+<?php 
+
+	$DIR='..';
+	// Connects to Database 
+	//mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
+	//mysql_select_db("mysticp_comments") or die(mysql_error()); 
+	
+?>
+
 <html lang="en">
 	<head>
 		<title>cuber</title>
@@ -32,6 +40,10 @@
 	<body>
 
 		<div id="container" style="position:absolute;">
+		</div>
+		
+		<div id="menu" style="position:absolute;">
+		Menu
 		</div>
 		
 		<div id="gui" style="position:absolute; left:70px; top:70px;">
@@ -219,9 +231,8 @@
 				//add registration and feedback options
 				
 				//level_complete_div.style.display = "inline-block";
-				
-				
-				show_message("<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. <br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game releases, please leave your email below and we will contact you. <br><br> <font size='7'>Registration </font><br><br> name<br><input type='text' name='name'><br> email<br><input type='text' name='email'><br> feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> <button> Register </button>  &nbsp;&nbsp; <input type='button' value=' No thanks '>", 900,800);
+								
+				show_message("				<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' value='Register'>  &nbsp;&nbsp; 				<input type='button' onclick='window.location=\"<?=$DIR?>/templates/level.php\";' value=' No thanks '>				</form>", 900,800);
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -414,6 +425,8 @@
 			var alerted = false;
 			
 			var container;
+			var menu_div;
+			
 			//var morphs = [];
 			var pickable_at_hand;
 			var pickable_at_hand_icon;
@@ -515,6 +528,8 @@
 			function init() {
 
 				container = document.getElementById( 'container' );
+				
+				menu_div = document.getElementById( 'menu' );
 				
 				//createWallsFromFloors();
 				
