@@ -67,6 +67,23 @@
    }
  }
 
+ //registration
+ if (isset($_POST['email']) && ($_POST['email']!=""))
+ {
+	$email = $_POST['email'];
+	//check valid email format
+	//if(valid_email($email))
+	{
+		//add to database
+		$reg_qid = mysql_query("INSERT INTO cuber_comments (username,email,password,ip,date,feedback,lvlcomplete) 
+                            VALUES ('$name','$email','$pass','$ip','$writingtime')");
+	}
+	else
+	{
+		//print warning dialog and offer user to reenter email
+	}
+ }
+ 
  $data = mysql_query("SELECT * FROM cuber_comments ORDER BY date") 
  or die(mysql_error()); 
  while($info = mysql_fetch_array( $data )) 
