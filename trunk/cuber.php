@@ -4,6 +4,7 @@
 	// Connects to Database 
 	//mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
 	//mysql_select_db("mysticp_comments") or die(mysql_error()); 
+    include "cuber_play_counter.php";
 	
 ?>
 
@@ -186,7 +187,7 @@
 			<p>Use QWEASD keys to move around and left mouse button to click. Browser reload button gets you back on start.</p>
 
 			<!-- <p>Please send me feedback about your Frame rate, OS, browser version, processor and GPU.</p> -->
-			<p>If you have any trouble playing the game please contact me using link in the top right corner.</p>
+			<p>If you have any trouble playing the game please contact me on <a style="color: rgb(20,75,30)" href="mailto:info@mystic-peanut.com">info@mystic-peanut.com</a> .</p>
 			<br>
 			<button onclick='hide_message();'> Ok </button>
 			</div>
@@ -211,9 +212,12 @@
 		<script src="./source/monster.js"></script>
 		<script src="./source/stats.min.js"></script>
 		<script src="./source/particles.js"></script>
+		<script src="./source/Detector.js"></script>
 
 		<script>
 		
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
 			clickConsumed = false;
 
 			var stats = new Stats();
@@ -233,6 +237,7 @@
 				//level_complete_div.style.display = "inline-block";
 								
 				show_message("				<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' value='Register'>  &nbsp;&nbsp; 				<input type='button' onclick='window.location=\"<?=$DIR?>/templates/level.php\";' value=' No thanks '>				</form>", 900,800);
+				<?php mail('info@mystic-peanut.com', "Someone finished Cuber", "Oh my"); ?>
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -616,7 +621,6 @@
 				
 				var loader = new THREE.JSONLoader();
 
-				//loader.load( "models/tost.js", createScene1 );
 				loader.load( "models/doorway.js", createScene1 );
 				loader.load( "models/door.js", createScene2 );
 
@@ -636,35 +640,35 @@
 				/////// draw text on canvas /////////
 
 				// create a canvas element
-				var canvas1 = document.createElement('canvas');
-				var context1 = canvas1.getContext('2d');
-				context1.font = "Bold 20px Arial";
+				//var canvas1 = document.createElement('canvas');
+				//var context1 = canvas1.getContext('2d');
+				//context1.font = "Bold 20px Arial";
 				//context1.fillStyle = "rgba(1,1,0,0.95)";
 				//context1.fillText('Hello, world!', 10, 20);
 				
-				context1.clearRect(0,0,640,480);
-				var message = "Pera";
-				var metrics = context1.measureText(message);
-				var width = metrics.width;
-				context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
-				context1.fillRect( 0,0, width+8,20+8);
-				context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-				context1.fillRect( 2,2, width+4,20+4 );
-				context1.fillStyle = "rgba(0,0,0,1)"; // text color
-				context1.fillText( message, 4,20 );
+				//context1.clearRect(0,0,640,480);
+				//var message = "Pera";
+				//var metrics = context1.measureText(message);
+				//var width = metrics.width;
+				//context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
+				//context1.fillRect( 0,0, width+8,20+8);
+				//context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
+				//context1.fillRect( 2,2, width+4,20+4 );
+				//context1.fillStyle = "rgba(0,0,0,1)"; // text color
+				//context1.fillText( message, 4,20 );
 				
 				// canvas contents will be used for a texture
-				var texture1 = new THREE.Texture(canvas1) 
-				texture1.needsUpdate = true;
+				//var texture1 = new THREE.Texture(canvas1) 
+				//texture1.needsUpdate = true;
 				
 				////////////////////////////////////////
 				
-				var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
+				//var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
 				
-				var sprite1 = new THREE.Sprite( spriteMaterial );
-				sprite1.scale.set(200,200,1.0);
-				sprite1.position.set( 50, 15, 0 );
-				scene.add( sprite1 );	
+				//var sprite1 = new THREE.Sprite( spriteMaterial );
+				//sprite1.scale.set(200,200,1.0);
+				//sprite1.position.set( 50, 15, 0 );
+				//scene.add( sprite1 );	
 				
 				/////// draw text on canvas /////////
 				
