@@ -9,22 +9,39 @@
 <?php 
  // Connects to Database 
  mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
- mysql_select_db("mysticp_comments") or die(mysql_error()); 
 ?>  
 
 <br>
 	<h2> &nbsp;Web Dungeon </h2> 
       <h3> &nbsp;Project state: in development.    
-      <br> &nbsp;Game genre : WebGL 3D online dungeon crawler..<br>
+      <br> &nbsp;Game genre : WebGL 3D online dungeon crawler..
+	  <br> &nbsp;Instructions: QWEASD to move, mouse to click..
+      <br>
+      <br>
+
+	  
+<div style="float:left; width:350px">
+&nbsp;
+<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.mystic-peanut.com/templates/level.php&amp;send=false&amp;layout=button_count&amp;width=150&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:21px;" allowTransparency="true"></iframe>
+
+<!-- Place this tag where you want the +1 button to render -->
+<g:plusone size="medium"></g:plusone>
+
+<!-- Place this tag after the last plusone tag -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
 
 
 
-&nbsp;Instructions: QWEASD to move, mouse to click..
-<br><br>
 
-<a href="http://www.mystic-peanut.com/webdungeon/cuber.html"> <img src="<?=$DIR?>/images/webdungeon_golem_660_play.jpg"> </a>
+<a href="http://www.mystic-peanut.com/webdungeon/cuber.php"> <img src="<?=$DIR?>/images/webdungeon_golem_660_play.jpg"> </a>
 <br>
-<a href="http://www.mystic-peanut.com/webdungeon/cuber.html"> Click here to enter dungeon... </a>
+<a href="http://www.mystic-peanut.com/webdungeon/cuber.php"> Click here to enter dungeon... </a>
 
 <?php include "cuber_visit_counter.php"; ?>
 
@@ -35,10 +52,13 @@
 <h2>COMMENTS</h2>
 <?php 
  
+ mysql_select_db("mysticp_comments") or die(mysql_error());
+ $moderated = 0;
+ $writingtime=date("Y-m-d H:i:s",mktime(date('H')+$TIMEZONE_OFFSET,date('i'),date('s'),date("m"),date("d"),date("Y")));
+
  if (isset($_POST['comment']) && ($_POST['comment']!=""))
  {
-   $writingtime=date("Y-m-d H:i:s",mktime(date('H')+$TIMEZONE_OFFSET,date('i'),date('s'),date("m"),date("d"),date("Y")));
-   $commentcontent=$_POST['comment'];
+	$commentcontent=$_POST['comment'];
    
    //one silly bot kept posting word 'USA' to my comments
    //if(strcmp($commentcontent,"USA")!=0)
@@ -48,7 +68,7 @@
      else
        $name="Anonymous";
      $website=$_POST['website'];
-     $moderated = 0;
+     
      $antibot = $_POST['antibut'];
      if($antibot > 100)
      {
@@ -68,20 +88,16 @@
  }
 
  //registration
- if (isset($_POST['email']) && ($_POST['email']!=""))
+ if (isset($_POST['feedback']) && ($_POST['feedback']!="") && isset($_POST['name']) && ($_POST['name']!=""))
  {
-	$email = $_POST['email'];
-	//check valid email format
-	//if(valid_email($email))
-	{
-		//add to database
-		$reg_qid = mysql_query("INSERT INTO cuber_comments (username,email,password,ip,date,feedback,lvlcomplete) 
-                            VALUES ('$name','$email','$pass','$ip','$writingtime')");
-	}
-	else
-	{
-		//print warning dialog and offer user to reenter email
-	}
+	$name = $_POST['name'];
+	$feedback = $_POST['feedback'];
+	$website = "";
+	
+	$qid_feed = mysql_query("INSERT INTO cuber_comments (username,comment,moderated,website,date) 
+                            VALUES ('$name','$feedback','$moderated','$website','$writingtime')");
+
+	mail('info@mystic-peanut.com', "New feedback on Cuber", $feedback);
  }
  
  $data = mysql_query("SELECT * FROM cuber_comments ORDER BY date") 
@@ -102,17 +118,62 @@
   }
  }
  
+ if (isset($_POST['email']) && ($_POST['email']!=""))
+ {
+	mysql_select_db("mysticp_cuberuserdata") or die(mysql_error()); 
+	$email = $_POST['email'];
+	//check valid email format
+	if (filter_var($email, FILTER_VALIDATE_EMAIL))
+	{
+		$name = $_POST['name'];
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$pass = 'spas';
+		
+		//add to database
+		$reg_qid = mysql_query("INSERT INTO cuber_users (name,email,password,ip,date) VALUES ('$name','$email','$pass','$ip','$writingtime')");
+		
+		//notify me by email about new user
+        mail('info@mystic-peanut.com', "New user on Cuber", $name);
+		
+		$registration_good = 1;
+	}
+	else
+	{
+		//print warning dialog and offer user to reenter email
+		$email_bad = 1;
+	}
+ }
+ 
+ 
  if ($qid) {
    Print "<p style='color:green'>";
    Print "Your comment is awaiting moderation.";
    Print "</p>";
  }
+ if ($qid_feed) {
+   Print "<p style='color:green'>";
+   Print "Your feedback will be added to comments.";
+   Print "</p>";
+ } 
  if($antibootfail)
  {
    Print "<p style='color:red'>";
    Print "<br> You failed to answer antibot question, please try again. <br><br>";
    Print "</p>";
  }
+ if($email_bad)
+ {
+   Print "<p style='color:red'>";
+   Print "<br> Your email was wrong, please try again. <br><br>";
+   Print "</p>";
+ }
+ if($registration_good)
+ {
+   Print "<p style='color:green'>";
+   Print "Thank you for registration. You will be notified of game progress.";
+   Print "</p>";
+ }
+ 
 
 ?>
 <br><br>
