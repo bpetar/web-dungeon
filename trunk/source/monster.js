@@ -1,12 +1,6 @@
 //monster.js
 //monster class, attributes and methods
 
-//monster inventory items: id, name, model, icon, picki
-var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
-
-// id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 100, 35, 20, monster_pickables_array]];
-
 //lively moved and modified (populated from save file and should be saved to save file)
 var array_of_monsters = [];
 
