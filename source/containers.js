@@ -1,10 +1,6 @@
 
 //containers and their content..
 
-// id, name, model, icon, slot
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
-// id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
 var currently_opened_container = -1;
 
 //load chests on the map

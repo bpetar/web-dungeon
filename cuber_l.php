@@ -201,7 +201,7 @@
 			</div>
 		</div>
 		
-		
+		<script src="./maps/level2/level2.js"></script>
 		<script src="./source/pickables.js"></script>
 		<script src="./source/tapestries.js"></script>
 		<script src="./source/containers.js"></script>
@@ -216,7 +216,11 @@
 
 		<script>
 		
-			if ( true /*! Detector.webgl*/ ) Detector.addGetWebGLMessage();
+			if ( ! Detector.webgl ) 
+			{
+				alert("You have no WebGL on your browser!!");
+				Detector.addGetWebGLMessage();
+			}
 			
 			clickConsumed = false;
 
@@ -636,6 +640,10 @@
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'mousedown', onMouseClick, false );
 
+				
+				loading_div.style.display = "none";
+				
+				
 				//
 				/////// draw text on canvas /////////
 

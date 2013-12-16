@@ -1,21 +1,4 @@
 
-//this goes in the map file:
-
-function healingScript()
-{
-	playerHPcurrent += 15;
-	if (playerHPcurrent > playerHPmax)
-	{
-		playerHPcurrent = playerHPmax;
-	}
-}
-
-// id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"healing","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
-
-
-
-//this stays in the file:
 
 //this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
 var array_of_pickables = [];
