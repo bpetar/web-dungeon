@@ -1,4 +1,23 @@
 
+// map arrays..
+var floorsArr2D = [[16,0], [9,0], [8,0], [16,1], [9,1], [8,1], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2], [12,2], [13,2], [15,2], [16,2], [15,3], [13,3], [6,3], [5,3], [4,3], [4,4], [10,4], [11,4], [12,4], [13,4], [14,4], [15,4], [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [4,5], [3,5], [10,6], [9,6], [8,6], [7,6], [4,6], [4,7], [5,7], [7,7], [8,7], [9,7], [10,7], [0,8], [1,8], [2,8], [5,8], [0,9], [1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9], [10,9], [13,9], [14,9], [15,9], [16,9], [17,9], [18,9], [19,9], [0,10], [1,10], [2,10], [8,10], [10,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10], [7,11], [8,11], [9,11], [10,11], [11,11], [12,11], [13,11], [14,11], [15,11], [16,11], [17,11], [18,11], [19,11], [20,11], [13,12], [14,12], [15,12], [16,12], [17,12], [18,12], [19,12], [13,13], [14,13], [15,13], [16,13], [17,13], [18,13], [19,13]];
+var secretWallsArr = [[6,2,3]]; //x,y,orientation
+var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
+var holesArr = [[7,7]];
+var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
+
+//basic level textures
+var floor_texture_file = 'maps/level2/media/floor_11_1.png';
+var wall_texture_file = 'maps/level2/media/stone_wall_01_01.png';
+var ceiling_texture_file = 'maps/level2/media/ceiling.png';
+var teleport_floor_texture_file = 'media/teleport_floor.jpg';
+var wall_writting_texture_file = 'media/wallwrit.jpg';
+
+//basic level models
+var hole_model = 'maps/level2/models/hole.js';
+var niche_model = 'maps/level2/models/niche.js';
+var doorway_model = 'maps/level2/models/doorway.js';
+var door_model = 'models/door.js';
 
 // id, name, model, x, z, icon
 var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];

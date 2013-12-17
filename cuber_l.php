@@ -408,17 +408,6 @@
 
 			var SQUARE_SIZE = 10;
 
-			//var floorsArr2D = [[2,-5], [3,-5], [4,-5], [5,-5], [6,-5], [6,-1], [1,2], [0,2], [0,1], [0,0], [0,-1], [0,-2], [0,-3], [0,-4], [1,-4], [2,-4], [3,-4], [4,-4], [5,-4], [6,-4], [2,-3], [3,-3], [4,-3], [5,-3], [6,-3], [4,-2], [5,-2], [3,-2], [6,-2], [2,-2], [4,-1], [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
-			var floorsArr2D = [[16,0], [9,0], [8,0], [16,1], [9,1], [8,1], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2], [12,2], [13,2], [15,2], [16,2], [15,3], [13,3], [6,3], [5,3], [4,3], [4,4], [10,4], [11,4], [12,4], [13,4], [14,4], [15,4], [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [4,5], [3,5], [10,6], [9,6], [8,6], [7,6], [4,6], [4,7], [5,7], [7,7], [8,7], [9,7], [10,7], [0,8], [1,8], [2,8], [5,8], [0,9], [1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9], [10,9], [13,9], [14,9], [15,9], [16,9], [17,9], [18,9], [19,9], [0,10], [1,10], [2,10], [8,10], [10,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10], [7,11], [8,11], [9,11], [10,11], [11,11], [12,11], [13,11], [14,11], [15,11], [16,11], [17,11], [18,11], [19,11], [20,11], [13,12], [14,12], [15,12], [16,12], [17,12], [18,12], [19,12], [13,13], [14,13], [15,13], [16,13], [17,13], [18,13], [19,13]];
-			var secretWallsArr = [[6,2,3]]; //x,y,orientation
-			var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
-			var holesArr = [[7,7]];
-			var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
-
-			//secretWallsArr = []; //x,y,orientation
-			//var doorsArr3D = []; //x,z,rot,open,mesh, 
-			//var holesArr = [];
-			
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -436,7 +425,6 @@
 			var container;
 			var menu_div;
 			
-			//var morphs = [];
 			var pickable_at_hand;
 			var pickable_at_hand_icon;
 			
@@ -540,8 +528,6 @@
 				
 				menu_div = document.getElementById( 'menu' );
 				
-				//createWallsFromFloors();
-				
 				document.onkeydown = handleKeyDown;
 
 				//audio!
@@ -549,7 +535,6 @@
 				var source = document.createElement('source');
 				source.src = 'media/wall.mp3';
 				audio.appendChild(source);
-				//audio.play();
   
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
@@ -561,7 +546,7 @@
 				current_position = new THREE.Vector3(16,0,0); //16,0,11
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( 0x559955, 0.0125 );
+				scene.fog = new THREE.FogExp2( 0x555599, 0.009525 );
 				
 				inventory_div = document.getElementById('gui_slots');
 				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
@@ -625,8 +610,8 @@
 				
 				var loader = new THREE.JSONLoader();
 
-				loader.load( "models/doorway.js", createScene1 );
-				loader.load( "models/door.js", createScene2 );
+				loader.load( doorway_model, createScene1 );
+				loader.load( door_model, createScene2 );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -636,64 +621,23 @@
 
 				container.appendChild( renderer.domElement );
 
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'mousedown', onMouseClick, false );
-
 				
 				loading_div.style.display = "none";
-				
-				
-				//
-				/////// draw text on canvas /////////
-
-				// create a canvas element
-				//var canvas1 = document.createElement('canvas');
-				//var context1 = canvas1.getContext('2d');
-				//context1.font = "Bold 20px Arial";
-				//context1.fillStyle = "rgba(1,1,0,0.95)";
-				//context1.fillText('Hello, world!', 10, 20);
-				
-				//context1.clearRect(0,0,640,480);
-				//var message = "Pera";
-				//var metrics = context1.measureText(message);
-				//var width = metrics.width;
-				//context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
-				//context1.fillRect( 0,0, width+8,20+8);
-				//context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-				//context1.fillRect( 2,2, width+4,20+4 );
-				//context1.fillStyle = "rgba(0,0,0,1)"; // text color
-				//context1.fillText( message, 4,20 );
-				
-				// canvas contents will be used for a texture
-				//var texture1 = new THREE.Texture(canvas1) 
-				//texture1.needsUpdate = true;
-				
-				////////////////////////////////////////
-				
-				//var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
-				
-				//var sprite1 = new THREE.Sprite( spriteMaterial );
-				//sprite1.scale.set(200,200,1.0);
-				//sprite1.position.set( 50, 15, 0 );
-				//scene.add( sprite1 );	
-				
-				/////// draw text on canvas /////////
 				
 				// initialize object to perform world/screen calculations
 				projector = new THREE.Projector();
 
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				var map = THREE.ImageUtils.loadTexture( 'media/floor.jpg' );
-				var teleport_map = THREE.ImageUtils.loadTexture( 'media/teleport_floor.jpg' );
+				var map = THREE.ImageUtils.loadTexture( floor_texture_file );
+				var teleport_map = THREE.ImageUtils.loadTexture( teleport_floor_texture_file );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
 				
 				//teleport_map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				teleport_map.anisotropy = 16;
-
 
 				var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 				
@@ -717,7 +661,7 @@
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
 						pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
-						loader.load( "models/hole.js", loadModel(pos,rot) );
+						loader.load( hole_model, loadModel(pos,rot) );
 					}
 					else
 					{
@@ -743,7 +687,7 @@
 				
 				//ceiling
 				
-				map = THREE.ImageUtils.loadTexture( 'media/ceiling.jpg' );
+				map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
 				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
@@ -765,13 +709,13 @@
 				//walls
 				
 				//wall texture
-				map = THREE.ImageUtils.loadTexture( 'media/wall.jpg' );
+				map = THREE.ImageUtils.loadTexture( wall_texture_file );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
 				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 				
 				//writting on the wall texture
-				var mapwrit = THREE.ImageUtils.loadTexture( 'media/wallwrit.jpg' );
+				var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
 				mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
 				mapwrit.anisotropy = 16;
 				materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
@@ -849,7 +793,7 @@
 							var rot = new THREE.Vector3(0, 0, 0);
 							pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 							rot.set(0, -Math.PI/2, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
+							loader.load( niche_model, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -905,7 +849,7 @@
 							var rot = new THREE.Vector3(0, 0, 0);
 							pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 							rot.set(0, Math.PI/2, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
+							loader.load( niche_model, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -961,7 +905,7 @@
 							var rot = new THREE.Vector3(0, 0, 0);
 							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 							rot.set(0, Math.PI, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
+							loader.load( niche_model, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -1017,7 +961,7 @@
 							var rot = new THREE.Vector3(0, 0, 0);
 							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
 							rot.set(0, 0, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
+							loader.load( niche_model, loadModel(pos, rot) );
 						}
 						else
 						{
