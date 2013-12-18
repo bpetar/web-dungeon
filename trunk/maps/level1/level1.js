@@ -7,21 +7,21 @@ var holesArr = [[7,7]];
 var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
 
 //basic level textures
-var floor_texture_file = 'maps/level2/media/floor_11_1.png';
-var wall_texture_file = 'maps/level2/media/stone_wall_01_01.png';
-var ceiling_texture_file = 'maps/level2/media/ceiling.png';
-var teleport_floor_texture_file = 'maps/level2/media/teleport_floor.png';
-var wall_writting_texture_file = 'maps/level2/media/wallwrit.png';
+var floor_texture_file = 'maps/level1/media/floor.jpg';
+var wall_texture_file = 'maps/level1/media/wall.jpg';
+var ceiling_texture_file = 'maps/level1/media/ceiling.jpg';
+var teleport_floor_texture_file = 'maps/level1/media/teleport_floor.jpg';
+var wall_writting_texture_file = 'maps/level1/media/wallwrit.jpg';
 
 //basic level models
-var hole_model = 'maps/level2/models/hole.js';
-var niche_model = 'maps/level2/models/niche.js';
-var doorway_model = 'maps/level2/models/doorway.js';
+var hole_model = 'maps/level1/models/hole.js';
+var niche_model = 'maps/level1/models/niche.js';
+var doorway_model = 'maps/level1/models/doorway.js';
 var door_model = 'models/door.js';
 
 //level related values
-fog_color = 0x555599;
-fog_intensity = 0.009525;
+fog_color = 0x559955;
+fog_intensity = 0.011525;
 
 // id, name, model, x, z, icon
 var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];
