@@ -201,7 +201,33 @@
 			</div>
 		</div>
 		
+<?php
+		
+if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
+{
+	$lvl = $_GET['lvl'];
+	//check valid email format
+	if (strcmp($lvl,'level2') == 0)
+	{
+?>
+		<script src="./maps/level2/level2.js"></script>
+<?php 
+    }
+	else
+	{
+?>
 		<script src="./maps/level1/level1.js"></script>
+<?php 
+	}
+}
+else
+{
+?>
+		<script src="./maps/level1/level1.js"></script>
+<?php 
+}
+?>
+	
 		<script src="./source/pickables.js"></script>
 		<script src="./source/tapestries.js"></script>
 		<script src="./source/containers.js"></script>

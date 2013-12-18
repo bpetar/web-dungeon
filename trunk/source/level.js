@@ -57,6 +57,29 @@ function load_level()
 	loader.load( doorway_model, loadDoorways );
 	loader.load( door_model, loadDoors );
 
+	var mpos = new THREE.Vector3(160, 0, 10);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/plynth.js", loadModel(mpos,mrot) );
+	
+	var mpos = new THREE.Vector3(155, 0, 15);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	var mpos = new THREE.Vector3(155, 0, 5);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	var mpos = new THREE.Vector3(165, 0, 15);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	var mpos = new THREE.Vector3(165, 0, 5);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	var mpos = new THREE.Vector3(165, 0, 25);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	var mpos = new THREE.Vector3(155, 0, 25);
+	var mrot = new THREE.Vector3(0, 0, 0);
+	loader.load( "models/pillar.js", loadModel(mpos,mrot) );
+	
 	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
 	var teleport_map = THREE.ImageUtils.loadTexture( teleport_floor_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
