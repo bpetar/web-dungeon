@@ -19,6 +19,10 @@
       <br>
       <br>
 
+	  &nbsp; Full 3D game that works in your browser without any plugin or installation required! Game is still in developement and demo level presents basic functionality like dungeon crawling, items, doors, pits, secret walls, niches, monsters and teleports. Explore sqarish dungeons, solve puzzles and fight monsters all free and easy to access! You need computer with moderate 3D graphics card and browser that supports WebGL, most of popular browsers do, just update to latest version. 
+	  
+	  <br>
+	  <br>
 	  
 <div style="float:left; width:350px">
 &nbsp;
@@ -38,13 +42,19 @@
 
 
 
-
 <a href="http://www.mystic-peanut.com/webdungeon/cuber.php"> <img src="<?=$DIR?>/images/webdungeon_golem_660_play.jpg"> </a>
 <br>
 <a href="http://www.mystic-peanut.com/webdungeon/cuber.php"> Click here to enter dungeon... </a>
 
 <?php include "cuber_visit_counter.php"; ?>
-
+<br>
+&nbsp; If you like this game, feel free to donate. Your fund will be used to hire 3d artists, buy new quality models and textures, music and sounds, and improve overal quality of the game.
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="DH4RZ5HDAGKXW">
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
 
 
 
@@ -118,29 +128,38 @@
   }
  }
  
- if (isset($_POST['email']) && ($_POST['email']!=""))
+ 
+ if (isset($_POST['noRegister'])) 
  {
-	mysql_select_db("mysticp_cuberuserdata") or die(mysql_error()); 
-	$email = $_POST['email'];
-	//check valid email format
-	if (filter_var($email, FILTER_VALIDATE_EMAIL))
+        mail('info@mystic-peanut.com', "Cuber - registration refused", "Why oh why?!");
+ }
+ else
+ {
+ 	if (isset($_POST['email']) && ($_POST['email']!=""))
 	{
-		$name = $_POST['name'];
-		$ip = $_SERVER['REMOTE_ADDR'];
-		$pass = 'spas';
-		
-		//add to database
-		$reg_qid = mysql_query("INSERT INTO cuber_users (name,email,password,ip,date) VALUES ('$name','$email','$pass','$ip','$writingtime')");
-		
-		//notify me by email about new user
-        mail('info@mystic-peanut.com', "New user on Cuber", $name);
-		
-		$registration_good = 1;
-	}
-	else
-	{
-		//print warning dialog and offer user to reenter email
-		$email_bad = 1;
+		mysql_select_db("mysticp_cuberuserdata") or die(mysql_error()); 
+		$email = $_POST['email'];
+		//check valid email format
+		if (filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			$name = $_POST['name'];
+			$ip = $_SERVER['REMOTE_ADDR'];
+			$pass = 'spas';
+			
+			//add to database
+			$reg_qid = mysql_query("INSERT INTO cuber_users (name,email,password,ip,date) VALUES ('$name','$email','$pass','$ip','$writingtime')");
+			
+			//notify me by email about new user
+			mail('info@mystic-peanut.com', "New user on Cuber", $name);
+			
+			$registration_good = 1;
+		}
+		else
+		{
+			//print warning dialog and offer user to reenter email
+			$email_bad = 1;
+			mail('info@mystic-peanut.com', "Cuber - failed email registration", $email);
+		}
 	}
  }
  
