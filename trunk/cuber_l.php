@@ -230,6 +230,7 @@ else
 	
 		<script src="./source/pickables.js"></script>
 		<script src="./source/tapestries.js"></script>
+		<script src="./source/plate.js"></script>
 		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
@@ -631,6 +632,9 @@ else
 				
 				//load tapestries
 				load_tapestries();
+				
+				//load pressure plates (plynths)
+				load_plates ();
 				
 				//load chests
 				load_containers();
@@ -1477,6 +1481,13 @@ else
 							{
 								//animate fall into hole
 								fallInHole();
+							}
+							
+							//check if player has stepped on the pressure plate
+							if(standing_on_plate())
+							{
+								//call pressure plate onPress function..
+								console.log("plate pressed!");
 							}
 							
 							//check if player stepped onto teleport!

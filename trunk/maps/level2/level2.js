@@ -36,6 +36,11 @@ var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0]
 // id, name, model, x, z, rot, hp, ac, attack
 var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 100, 35, 20, monster_pickables_array]];
 
+// id, model, x, z, pressed, script functions..
+var plates_array = [[1, "models/plynth.js", 16,0,0,0,0], [2, "models/plynth.js", 16,1,0,0,0]];
+
+var pillar_array = [[1, "models/pillar.js", 16,2], [2, "models/pillar.js", 15,2]];
+	
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
