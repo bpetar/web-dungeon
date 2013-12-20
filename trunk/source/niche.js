@@ -48,6 +48,7 @@ function loadNiches() {
 			
 			picki.icon = niche_pickables[i][3];
 			picki.niched = n; //flag indicating if pickable is in the niche
+			picki.plated = -1; //flag indicating if pickable is on the plate
 			
 			picki.useHint = niche_pickables[i][4];
 			if(niche_pickables[i].length>5)

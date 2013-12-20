@@ -13,8 +13,8 @@ function load_pickables () {
 		picki.gameID = pickables_array[i][0];
 		picki.name = pickables_array[i][1];
 		picki.model = pickables_array[i][2];
-		picki.position.x = pickables_array[i][3]*SQUARE_SIZE+2;
-		picki.position.z = pickables_array[i][4]*SQUARE_SIZE+4;
+		picki.position.x = pickables_array[i][3]*SQUARE_SIZE-2;
+		picki.position.z = pickables_array[i][4]*SQUARE_SIZE-4;
 		picki.position.y = 0;
 		picki.icon = pickables_array[i][5];
 		picki.useHint = pickables_array[i][6];
@@ -28,6 +28,7 @@ function load_pickables () {
 			picki.consumable = (pickables_array[i][8] == 1)?true:false;
 		}
 		picki.niched = -1; //flag indicating if pickable is in the niche
+		picki.plated = -1; //flag indicating if pickable is in the niche
 
 		loader.load( picki.model, picki.loadObject(picki) );
 		

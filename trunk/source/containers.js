@@ -115,6 +115,7 @@ function container_item_clicked(x_pos,y_pos)
 					picki.model = container_pickables_array[i][2];
 					picki.icon = container_pickables_array[i][3];
 					picki.niched = -1;
+					picki.plated = -1;
 					picki.visible = false;
 					//lets make 3d model here in case player wants to drop it in 3D world.. 
 					var loader = new THREE.JSONLoader();
