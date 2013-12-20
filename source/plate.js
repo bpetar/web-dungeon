@@ -36,8 +36,26 @@ function standing_on_plate()
 		if((current_position.x == plates_array[n][2])&&(current_position.z == plates_array[n][3]))
 		{
 			//standing on plate position..
-			return true;
+			console.log("standing_on_plate yes!");
+			return n;
 		}
 	}
-	return false;
+	console.log("standing_on_plate no :(");
+	return -1;
+}
+
+function item_on_plate (item)
+{
+	//check if item is standing on plate
+	for(var n=0; n<plates_array.length; n++)
+	{
+		if((item.x == plates_array[n][2])&&(item.z == plates_array[n][3]))
+		{
+			//item standing on plate position..
+			console.log("item standing_on_plate yes!");
+			return n;
+		}
+	}
+	console.log("item standing_on_plate no :(");
+	return -1;
 }

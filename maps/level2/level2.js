@@ -1,10 +1,10 @@
 
 // map arrays..
-var floorsArr2D = [[16,0], [9,0], [8,0], [16,1], [9,1], [8,1], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2], [12,2], [13,2], [15,2], [16,2], [15,3], [13,3], [6,3], [5,3], [4,3], [4,4], [10,4], [11,4], [12,4], [13,4], [14,4], [15,4], [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [4,5], [3,5], [10,6], [9,6], [8,6], [7,6], [4,6], [4,7], [5,7], [7,7], [8,7], [9,7], [10,7], [0,8], [1,8], [2,8], [5,8], [0,9], [1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9], [10,9], [13,9], [14,9], [15,9], [16,9], [17,9], [18,9], [19,9], [0,10], [1,10], [2,10], [8,10], [10,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10], [7,11], [8,11], [9,11], [10,11], [11,11], [12,11], [13,11], [14,11], [15,11], [16,11], [17,11], [18,11], [19,11], [20,11], [13,12], [14,12], [15,12], [16,12], [17,12], [18,12], [19,12], [13,13], [14,13], [15,13], [16,13], [17,13], [18,13], [19,13]];
+var floorsArr2D = [[16,0], [16,1], [16,2], [16,3], [16,4]];
 var secretWallsArr = [[6,2,3]]; //x,y,orientation
-var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
-var holesArr = [[7,7]];
-var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
+var doorsArr3D = [[16,3,0,0,0,0]]; //x,z,rot,open,mesh,openable on click
+var holesArr = [];
+var writtingsArr = [[16,1,1,"Put some weight.."]]; 
 
 //basic level textures
 var floor_texture_file = 'maps/level2/media/floor_11_1.png';
@@ -24,25 +24,41 @@ fog_color = 0x555599;
 fog_intensity = 0.009525;
 
 // id, name, model, x, z, icon
-var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];
+var tapestries_array = [["models/tapestry1.js", 16,0,2]];
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
+//var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
+var containers_array = [];
 
 //monster inventory items: id, name, model, icon, picki
-var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
+//var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 100, 35, 20, monster_pickables_array]];
+var monster_array = [];
 
 // id, model, x, z, pressed, script functions..
-var plates_array = [[1, "models/plynth.js", 16,0,0,0,0], [2, "models/plynth.js", 16,1,0,0,0]];
+var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
-var pillar_array = [[1, "models/pillar.js", 16,2], [2, "models/pillar.js", 15,2]];
+var pillar_array = [[2, "models/pillar.js", 15,2]];
 	
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+function onPressPlate1()
+{
+	console.log("plate to open door");
+	
+	doorsArr3D[0][5] = 1; //animate flag
+	doorsArr3D[0][3] = 1; // open/close flag
+}
+
+function onUnpressPlate1()
+{
+	console.log("plate to close door");
+	doorsArr3D[0][5] = 1; //animate flag
+	doorsArr3D[0][3] = 0; // open/close flag
+}
+
 
 function showScroll()
 {
@@ -145,5 +161,5 @@ function healingScript()
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"healing","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
+var pickables_array = [[2,"rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
 ////////////////////////////////////////////////

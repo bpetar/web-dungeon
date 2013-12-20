@@ -268,8 +268,7 @@ else
 				
 				//level_complete_div.style.display = "inline-block";
 								
-				show_message("				<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' value='Register'>  &nbsp;&nbsp; 				<input type='button' onclick='window.location=\"<?=$DIR?>/templates/level.php\";' value=' No thanks '>				</form>", 900,800);
-				<?php mail('info@mystic-peanut.com', "Someone finished Cuber", "Oh my"); ?>
+				show_message("				<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -511,6 +510,9 @@ else
 			var ROUND_DURATION = 2; //2 seconds
 			var STEP_MOVE_DURATION = 150;
 			
+			var gStandingOnPlate = -1;
+			var gWeightOnThePlate = false;
+			
 			var audio;
 			
 			init();
@@ -706,6 +708,7 @@ else
 					}
 				}
 				
+				//check if doors are in that position
 				for(i=0; i < floorsArr2D.length; i++)
 				{
 					if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
@@ -1079,14 +1082,18 @@ else
 
 				for(i=0; i < doorsArr3D.length; i++)
 				{
+					//if there are doors in that position
 					if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
 					{
-						//if there are doors in that position..
-						/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
-						doorsArr3D[i][5] = 1; //animate flag
-						//alert("ima!");
-						if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flagww
-						else doorsArr3D[i][3] = 0;
+						// and door are unlocked..
+						if(doorsArr3D[i][7] == 1)
+						{
+							/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
+							doorsArr3D[i][5] = 1; //animate flag
+							//alert("ima!");
+							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flagww
+							else doorsArr3D[i][3] = 0;
+						}
 					}
 				}
 			}
@@ -1197,7 +1204,8 @@ else
 					}
 					
 					//drop it on the ground
-					//var looker = new THREE.Vector3(0, 0, 0);
+					
+					var plateID = standing_on_plate();
 					var looker = camera.look.clone().sub(camera.position);
 					
 					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
@@ -1208,7 +1216,16 @@ else
 					}
 					else
 					{
-						looker.multiplyScalar(0.92);
+						if(plateID>-1)
+						{
+							looker.multiplyScalar(0.62);
+							gWeightOnThePlate = true;
+							pickable_at_hand.plated = plateID;
+						}
+						else
+						{
+							looker.multiplyScalar(0.92);
+						}
 					}
 					
 					//var pos = camera.position.clone().add(looker);
@@ -1317,8 +1334,8 @@ else
 							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
 							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
 							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
-							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 1)) //left
-							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 3))) //right
+							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
 								console.log("looking at writting!");
 								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
@@ -1362,6 +1379,18 @@ else
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
 								//if pickable belongs to niche, remove from niche array
 								if(pickable_at_hand.niched > -1) remove_from_niche(pickable_at_hand);
+								if(pickable_at_hand.plated > -1)
+								{
+									//TODO: check if more items remain on the plate
+									gWeightOnThePlate = false;
+									console.log("lifting item off the plate!");
+									var onUnpress = plates_array[pickable_at_hand.plated][6];
+									if(onUnpress !=0 )
+									{
+										onUnpress();
+									}
+									pickable_at_hand.plated = -1;
+								}
 								inventorySlide = 1;
 								break;
 							}
@@ -1483,11 +1512,38 @@ else
 								fallInHole();
 							}
 							
+							//check if player was standing on press plate before this move..
+							if(gStandingOnPlate > -1)
+							{
+								//call pressure plate onUnpress function..
+								if(gWeightOnThePlate)
+								{
+									console.log("plate is not unpressed because weight is on it!");
+								}
+								else
+								{
+									console.log("plate unpressed!");
+									var onUnpress = plates_array[gStandingOnPlate][6];
+									if(onUnpress !=0 )
+									{
+										onUnpress();
+									}
+								}
+								gStandingOnPlate = -1;
+							}
+							
 							//check if player has stepped on the pressure plate
-							if(standing_on_plate())
+							var plateID = standing_on_plate();
+							if(plateID>-1)
 							{
 								//call pressure plate onPress function..
 								console.log("plate pressed!");
+								var onPress = plates_array[plateID][5];
+								if(onPress !=0 )
+								{
+									onPress();
+								}
+								gStandingOnPlate = plateID;
 							}
 							
 							//check if player stepped onto teleport!
