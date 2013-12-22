@@ -23,7 +23,7 @@ function create_game_object () {
 	gobject.gameID = 0;
 	gobject.orientation = 0;
 	gobject.visible = true;
-	
+	gobject.pressed = false;
 	gobject.mesh = 0;
 	
 	gobject.useHint = "Nothing seems to happen..";

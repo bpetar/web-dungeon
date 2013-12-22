@@ -1,10 +1,10 @@
 
 // map arrays..
-var floorsArr2D = [[16,0], [16,1], [16,2], [16,3], [16,4]];
+var floorsArr2D = [[16,0], [16,1], [16,2], [16,3], [16,4], [16,5], [16,6], [16,7], [16,8], [16,9], [16,10], [16,11], [16,12], [16,13]];
 var secretWallsArr = [[6,2,3]]; //x,y,orientation
-var doorsArr3D = [[16,3,0,0,0,0]]; //x,z,rot,open,mesh,openable on click
+var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,rot,open,mesh,animate flag,openable on click
 var holesArr = [];
-var writtingsArr = [[16,1,1,"Put some weight.."]]; 
+var writtingsArr = [[16,1,1,"Put some weight..",0]]; 
 
 //basic level textures
 var floor_texture_file = 'maps/level2/media/floor_11_1.png';
@@ -40,9 +40,20 @@ var monster_array = [];
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
 var pillar_array = [[2, "models/pillar.js", 15,2]];
-	
+
+//buttons
+var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressButton1]];
+
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+function onPressButton1()
+{
+	console.log("button to open door");
+	
+	doorsArr3D[1][5] = 1; //animate flag
+	doorsArr3D[1][3] = 1; // open/close flag
+}
 
 function onPressPlate1()
 {
@@ -63,18 +74,14 @@ function onUnpressPlate1()
 function showScroll()
 {
 	console.log("Showing scroll content!");
-	show_message(" <br> " + "The world built on dreams reaches for the dreams built in this world. Are you in a dream?" + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+	show_message(" <br> " + "Search the walls.." + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
 }
 
 // id, name, model, icon
 var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
-var niche_pickables_array2 = [];
-var niche_pickables_array3 = [];
-var niche_pickables_array4 = [];
-
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, 0, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, 0, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, 0, niche_onItemAdd]]; 
+var nicheArr = [[16,5,3,niche_pickables_array1]]; 
 
 NICHES_CLOSED = 0;
 

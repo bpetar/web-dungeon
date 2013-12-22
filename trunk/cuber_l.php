@@ -240,6 +240,7 @@ else
 		<script src="./source/stats.min.js"></script>
 		<script src="./source/particles.js"></script>
 		<script src="./source/Detector.js"></script>
+		<script src="./source/button.js"></script>
 		<script src="./source/level.js"></script>
 
 		<script>
@@ -456,6 +457,8 @@ else
 			var pickable_at_hand_icon;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
+			///var x_pos = 0;
+			///var y_pos = 0;
 
 			var camera, scene, renderer;
 			
@@ -469,8 +472,6 @@ else
 
 			var mesh, mesh2, mesh3, light;
 
-			var mouseX = 0, mouseY = 0;
-			
 			var m_GamePaused = false;
 			
 			var windowHalfX = window.innerWidth / 2;
@@ -512,8 +513,10 @@ else
 			
 			var gStandingOnPlate = -1;
 			var gWeightOnThePlate = false;
-			
+			var plate_click_audio;
+			var button_click_audio;
 			var audio;
+			var mouse_over_button = -1;
 			
 			init();
 			animate();
@@ -565,6 +568,17 @@ else
 				var source = document.createElement('source');
 				source.src = 'media/wall.mp3';
 				audio.appendChild(source);
+				
+				plate_click_audio = document.createElement('audio');
+				var sourcep = document.createElement('source');
+				sourcep.src = 'media/plate.mp3';
+				plate_click_audio.appendChild(sourcep);
+				
+				button_click_audio = document.createElement('audio');
+				var sourceb = document.createElement('source');
+				sourceb.src = 'media/button.mp3';
+				button_click_audio.appendChild(sourceb);
+				
   
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
@@ -1048,15 +1062,105 @@ else
 			
 			function onDocumentMouseMove( event ) {
 
-				mouseX = ( event.clientX - windowHalfX );
-				mouseY = ( event.clientY - windowHalfY );
-				
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+				
+				if(!pickable_at_hand)
+				{
 
+					// create a Ray with origin at the mouse position
+					//   and direction into the scene (camera direction)
+					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+					projector.unprojectVector( vector, camera );
+					var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+					for (var i=0; i< array_of_pickables.length; i++)
+					{
+						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
+						if(array_of_pickables[i].mesh.visible == false)
+							continue;
+						
+						//check if player is close to pickable
+						if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
+						{
+							continue;
+						}
+						
+						//check if pickable is clicked on
+						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+						
+						// if there is one (or more) intersections
+						if ( intersects.length > 0 )
+						{
+							
+							// if the closest object intersected is not the currently stored intersection object
+							if ( intersects[0].object.id == array_of_pickables[i].id )
+							{
+								//change mouse pointer to cursor
+								container.style.cursor = 'pointer';
+								return;
+							}
+						}
+					}
+					
+					for (var n=0; n<writtingsArr.length; n++)
+					{
+						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
+						{
+							var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+							looker.sub(camera.position);
+							var lookie = new THREE.Vector3(0,0,0).add(looker);
+							lookie.normalize();
+							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
+							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
+							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
+							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
+							{
+								if(writtingsArr[n][4] != 0)
+								{
+									var intersects = ray.intersectObject( writtingsArr[n][4] );
+							
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										//change mouse pointer to cursor
+										container.style.cursor = 'pointer';
+										return;
+									}
+								}
+							}
+						}
+					}
+					
+					
+					for (var b=0; b<buttons_array.length; b++)
+					{
+						if((buttons_array[b][2] == current_position.x)&&(buttons_array[b][3] == current_position.z))
+						{
+							//console.log("paaaaaaa");
+							if(array_of_buttons[b].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_buttons[b].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//console.log("prrrt");
+									//change mouse pointer to cursor
+									container.style.cursor = 'pointer';
+									mouse_over_button = b;
+									return;
+								}
+							}
+						}
+					}
+				}
+				mouse_over_button = -1;
+				container.style.cursor = 'auto';
 			}
 
 			function handleMouseClick(x,y) {
@@ -1086,12 +1190,12 @@ else
 					if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
 					{
 						// and door are unlocked..
-						if(doorsArr3D[i][7] == 1)
+						if(doorsArr3D[i][6] == 1)
 						{
 							/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
 							doorsArr3D[i][5] = 1; //animate flag
 							//alert("ima!");
-							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flagww
+							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
 							else doorsArr3D[i][3] = 0;
 						}
 					}
@@ -1203,10 +1307,16 @@ else
 						}
 					}
 					
+					//if click is too high, do nothing (throwing to be implemented later)
+					
+					
 					//drop it on the ground
 					
+					//check if pickable is dropped on the pressure plate plynth
 					var plateID = standing_on_plate();
 					var looker = camera.look.clone().sub(camera.position);
+					
+					
 					
 					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
 					if(pickable_at_hand.name=="ring")
@@ -1221,10 +1331,35 @@ else
 							looker.multiplyScalar(0.62);
 							gWeightOnThePlate = true;
 							pickable_at_hand.plated = plateID;
+							array_of_plates[plateID].mesh.position.y -=0.2;
+							plate_click_audio.play();
+							var onPress = plates_array[plateID][5];
+							if(onPress !=0 )
+							{
+								onPress();
+							}
 						}
 						else
 						{
-							looker.multiplyScalar(0.92);
+							plateID = clicking_on_plate();
+							//if not standing on plate, check if clicking on plate
+							if(plateID>-1)
+							{
+								looker.multiplyScalar(1.52);
+								gWeightOnThePlate = true;
+								pickable_at_hand.plated = plateID;
+								array_of_plates[plateID].mesh.position.y -=0.2;
+								plate_click_audio.play();
+								var onPress = plates_array[plateID][5];
+								if(onPress !=0 )
+								{
+									onPress();
+								}
+							}
+							else
+							{
+								looker.multiplyScalar(0.92);
+							}
 						}
 					}
 					
@@ -1307,6 +1442,22 @@ else
 						}
 					}
 					
+					//button
+					if(mouse_over_button > -1)
+					{
+						if(array_of_buttons[mouse_over_button].pressed == false)
+						{
+							//play sound
+							button_click_audio.play();
+							//move button in the wall
+							array_of_buttons[mouse_over_button].mesh.position.x -= 0.05; //TODO move depending on orientation
+							//do button action
+							array_of_buttons[mouse_over_button].onPressFunc();
+							//set it to be budged.. no more clicking.
+							array_of_buttons[mouse_over_button].pressed = true;
+						}
+					}
+					
 					//check if player clicked on chest (3d model)
 					var containerID = container_clicked_on(x_pos,y_pos);
 					if(containerID > -1)
@@ -1319,14 +1470,10 @@ else
 					}
 					
 					//check if player clicked on writting on the wall
-					var writtingIsOnTheWall = false;
-					//loop writtingsArr
 					for (var n=0; n<writtingsArr.length; n++)
 					{
 						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
 						{
-							writtingIsOnTheWall = true;
-							
 							var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 							looker.sub(camera.position);
 							var lookie = new THREE.Vector3(0,0,0).add(looker);
@@ -1383,6 +1530,7 @@ else
 								{
 									//TODO: check if more items remain on the plate
 									gWeightOnThePlate = false;
+									array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
 									console.log("lifting item off the plate!");
 									var onUnpress = plates_array[pickable_at_hand.plated][6];
 									if(onUnpress !=0 )
@@ -1538,6 +1686,7 @@ else
 							{
 								//call pressure plate onPress function..
 								console.log("plate pressed!");
+								plate_click_audio.play();
 								var onPress = plates_array[plateID][5];
 								if(onPress !=0 )
 								{
@@ -1603,9 +1752,9 @@ else
 					//animate doors opening/closing
 					for(i=0; i < doorsArr3D.length; i++)
 					{
-						if(doorsArr3D[i][5] == 1)
+						if(doorsArr3D[i][5] == 1) //openable
 						{
-							if(doorsArr3D[i][3] == 0) 
+							if(doorsArr3D[i][3] == 0) //closed
 							{
 								doorsArr3D[i][4].position.y -= elapsed/800;
 								if(doorsArr3D[i][4].position.y < 0.01) 

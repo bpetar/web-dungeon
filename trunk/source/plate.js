@@ -1,6 +1,8 @@
 
 //pressure plates
 
+//this is array of plates
+var array_of_plates = [];
 
 
 //load plate 3d models on the map
@@ -24,6 +26,8 @@ function load_plates () {
 		platsy.position.z = plates_array[i][3]*SQUARE_SIZE;
 
 		loader.load( platsy.model, platsy.loadObject(platsy) );
+		
+		array_of_plates.push(platsy);
 	}
 
 }
@@ -36,11 +40,31 @@ function standing_on_plate()
 		if((current_position.x == plates_array[n][2])&&(current_position.z == plates_array[n][3]))
 		{
 			//standing on plate position..
-			console.log("standing_on_plate yes!");
 			return n;
 		}
 	}
-	console.log("standing_on_plate no :(");
+	return -1;
+}
+
+function clicking_on_plate()
+{
+	for(var n=0; n<plates_array.length; n++)
+	{
+		//standing in front of plate?
+		var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+		looker.sub(camera.position);
+		var lookie = new THREE.Vector3(0,0,0).add(looker);
+		lookie.normalize();
+					
+		if(((current_position.z == plates_array[n][3]-1)&&(current_position.x == plates_array[n][2])&&(lookie.x==0)&&(lookie.z ==1))
+		||((current_position.z == plates_array[n][3]+1)&&(current_position.x == plates_array[n][2])&&(lookie.x==0)&&(lookie.z ==-1))
+		||((current_position.z == plates_array[n][3])&&(current_position.x == plates_array[n][2]+1)&&(lookie.x==+1)&&(lookie.z ==0))
+		||((current_position.z == plates_array[n][3])&&(current_position.x == plates_array[n][2]-1)&&(lookie.x==-1)&&(lookie.z ==0)))
+		{
+			console.log("looking at plate yes!");
+			return n;
+		}
+	}
 	return -1;
 }
 
