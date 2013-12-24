@@ -1,11 +1,11 @@
 
-//pressure plates
+//buttons
 
-//this is array of plates
+//this is array of buttons
 var array_of_buttons = [];
 
 
-//load plate 3d models on the map
+//load button 3d models on the map
 function load_buttons () {
 
 	var loader = new THREE.JSONLoader();
