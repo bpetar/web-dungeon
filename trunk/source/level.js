@@ -62,7 +62,7 @@ function load_level()
 
 		var pillarke = create_game_object();
 		pillarke.gameID = pillar_array[i][0];
-		pillarke.name = "plate" + i;
+		pillarke.name = "pillar" + i;
 		pillarke.model = pillar_array[i][1];
 
 		pillarke.position.y = 0;
@@ -181,6 +181,9 @@ function load_level()
 	
 	//buttons
 	load_buttons();
+	
+	//keyholes
+	load_keyholes();
 	
 	//regular walls
 	for(i=0; i < floorsArr2D.length; i++)

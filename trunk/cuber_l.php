@@ -241,6 +241,7 @@ else
 		<script src="./source/particles.js"></script>
 		<script src="./source/Detector.js"></script>
 		<script src="./source/button.js"></script>
+		<script src="./source/keyholes.js"></script>
 		<script src="./source/level.js"></script>
 
 		<script>
@@ -273,7 +274,7 @@ else
 			}
 			
 			function DisplayInfoDiv(msg) {
-				//show some dmg blood flashy thing over monster
+				//show some nice fadeout info test above inventory..
 				var info_tip_div_bottom = INVENTORY_POS_SHOWN + SLOT_WIDTH
 				var left = (windowHalfX - (SLOT_WIDTH*NUM_SLOTS_INVENTORY_ROW/2));
 				//info_tip_div.style.top = info_tip_div_top + "px";
@@ -517,6 +518,9 @@ else
 			var button_click_audio;
 			var audio;
 			var mouse_over_button = -1;
+			var mouse_over_keyhole = -1;
+			var item_over_keyhole = -1;
+
 			
 			init();
 			animate();
@@ -1068,15 +1072,14 @@ else
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
+				// create a Ray with origin at the mouse position
+				//   and direction into the scene (camera direction)
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				projector.unprojectVector( vector, camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
 				if(!pickable_at_hand)
 				{
-
-					// create a Ray with origin at the mouse position
-					//   and direction into the scene (camera direction)
-					var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-					projector.unprojectVector( vector, camera );
-					var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
-
 					for (var i=0; i< array_of_pickables.length; i++)
 					{
 						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
@@ -1158,8 +1161,57 @@ else
 							}
 						}
 					}
+					
+					for (var b=0; b<keyholes_array.length; b++)
+					{
+						if((keyholes_array[b][2] == current_position.x)&&(keyholes_array[b][3] == current_position.z))
+						{
+							//console.log("paaaaaaa");
+							if(array_of_keyholes[b].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//console.log("prrrt");
+									//change mouse pointer to cursor
+									container.style.cursor = 'pointer';
+									mouse_over_keyhole = b;
+									return;
+								}
+							}
+						}
+					}
 				}
+				else
+				{
+					for (var b=0; b<keyholes_array.length; b++)
+					{
+						if((keyholes_array[b][2] == current_position.x)&&(keyholes_array[b][3] == current_position.z))
+						{
+							console.log("paaaaaaa");
+							if(array_of_keyholes[b].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									console.log("prrrt " + item_over_keyhole);
+									//change mouse pointer to cursor
+									container.style.cursor = 'pointer';
+									item_over_keyhole = b;
+									return;
+								}
+							}
+						}
+					}
+				}
+				
 				mouse_over_button = -1;
+				mouse_over_keyhole = -1;
+				item_over_keyhole = -1;
 				container.style.cursor = 'auto';
 			}
 
@@ -1307,6 +1359,30 @@ else
 						}
 					}
 					
+					//keyhole
+					if(item_over_keyhole > -1)
+					{
+						console.log("iiiki " + item_over_keyhole);
+						//if item id is same as keyhole id => it is a match!
+						if(keyholes_array[item_over_keyhole][0] == pickable_at_hand.gameID)
+						{
+							//unlock the keyhole!
+							//play sound
+							//button_click_audio.play();
+							array_of_keyholes[item_over_keyhole].onPressFunc();
+							
+							//drop the icon
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+						}
+						else
+						{						
+							//show info
+							DisplayInfoDiv("Doesn't fit..");
+						}
+						return;
+					}
+
 					//if click is too high, do nothing (throwing to be implemented later)
 					
 					
@@ -1388,9 +1464,7 @@ else
 							if(isRightMB)
 							{
 								//use item
-								console.log("Use item " + item.name);
 								//print item use hint
-								console.log("Use item hint: " + item.useHint);
 								DisplayInfoDiv(item.useHint);
 								//run item usage script function
 								if(item.useScript != 0)
@@ -1456,6 +1530,16 @@ else
 							//set it to be budged.. no more clicking.
 							array_of_buttons[mouse_over_button].pressed = true;
 						}
+					}
+					
+					//button
+					if(mouse_over_keyhole > -1)
+					{
+						//play sound ?
+						//button_click_audio.play();
+						
+						//show info
+						DisplayInfoDiv("For every keyhole there is a key..");
 					}
 					
 					//check if player clicked on chest (3d model)

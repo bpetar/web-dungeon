@@ -1,6 +1,6 @@
 
 // map arrays..
-var floorsArr2D = [[16,0], [16,1], [16,2], [16,3], [16,4], [16,5], [16,6], [16,7], [16,8], [16,9], [16,10], [16,11], [16,12], [16,13]];
+var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
 var secretWallsArr = [[6,2,3]]; //x,y,orientation
 var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,rot,open,mesh,animate flag,openable on click
 var holesArr = [];
@@ -27,9 +27,9 @@ fog_intensity = 0.009525;
 var tapestries_array = [["models/tapestry1.js", 16,0,2]];
 
 // id, name, model, icon, slot
-//var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
+var container_pickables_array1 = [[1,"gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation
-var containers_array = [];
+var containers_array = [[1,"chest","models/chest.js", 17,9,3, container_pickables_array1]];
 
 //monster inventory items: id, name, model, icon, picki
 //var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
@@ -39,13 +39,24 @@ var monster_array = [];
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
-var pillar_array = [[2, "models/pillar.js", 15,2]];
+var pillar_array = [[2, "models/pillar.js", 16,2]];
 
 //buttons
 var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressButton1]];
 
+//keyholes
+var keyholes_array = [[1, "maps/level2/models/keyhole.js", 16,9,1,onKeyClick]];
+
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+function onKeyClick()
+{
+	console.log("gold key to open door");
+	
+	doorsArr3D[2][5] = 1; //animate flag
+	doorsArr3D[2][3] = 1; // open/close flag
+}
 
 function onPressButton1()
 {
@@ -78,7 +89,7 @@ function showScroll()
 }
 
 // id, name, model, icon
-var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
+var niche_pickables_array1 = [[3,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[16,5,3,niche_pickables_array1]]; 
