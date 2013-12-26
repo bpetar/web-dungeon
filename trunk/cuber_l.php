@@ -515,6 +515,7 @@ else
 			var gStandingOnPlate = -1;
 			var gWeightOnThePlate = false;
 			var plate_click_audio;
+			var plate_unclick_audio;
 			var button_click_audio;
 			var audio;
 			var mouse_over_button = -1;
@@ -570,13 +571,19 @@ else
 				//audio!
 				audio = document.createElement('audio');
 				var source = document.createElement('source');
-				source.src = 'media/wall.mp3';
+				source.src = 'media/thud.mp3';
 				audio.appendChild(source);
 				
 				plate_click_audio = document.createElement('audio');
 				var sourcep = document.createElement('source');
 				sourcep.src = 'media/plate.mp3';
 				plate_click_audio.appendChild(sourcep);
+				
+				
+				plate_unclick_audio = document.createElement('audio');
+				var sourcep = document.createElement('source');
+				sourcep.src = 'media/plate_reverse.mp3';
+				plate_unclick_audio.appendChild(sourcep);
 				
 				button_click_audio = document.createElement('audio');
 				var sourceb = document.createElement('source');
@@ -1078,6 +1085,11 @@ else
 				projector.unprojectVector( vector, camera );
 				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
+				
+				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+				looker.sub(camera.position);
+				
+				
 				if(!pickable_at_hand)
 				{
 					for (var i=0; i< array_of_pickables.length; i++)
@@ -1113,8 +1125,6 @@ else
 					{
 						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
 						{
-							var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
-							looker.sub(camera.position);
 							var lookie = new THREE.Vector3(0,0,0).add(looker);
 							lookie.normalize();
 							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
@@ -1135,6 +1145,28 @@ else
 										return;
 									}
 								}
+							}
+						}
+					}
+					
+					var norm_looker = new THREE.Vector3(0,0,0).add(looker);
+					norm_looker.normalize();
+					var look_pos =new THREE.Vector3(0,0,0).add(current_position);
+					look_pos.add(norm_looker);
+
+					for(var d=0; d < doorsArr3D.length; d++)
+					{
+						//if there are doors in that position
+						if((doorsArr3D[d][0] == look_pos.x) && (doorsArr3D[d][1] == look_pos.z))
+						{
+							//intersect..
+							var intersects = ray.intersectObject( doorsArr3D[d][4] );
+							
+							// if there is one (or more) intersections
+							if ( intersects.length > 0 )
+							{
+								container.style.cursor = 'pointer';
+								return;
 							}
 						}
 					}
@@ -1190,7 +1222,7 @@ else
 					{
 						if((keyholes_array[b][2] == current_position.x)&&(keyholes_array[b][3] == current_position.z))
 						{
-							console.log("paaaaaaa");
+							//console.log("paaaaaaa");
 							if(array_of_keyholes[b].mesh != 0)
 							{
 								var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
@@ -1198,7 +1230,7 @@ else
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
 								{
-									console.log("prrrt " + item_over_keyhole);
+									//console.log("prrrt " + item_over_keyhole);
 									//change mouse pointer to cursor
 									container.style.cursor = 'pointer';
 									item_over_keyhole = b;
@@ -1249,6 +1281,10 @@ else
 							//alert("ima!");
 							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
 							else doorsArr3D[i][3] = 0;
+						}
+						else
+						{
+							DisplayInfoDiv("These doors are opened elsewhere..");
 						}
 					}
 				}
@@ -1374,6 +1410,8 @@ else
 							//drop the icon
 							pickable_at_hand_icon.style.left = "-170px";
 							pickable_at_hand_icon = 0;
+							
+							DisplayInfoDiv("Unlocked!");
 						}
 						else
 						{						
@@ -1408,12 +1446,12 @@ else
 							gWeightOnThePlate = true;
 							pickable_at_hand.plated = plateID;
 							array_of_plates[plateID].mesh.position.y -=0.2;
-							plate_click_audio.play();
-							var onPress = plates_array[plateID][5];
-							if(onPress !=0 )
-							{
-								onPress();
-							}
+							//plate_click_audio.play();
+							//var onPress = plates_array[plateID][5];
+							//if(onPress !=0 )
+							//{
+							//	onPress();
+							//}
 						}
 						else
 						{
@@ -1529,6 +1567,8 @@ else
 							array_of_buttons[mouse_over_button].onPressFunc();
 							//set it to be budged.. no more clicking.
 							array_of_buttons[mouse_over_button].pressed = true;
+							//info
+							DisplayInfoDiv("Buttons triggers some mechanism!");
 						}
 					}
 					
@@ -1547,7 +1587,7 @@ else
 					if(containerID > -1)
 					{
 						//open container inventory, and player inventory
-						//alert("niche clicked!");
+						//alert("chest clicked!");
 						container_fill_gui(containerID);
 						inventorySlide = 1;
 						return;
@@ -1570,6 +1610,7 @@ else
 							{
 								console.log("looking at writting!");
 								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+								DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
 					}
@@ -1606,6 +1647,9 @@ else
 								pickable_at_hand = array_of_pickables[i];
 								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								var from_where = "from the ground..";
+								if(pickable_at_hand.niched > -1) from_where = "from niche in the wall";
+								DisplayInfoDiv(pickable_at_hand.name + " picked up " + from_where);
 								//alert("picked z = " + Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z));
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
 								//if pickable belongs to niche, remove from niche array
@@ -1616,6 +1660,7 @@ else
 									gWeightOnThePlate = false;
 									array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
 									console.log("lifting item off the plate!");
+									plate_unclick_audio.play();
 									var onUnpress = plates_array[pickable_at_hand.plated][6];
 									if(onUnpress !=0 )
 									{
@@ -1755,6 +1800,8 @@ else
 								else
 								{
 									console.log("plate unpressed!");
+									///
+									plate_unclick_audio.play();
 									var onUnpress = plates_array[gStandingOnPlate][6];
 									if(onUnpress !=0 )
 									{
@@ -1768,13 +1815,16 @@ else
 							var plateID = standing_on_plate();
 							if(plateID>-1)
 							{
-								//call pressure plate onPress function..
-								console.log("plate pressed!");
-								plate_click_audio.play();
-								var onPress = plates_array[plateID][5];
-								if(onPress !=0 )
+								if (!gWeightOnThePlate)
 								{
-									onPress();
+									//call pressure plate onPress function..
+									console.log("plate pressed!");
+									plate_click_audio.play();
+									var onPress = plates_array[plateID][5];
+									if(onPress !=0 )
+									{
+										onPress();
+									}
 								}
 								gStandingOnPlate = plateID;
 							}

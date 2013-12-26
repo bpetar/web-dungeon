@@ -1,7 +1,7 @@
 
 // map arrays..
 var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
-var secretWallsArr = [[6,2,3]]; //x,y,orientation
+var secretWallsArr = [[16,9,3]]; //x,y,orientation
 var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,rot,open,mesh,animate flag,openable on click
 var holesArr = [];
 var writtingsArr = [[16,1,1,"Put some weight..",0]]; 
@@ -39,13 +39,13 @@ var monster_array = [];
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
-var pillar_array = [[2, "models/pillar.js", 16,2]];
+var pillar_array = [[2, "models/pillar.js", 12,14]];
 
 //buttons
 var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressButton1]];
 
 //keyholes
-var keyholes_array = [[1, "maps/level2/models/keyhole.js", 16,9,1,onKeyClick]];
+var keyholes_array = [[1, "models/keyhole.js", 16,9,1,onKeyClick]];
 
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
