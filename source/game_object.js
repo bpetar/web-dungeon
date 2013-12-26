@@ -20,6 +20,7 @@ function create_game_object () {
 	gobject.icon = "unnamed";
 	gobject.slot = -1;
 	gobject.id = 0;
+	gobject.niched = -1;
 	gobject.gameID = 0;
 	gobject.orientation = 0;
 	gobject.visible = true;
