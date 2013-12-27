@@ -1217,7 +1217,7 @@ else
 						}
 					}
 				}
-				else
+				else //pickable is at hand
 				{
 					for (var b=0; b<keyholes_array.length; b++)
 					{
@@ -1231,11 +1231,35 @@ else
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
 								{
-									//console.log("prrrt " + item_over_keyhole);
+									console.log("prrrt " + item_over_keyhole);
 									//change mouse pointer to cursor
 									container.style.cursor = 'pointer';
 									item_over_keyhole = b;
 									return;
+								}
+								else
+								{
+									//check if top left corner of pickable icon is intersecting because of key tip to keyhole issue:
+									//(players tend to center tip of the key to keyhole which causes center of icon to miss keyhole)
+									var musex = ( (event.clientX-44) / window.innerWidth ) * 2 - 1;
+									var musey = - ( (event.clientY-44) / window.innerHeight ) * 2 + 1;
+									
+									var vector = new THREE.Vector3( musex, musey, 1 );
+									projector.unprojectVector( vector, camera );
+									var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+									var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										console.log("grrrt " + item_over_keyhole);
+										//change mouse pointer to cursor
+										container.style.cursor = 'pointer';
+										item_over_keyhole = b;
+										return;
+									}
+								
 								}
 							}
 						}
