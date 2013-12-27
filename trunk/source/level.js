@@ -72,6 +72,7 @@ function load_level()
 		loader.load( pillarke.model, pillarke.loadObject(pillarke) );
 	}
 	
+	//show_model(loader, "models/crystal.js", 16,1);
 	
 	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
 	var teleport_map = THREE.ImageUtils.loadTexture( teleport_floor_texture_file );

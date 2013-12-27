@@ -21,7 +21,7 @@ Monster = function ( ) {
 	this.hp = 1;
 	this.defense = 40;
 	this.attack = 30;
-	this.damage = 53;
+	this.dmg = 53;
 	this.xp = 300; //how much xp player gets for killing it
 	
 	//animation keyframes
@@ -61,9 +61,9 @@ Monster = function ( ) {
 
 //Monster.prototype = Object.create(  );
 
-Monster.prototype.damage = function ( dmg ) {
+Monster.prototype.damage = function ( dmg_done ) {
 
-	this.hp -= dmg;
+	this.hp -= dmg_done;
 
 };
 
@@ -76,7 +76,10 @@ Monster.prototype.loadObject = function ( munster ) {
 		geometry.computeMorphNormals();
 		materials[ 0 ].morphTargets = true;
 		materials[ 0 ].morphNormals = true;
-		materials[ 1 ].morphTargets = true;
+		if(materials.length > 1)
+		{
+			materials[ 1 ].morphTargets = true;
+		}
 		munster.mesh = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) );
 		munster.mesh.position.x = munster.position.x*SQUARE_SIZE;
 		munster.mesh.position.z = munster.position.z*SQUARE_SIZE;
@@ -138,7 +141,20 @@ function load_monsters () {
 		munster.hp = monster_array[i][6];
 		munster.ac = monster_array[i][7];
 		munster.attack = monster_array[i][8];
-		munster.pickables = monster_array[i][9];
+		munster.dmg = monster_array[i][9];
+		munster.pickables = monster_array[i][10];
+		
+		//animation keyframes
+		if(monster_array[i].length > 16)
+		{
+			munster.idle_startKeyframe = monster_array[i][11];
+			munster.idle_endKeyframe = monster_array[i][12];
+			munster.attack_startKeyframe = monster_array[i][13];
+			munster.attack_endKeyframe = monster_array[i][14];
+			munster.walk_startKeyframe = monster_array[i][15];
+			munster.walk_endKeyframe = monster_array[i][16];
+		}
+		
 		console.log("loading monstere " + i);
 		loader.load( munster.model, munster.loadObject(munster) );
 		
@@ -168,7 +184,15 @@ Monster.prototype.clickedOn = function ( pickable ) {
 			newMonsterItem[2] = pickable.model;
 			newMonsterItem[3] = pickable.icon;
 			newMonsterItem[4] = pickable;
-			this.pickables.push(newMonsterItem);
+			if(this.pickables != 0)
+			{
+				this.pickables.push(newMonsterItem);
+			}
+			else
+			{
+				console.log("monster has no pickable item list!");
+			}
+			
 			
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
@@ -681,7 +705,7 @@ Monster.prototype.move = function ( delta ) {
 			var att_roll = 50*Math.random()+this.attack;
 			if(att_roll>PlayerDefense)
 			{
-				var dmg_roll = Math.round(this.damage * Math.random()) + 1;
+				var dmg_roll = Math.round(this.dmg * Math.random()) + 1;
 				playerHPcurrent -= dmg_roll;
 				player_wound_div.style.display = "inline-block";
 				player_wound_div.innerHTML = dmg_roll;
