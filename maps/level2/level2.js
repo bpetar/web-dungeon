@@ -32,9 +32,9 @@ var container_pickables_array1 = [[1,"gold key","models/key.js", "media/key.png"
 var containers_array = [[1,"chest","models/chest.js", 17,9,3, container_pickables_array1]];
 
 //monster inventory items: id, name, model, icon, picki
-//var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
+var monster_pickables_array1 = [];
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [];
+var monster_array = [[2,"crystal elemental","models/crystal.js", 11,14,3, 15, 35, 40, 5, monster_pickables_array1,1,25,25,50,50,75], [3,"crystal elemental","models/crystal.js", 6,14,1, 15, 35, 40, 5, monster_pickables_array1,1,25,25,50,50,75]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];

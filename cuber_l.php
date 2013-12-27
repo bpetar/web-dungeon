@@ -242,6 +242,7 @@ else
 		<script src="./source/Detector.js"></script>
 		<script src="./source/button.js"></script>
 		<script src="./source/keyholes.js"></script>
+		<script src="./source/utils.js"></script>
 		<script src="./source/level.js"></script>
 
 		<script>
