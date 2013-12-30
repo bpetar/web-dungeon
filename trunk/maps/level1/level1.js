@@ -219,3 +219,9 @@ function healingScript()
 // id, name, model, x, z, icon, useage hint, use script, consumable
 var pickables_array = [[2,"Rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"Healing Potion","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
 ////////////////////////////////////////////////
+
+
+//teleports
+
+var teleport_pos_x = 180; //position on map
+var teleport_pos_z = 110; //position on map

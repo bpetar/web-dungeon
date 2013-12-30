@@ -18,7 +18,7 @@ var decorPillarModel = "maps/level2/models/decorPillar.js";
 var hole_model = 'maps/level2/models/hole.js';
 var niche_model = 'maps/level2/models/niche.js';
 var doorway_model = 'maps/level2/models/doorway.js';
-var door_model = 'models/door.js';
+var door_model = 'maps/level2/models/door.js';
 
 //level related values
 fog_color = 0x555599;
@@ -30,7 +30,7 @@ var tapestries_array = [["models/tapestry1.js", 16,0,2]];
 // id, name, model, icon, slot
 var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation, mesh
-var containers_array = [[1,"Chest","models/chest.js", 17,9,3, container_pickables_array1, 0]];
+var containers_array = [[1,"Chest","maps/level2/models/chest2.js", 17,9,3, container_pickables_array1, 0]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
@@ -70,6 +70,9 @@ function onKeyClick()
 	
 	doorsArr3D[2][5] = 1; //animate flag
 	doorsArr3D[2][3] = 1; // open/close flag
+
+	//temp hack
+	load_teleport();
 }
 
 function onPressButton1()
@@ -83,7 +86,7 @@ function onPressButton1()
 function onPressPlate1()
 {
 	console.log("plate to open door");
-	
+
 	doorsArr3D[0][5] = 1; //animate flag
 	doorsArr3D[0][3] = 1; // open/close flag
 }
@@ -195,3 +198,12 @@ function healingScript()
 // id, name, model, x, z, icon, useage hint, use script, consumable
 var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
 ////////////////////////////////////////////////
+
+
+//teleports
+
+//var teleport_pos = new THREE.Vector3(160, 0, 110); //position on map
+var teleport_pos_x = 50; //position on map
+var teleport_pos_z = 140; //position on map
+
+

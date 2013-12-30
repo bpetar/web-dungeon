@@ -796,7 +796,7 @@ else
 			
 			function positionIsTeleport(x,z) {
 				
-				console.log("entered teleport!");
+				//console.log("entered teleport!");
 				if((x == teleport_pos.x/10)&&(z == teleport_pos.z/10))
 				{
 					return true;
