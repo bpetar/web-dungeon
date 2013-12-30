@@ -39,6 +39,8 @@ Monster = function ( ) {
 	this.pickables = 0;
 	
 	//this.reached_destination = false;
+	this.OnClick = 0;
+	this.OnItemClick = 0;
 	
 	//inventory
 	this.inventory = 0;
@@ -143,16 +145,23 @@ function load_monsters () {
 		munster.attack = monster_array[i][8];
 		munster.dmg = monster_array[i][9];
 		munster.pickables = monster_array[i][10];
+		munster.OnClick = monster_array[i][11];
+		munster.OnItemClick = monster_array[i][12];
 		
 		//animation keyframes
-		if(monster_array[i].length > 16)
+		if(monster_array[i].length > 18)
 		{
-			munster.idle_startKeyframe = monster_array[i][11];
-			munster.idle_endKeyframe = monster_array[i][12];
-			munster.attack_startKeyframe = monster_array[i][13];
-			munster.attack_endKeyframe = monster_array[i][14];
-			munster.walk_startKeyframe = monster_array[i][15];
-			munster.walk_endKeyframe = monster_array[i][16];
+			munster.idle_startKeyframe = monster_array[i][13];
+			munster.idle_endKeyframe = monster_array[i][14];
+			munster.attack_startKeyframe = monster_array[i][15];
+			munster.attack_endKeyframe = monster_array[i][16];
+			munster.walk_startKeyframe = monster_array[i][17];
+			munster.walk_endKeyframe = monster_array[i][18];
+		}
+
+		if(monster_array[i].length > 19)
+		{
+			munster.mood = monster_array[i][19];
 		}
 		
 		console.log("loading monstere " + i);
@@ -177,7 +186,7 @@ Monster.prototype.clickedOn = function ( pickable ) {
 		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
 		{
 			//add item to monster inventory, its his item now :)
-			
+			DisplayInfoDiv("Rock Golem takes ring from you!");
 			var newMonsterItem = new Array();
 			newMonsterItem[0] = pickable.id;
 			newMonsterItem[1] = pickable.name;
@@ -197,16 +206,22 @@ Monster.prototype.clickedOn = function ( pickable ) {
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
 			console.log("monster will walk now");
+			
+			//return true if item is consumed
+			return true;
 		}
 		else
 		{
 			//monster get angry
 			this.mood = MONSTER_MAD;
 			console.log("monster got mad");
+			DisplayInfoDiv("This offer makes Rock Golem angry!!");
 		}
 		
-		//return true if item is consumed
-		return true;
+	}
+	else if(this.mood == MONSTER_MAD)
+	{
+		//DisplayInfoDiv("Too late to bribe.. fight or flight!");
 	}
 	
 	return false;
