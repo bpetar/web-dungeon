@@ -63,6 +63,7 @@ function MonsterOnItemClick1(pickable)
 	//if golem is idle react to pickable click
 	if(this.mood == MONSTER_IDLE)
 	{
+		console.log("item on mosnter: " + pickable.name + ", id: " + pickable.gameID);
 		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
 		{
 			//add item to monster inventory, its his item now :)
