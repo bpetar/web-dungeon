@@ -1,6 +1,46 @@
 
+var array_of_decorPillars = [];
 
-function loadDoorways( geometry, materials ) {
+function decorPillarAlreadyAdded (decorPil)
+{
+	for(var i=0; i<array_of_decorPillars.length; i++)
+	{
+		if((array_of_decorPillars[i].x == decorPil.x) && (array_of_decorPillars[i].z == decorPil.z))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+function addPillar(loader, x, z)
+{
+	var decorPil = new THREE.Vector3(x, 0, z);
+	if(!decorPillarAlreadyAdded(decorPil))
+	{
+		array_of_decorPillars.push(decorPil);
+		console.log("pillar added, x:" + decorPil.x + ", z:" + decorPil.z);
+		
+		var decorPillarke = create_game_object();
+		decorPillarke.name = "decorPillar";
+
+		decorPillarke.position.y = 0;
+		decorPillarke.position.x = x;
+		decorPillarke.position.z = z;
+
+		if(decorPillarModel != "")
+		{
+			loader.load( decorPillarModel, decorPillarke.loadObject(decorPillarke) );
+		}
+	}
+	else
+	{
+		console.log("pillar alredy in the queue, x:" + decorPil.x + ", z:" + decorPil.z);
+	}
+}
+
+function loadDoorways( geometry, materials )
+{
 
 	materials[ 0 ].shading = THREE.FlatShading;
 
@@ -24,7 +64,8 @@ function loadDoorways( geometry, materials ) {
 	}
 }
 			
-function loadDoors( geometry, materials ) {
+function loadDoors( geometry, materials )
+{
 
 	materials[ 0 ].shading = THREE.FlatShading;
 
@@ -225,6 +266,14 @@ function load_level()
 		
 		if(leftWall)
 		{
+			//pillars
+			var x1 = (floorsArr2D[i][0])*SQUARE_SIZE+5;
+			var x2 = (floorsArr2D[i][0])*SQUARE_SIZE+5;
+			var z1 = (floorsArr2D[i][1])*SQUARE_SIZE+5;
+			var z2 = (floorsArr2D[i][1])*SQUARE_SIZE-5;
+			addPillar(loader,x1,z1);
+			addPillar(loader,x2,z2);
+
 			var nicheIsOnTheWall = false;
 			//loop nicheArr
 			for (var n=0; n<nicheArr.length; n++)
@@ -280,6 +329,14 @@ function load_level()
 		}
 		if(rightWall)
 		{
+			//pillars
+			var x1 = (floorsArr2D[i][0])*SQUARE_SIZE-5;
+			var x2 = (floorsArr2D[i][0])*SQUARE_SIZE-5;
+			var z1 = (floorsArr2D[i][1])*SQUARE_SIZE+5;
+			var z2 = (floorsArr2D[i][1])*SQUARE_SIZE-5;
+			addPillar(loader,x1,z1);
+			addPillar(loader,x2,z2);
+
 			var nicheIsOnTheWall = false;
 			//loop nicheArr
 			for (var n=0; n<nicheArr.length; n++)
@@ -337,6 +394,14 @@ function load_level()
 		}
 		if(frontWall)
 		{
+			//pillars
+			var x1 = (floorsArr2D[i][0])*SQUARE_SIZE+5;
+			var x2 = (floorsArr2D[i][0])*SQUARE_SIZE-5;
+			var z1 = (floorsArr2D[i][1])*SQUARE_SIZE+5;
+			var z2 = (floorsArr2D[i][1])*SQUARE_SIZE+5;
+			addPillar(loader,x1,z1);
+			addPillar(loader,x2,z2);
+
 			var nicheIsOnTheWall = false;
 			//loop nicheArr
 			for (var n=0; n<nicheArr.length; n++)
@@ -395,6 +460,14 @@ function load_level()
 		}
 		if(backWall)
 		{
+			//pillars
+			var x1 = (floorsArr2D[i][0])*SQUARE_SIZE+5;
+			var x2 = (floorsArr2D[i][0])*SQUARE_SIZE-5;
+			var z1 = (floorsArr2D[i][1])*SQUARE_SIZE-5;
+			var z2 = (floorsArr2D[i][1])*SQUARE_SIZE-5;
+			addPillar(loader,x1,z1);
+			addPillar(loader,x2,z2);
+			
 			var nicheIsOnTheWall = false;
 			//loop nicheArr
 			for (var n=0; n<nicheArr.length; n++)

@@ -12,6 +12,7 @@ var wall_texture_file = 'maps/level1/media/wall.jpg';
 var ceiling_texture_file = 'maps/level1/media/ceiling.jpg';
 var teleport_floor_texture_file = 'maps/level1/media/teleport_floor.jpg';
 var wall_writting_texture_file = 'maps/level1/media/wallwrit.jpg';
+var decorPillarModel = "";
 
 //basic level models
 var hole_model = 'maps/level1/models/hole.js';

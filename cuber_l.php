@@ -1095,29 +1095,32 @@ else
 				{
 					for (var i=0; i< array_of_pickables.length; i++)
 					{
-						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
-						if(array_of_pickables[i].mesh.visible == false)
-							continue;
-						
-						//check if player is close to pickable
-						if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
+						if(array_of_pickables[i].mesh !=0)
 						{
-							continue;
-						}
-						
-						//check if pickable is clicked on
-						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
-						
-						// if there is one (or more) intersections
-						if ( intersects.length > 0 )
-						{
+							//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
+							if(array_of_pickables[i].mesh.visible == false)
+								continue;
 							
-							// if the closest object intersected is not the currently stored intersection object
-							if ( intersects[0].object.id == array_of_pickables[i].id )
+							//check if player is close to pickable
+							if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
 							{
-								//change mouse pointer to cursor
-								container.style.cursor = 'pointer';
-								return;
+								continue;
+							}
+							
+							//check if pickable is clicked on
+							var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+							
+							// if there is one (or more) intersections
+							if ( intersects.length > 0 )
+							{
+								
+								// if the closest object intersected is not the currently stored intersection object
+								if ( intersects[0].object.id == array_of_pickables[i].id )
+								{
+									//change mouse pointer to cursor
+									container.style.cursor = 'pointer';
+									return;
+								}
 							}
 						}
 					}
@@ -1157,17 +1160,20 @@ else
 
 					for(var d=0; d < doorsArr3D.length; d++)
 					{
-						//if there are doors in that position
-						if((doorsArr3D[d][0] == look_pos.x) && (doorsArr3D[d][1] == look_pos.z))
+						if(doorsArr3D[d][4] != 0)
 						{
-							//intersect..
-							var intersects = ray.intersectObject( doorsArr3D[d][4] );
-							
-							// if there is one (or more) intersections
-							if ( intersects.length > 0 )
+							//if there are doors in that position
+							if((doorsArr3D[d][0] == look_pos.x) && (doorsArr3D[d][1] == look_pos.z))
 							{
-								container.style.cursor = 'pointer';
-								return;
+								//intersect..
+								var intersects = ray.intersectObject( doorsArr3D[d][4] );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									container.style.cursor = 'pointer';
+									return;
+								}
 							}
 						}
 					}
@@ -1309,7 +1315,10 @@ else
 						}
 						else
 						{
-							DisplayInfoDiv("These doors are opened elsewhere..");
+							if(doorsArr3D[i][3] == 0)
+							{
+								DisplayInfoDiv("These doors are opened elsewhere..");
+							}
 						}
 					}
 				}
@@ -1455,7 +1464,7 @@ else
 					var plateID = standing_on_plate();
 					var looker = camera.look.clone().sub(camera.position);
 					
-					
+					DisplayInfoDiv(pickable_at_hand.name + " dropped on the ground..");
 					
 					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
 					if(pickable_at_hand.name=="ring")
@@ -1635,7 +1644,7 @@ else
 							{
 								console.log("looking at writting!");
 								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
-								DisplayInfoDiv("Ancient writting deciphered..");
+								//DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
 					}
@@ -1915,7 +1924,7 @@ else
 						{
 							if(doorsArr3D[i][3] == 0) //closed
 							{
-								doorsArr3D[i][4].position.y -= elapsed/800;
+								doorsArr3D[i][4].position.y -= elapsed/400;
 								if(doorsArr3D[i][4].position.y < 0.01) 
 								{
 									doorsArr3D[i][5] = 0;
@@ -1923,7 +1932,7 @@ else
 							}
 							else 
 							{
-								doorsArr3D[i][4].position.y += elapsed/800;
+								doorsArr3D[i][4].position.y += elapsed/400;
 								if(doorsArr3D[i][4].position.y > 7.5) 
 								{
 									doorsArr3D[i][5] = 0;
