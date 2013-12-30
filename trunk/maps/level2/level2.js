@@ -12,6 +12,7 @@ var wall_texture_file = 'maps/level2/media/stone_wall_01_01.png';
 var ceiling_texture_file = 'maps/level2/media/ceiling.png';
 var teleport_floor_texture_file = 'maps/level2/media/teleport_floor.png';
 var wall_writting_texture_file = 'maps/level2/media/wallwrit.png';
+var decorPillarModel = "maps/level2/models/decorPillar.js";
 
 //basic level models
 var hole_model = 'maps/level2/models/hole.js';
@@ -27,9 +28,9 @@ fog_intensity = 0.009525;
 var tapestries_array = [["models/tapestry1.js", 16,0,2]];
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
+var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 17,9,3, container_pickables_array1]];
+var containers_array = [[1,"Chest","models/chest.js", 17,9,3, container_pickables_array1]];
 
 //monster inventory items: id, name, model, icon, picki
 var monster_pickables_array1 = [];
@@ -39,7 +40,7 @@ var monster_array = [[2,"crystal elemental","models/crystal.js", 11,14,3, 15, 35
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
-var pillar_array = [[2, "models/pillar.js", 12,14]];
+var pillar_array = [[2, "maps/level2/models/pillar.js", 12,14]];
 
 //buttons
 var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressButton1]];
@@ -89,7 +90,7 @@ function showScroll()
 }
 
 // id, name, model, icon
-var niche_pickables_array1 = [[3,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
+var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[16,5,3,niche_pickables_array1]]; 
@@ -179,5 +180,5 @@ function healingScript()
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
+var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
 ////////////////////////////////////////////////
