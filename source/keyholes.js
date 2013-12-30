@@ -13,18 +13,19 @@ function load_keyholes () {
 
 		// id, model, x, z, pressed, script function..
 
-		var butsy = create_game_object();
-		butsy.gameID = keyholes_array[i][0];
-		butsy.name = "keyhole" + i;
-		butsy.model = keyholes_array[i][1];
-		butsy.orientation = keyholes_array[i][4];
-		butsy.onPressFunc = keyholes_array[i][5];
-		butsy.position.set((keyholes_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(keyholes_array[i][3])*SQUARE_SIZE);
-		butsy.rotation.set(0, Math.PI/2, 0);
+		var keyhols = create_game_object();
+		keyhols.gameID = keyholes_array[i][0];
+		keyhols.name = "keyhole" + i;
+		keyhols.locked = true;
+		keyhols.model = keyholes_array[i][1];
+		keyhols.orientation = keyholes_array[i][4];
+		keyhols.onPressFunc = keyholes_array[i][5];
+		keyhols.position.set((keyholes_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(keyholes_array[i][3])*SQUARE_SIZE);
+		keyhols.rotation.set(0, Math.PI/2, 0);
 		
-		loader.load( butsy.model, butsy.loadObject(butsy) );
+		loader.load( keyhols.model, keyhols.loadObject(keyhols) );
 		
-		array_of_keyholes.push(butsy);
+		array_of_keyholes.push(keyhols);
 	}
 
 }

@@ -28,20 +28,90 @@ fog_intensity = 0.011525;
 var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
-// id, name, model, x, z, orientation
-var containers_array = [[1,"chest","models/chest.js", 0,8,1, container_pickables_array1]];
+var container_pickables_array1 = [[1,"Ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
+// id, name, model, x, z, orientation, mesh
+var containers_array = [[1,"Chest","models/chest.js", 0,8,1, container_pickables_array1,0]];
 
-//monster inventory items: id, name, model, icon, picki
-var monster_pickables_array = [[5,"rock","models/rocky.js", "media/rock.png", 0], [6,"rock","models/rocky.js", "media/rock.png", 0]];
-// id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"rock_golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [];
 var pillar_array = [];
 //buttons
 var buttons_array = [];
+//keyholes
+var keyholes_array = [];
+
+
+
+//monsters
+
+function MonsterOnClick1()
+{
+	if(this.mood == MONSTER_MAD)
+	{
+		DisplayInfoDiv("It seems mad at you now..");
+	}
+	else
+	{
+		DisplayInfoDiv("Big guy, better not make him angry..");
+	}
+}
+
+
+function MonsterOnItemClick1(pickable)
+{
+	//if golem is idle react to pickable click
+	if(this.mood == MONSTER_IDLE)
+	{
+		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
+		{
+			//add item to monster inventory, its his item now :)
+			DisplayInfoDiv("Rock Golem takes ring from you!");
+			var newMonsterItem = new Array();
+			newMonsterItem[0] = pickable.id;
+			newMonsterItem[1] = pickable.name;
+			newMonsterItem[2] = pickable.model;
+			newMonsterItem[3] = pickable.icon;
+			newMonsterItem[4] = pickable;
+			if(this.pickables != 0)
+			{
+				this.pickables.push(newMonsterItem);
+			}
+			else
+			{
+				console.log("monster has no pickable item list!");
+			}
+			
+			
+			//monster move from guarding pos
+			this.mood = MONSTER_WALK;
+			console.log("monster will walk now");
+			
+			//return true if item is consumed
+			return true;
+		}
+		else
+		{
+			//monster get angry
+			this.mood = MONSTER_MAD;
+			console.log("monster got mad");
+			DisplayInfoDiv("This offer makes Rock Golem angry!!");
+		}
+		
+	}
+	else if(this.mood == MONSTER_MAD)
+	{
+		//DisplayInfoDiv("Too late to bribe.. fight or flight!");
+	}
+	
+	return false;
+}
+
+//monster inventory items: id, name, model, icon, picki
+var monster_pickables_array = [[5,"Rock","models/rocky.js", "media/rock.png", 0], [6,"Rock","models/rocky.js", "media/rock.png", 0]];
+// id, name, model, x, z, rot, hp, ac, attack
+var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array, MonsterOnClick1, MonsterOnItemClick1]];
+
 
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +123,7 @@ function showScroll()
 }
 
 // id, name, model, icon
-var niche_pickables_array1 = [[4,"scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
+var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
 var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];
@@ -147,5 +217,5 @@ function healingScript()
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"healing","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
+var pickables_array = [[2,"Rock","models/rocky.js", 12,2, "media/rock.png", "This is too hard to chew.."], [3,"Healing Potion","models/healing.js", 9,0, "media/potion.png", "Healing potion replenishes 15 hp!", healingScript, 1]];
 ////////////////////////////////////////////////

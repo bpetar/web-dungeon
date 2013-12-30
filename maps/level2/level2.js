@@ -29,13 +29,8 @@ var tapestries_array = [["models/tapestry1.js", 16,0,2]];
 
 // id, name, model, icon, slot
 var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
-// id, name, model, x, z, orientation
-var containers_array = [[1,"Chest","models/chest.js", 17,9,3, container_pickables_array1]];
-
-//monster inventory items: id, name, model, icon, picki
-var monster_pickables_array1 = [];
-// id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"crystal elemental","models/crystal.js", 11,14,3, 15, 35, 40, 5, monster_pickables_array1,1,25,25,50,50,75], [3,"crystal elemental","models/crystal.js", 6,14,1, 15, 35, 40, 5, monster_pickables_array1,1,25,25,50,50,75]];
+// id, name, model, x, z, orientation, mesh
+var containers_array = [[1,"Chest","models/chest.js", 17,9,3, container_pickables_array1, 0]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
@@ -47,6 +42,24 @@ var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressBut
 
 //keyholes
 var keyholes_array = [[1, "models/keyhole.js", 16,9,1,onKeyClick]];
+
+
+//monsters
+//on click script functions
+function MonsterOnClick1()
+{
+	DisplayInfoDiv("It seems mad at you..");
+}
+function MonsterOnItemClick1(pickable)
+{
+	DisplayInfoDiv("It doesn't want to take it..");
+	return false;
+}
+//monster inventory items: id, name, model, icon, picki
+var monster_pickables_array1 = [];
+// id, name, model, x, z, rot, hp, ac, attack, dmg, pickables, onclick, onitemclick, idlestart, idleend, walkstart, walkend, attackstart, attackend, mood
+var monster_array = [[2,"Crystal Elemental","models/crystal.js", 11,14,3, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1], [3,"crystal elemental","models/crystal.js", 6,14,1, 15, 35, 40, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1]];
+
 
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////

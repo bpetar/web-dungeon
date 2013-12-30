@@ -90,6 +90,8 @@ function loadDoors( geometry, materials )
 	}
 }
 
+var array_of_pillars = [];
+
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level()
 {
@@ -111,6 +113,8 @@ function load_level()
 		pillarke.position.z = pillar_array[i][3]*SQUARE_SIZE;
 
 		loader.load( pillarke.model, pillarke.loadObject(pillarke) );
+		
+		array_of_pillars.push(pillarke);
 	}
 	
 	//show_model(loader, "models/crystal.js", 16,1);

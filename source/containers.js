@@ -1,5 +1,6 @@
 
 //containers and their content..
+var array_of_containers = [];
 
 var currently_opened_container = -1;
 
@@ -42,6 +43,8 @@ function load_containers () {
 		}
 		
 		loader.load( chest.model, chest.loadObject(chest) );
+		
+		array_of_containers.push(chest);
 	}
 }
 
@@ -90,6 +93,26 @@ function add_to_container(gObject, slot)
 	}
 	//TODO: start timer for automatic inventory draw back at later time..
 
+}
+
+function container_mouse_over_slot(x_pos,y_pos)
+{
+	var slot = container_clicked_in_slot(x_pos,y_pos);
+	
+	if(slot>0)
+	{
+		//get item from currently_opened_container and place it in hand..
+		var container_pickables_array = containers_array[currently_opened_container][6];
+		for(var i=0; i<container_pickables_array.length; i++)
+		{
+			if(container_pickables_array[i][4] == slot)
+			{
+				return slot;
+			}
+		}
+	}
+	
+	return -1;
 }
 
 function container_item_clicked(x_pos,y_pos)
@@ -173,9 +196,9 @@ function container_clicked_in_slot(x_pos,y_pos)
 	return -1;
 }
 
-//check if player clicked on container 3d model
-function container_clicked_on(x_pos,y_pos) {
-	//check if player is facing container first
+//check if player standing in front of container
+function looking_at_container() {
+	//check if player is facing container
 	for(var n=0; n<containers_array.length; n++)
 	{
 		if((current_position.x == containers_array[n][3])&&(current_position.z == containers_array[n][4]))
@@ -202,8 +225,6 @@ function container_clicked_on(x_pos,y_pos) {
 			}
 		}
 	}
-	
-	//TODO calculate position of mouse click within the container
 	
 	return -1;
 }
