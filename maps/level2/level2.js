@@ -58,7 +58,7 @@ function MonsterOnItemClick1(pickable)
 //monster inventory items: id, name, model, icon, picki
 var monster_pickables_array1 = [];
 // id, name, model, x, z, rot, hp, ac, attack, dmg, pickables, onclick, onitemclick, idlestart, idleend, walkstart, walkend, attackstart, attackend, mood
-var monster_array = [[2,"Crystal Elemental","models/crystal.js", 11,14,3, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1], [3,"crystal elemental","models/crystal.js", 6,14,1, 15, 35, 40, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1]];
+var monster_array = [[2,"Crystal Elemental","models/crystal.js", 11,14,3, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,0], [3,"crystal elemental","models/crystal.js", 6,14,1, 15, 35, 40, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,0]];
 
 
 //niches and their content
