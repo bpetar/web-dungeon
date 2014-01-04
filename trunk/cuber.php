@@ -180,7 +180,7 @@
 			<p>Level Complete!<p>
 		</div>
 		
-		<div id="info_dialog" style="position:absolute; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
+		<div id="info_dialog" style="position:absolute; display:none; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
 			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
 			<p>Welcome to the Web Dungeon game test!</p> 
 			
@@ -201,9 +201,36 @@
 			</div>
 		</div>
 		
+<?php
 		
+if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
+{
+	$lvl = $_GET['lvl'];
+	//check valid email format
+	if (strcmp($lvl,'level2') == 0)
+	{
+?>
+		<script src="./maps/level2/level2.js"></script>
+<?php 
+    }
+	else
+	{
+?>
+		<script src="./maps/level1/level1.js"></script>
+<?php 
+	}
+}
+else
+{
+?>
+		<script src="./maps/level1/level1.js"></script>
+<?php 
+}
+?>
+	
 		<script src="./source/pickables.js"></script>
 		<script src="./source/tapestries.js"></script>
+		<script src="./source/plate.js"></script>
 		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
@@ -213,10 +240,18 @@
 		<script src="./source/stats.min.js"></script>
 		<script src="./source/particles.js"></script>
 		<script src="./source/Detector.js"></script>
+		<script src="./source/button.js"></script>
+		<script src="./source/keyholes.js"></script>
+		<script src="./source/utils.js"></script>
+		<script src="./source/level.js"></script>
 
 		<script>
 		
-			if ( true /*! Detector.webgl*/ ) Detector.addGetWebGLMessage();
+			if ( ! Detector.webgl ) 
+			{
+				alert("You have no WebGL on your browser!!");
+				Detector.addGetWebGLMessage();
+			}
 			
 			clickConsumed = false;
 
@@ -236,12 +271,11 @@
 				
 				//level_complete_div.style.display = "inline-block";
 								
-				show_message("				<br><br><font size='7'>Level Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' value='Register'>  &nbsp;&nbsp; 				<input type='button' onclick='window.location=\"<?=$DIR?>/templates/level.php\";' value=' No thanks '>				</form>", 900,800);
-				<?php mail('info@mystic-peanut.com', "Someone finished Cuber", "Oh my"); ?>
+				show_message("				<br><br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
 			}
 			
 			function DisplayInfoDiv(msg) {
-				//show some dmg blood flashy thing over monster
+				//show some nice fadeout info test above inventory..
 				var info_tip_div_bottom = INVENTORY_POS_SHOWN + SLOT_WIDTH
 				var left = (windowHalfX - (SLOT_WIDTH*NUM_SLOTS_INVENTORY_ROW/2));
 				//info_tip_div.style.top = info_tip_div_top + "px";
@@ -300,6 +334,12 @@
 			
 			function player_dies() {
 				player1_div.style.opacity = "0.4";
+				if(pickable_at_hand != 0)
+				{
+						pickable_at_hand = 0;
+						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon = 0;	
+				}
 				playerDead = true;
 			}
 			
@@ -404,17 +444,6 @@
 
 			var SQUARE_SIZE = 10;
 
-			//var floorsArr2D = [[2,-5], [3,-5], [4,-5], [5,-5], [6,-5], [6,-1], [1,2], [0,2], [0,1], [0,0], [0,-1], [0,-2], [0,-3], [0,-4], [1,-4], [2,-4], [3,-4], [4,-4], [5,-4], [6,-4], [2,-3], [3,-3], [4,-3], [5,-3], [6,-3], [4,-2], [5,-2], [3,-2], [6,-2], [2,-2], [4,-1], [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [5,2], [6,2], [7,2],[6,3], [6,4], [3,2], [2,2], [2,3], [2,4], [2,5]];
-			var floorsArr2D = [[16,0], [9,0], [8,0], [16,1], [9,1], [8,1], [4,2], [5,2], [6,2], [7,2], [8,2], [9,2], [12,2], [13,2], [15,2], [16,2], [15,3], [13,3], [6,3], [5,3], [4,3], [4,4], [10,4], [11,4], [12,4], [13,4], [14,4], [15,4], [10,5], [9,5], [8,5], [7,5], [6,5], [5,5], [4,5], [3,5], [10,6], [9,6], [8,6], [7,6], [4,6], [4,7], [5,7], [7,7], [8,7], [9,7], [10,7], [0,8], [1,8], [2,8], [5,8], [0,9], [1,9], [2,9], [3,9], [4,9], [5,9], [6,9], [7,9], [8,9], [9,9], [10,9], [13,9], [14,9], [15,9], [16,9], [17,9], [18,9], [19,9], [0,10], [1,10], [2,10], [8,10], [10,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10], [7,11], [8,11], [9,11], [10,11], [11,11], [12,11], [13,11], [14,11], [15,11], [16,11], [17,11], [18,11], [19,11], [20,11], [13,12], [14,12], [15,12], [16,12], [17,12], [18,12], [19,12], [13,13], [14,13], [15,13], [16,13], [17,13], [18,13], [19,13]];
-			var secretWallsArr = [[6,2,3]]; //x,y,orientation
-			var doorsArr3D = [[3,9,1,0,0], [12,11,1,0,0]]; //x,z,rot,open,mesh, 
-			var holesArr = [[7,7]];
-			var writtingsArr = [[11,11,0,"Offer gift to the Guardian, but be careful not to insult him!"]]; 
-
-			//secretWallsArr = []; //x,y,orientation
-			//var doorsArr3D = []; //x,z,rot,open,mesh, 
-			//var holesArr = [];
-			
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -432,11 +461,12 @@
 			var container;
 			var menu_div;
 			
-			//var morphs = [];
 			var pickable_at_hand;
 			var pickable_at_hand_icon;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
+			///var x_pos = 0;
+			///var y_pos = 0;
 
 			var camera, scene, renderer;
 			
@@ -450,8 +480,6 @@
 
 			var mesh, mesh2, mesh3, light;
 
-			var mouseX = 0, mouseY = 0;
-			
 			var m_GamePaused = false;
 			
 			var windowHalfX = window.innerWidth / 2;
@@ -491,8 +519,24 @@
 			var ROUND_DURATION = 2; //2 seconds
 			var STEP_MOVE_DURATION = 150;
 			
+			var gStandingOnPlate = -1;
+			var gWeightOnThePlate = false;
+			var plate_click_audio;
+			var plate_unclick_audio;
+			var button_click_audio;
 			var audio;
+			var mouse_over_button = -1;
+			var mouse_over_keyhole = -1;
+			var item_over_keyhole = -1;
+			var mouse_over_container = -1;
+			var mouse_over_monster = -1;
+			var item_over_monster = -1;
+			var mouse_over_item_in_inventory = -1;
+			var mouse_over_item_in_container = -1;
 			
+			var gui_left_div = 0;
+			var gui_right_div = 0;
+
 			init();
 			animate();
 
@@ -536,16 +580,33 @@
 				
 				menu_div = document.getElementById( 'menu' );
 				
-				//createWallsFromFloors();
+				gui_left_div = document.getElementById( 'gui_left' );
+				gui_right_div = document.getElementById( 'gui_right' );
 				
 				document.onkeydown = handleKeyDown;
 
 				//audio!
 				audio = document.createElement('audio');
 				var source = document.createElement('source');
-				source.src = 'media/wall.mp3';
+				source.src = 'media/thud.mp3';
 				audio.appendChild(source);
-				//audio.play();
+				
+				plate_click_audio = document.createElement('audio');
+				var sourcep = document.createElement('source');
+				sourcep.src = 'media/plate.mp3';
+				plate_click_audio.appendChild(sourcep);
+				
+				
+				plate_unclick_audio = document.createElement('audio');
+				var sourcep = document.createElement('source');
+				sourcep.src = 'media/plate_reverse.mp3';
+				plate_unclick_audio.appendChild(sourcep);
+				
+				button_click_audio = document.createElement('audio');
+				var sourceb = document.createElement('source');
+				sourceb.src = 'media/button.mp3';
+				button_click_audio.appendChild(sourceb);
+				
   
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
@@ -557,7 +618,7 @@
 				current_position = new THREE.Vector3(16,0,0); //16,0,11
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( 0x559955, 0.0125 );
+				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
 				
 				inventory_div = document.getElementById('gui_slots');
 				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
@@ -593,9 +654,9 @@
 				weaponDiv.style.opacity=1.0;
 				
 				light = new THREE.SpotLight();
-				light.position.set( -40, 60, 40 );
+				light.position.set( -155, 5, 10 );
 				light.castShadow = true;
-				scene.add( light );
+				//scene.add( light );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
 				light2.position.set( 50, 50, 50 ).normalize();
@@ -603,9 +664,20 @@
 				scene.add( light2 );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( -50, -50, -50 ).normalize();
+				light2.position.set( -50, -30, -50 ).normalize();
 				light2.castShadow = true;
 				scene.add( light2 );
+
+				light2 = new THREE.DirectionalLight( 0xffffff );
+				light2.position.set( 50, -10, -30 ).normalize();
+				light2.castShadow = true;
+				//scene.add( light2 );
+
+				//level specific action on load
+				onLoad();
+				
+				//load level walls and floors etc..
+				load_level();
 
 				//load pickables
 				load_pickables();
@@ -616,14 +688,12 @@
 				//load tapestries
 				load_tapestries();
 				
+				//load pressure plates (plynths)
+				load_plates ();
+				
 				//load chests
 				load_containers();
 				
-				var loader = new THREE.JSONLoader();
-
-				loader.load( "models/doorway.js", createScene1 );
-				loader.load( "models/door.js", createScene2 );
-
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.shadowMapWidth = 128;;
@@ -632,423 +702,17 @@
 
 				container.appendChild( renderer.domElement );
 
-
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				document.addEventListener( 'mousedown', onMouseClick, false );
-
-				//
-				/////// draw text on canvas /////////
-
-				// create a canvas element
-				//var canvas1 = document.createElement('canvas');
-				//var context1 = canvas1.getContext('2d');
-				//context1.font = "Bold 20px Arial";
-				//context1.fillStyle = "rgba(1,1,0,0.95)";
-				//context1.fillText('Hello, world!', 10, 20);
 				
-				//context1.clearRect(0,0,640,480);
-				//var message = "Pera";
-				//var metrics = context1.measureText(message);
-				//var width = metrics.width;
-				//context1.fillStyle = "rgba(0,0,0,0.95)"; // black border
-				//context1.fillRect( 0,0, width+8,20+8);
-				//context1.fillStyle = "rgba(255,255,255,0.95)"; // white filler
-				//context1.fillRect( 2,2, width+4,20+4 );
-				//context1.fillStyle = "rgba(0,0,0,1)"; // text color
-				//context1.fillText( message, 4,20 );
-				
-				// canvas contents will be used for a texture
-				//var texture1 = new THREE.Texture(canvas1) 
-				//texture1.needsUpdate = true;
-				
-				////////////////////////////////////////
-				
-				//var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true, alignment: THREE.SpriteAlignment.topLeft } );
-				
-				//var sprite1 = new THREE.Sprite( spriteMaterial );
-				//sprite1.scale.set(200,200,1.0);
-				//sprite1.position.set( 50, 15, 0 );
-				//scene.add( sprite1 );	
-				
-				/////// draw text on canvas /////////
+				//loading_div.style.display = "none";
 				
 				// initialize object to perform world/screen calculations
 				projector = new THREE.Projector();
 
-
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				var map = THREE.ImageUtils.loadTexture( 'media/floor.jpg' );
-				var teleport_map = THREE.ImageUtils.loadTexture( 'media/teleport_floor.jpg' );
-				map.wrapS = map.wrapT = THREE.RepeatWrapping;
-				map.anisotropy = 16;
-				
-				//teleport_map.wrapS = map.wrapT = THREE.RepeatWrapping;
-				teleport_map.anisotropy = 16;
-
-
-				var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-				
-				var teleport_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: teleport_map, side: THREE.DoubleSide } );
-
-				//floors
-				for(var i=0; i < floorsArr2D.length; i++)
-				{
-					holeSpot = false;
-					for (var h=0; h<holesArr.length; h++)
-					{
-						if((holesArr[h][0] == floorsArr2D[i][0]) && (holesArr[h][1] == floorsArr2D[i][1]))
-						holeSpot = true;
-					}
-					//if this floor tile is hole, make a hole, else make floor
-					
-					if(holeSpot)
-					{
-						//add hole model
-						var pos = new THREE.Vector3(0, 0, 0);
-						var rot = new THREE.Vector3(0, 0, 0);
-						pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
-						pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
-						loader.load( "models/hole.js", loadModel(pos,rot) );
-					}
-					else
-					{
-						//add floor tile
-						if(positionIsTeleport(floorsArr2D[i][0], floorsArr2D[i][1]))
-						{
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), teleport_material );
-						}
-						else
-						{
-							object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-						}
-						object.rotation.set(-Math.PI/2, 0, 0);
-						object.receiveShadow = true;
-						
-						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-						object.position.y = 0; //y
-						object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
-				
-						scene.add( object );
-					}
-				}
-				
-				//ceiling
-				
-				map = THREE.ImageUtils.loadTexture( 'media/ceiling.jpg' );
-				map.wrapS = map.wrapT = THREE.RepeatWrapping;
-				map.anisotropy = 16;
-				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-				for(i=0; i < floorsArr2D.length; i++)
-				{
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-					//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-					object.rotation.set(-Math.PI/2, 0, 0);
-					object.receiveShadow = true;
-					
-				
-					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-					object.position.y = 0.8*SQUARE_SIZE; //y
-					object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
-			
-					scene.add( object );
-				}
-				
-				//walls
-				
-				//wall texture
-				map = THREE.ImageUtils.loadTexture( 'media/wall.jpg' );
-				map.wrapS = map.wrapT = THREE.RepeatWrapping;
-				map.anisotropy = 16;
-				material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-				
-				//writting on the wall texture
-				var mapwrit = THREE.ImageUtils.loadTexture( 'media/wallwrit.jpg' );
-				mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
-				mapwrit.anisotropy = 16;
-				materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
-				
-				//secret walls
-				for(var s=0; s<secretWallsArr.length; s++)
-				{
-					//place wall depending on orientation
-					if(secretWallsArr[s][2] == 3)
-					{
-						//left secret wall
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						object.rotation.set(0, Math.PI/2, 0);
-						object.receiveShadow = true;
-						object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
-						scene.add( object );
-					}
-				}
-				
-				//regular walls
-				for(i=0; i < floorsArr2D.length; i++)
-				{
-					var leftWall = true;
-					var rightWall = true;
-					var frontWall = true;
-					var backWall = true;
-					var xTile = floorsArr2D[i][0];
-					var yTile = floorsArr2D[i][1];
-					//make walls around floor tile, but check if it has neighboring tile..
-					for(j=0; j < floorsArr2D.length; j++)
-					{
-						if(i!=j)
-						{
-							if((floorsArr2D[j][0] == xTile+1) && (floorsArr2D[j][1] == yTile))
-							{
-								//there is floor tile to the left - no LeftWall.
-								leftWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
-							{
-								//there is floor tile to the right - no RightWall.
-								rightWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile+1))
-							{
-								//there is floor tile to the front - no FrontWall.
-								frontWall = false;
-							}
-							if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile-1))
-							{
-								//there is floor tile to the back - no BackWall.
-								backWall = false;
-							}
-						}
-					}
-					
-					if(leftWall)
-					{
-						var nicheIsOnTheWall = false;
-						//loop nicheArr
-						for (var n=0; n<nicheArr.length; n++)
-						{
-							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 3))
-							{
-								nicheIsOnTheWall = true;
-							}
-						}
-						
-						if(nicheIsOnTheWall)
-						{
-							//load niche model instead of regular wall
-							var pos = new THREE.Vector3(0, 0, 0);
-							var rot = new THREE.Vector3(0, 0, 0);
-							pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
-							rot.set(0, -Math.PI/2, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
-						}
-						else
-						{
-							//check if writting is on the wall
-							var writtingIsOnTheWall = false;
-							//loop writtingsArr
-							for (var n=0; n<writtingsArr.length; n++)
-							{
-								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 3))
-								{
-									writtingIsOnTheWall = true;
-								}
-							}
-							
-							if(writtingIsOnTheWall)
-							{
-								//load wall with writting
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-							}
-							else
-							{
-								//load regular wall
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-							}
-							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-							object.rotation.set(0, Math.PI/2, 0);
-							object.receiveShadow = true;
-							
-						
-							object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
-							object.position.y = 0.4*SQUARE_SIZE; //y
-							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-					
-							scene.add( object );
-						}
-					}
-					if(rightWall)
-					{
-						var nicheIsOnTheWall = false;
-						//loop nicheArr
-						for (var n=0; n<nicheArr.length; n++)
-						{
-							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 1))
-							{
-								nicheIsOnTheWall = true;
-							}
-						}
-						
-						if(nicheIsOnTheWall)
-						{
-							//load niche model instead of regular wall
-							var pos = new THREE.Vector3(0, 0, 0);
-							var rot = new THREE.Vector3(0, 0, 0);
-							pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
-							rot.set(0, Math.PI/2, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
-						}
-						else
-						{
-							//check if writting is on the wall
-							var writtingIsOnTheWall = false;
-							//loop writtingsArr
-							for (var n=0; n<writtingsArr.length; n++)
-							{
-								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 1))
-								{
-									writtingIsOnTheWall = true;
-								}
-							}
-							
-							if(writtingIsOnTheWall)
-							{
-								//load wall with writting
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-							}
-							else
-							{
-								//load regular wall
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-							}
-
-							object.rotation.set(0, Math.PI/2, 0);
-							object.receiveShadow = true;
-							
-						
-							object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
-							object.position.y = 0.4*SQUARE_SIZE; //y
-							object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-					
-							scene.add( object );
-						}
-					}
-					if(frontWall)
-					{
-						var nicheIsOnTheWall = false;
-						//loop nicheArr
-						for (var n=0; n<nicheArr.length; n++)
-						{
-							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 0))
-							{
-								nicheIsOnTheWall = true;
-							}
-						}
-						
-						if(nicheIsOnTheWall)
-						{
-							//load niche model instead of regular wall
-							var pos = new THREE.Vector3(0, 0, 0);
-							var rot = new THREE.Vector3(0, 0, 0);
-							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
-							rot.set(0, Math.PI, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
-						}
-						else
-						{
-							//check if writting is on the wall
-							var writtingIsOnTheWall = false;
-							//loop writtingsArr
-							for (var n=0; n<writtingsArr.length; n++)
-							{
-								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 0))
-								{
-									writtingIsOnTheWall = true;
-								}
-							}
-							
-							if(writtingIsOnTheWall)
-							{
-								//load wall with writting
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-							}
-							else
-							{
-								//load regular wall
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-							}
-							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-							object.rotation.set(0, Math.PI, 0);
-							object.receiveShadow = true;
-							
-						
-							object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-							object.position.y = 0.4*SQUARE_SIZE; //y
-							object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
-					
-							scene.add( object );
-						}
-					}
-					if(backWall)
-					{
-						var nicheIsOnTheWall = false;
-						//loop nicheArr
-						for (var n=0; n<nicheArr.length; n++)
-						{
-							if((nicheArr[n][0] == floorsArr2D[i][0])&&(nicheArr[n][1] == floorsArr2D[i][1])&&(nicheArr[n][2] == 2))
-							{
-								nicheIsOnTheWall = true;
-							}
-						}
-						
-						if(nicheIsOnTheWall)
-						{
-							//load niche model instead of regular wall
-							var pos = new THREE.Vector3(0, 0, 0);
-							var rot = new THREE.Vector3(0, 0, 0);
-							pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
-							rot.set(0, 0, 0);
-							loader.load( "models/niche.js", loadModel(pos, rot) );
-						}
-						else
-						{
-							//check if writting is on the wall
-							var writtingIsOnTheWall = false;
-							//loop writtingsArr
-							for (var n=0; n<writtingsArr.length; n++)
-							{
-								if((writtingsArr[n][0] == floorsArr2D[i][0])&&(writtingsArr[n][1] == floorsArr2D[i][1])&&(writtingsArr[n][2] == 2))
-								{
-									writtingIsOnTheWall = true;
-								}
-							}
-							
-							if(writtingIsOnTheWall)
-							{
-								//load wall with writting
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-							}
-							else
-							{
-								//load regular wall
-								object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-							}
-							//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-							object.rotation.set(0, Math.PI, 0);
-							object.receiveShadow = true;
-							
-						
-							object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-							object.position.y = 0.4*SQUARE_SIZE; //y
-							object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
-					
-							scene.add( object );
-						}
-					}
-				}
-				
-				load_monsters ();
+				load_monsters();
   
 				renderer.shadowMapEnabled = true;
 
@@ -1083,22 +747,13 @@
 				if(holeFallen||playerDead)
 					return false;
 				
-				//check if monster is in that position
-				for(i=0; i < array_of_monsters.length; i++)
-				{
-					if(array_of_monsters[i].gameID != id)
-					{
-						if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
-						{
-							return false;
-						}
-					}
-				}
+				
 				
 				for(i=0; i < floorsArr2D.length; i++)
 				{
 					if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
 					{
+						//check if doors are in that position
 						for(j=0; j < doorsArr3D.length; j++)
 						{
 							//if there are closed doors in that position..
@@ -1107,6 +762,28 @@
 								if(doorsArr3D[j][3] == 0) return false;
 							}
 						}
+
+						//check if pillar is in that position
+						for(i=0; i < pillar_array.length; i++)
+						{
+							if((pillar_array[i][2] == x) && (pillar_array[i][3] == z))
+							{
+								return false;
+							}
+						}
+						
+						//check if monster is in that position
+						for(i=0; i < array_of_monsters.length; i++)
+						{
+							if(array_of_monsters[i].gameID != id)
+							{
+								if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
+								{
+									return false;
+								}
+							}
+						}
+
 						return true;
 					}
 				}
@@ -1129,7 +806,7 @@
 			
 			function positionIsTeleport(x,z) {
 				
-				console.log("entered teleport!");
+				//console.log("entered teleport!");
 				if((x == teleport_pos.x/10)&&(z == teleport_pos.z/10))
 				{
 					return true;
@@ -1141,6 +818,12 @@
 			function fallInHole()
 			{
 				holeFallen = true;
+				if(pickable_at_hand != 0)
+				{
+						pickable_at_hand = 0;
+						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon = 0;	
+				}
 			}
 			
 
@@ -1176,7 +859,7 @@
 					// Turn Left Q
 					
 					//if player is in the hole atm, he can not turn around because he is dead.
-					if(holeFallen)
+					if(holeFallen||playerDead)
 						return;
 					
 					//back tile position modification requires to move front and to the right by half step, then rotate
@@ -1236,7 +919,7 @@
 					// Turne Right E
 					
 					//if player is in the hole atm, he can not turn around because he is dead.
-					if(holeFallen)
+					if(holeFallen||playerDead)
 						return;
 					
 					//back tile position modification requires to move front and to the left by half step, then rotate right
@@ -1432,66 +1115,333 @@
 				}
 			}
 			
-			function createScene1( geometry, materials ) {
-
-				materials[ 0 ].shading = THREE.FlatShading;
-
-				for(var i=0; i<doorsArr3D.length; i++)
-				{
-					mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-					mesh.position.x = doorsArr3D[i][0]*10;
-					mesh.position.z = doorsArr3D[i][1]*10;
-					mesh.position.y = 0;
-					if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
-					{
-						mesh.rotation.set(0,0, 0);
-					}
-					else
-					{
-						mesh.rotation.set(0,Math.PI/2, 0);
-					}
-					mesh.castShadow = true;
-					mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
-					scene.add( mesh );
-				}
+			function setCursor(pointer)
+			{
+				container.style.cursor = pointer;
+				gui_left_div.style.cursor = pointer;
+				gui_right_div.style.cursor = pointer;
+				inventory_div.style.cursor = pointer;
+				container_div.style.cursor = pointer;
 			}
 			
-			function createScene2( geometry, materials ) {
-
-				materials[ 0 ].shading = THREE.FlatShading;
-
-				for(var i=0; i<doorsArr3D.length; i++)
-				{
-					doorsArr3D[i][4] = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-					doorsArr3D[i][4].position.x = doorsArr3D[i][0]*10;
-					doorsArr3D[i][4].position.z = doorsArr3D[i][1]*10;
-					doorsArr3D[i][4].position.y = 0;
-					if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
-					{
-						doorsArr3D[i][4].rotation.set(0,0,0);
-					}
-					else
-					{
-						doorsArr3D[i][4].rotation.set(0,Math.PI/2,0);
-					}
-					
-					doorsArr3D[i][4].castShadow = true;
-					doorsArr3D[i][4].scale.x = doorsArr3D[i][4].scale.y = doorsArr3D[i][4].scale.z = 1;
-					scene.add( doorsArr3D[i][4] );
-				}
+			function drawItemInfo(xpos, ypos, item)
+			{
 			}
+			
+			function onDocumentMouseMove( event )
+			{
 
-			function onDocumentMouseMove( event ) {
-
-				mouseX = ( event.clientX - windowHalfX );
-				mouseY = ( event.clientY - windowHalfY );
-				
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+				
+				// create a Ray with origin at the mouse position
+				//   and direction into the scene (camera direction)
+				var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+				projector.unprojectVector( vector, camera );
+				var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
+				
+				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+				looker.sub(camera.position);
+				var norm_looker = new THREE.Vector3(0,0,0).add(looker);
+				norm_looker.normalize();
+				var look_pos =new THREE.Vector3(0,0,0).add(current_position);
+				look_pos.add(norm_looker);
+				
+				
+				if(!pickable_at_hand)
+				{
+					//mouse over inventory stuff
+					if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
+					{
+						var item = inventory_item_clicked(x_pos,y_pos);
+						if(item != 0)
+						{
+							//console.log("asdasdasdas");
+							mouse_over_item_in_inventory = item;
+							setCursor('pointer');
+							drawItemInfo(x_pos,y_pos,item);
+							return;
+						}
+					}
+					mouse_over_item_in_inventory = -1;
+					
+					//mouse over container item
+					if(container_div.style.display == "inline-block")
+					{
+						var slot = container_mouse_over_slot(x_pos,y_pos);
+						if(slot > -1)
+						{
+							console.log("conktiitit");
+							mouse_over_item_in_container = slot;
+							setCursor('pointer');
+							//drawItemInfo(x_pos,y_pos,item);
+							return;
+						}
+					}
+					mouse_over_item_in_container = -1;
+					
+					//mouse over pickables
+					for (var i=0; i< array_of_pickables.length; i++)
+					{
+						if(array_of_pickables[i].mesh !=0)
+						{
+							//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
+							if(array_of_pickables[i].mesh.visible == false)
+								continue;
+							
+							//check if player is close to pickable
+							if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
+							{
+								continue;
+							}
+							
+							//check if pickable is clicked on
+							var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+							
+							// if there is one (or more) intersections
+							if ( intersects.length > 0 )
+							{
+								// if the closest object intersected is not the currently stored intersection object
+								if ( intersects[0].object.id == array_of_pickables[i].id )
+								{
+									//change mouse pointer to cursor
+									setCursor('pointer');
+									return;
+								}
+							}
+						}
+					}
+					
+					//mouse over wall writtings
+					for (var n=0; n<writtingsArr.length; n++)
+					{
+						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
+						{
+							var lookie = new THREE.Vector3(0,0,0).add(looker);
+							lookie.normalize();
+							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
+							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
+							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
+							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
+							{
+								if(writtingsArr[n][4] != 0)
+								{
+									var intersects = ray.intersectObject( writtingsArr[n][4] );
+							
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										//change mouse pointer to cursor
+										setCursor('pointer');
+										return;
+									}
+								}
+							}
+						}
+					}
+					
+					//mouse over doors
+					for(var d=0; d < doorsArr3D.length; d++)
+					{
+						if(doorsArr3D[d][4] != 0)
+						{
+							//if there are doors in that position
+							if((doorsArr3D[d][0] == look_pos.x) && (doorsArr3D[d][1] == look_pos.z))
+							{
+								//intersect..
+								var intersects = ray.intersectObject( doorsArr3D[d][4] );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									setCursor('pointer');
+									return;
+								}
+							}
+						}
+					}
+					
+					//mouse over buttons
+					for (var b=0; b<buttons_array.length; b++)
+					{
+						if((buttons_array[b][2] == current_position.x)&&(buttons_array[b][3] == current_position.z))
+						{
+							//console.log("paaaaaaa");
+							if(array_of_buttons[b].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_buttons[b].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//console.log("prrrt");
+									//change mouse pointer to cursor
+									setCursor('pointer');
+									mouse_over_button = b;
+									return;
+								}
+							}
+						}
+					}
+					
+					//mouse over keyholes
+					for (var k=0; k<keyholes_array.length; k++)
+					{
+						if((keyholes_array[k][2] == current_position.x)&&(keyholes_array[k][3] == current_position.z))
+						{
+							//console.log("paaaaaaa");
+							if(array_of_keyholes[k].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_keyholes[k].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//console.log("prrrt");
+									//change mouse pointer to cursor
+									setCursor('pointer');
+									mouse_over_keyhole = k;
+									return;
+								}
+							}
+						}
+					}
+					
+					//mouse over containers
+					var c = looking_at_container();
+					if(c > -1)
+					{
+						//console.log("coooooontainernrr");
+						if(array_of_containers[c].mesh != 0)
+						{
+							var intersects = ray.intersectObject( array_of_containers[c].mesh );
+							
+							// if there is one (or more) intersections
+							if ( intersects.length > 0 )
+							{
+								//console.log("prrrt coooooontainernrr");
+								//change mouse pointer to cursor
+								setCursor('pointer');
+								mouse_over_container = c;
+								return;
+							}
+						}
+					}
+					
+					//mouse over monster
+					for ( var m = 0; m < array_of_monsters.length; m ++ )
+					{
+						var monster = array_of_monsters[ m ];
+						if(monster.mesh != 0)
+						{
+							//is monster standing in front of player?
+							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
+							{
+								var intersects = ray.intersectObject( monster.mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//console.log("prrrt coooooontainernrr");
+									//change mouse pointer to cursor
+									setCursor('pointer');
+									mouse_over_monster = m;
+									return;
+								}
+							}
+						}
+					}
+					
+				}
+				else //pickable is at hand
+				{
+				
+					//pickable over keyhole
+					for (var b=0; b<keyholes_array.length; b++)
+					{
+						if((keyholes_array[b][2] == current_position.x)&&(keyholes_array[b][3] == current_position.z))
+						{
+							//console.log("paaaaaaa");
+							if(array_of_keyholes[b].mesh != 0)
+							{
+								var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									console.log("prrrt " + item_over_keyhole);
+									//change mouse pointer to cursor
+									setCursor('pointer');
+									item_over_keyhole = b;
+									return;
+								}
+								else
+								{
+									//check if top left corner of pickable icon is intersecting because of key tip to keyhole issue:
+									//(players tend to center tip of the key to keyhole which causes center of icon to miss keyhole)
+									var musex = ( (event.clientX-44) / window.innerWidth ) * 2 - 1;
+									var musey = - ( (event.clientY-44) / window.innerHeight ) * 2 + 1;
+									
+									var vector = new THREE.Vector3( musex, musey, 1 );
+									projector.unprojectVector( vector, camera );
+									var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+
+									var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										console.log("grrrt " + item_over_keyhole);
+										//change mouse pointer to cursor
+										setCursor('pointer');
+										item_over_keyhole = b;
+										return;
+									}
+								
+								}
+							}
+						}
+					}
+					
+					//pickable over monster
+					for ( var m = 0; m < array_of_monsters.length; m ++ )
+					{
+						var monster = array_of_monsters[ m ];
+						if(monster.mesh != 0)
+						{
+							//is monster standing in front of player?
+							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
+							{
+								var intersects = ray.intersectObject( monster.mesh );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									//change mouse pointer to cursor
+									setCursor('pointer');
+
+									item_over_monster = m;
+									return;
+								}
+							}
+						}
+					}
+				}
+				
+				mouse_over_button = -1;
+				mouse_over_keyhole = -1;
+				mouse_over_container = -1;
+				mouse_over_monster = -1;
+				mouse_over_item_in_inventory = -1;
+				mouse_over_item_in_container = -1;
+				item_over_keyhole = -1;
+				item_over_monster = -1
+				setCursor('auto');
 			}
 
 			function handleMouseClick(x,y) {
@@ -1508,7 +1458,7 @@
 				looker.normalize();
 				var look_pos =new THREE.Vector3(0,0,0).add(current_position);
 				look_pos.add(looker);
-					
+				
 					
 				/*if(yaw == 0) {xDoor = currentPos.x; zDoor = currentPos.z-1;}
 				if((yaw == 90)||(yaw == -270)) {xDoor = currentPos.x-1; zDoor = currentPos.z}
@@ -1517,14 +1467,25 @@
 
 				for(i=0; i < doorsArr3D.length; i++)
 				{
+					//if there are doors in that position
 					if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
 					{
-						//if there are doors in that position..
-						/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
-						doorsArr3D[i][5] = 1; //animate flag
-						//alert("ima!");
-						if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flagww
-						else doorsArr3D[i][3] = 0;
+						// and door are unlocked..
+						if(doorsArr3D[i][6] == 1)
+						{
+							/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
+							doorsArr3D[i][5] = 1; //animate flag
+							//alert("ima!");
+							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
+							else doorsArr3D[i][3] = 0;
+						}
+						else
+						{
+							if(doorsArr3D[i][3] == 0)
+							{
+								DisplayInfoDiv("These doors are opened elsewhere..");
+							}
+						}
 					}
 				}
 			}
@@ -1610,48 +1571,118 @@
 					
 					//check if player is clicking item on the monster
 					//var monsterID = monster_clicked_on(look_pos);
-					for ( var i = 0; i < array_of_monsters.length; i ++ ) {
+					if(item_over_monster > -1)
+					{
+						var monster = array_of_monsters[ item_over_monster ];
+						
+						console.log("player clicked item on " + monster.name);
+						var taken = monster.OnItemClick(pickable_at_hand);
 
-						var monster = array_of_monsters[ i ];
-						if(monster.mesh != 0)
+						//if monster took the pickable - make it dissapear
+						if(taken)
 						{
-							//is monster standing in front of player?
-							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
-							{
-								console.log("player clicked on monster id: " + monster.gameID);
-								var taken = monster.clickedOn(pickable_at_hand);
-								
-								//if monster took the pickable - make it dissapear
-								if(taken)
-								{
-									pickable_at_hand_icon.style.left = "-170px";
-									pickable_at_hand_icon = 0;
-									pickable_at_hand.mesh.visible = false;
-									pickable_at_hand = 0;
-									return;
-								}
-							}
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+							pickable_at_hand.mesh.visible = false;
+							pickable_at_hand = 0;
 						}
+						return;
 					}
 					
+					//keyhole
+					if(item_over_keyhole > -1)
+					{
+						console.log("iiiki " + item_over_keyhole);
+						//if item id is same as keyhole id => it is a match!
+						if(keyholes_array[item_over_keyhole][0] == pickable_at_hand.gameID)
+						{
+							//unlock the keyhole!
+							//play sound
+							//button_click_audio.play();
+							array_of_keyholes[item_over_keyhole].onPressFunc();
+							array_of_keyholes[item_over_keyhole].locked = false;
+							//drop the icon
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+							//key is spent so just dissapears
+							pickable_at_hand = 0;
+							
+							DisplayInfoDiv("Unlocked!");
+						}
+						else
+						{						
+							//show info
+							DisplayInfoDiv("Doesn't fit..");
+						}
+						return;
+					}
+
+					//if click is too high, do nothing (throwing to be implemented later)
+					
+					
 					//drop it on the ground
-					//var looker = new THREE.Vector3(0, 0, 0);
+					
+					//check if pickable is dropped on the pressure plate plynth
+					var plateID = standing_on_plate();
 					var looker = camera.look.clone().sub(camera.position);
 					
+					DisplayInfoDiv(pickable_at_hand.name + " dropped on the ground..");
+					
 					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
-					if(pickable_at_hand.name=="ring")
+					if(pickable_at_hand.name=="Ring")
 					{
 						console.log("trti ring");
 						looker.multiplyScalar(0.97);
 					}
 					else
 					{
-						looker.multiplyScalar(0.92);
+						if(plateID>-1)
+						{
+							looker.multiplyScalar(0.62);
+							gWeightOnThePlate = true;
+							pickable_at_hand.plated = plateID;
+							array_of_plates[plateID].mesh.position.y -=0.2;
+							//plate_click_audio.play();
+							//var onPress = plates_array[plateID][5];
+							//if(onPress !=0 )
+							//{
+							//	onPress();
+							//}
+						}
+						else
+						{
+							plateID = clicking_on_plate();
+							//if not standing on plate, check if clicking on plate
+							if(plateID>-1)
+							{
+								looker.multiplyScalar(1.52);
+								gWeightOnThePlate = true;
+								pickable_at_hand.plated = plateID;
+								array_of_plates[plateID].mesh.position.y -=0.2;
+								plate_click_audio.play();
+								var onPress = plates_array[plateID][5];
+								if(onPress !=0 )
+								{
+									onPress();
+								}
+							}
+							else
+							{
+								looker.multiplyScalar(0.92);
+							}
+						}
 					}
 					
 					//var pos = camera.position.clone().add(looker);
 					pickable_at_hand.mesh.position = camera.position.clone().add(looker);
-					pickable_at_hand.mesh.position.y = 0;
+					if(plateID>-1)
+					{
+						pickable_at_hand.mesh.position.y = 0.3;
+					}
+					else
+					{
+						pickable_at_hand.mesh.position.y = 0;
+					}
 					pickable_at_hand.mesh.visible = true;
 					pickable_at_hand = 0;
 
@@ -1662,53 +1693,52 @@
 					inventorySlide = -1;
 					
 					return;
+					
 				}
-				else
+				else //regular mouse click on screen, pickable is not at hand
 				{
-					//check if item from inventory is clicked
-					if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
+				
+					//click on monster
+					if(mouse_over_monster > -1)
 					{
-						var item = inventory_item_clicked(x_pos,y_pos);
-						if(item)
+						var monster = array_of_monsters[ mouse_over_monster ];
+						monster.OnClick();
+					}
+					
+					//check if item from inventory is clicked
+					if(mouse_over_item_in_inventory != -1)
+					{
+						if(isRightMB)
 						{
-							if(isRightMB)
+							//use item
+							//print item use hint
+							DisplayInfoDiv(mouse_over_item_in_inventory.useHint);
+							//run item usage script function
+							if(mouse_over_item_in_inventory.useScript != 0)
 							{
-								//use item
-								console.log("Use item " + item.name);
-								//print item use hint
-								console.log("Use item hint: " + item.useHint);
-								DisplayInfoDiv(item.useHint);
-								//run item usage script function
-								if(item.useScript != 0)
-								{
-									item.useScript();
-								}
-								//consume if expendable
-								if(item.consumable)
-								{
-									inventory_item_remove(item);
-								}
-								m_RMBEventWasUsed = true;
+								mouse_over_item_in_inventory.useScript();
 							}
-							else
+							//consume if expendable
+							if(mouse_over_item_in_inventory.consumable)
 							{
-								//remove picked from inventory
-								inventory_item_remove(item);
-								
-								//place inventory item at hand
-								pickable_at_hand = item;
-								pickable_at_hand.mesh.visible = false; //TODO remove this line?
-								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-								pickable_at_hand_icon.src = item.icon;
-								
-								//should we hide inventory right after item pickup?
-								//inventorySlide = -1;
-								
+								inventory_item_remove(mouse_over_item_in_inventory);
 							}
-
-							//dont do anything else if item is clicked
-							return;
+							m_RMBEventWasUsed = true;
 						}
+						else
+						{
+							//remove picked from inventory
+							inventory_item_remove(mouse_over_item_in_inventory);
+							
+							//place inventory item at hand
+							pickable_at_hand = mouse_over_item_in_inventory;
+							pickable_at_hand.mesh.visible = false; //TODO remove this line?
+							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+							pickable_at_hand_icon.src = mouse_over_item_in_inventory.icon;
+						}
+						mouse_over_item_in_inventory = -1;
+						//dont do anything else if item is clicked
+						return;
 					}
 					
 					//check if item from container is clicked
@@ -1728,26 +1758,57 @@
 						}
 					}
 					
+					//button
+					if(mouse_over_button > -1)
+					{
+						if(array_of_buttons[mouse_over_button].pressed == false)
+						{
+							//play sound
+							button_click_audio.play();
+							//move button in the wall
+							array_of_buttons[mouse_over_button].mesh.position.x -= 0.05; //TODO move depending on orientation
+							//do button action
+							array_of_buttons[mouse_over_button].onPressFunc();
+							//set it to be budged.. no more clicking.
+							array_of_buttons[mouse_over_button].pressed = true;
+							//info
+							DisplayInfoDiv("Buttons triggers some mechanism!");
+						}
+					}
+					
+					//button
+					if(mouse_over_keyhole > -1)
+					{
+						//play sound ?
+						//button_click_audio.play();
+						
+						//show info
+						if(array_of_keyholes[mouse_over_keyhole].locked)
+						{
+							DisplayInfoDiv("For every keyhole there is a key..");
+						}
+						else
+						{
+							DisplayInfoDiv("This lock is unlocked..");
+						}
+					}
+					
 					//check if player clicked on chest (3d model)
-					var containerID = container_clicked_on(x_pos,y_pos);
-					if(containerID > -1)
+					if(mouse_over_container > -1)
 					{
 						//open container inventory, and player inventory
-						//alert("niche clicked!");
-						container_fill_gui(containerID);
+						//alert("chest clicked!");
+						container_fill_gui(mouse_over_container);
 						inventorySlide = 1;
+						DisplayInfoDiv("Chest opened..");
 						return;
 					}
 					
 					//check if player clicked on writting on the wall
-					var writtingIsOnTheWall = false;
-					//loop writtingsArr
 					for (var n=0; n<writtingsArr.length; n++)
 					{
 						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
 						{
-							writtingIsOnTheWall = true;
-							
 							var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 							looker.sub(camera.position);
 							var lookie = new THREE.Vector3(0,0,0).add(looker);
@@ -1755,11 +1816,12 @@
 							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
 							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
 							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
-							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 1)) //left
-							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 3))) //right
+							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
 								console.log("looking at writting!");
 								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+								//DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
 					}
@@ -1796,10 +1858,27 @@
 								pickable_at_hand = array_of_pickables[i];
 								pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								var from_where = "from the ground..";
+								if(pickable_at_hand.niched > -1) from_where = "from niche in the wall";
+								DisplayInfoDiv(pickable_at_hand.name + " picked up " + from_where);
 								//alert("picked z = " + Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z));
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
 								//if pickable belongs to niche, remove from niche array
 								if(pickable_at_hand.niched > -1) remove_from_niche(pickable_at_hand);
+								if(pickable_at_hand.plated > -1)
+								{
+									//TODO: check if more items remain on the plate
+									gWeightOnThePlate = false;
+									array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
+									console.log("lifting item off the plate!");
+									plate_unclick_audio.play();
+									var onUnpress = plates_array[pickable_at_hand.plated][6];
+									if(onUnpress !=0 )
+									{
+										onUnpress();
+									}
+									pickable_at_hand.plated = -1;
+								}
 								inventorySlide = 1;
 								break;
 							}
@@ -1921,15 +2000,56 @@
 								fallInHole();
 							}
 							
+							//check if player was standing on press plate before this move..
+							if(gStandingOnPlate > -1)
+							{
+								//call pressure plate onUnpress function..
+								if(gWeightOnThePlate)
+								{
+									console.log("plate is not unpressed because weight is on it!");
+								}
+								else
+								{
+									console.log("plate unpressed!");
+									///
+									plate_unclick_audio.play();
+									var onUnpress = plates_array[gStandingOnPlate][6];
+									if(onUnpress !=0 )
+									{
+										onUnpress();
+									}
+								}
+								gStandingOnPlate = -1;
+							}
+							
+							//check if player has stepped on the pressure plate
+							var plateID = standing_on_plate();
+							if(plateID>-1)
+							{
+								if (!gWeightOnThePlate)
+								{
+									//call pressure plate onPress function..
+									console.log("plate pressed!");
+									plate_click_audio.play();
+									var onPress = plates_array[plateID][5];
+									if(onPress !=0 )
+									{
+										onPress();
+									}
+								}
+								gStandingOnPlate = plateID;
+							}
+							
 							//check if player stepped onto teleport!
 							if(teleport != 0)
 							{
 								if(positionIsTeleport(current_position.x, current_position.z))
 								{
 									//pause game
-									m_GamePaused = true;
+									//m_GamePaused = true;
 									//show final register/feedback level complete screen!
-									displayLevelCompleteDialog();
+									//displayLevelCompleteDialog();
+									teleportGo();
 								}
 							}
 						}
@@ -1978,11 +2098,11 @@
 					//animate doors opening/closing
 					for(i=0; i < doorsArr3D.length; i++)
 					{
-						if(doorsArr3D[i][5] == 1)
+						if(doorsArr3D[i][5] == 1) //openable
 						{
-							if(doorsArr3D[i][3] == 0) 
+							if(doorsArr3D[i][3] == 0) //closed
 							{
-								doorsArr3D[i][4].position.y -= elapsed/800;
+								doorsArr3D[i][4].position.y -= elapsed/400;
 								if(doorsArr3D[i][4].position.y < 0.01) 
 								{
 									doorsArr3D[i][5] = 0;
@@ -1990,7 +2110,7 @@
 							}
 							else 
 							{
-								doorsArr3D[i][4].position.y += elapsed/800;
+								doorsArr3D[i][4].position.y += elapsed/400;
 								if(doorsArr3D[i][4].position.y > 7.5) 
 								{
 									doorsArr3D[i][5] = 0;
