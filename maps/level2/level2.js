@@ -1,4 +1,9 @@
 
+function onLoad()
+{
+	//info_dialog_div.style.display = "inline";
+}
+
 // map arrays..
 var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
 var secretWallsArr = [[16,9,3]]; //x,y,orientation
@@ -206,4 +211,11 @@ var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "Thi
 var teleport_pos_x = 50; //position on map
 var teleport_pos_z = 140; //position on map
 
+function teleportGo()
+{
+	//pause game
+	m_GamePaused = true;
+	//show final register/feedback level complete screen!
+	displayLevelCompleteDialog();
+}
 

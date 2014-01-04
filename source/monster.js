@@ -8,6 +8,8 @@ var MONSTER_IDLE = 0;
 var MONSTER_MAD = 1;
 var MONSTER_WALK = 2;
 
+var IDLE_ANIM_DURATION = 3300;
+
 //monster class declaration
 Monster = function ( ) {
 
@@ -91,7 +93,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.name = munster.name;
 		munster.id = munster.mesh.id;
 		munster.mesh.visible = munster.visible;
-		munster.mesh.duration = 6200;
+		munster.mesh.duration = IDLE_ANIM_DURATION;
 		munster.mesh.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		console.log("adding monstere " + munster.mesh.name);
@@ -235,7 +237,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 	if(playerDead)
 	{
 		console.log("player is dead, lets idle");
-		this.mesh.duration = 6200;
+		this.mesh.duration = IDLE_ANIM_DURATION;
 		this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		return;
 	}
@@ -484,7 +486,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 			else
 			{
 				console.log("diagonal, stuck");
-				this.mesh.duration = 6200;
+				this.mesh.duration = IDLE_ANIM_DURATION;
 				this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 			}
 		}
@@ -492,7 +494,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 		{
 			//player is too far away to draw attention of monster... so idle around
 			console.log("diagonal, too far away");
-			this.mesh.duration = 6200;
+			this.mesh.duration = IDLE_ANIM_DURATION;
 			this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		}
 	}
@@ -677,7 +679,7 @@ Monster.prototype.find_path = function ( destination_position ) {
 				if(this.rotation == 2)
 				{
 					this.mood = MONSTER_IDLE;
-					this.mesh.duration = 6200;
+					this.mesh.duration = IDLE_ANIM_DURATION;
 					this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 				}
 				else
@@ -694,7 +696,7 @@ Monster.prototype.find_path = function ( destination_position ) {
 			else
 			{
 				console.log("stuck, but don't go to idle but keep walking (so that player realizes he should move :)");
-				//this.mesh.duration = 6200;
+				//this.mesh.duration = IDLE_ANIM_DURATION;
 				//this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 			}
 		}
