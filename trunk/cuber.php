@@ -341,6 +341,7 @@ else
 						pickable_at_hand_icon = 0;	
 				}
 				playerDead = true;
+				// soundy Play player dies sound
 			}
 			
 			function player_attack() {
@@ -372,6 +373,8 @@ else
 							if(monster.hp < 0)
 							{
 								//Monster is dead!
+								
+								//soundy play sound of monstrous death
 								
 								//Monster drops loot
 								if(monster.pickables != 0)
@@ -416,12 +419,14 @@ else
 						{
 							//Miss!
 							DisplayMonsterDmg("Miss!");
+							//soundy Play miss sound swoosh
 						}
 					}
 					else
 					{
 						//Miss!
 						DisplayMonsterDmg("Miss!");
+						//soundy Play miss sound swoosh or cling
 					}
 				}
 			}

@@ -50,15 +50,19 @@ var keyholes_array = [];
 
 //monsters
 
+var IDLE_ANIM_DURATION = 6200;
+
 function MonsterOnClick1()
 {
 	if(this.mood == MONSTER_MAD)
 	{
 		DisplayInfoDiv("It seems mad at you now..");
+		// soundy Play tounchy mad sound
 	}
 	else
 	{
 		DisplayInfoDiv("Big guy, better not make him angry..");
+		// soundy Play tounchy sound
 	}
 }
 
@@ -88,6 +92,7 @@ function MonsterOnItemClick1(pickable)
 				console.log("monster has no pickable item list!");
 			}
 			
+			//// soundy Play Golem happy sound
 			
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
@@ -100,6 +105,7 @@ function MonsterOnItemClick1(pickable)
 		{
 			//monster get angry
 			this.mood = MONSTER_MAD;
+			// soundy Play tounchy mad sound
 			console.log("monster got mad");
 			DisplayInfoDiv("This offer makes Rock Golem angry!!");
 		}
@@ -108,6 +114,7 @@ function MonsterOnItemClick1(pickable)
 	else if(this.mood == MONSTER_MAD)
 	{
 		//DisplayInfoDiv("Too late to bribe.. fight or flight!");
+		// soundy Play tounchy mad sound
 	}
 	
 	return false;
