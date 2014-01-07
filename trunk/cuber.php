@@ -531,6 +531,11 @@ else
 			var button_click_audio;
 			var audio_lock_unlock;
 			var audio_chest_open;
+			var audio_player_death;
+			var audio_miss;
+			var audio_ngh;
+			var audio_cling;
+			var audio_ambient;
 			var audio;
 			var mouse_over_button = -1;
 			var mouse_over_secret_wall = -1;
@@ -604,7 +609,6 @@ else
 				sourcep.src = 'media/plate.mp3';
 				plate_click_audio.appendChild(sourcep);
 				
-				
 				plate_unclick_audio = document.createElement('audio');
 				var sourcep = document.createElement('source');
 				sourcep.src = 'media/plate_reverse.mp3';
@@ -624,7 +628,34 @@ else
 				var sourcec = document.createElement('source');
 				sourcec.src = 'media/chest.mp3';
 				audio_chest_open.appendChild(sourcec);
-  
+				
+				audio_player_death = document.createElement('audio');
+				var source_apd = document.createElement('source');
+				source_apd.src = 'media/death.mp3';
+				audio_player_death.appendChild(source_apd);
+				
+				audio_miss = document.createElement('audio');
+				var source_miss = document.createElement('source');
+				source_miss.src = 'media/miss.mp3';
+				audio_miss.appendChild(source_miss);
+
+				audio_ngh = document.createElement('audio');
+				var source_ngh = document.createElement('source');
+				source_ngh.src = 'media/ngh.mp3';
+				audio_ngh.appendChild(source_ngh);
+
+				audio_cling = document.createElement('audio');
+				var source_cling = document.createElement('source');
+				source_cling.src = 'media/cling.mp3';
+				audio_cling.appendChild(source_cling);
+
+				audio_ambient = document.createElement('audio');
+				var source_ambient = document.createElement('source');
+				source_ambient.src = 'media/ambient_music.mp3';
+				audio_ambient.appendChild(source_ambient);
+				
+				audio_ambient.play();
+
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
