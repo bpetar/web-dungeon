@@ -8,7 +8,6 @@ var MONSTER_IDLE = 0;
 var MONSTER_MAD = 1;
 var MONSTER_WALK = 2;
 
-var IDLE_ANIM_DURATION = 3300;
 
 //monster class declaration
 Monster = function ( ) {
@@ -175,58 +174,6 @@ function load_monsters () {
 
 	}
 
-}
-
-//player clicked on monster with pickable item at hand
-Monster.prototype.clickedOn = function ( pickable ) {
-	
-	//we will have golem reaction to item click hard coded here, but in the future there will be some script loading here :)
-	
-	//if golem is idle react to pickable click
-	if(this.mood == MONSTER_IDLE)
-	{
-		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
-		{
-			//add item to monster inventory, its his item now :)
-			DisplayInfoDiv("Rock Golem takes ring from you!");
-			var newMonsterItem = new Array();
-			newMonsterItem[0] = pickable.id;
-			newMonsterItem[1] = pickable.name;
-			newMonsterItem[2] = pickable.model;
-			newMonsterItem[3] = pickable.icon;
-			newMonsterItem[4] = pickable;
-			if(this.pickables != 0)
-			{
-				this.pickables.push(newMonsterItem);
-			}
-			else
-			{
-				console.log("monster has no pickable item list!");
-			}
-			
-			
-			//monster move from guarding pos
-			this.mood = MONSTER_WALK;
-			console.log("monster will walk now");
-			
-			//return true if item is consumed
-			return true;
-		}
-		else
-		{
-			//monster get angry
-			this.mood = MONSTER_MAD;
-			console.log("monster got mad");
-			DisplayInfoDiv("This offer makes Rock Golem angry!!");
-		}
-		
-	}
-	else if(this.mood == MONSTER_MAD)
-	{
-		//DisplayInfoDiv("Too late to bribe.. fight or flight!");
-	}
-	
-	return false;
 }
 
 //find player
@@ -718,6 +665,8 @@ Monster.prototype.move = function ( delta ) {
 			
 			//check if player moved already from that position
 			
+			// soundy Play hack attack sound
+			
 			//roll monster attack
 			var att_roll = 50*Math.random()+this.attack;
 			if(att_roll>PlayerDefense)
@@ -726,6 +675,7 @@ Monster.prototype.move = function ( delta ) {
 				playerHPcurrent -= dmg_roll;
 				player_wound_div.style.display = "inline-block";
 				player_wound_div.innerHTML = dmg_roll;
+				// soundy Play player wounded ngh sound
 				audio.play();
 				
 				//player death

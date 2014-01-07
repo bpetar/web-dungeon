@@ -50,14 +50,18 @@ var keyholes_array = [[1, "models/keyhole.js", 16,9,1,onKeyClick]];
 
 
 //monsters
+var IDLE_ANIM_DURATION = 3300;
+
 //on click script functions
 function MonsterOnClick1()
 {
 	DisplayInfoDiv("It seems mad at you..");
+	// soundy Play tounchy mad sound
 }
 function MonsterOnItemClick1(pickable)
 {
 	DisplayInfoDiv("It doesn't want to take it..");
+	// soundy Play tounchy mad sound
 	return false;
 }
 //monster inventory items: id, name, model, icon, picki
