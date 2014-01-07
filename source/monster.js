@@ -686,7 +686,18 @@ Monster.prototype.move = function ( delta ) {
 					player_HP_div.style.backgroundColor = "#990000";
 					//player dies. pause the game and write apropriate message.
 					player_dies();
-					show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+					if(this.name == "Crystal Elemental")
+					{
+						show_message("<br><br>You have been defeated by demotivated little elemental.. <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+					}
+					else if(this.name == "Rock Golem")
+					{
+						show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+					}
+					else
+					{
+						show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+					}
 				}
 				else
 				{
