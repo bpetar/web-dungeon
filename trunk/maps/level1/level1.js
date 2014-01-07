@@ -135,8 +135,8 @@ function showScroll()
 	show_message(" <br> " + "The world built on dreams reaches for the dreams built in this world. Are you in a dream?" + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
 }
 
-// id, name, model, icon
-var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "Player reads the scroll", showScroll]];
+// id, name, model, icon, useHint, script function onUse
+var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "", showScroll]];
 var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];

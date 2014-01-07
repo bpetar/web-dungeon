@@ -221,6 +221,10 @@ function load_level()
 			object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
 			object.position.y = 0.4*SQUARE_SIZE; //y
 			object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
+			if(secretWallsArr[s].length > 3)
+			{
+				secretWallsArr[s][3] = object;
+			}
 			scene.add( object );
 		}
 	}

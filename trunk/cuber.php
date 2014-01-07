@@ -529,8 +529,11 @@ else
 			var plate_click_audio;
 			var plate_unclick_audio;
 			var button_click_audio;
+			var audio_lock_unlock;
+			var audio_chest_open;
 			var audio;
 			var mouse_over_button = -1;
+			var mouse_over_secret_wall = -1;
 			var mouse_over_keyhole = -1;
 			var item_over_keyhole = -1;
 			var mouse_over_container = -1;
@@ -612,6 +615,15 @@ else
 				sourceb.src = 'media/button.mp3';
 				button_click_audio.appendChild(sourceb);
 				
+				audio_lock_unlock = document.createElement('audio');
+				var sourcel = document.createElement('source');
+				sourcel.src = 'media/lock.mp3';
+				audio_lock_unlock.appendChild(sourcel);
+				
+				audio_chest_open = document.createElement('audio');
+				var sourcec = document.createElement('source');
+				sourcec.src = 'media/chest.mp3';
+				audio_chest_open.appendChild(sourcec);
   
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
@@ -1271,6 +1283,27 @@ else
 						}
 					}
 					
+					//mouse over secret walls
+					for(var s=0; s<secretWallsArr.length; s++)
+					{
+						if(secretWallsArr[s].length > 3)
+						{
+							if((secretWallsArr[s][0] == current_position.x)&&(secretWallsArr[s][1] == current_position.z))
+							{
+								//intersect..
+								var intersects = ray.intersectObject( secretWallsArr[s][3] );
+								
+								// if there is one (or more) intersections
+								if ( intersects.length > 0 )
+								{
+									setCursor('pointer');
+									mouse_over_secret_wall = s;
+									return;
+								}
+							}
+						}
+					}
+					
 					//mouse over buttons
 					for (var b=0; b<buttons_array.length; b++)
 					{
@@ -1439,6 +1472,7 @@ else
 				}
 				
 				mouse_over_button = -1;
+				mouse_over_secret_wall = -1;
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
 				mouse_over_monster = -1;
@@ -1603,10 +1637,11 @@ else
 						{
 							//unlock the keyhole!
 							//play sound
-							//button_click_audio.play();
+							audio_lock_unlock.play();
+							//call script function
 							array_of_keyholes[item_over_keyhole].onPressFunc();
 							array_of_keyholes[item_over_keyhole].locked = false;
-							//drop the icon
+							//drop the key icon
 							pickable_at_hand_icon.style.left = "-170px";
 							pickable_at_hand_icon = 0;
 							//key is spent so just dissapears
@@ -1781,6 +1816,12 @@ else
 						}
 					}
 					
+					//secret wall
+					if(mouse_over_secret_wall > -1)
+					{
+						DisplayInfoDiv(secretWallsArr[mouse_over_secret_wall][4]);
+					}
+					
 					//button
 					if(mouse_over_keyhole > -1)
 					{
@@ -1802,7 +1843,8 @@ else
 					if(mouse_over_container > -1)
 					{
 						//open container inventory, and player inventory
-						//alert("chest clicked!");
+						//play sound
+						audio_chest_open.play();
 						container_fill_gui(mouse_over_container);
 						inventorySlide = 1;
 						DisplayInfoDiv("Chest opened..");
