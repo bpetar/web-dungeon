@@ -535,6 +535,7 @@ else
 			var audio_miss;
 			var audio_ngh;
 			var audio_cling;
+			var audio_door;
 			var audio_ambient;
 			var audio;
 			var mouse_over_button = -1;
@@ -648,6 +649,11 @@ else
 				var source_cling = document.createElement('source');
 				source_cling.src = 'media/cling.mp3';
 				audio_cling.appendChild(source_cling);
+
+				audio_door = document.createElement('audio');
+				var source_door = document.createElement('source');
+				source_door.src = 'media/door.mp3';
+				audio_door.appendChild(source_door);
 
 				audio_ambient = document.createElement('audio');
 				var source_ambient = document.createElement('source');
@@ -1546,6 +1552,8 @@ else
 							/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
 							doorsArr3D[i][5] = 1; //animate flag
 							//alert("ima!");
+							audio_door.load();
+							audio_door.play();
 							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
 							else doorsArr3D[i][3] = 0;
 						}
@@ -2184,6 +2192,7 @@ else
 								if(doorsArr3D[i][4].position.y < 0.01) 
 								{
 									doorsArr3D[i][5] = 0;
+									audio_door.pause();
 								}
 							}
 							else 
@@ -2192,6 +2201,7 @@ else
 								if(doorsArr3D[i][4].position.y > 7.5) 
 								{
 									doorsArr3D[i][5] = 0;
+									audio_door.pause();
 								}
 							}
 						}
