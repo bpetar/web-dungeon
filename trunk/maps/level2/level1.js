@@ -1,7 +1,7 @@
 
 function onLoad()
 {
-	//info_dialog_div.style.display = "inline";
+	info_dialog_div.style.display = "inline";
 }
 
 // map arrays..
@@ -79,6 +79,9 @@ function onKeyClick()
 	
 	doorsArr3D[2][5] = 1; //animate flag
 	doorsArr3D[2][3] = 1; // open/close flag
+	
+	audio_door.load();
+	audio_door.play();
 
 	//temp hack
 	load_teleport();
@@ -90,6 +93,9 @@ function onPressButton1()
 	
 	doorsArr3D[1][5] = 1; //animate flag
 	doorsArr3D[1][3] = 1; // open/close flag
+	
+	audio_door.load();
+	audio_door.play();
 }
 
 function onPressPlate1()
@@ -98,6 +104,9 @@ function onPressPlate1()
 
 	doorsArr3D[0][5] = 1; //animate flag
 	doorsArr3D[0][3] = 1; // open/close flag
+	
+	audio_door.load();
+	audio_door.play();
 }
 
 function onUnpressPlate1()
@@ -105,6 +114,9 @@ function onUnpressPlate1()
 	console.log("plate to close door");
 	doorsArr3D[0][5] = 1; //animate flag
 	doorsArr3D[0][3] = 0; // open/close flag
+
+	audio_door.load();
+	audio_door.play();
 }
 
 
@@ -217,9 +229,6 @@ var teleport_pos_z = 140; //position on map
 
 function teleportGo()
 {
-	//pause game
-	m_GamePaused = true;
-	//show final register/feedback level complete screen!
-	displayLevelCompleteDialog();
+	window.location.href = 'cuber.php?lvl=level2';
 }
 

@@ -1,7 +1,7 @@
 
 function onLoad()
 {
-	info_dialog_div.style.display = "inline";
+	//info_dialog_div.style.display = "inline";
 }
 
 // map arrays..
@@ -241,5 +241,8 @@ var teleport_pos_z = 110; //position on map
 
 function teleportGo()
 {
-	window.location.href = 'cuber.php?lvl=level2';
+	//pause game
+	m_GamePaused = true;
+	//show final register/feedback level complete screen!
+	displayLevelCompleteDialog();
 }
