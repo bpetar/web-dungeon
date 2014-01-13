@@ -60,14 +60,79 @@ Monster = function ( ) {
 	
 	this.VIEW_DISTANCE = 4;
 	
+	this.audio_monster_wound = document.createElement('audio');
+	this.audio_monster_dies = document.createElement('audio');
+	this.audio_monster_roar = document.createElement('audio');
+	this.audio_monster_attack = document.createElement('audio');
+	this.audio_monster_click = document.createElement('audio');
+	
 };
 
 //Monster.prototype = Object.create(  );
 
-Monster.prototype.damage = function ( dmg_done ) {
+Monster.prototype.deal_damage = function ( dmg_done ) {
 
 	this.hp -= dmg_done;
-
+	this.mood = MONSTER_MAD; //monster get angry
+	console.log("player makes dmg: " + dmg_done + ", monster hp is now: " + this.hp);
+	DisplayMonsterDmg(dmg_done);
+	if(this.hp < 0)
+	{
+		//Monster is dead!
+		
+		//soundy play sound of monstrous death
+		this.audio_monster_dies.play();
+		
+		//Monster drops loot
+		if(this.pickables != 0)
+		{
+			for(var i=0; i<this.pickables.length; i++)
+			{
+				var picki = 0;
+				if(this.pickables[i][4] == 0)
+				{
+					console.log("creating new item..");
+					picki = create_game_object();
+					picki.gameID = this.pickables[i][0];
+					picki.name = this.pickables[i][1];
+					picki.model = this.pickables[i][2];
+					picki.icon = this.pickables[i][3];
+					picki.position = this.mesh.position.clone();
+					picki.position.y = 0;
+					picki.niched = -1;
+					picki.visible = true;
+					//lets make 3d model here
+					var loader = new THREE.JSONLoader();
+					loader.load( picki.model, picki.loadObject(picki) );
+				}
+				else
+				{
+					console.log("not creating item, but using object already created..");
+					picki = this.pickables[i][4];
+					picki.mesh.position = this.mesh.position.clone();
+					picki.mesh.position.y = 0;
+					picki.mesh.visible = true;
+				}
+				
+				array_of_pickables.push(picki);
+			}
+		}
+		scene.remove(this.mesh);
+		
+		for(var m=0; m<array_of_monsters.length; m++)
+		{
+			if(array_of_monsters[m] == this)
+			{
+				console.log("splicing monster number: " + m);
+				array_of_monsters.splice(m,1); //TODO fix hard coded for one monster!
+			}
+		}
+		
+	}
+	else
+	{
+		this.audio_monster_wound.play();
+	}
 };
 
 
@@ -110,7 +175,6 @@ Monster.prototype.loadObject = function ( munster ) {
 function load_monsters () {
 
 	var loader = new THREE.JSONLoader();
-
 
 	var callbackProgress = function( progress, result ) {
 
@@ -164,6 +228,23 @@ function load_monsters () {
 		{
 			munster.mood = monster_array[i][19];
 		}
+		
+		var source_monster_wound = document.createElement('source');
+		source_monster_wound.src = monster_array[i][20];
+		munster.audio_monster_wound.appendChild(source_monster_wound);
+		var source_monster_dies = document.createElement('source');
+		source_monster_dies.src = monster_array[i][21];
+		munster.audio_monster_dies.appendChild(source_monster_dies);
+		var source_monster_roar = document.createElement('source');
+		source_monster_roar.src = monster_array[i][22];
+		munster.audio_monster_roar.appendChild(source_monster_roar);
+		var source_monster_attack = document.createElement('source');
+		source_monster_attack.src = monster_array[i][23];
+		munster.audio_monster_attack.appendChild(source_monster_attack);
+		var source_monster_click = document.createElement('source');
+		source_monster_click.src = monster_array[i][24];
+		munster.audio_monster_click.appendChild(source_monster_click);
+
 		
 		console.log("loading monstere " + i);
 		loader.load( munster.model, munster.loadObject(munster) );
@@ -676,7 +757,7 @@ Monster.prototype.move = function ( delta ) {
 				player_wound_div.style.display = "inline-block";
 				player_wound_div.innerHTML = dmg_roll;
 				// soundy Play player wounded ngh sound
-				audio.play();
+				audio_ngh.play();
 				
 				//player death
 				if(playerHPcurrent <= 0)

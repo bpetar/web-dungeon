@@ -12,18 +12,18 @@ var holesArr = [];
 var writtingsArr = [[16,1,1,"Put some weight..",0]]; 
 
 //basic level textures
-var floor_texture_file = 'maps/level2/media/floor_11_1.png';
-var wall_texture_file = 'maps/level2/media/stone_wall_01_01.png';
-var ceiling_texture_file = 'maps/level2/media/ceiling.png';
-var teleport_floor_texture_file = 'maps/level2/media/teleport_floor.png';
-var wall_writting_texture_file = 'maps/level2/media/wallwrit.png';
-var decorPillarModel = "maps/level2/models/decorPillar.js";
+var floor_texture_file = 'maps/level1/media/floor_11_1.png';
+var wall_texture_file = 'maps/level1/media/stone_wall_01_01.png';
+var ceiling_texture_file = 'maps/level1/media/ceiling.png';
+var teleport_floor_texture_file = 'maps/level1/media/teleport_floor.png';
+var wall_writting_texture_file = 'maps/level1/media/wallwrit.png';
+var decorPillarModel = "maps/level1/models/decorPillar.js";
 
 //basic level models
-var hole_model = 'maps/level2/models/hole.js';
-var niche_model = 'maps/level2/models/niche.js';
-var doorway_model = 'maps/level2/models/doorway.js';
-var door_model = 'maps/level2/models/door.js';
+var hole_model = 'maps/level1/models/hole.js';
+var niche_model = 'maps/level1/models/niche.js';
+var doorway_model = 'maps/level1/models/doorway.js';
+var door_model = 'maps/level1/models/door.js';
 
 //level related values
 fog_color = 0x555599;
@@ -35,15 +35,15 @@ var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry2.js",
 // id, name, model, icon, slot
 var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation, mesh
-var containers_array = [[1,"Chest","maps/level2/models/chest2.js", 17,9,3, container_pickables_array1, 0]];
+var containers_array = [[1,"Chest","maps/level1/models/chest2.js", 17,9,3, container_pickables_array1, 0]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
 
-var pillar_array = [[2, "maps/level2/models/pillar.js", 12,14]];
+var pillar_array = [[2, "maps/level1/models/pillar.js", 12,14]];
 
 //buttons
-var buttons_array = [[1, "maps/level2/models/button_small.js", 16,5,1,onPressButton1]];
+var buttons_array = [[1, "maps/level1/models/button_small.js", 16,5,1,onPressButton1]];
 
 //keyholes
 var keyholes_array = [[1, "models/keyhole.js", 16,9,1,onKeyClick]];
@@ -55,9 +55,20 @@ var IDLE_ANIM_DURATION = 3300;
 //on click script functions
 function MonsterOnClick1()
 {
-	DisplayInfoDiv("It seems demotivated..");
-	// soundy Play tounchy mad sound
+	if(this.mood == MONSTER_MAD)
+	{
+		DisplayInfoDiv("It seems demotivated..");
+		//Play tounchy mad sound
+		this.audio_monster_roar.play();
+	}
+	else
+	{
+		DisplayInfoDiv("It seems demotivated..");
+		//Play tounchy sound
+		this.audio_monster_click.play();
+	}
 }
+
 function MonsterOnItemClick1(pickable)
 {
 	DisplayInfoDiv("It doesn't want to take it..");
@@ -67,7 +78,7 @@ function MonsterOnItemClick1(pickable)
 //monster inventory items: id, name, model, icon, picki
 var monster_pickables_array1 = [];
 // id, name, model, x, z, rot, hp, ac, attack, dmg, pickables, onclick, onitemclick, idlestart, idleend, walkstart, walkend, attackstart, attackend, mood
-var monster_array = [[2,"Crystal Elemental","models/crystal.js", 11,14,3, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,0], [3,"Crystal Elemental","models/crystal.js", 6,14,1, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,0]];
+var monster_array = [[2,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"], [3,"Crystal Elemental Djoka","models/crystal.js", 6,14,1, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]];
 
 
 //niches and their content
