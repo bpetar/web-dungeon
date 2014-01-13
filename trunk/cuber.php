@@ -341,7 +341,8 @@ else
 						pickable_at_hand_icon = 0;	
 				}
 				playerDead = true;
-				// soundy Play player dies sound
+				//Play player dies sound
+				audio_player_death.play();
 			}
 			
 			function player_attack() {
@@ -366,67 +367,25 @@ else
 						{
 							//Hit!
 							var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
-							monster.hp -= dmg_roll;
-							monster.mood = MONSTER_MAD; //monster get angry
-							console.log("player makes dmg: " + dmg_roll + ", monster hp is now: " + monster.hp);
-							DisplayMonsterDmg(dmg_roll);
-							if(monster.hp < 0)
-							{
-								//Monster is dead!
-								
-								//soundy play sound of monstrous death
-								
-								//Monster drops loot
-								if(monster.pickables != 0)
-								{
-									for(var i=0; i<monster.pickables.length; i++)
-									{
-										var picki = 0;
-										if(monster.pickables[i][4] == 0)
-										{
-											console.log("creating new item..");
-											picki = create_game_object();
-											picki.gameID = monster.pickables[i][0];
-											picki.name = monster.pickables[i][1];
-											picki.model = monster.pickables[i][2];
-											picki.icon = monster.pickables[i][3];
-											picki.position = monster.mesh.position.clone();
-											picki.position.y = 0;
-											picki.niched = -1;
-											picki.visible = true;
-											//lets make 3d model here
-											var loader = new THREE.JSONLoader();
-											loader.load( picki.model, picki.loadObject(picki) );
-										}
-										else
-										{
-											console.log("not creating item, but using object already created..");
-											picki = monster.pickables[i][4];
-											picki.mesh.position = monster.mesh.position.clone();
-											picki.mesh.position.y = 0;
-											picki.mesh.visible = true;
-										}
-										
-										array_of_pickables.push(picki);
-									}
-								}
-								scene.remove(monster.mesh);
-								array_of_monsters.splice(0,1); //TODO fix hard coded for one monster!
-								
-							}
+							
+							//Damage monster
+							monster.deal_damage(dmg_roll);
+
 						}
 						else
 						{
 							//Miss!
 							DisplayMonsterDmg("Miss!");
-							//soundy Play miss sound swoosh
+							//Play miss sound swoosh
+							audio_miss.play();
 						}
 					}
 					else
 					{
 						//Miss!
 						DisplayMonsterDmg("Miss!");
-						//soundy Play miss sound swoosh or cling
+						//Play miss sound swoosh or cling
+						audio_miss.play();
 					}
 				}
 			}
