@@ -165,6 +165,8 @@ Monster.prototype.loadObject = function ( munster ) {
 		
 		//remove loading screen
 		loading_div.style.display = "none";
+		document.getElementById( 'info_dialog_button' ).focus();
+
 	}
 
 };

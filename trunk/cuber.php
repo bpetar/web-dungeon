@@ -189,7 +189,7 @@
 			<!-- <p>Please send me feedback about your Frame rate, OS, browser version, processor and GPU.</p> -->
 			<p>If you have any trouble playing the game please contact me on <a style="color: rgb(20,75,30)" href="mailto:info@mystic-peanut.com">info@mystic-peanut.com</a> .</p>
 			<br>
-			<button onclick='hide_message();'> Ok </button>
+			<button id="info_dialog_button" style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>
 			</div>
 		</div>
 
@@ -555,6 +555,8 @@ else
 				
 				gui_left_div = document.getElementById( 'gui_left' );
 				gui_right_div = document.getElementById( 'gui_right' );
+				
+				document.getElementById( 'info_dialog_button' ).focus();
 				
 				document.onkeydown = handleKeyDown;
 
