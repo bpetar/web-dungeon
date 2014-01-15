@@ -87,7 +87,7 @@
 			</div>
 		</div>
 
-		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-37px;">
+		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-41px;">
 		&nbsp;
 		</div>
 		<div id="gui_left" style="position:absolute; left:-36px; bottom:-40px;">
@@ -180,15 +180,15 @@
 			<p>Level Complete!<p>
 		</div>
 		
-		<div id="info_dialog" style="position:absolute; display:none; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/scroll.png); background-size: 100% 100%;">
-			<div id="info_message" style="font-size:20px; font-weight:bold; color: #001100; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
+		<div id="info_dialog" style="position:absolute; display:none; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/pannel_small.png); background-size: 100% 100%;">
+			<div id="info_message" style="font-size:20px; font-family: Copperplate, 'Copperplate Gothic Light', fantasy; font-weight:normal; color: #ddddd0; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
 			<p>Welcome to the Web Dungeon game test!</p> 
 			
-			<p>Use QWEASD keys to move around and left mouse button to click. Browser reload button gets you back on start.</p>
+			<p>Use <span style="color:#dd3333">QWEASD</span> keys to move around and left mouse button to click. Browser reload button gets you back on start.</p>
 
 			<!-- <p>Please send me feedback about your Frame rate, OS, browser version, processor and GPU.</p> -->
-			<p>If you have any trouble playing the game please contact me on <a style="color: rgb(20,75,30)" href="mailto:info@mystic-peanut.com">info@mystic-peanut.com</a> .</p>
-			<br>
+			<p>If you have any trouble playing the game please contact me on <a style="color: rgb(50,148,50)" href="mailto:info@mystic-peanut.com">info@mystic-peanut.com</a> .</p>
+			<br><br>
 			<button id="info_dialog_button" style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>
 			</div>
 		</div>
@@ -408,6 +408,8 @@ else
 
 			var SQUARE_SIZE = 10;
 
+			var inventory_tip_shown = false;
+			
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -519,7 +521,7 @@ else
 				info_dialog_div.style.display = "none";
 			}
 			
-			function show_message(message, width, height) {
+			function show_message(message, width, height, silly_background, fonty_face) {
 				if(info_dialog_div.style.display == "none")
 				{
 					info_dialog_message_div.innerHTML = message;
@@ -533,7 +535,7 @@ else
 						info_dialog_div.style.width = "750px";
 					}
 
-					if ((height != 'undefined') && (height > 0))
+					if ((height != "undefined") && (height > 0))
 					{
 						info_dialog_div.style.height = height + "px";
 					}
@@ -542,6 +544,30 @@ else
 						info_dialog_div.style.height = "450px";
 					}
 
+					if(typeof silly_background != "undefined")
+					{
+						info_dialog_div.style.backgroundImage = silly_background;
+						info_dialog_message_div.style.color = "#001100";
+						console.log("defines: " + info_dialog_message_div.style.color);
+					}
+					else
+					{
+						console.log("undefines");
+						info_dialog_div.style.backgroundImage = "url(media/pannel_small.png)";
+						info_dialog_message_div.style.color = "#ddddd0";
+					}
+					
+					if(typeof fonty_face != "undefined")
+					{
+						info_dialog_message_div.style.fontFamily = fonty_face;
+						info_dialog_message_div.style.fontWeight = "600";
+					}
+					else
+					{
+						info_dialog_message_div.style.fontFamily = "Copperplate, 'Copperplate Gothic Light', fantasy"; 
+						info_dialog_message_div.style.fontWeight = "400";
+					}
+					
 					info_dialog_div.style.display = "inline";
 				}
 			}
@@ -873,6 +899,9 @@ else
 				if ((event.keyCode == 37) || (event.keyCode == 81)) {
 					// Turn Left Q
 					
+					//reset mouse
+					resetCursor();
+					
 					//if player is in the hole atm, he can not turn around because he is dead.
 					if(holeFallen||playerDead)
 						return;
@@ -933,6 +962,9 @@ else
 				} else if ((event.keyCode == 39) || (event.keyCode == 69)) {
 					// Turne Right E
 					
+					//reset mouse
+					resetCursor();
+
 					//if player is in the hole atm, he can not turn around because he is dead.
 					if(holeFallen||playerDead)
 						return;
@@ -984,6 +1016,10 @@ else
 					
 				} else if ((event.keyCode == 38) || (event.keyCode == 87)) {
 					// Up cursor key or W
+
+					//reset mouse
+					resetCursor();
+
 					var lookie = new THREE.Vector3(0,0,0).add(looker);
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).add(lookie);
@@ -1010,6 +1046,10 @@ else
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
+
+					//reset mouse
+					resetCursor();
+
 					var lookie = new THREE.Vector3(0,0,0).add(looker);
 					lookie.normalize();
 					var new_pos =new THREE.Vector3(0,0,0).sub(lookie);
@@ -1036,6 +1076,9 @@ else
 					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
+
+					//reset mouse
+					resetCursor();
 					
 					var left_looker = new THREE.Vector3(0, 0, 0).add(looker);
 					var axis = new THREE.Vector3( 0, 1, 0 );
@@ -1069,6 +1112,9 @@ else
 					}
 				} else if ((event.keyCode == 39) || (event.keyCode == 68)) {
 					// Right cursor key or D
+
+					//reset mouse
+					resetCursor();
 					
 					var right_looker = new THREE.Vector3(0, 0, 0).add(looker);
 					var axis = new THREE.Vector3( 0, 1, 0 );
@@ -1141,6 +1187,20 @@ else
 			
 			function drawItemInfo(xpos, ypos, item)
 			{
+			}
+			
+			function resetCursor()
+			{
+				mouse_over_button = -1;
+				mouse_over_secret_wall = -1;
+				mouse_over_keyhole = -1;
+				mouse_over_container = -1;
+				mouse_over_monster = -1;
+				mouse_over_item_in_inventory = -1;
+				mouse_over_item_in_container = -1;
+				item_over_keyhole = -1;
+				item_over_monster = -1
+				setCursor('auto');
 			}
 			
 			function onDocumentMouseMove( event )
@@ -1571,10 +1631,25 @@ else
 					if(slot_index > 0)
 					{
 						//alert("yo yo " + pickable_at_hand);
+						var item_name = pickable_at_hand.name;
+						
 						add_to_inventory(pickable_at_hand, slot_index);
 						pickable_at_hand_icon.style.left = "-170px";
 						pickable_at_hand_icon = 0;
 						pickable_at_hand = 0;
+						
+						//onetime inventory tip..
+						if((levelNumber == 1)&&(inventory_tip_shown == false))
+						{
+							DisplayInfoDiv("Press 'i' to close inventory..");
+							inventory_tip_shown = true;
+						}
+
+						if((levelNumber == 1)&&(item_name == "Scroll"))
+						{
+							DisplayInfoDiv("Right click to read scroll..");
+							inventory_tip_shown = true;
+						}
 						
 						return;
 					}
@@ -1867,7 +1942,7 @@ else
 							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
 								console.log("looking at writting!");
-								show_message(" <br> " + writtingsArr[n][3] + " <br><br> <button onclick='hide_message();'> Ok </button>", 600, 300);
+								show_message(" <br> " + writtingsArr[n][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300);
 								//DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
@@ -2214,7 +2289,7 @@ else
 						{
 							alerted = true;
 							//alert("game over");
-							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again. <br><br> <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>");
+							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again. <br><br><br><br><br> <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>");
 							player_dies();
 						}
 					}
