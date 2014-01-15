@@ -474,7 +474,7 @@ else
 			//player stats
 			var player_HP_div = 0;
 			var playerHPmax = 30;
-			var playerHPcurrent = 30;
+			var playerHPcurrent = 530;
 			var playerDead = false;
 			var playerCanHit = true;
 			var playerHitTimeout = WEAPON_SPEED;
@@ -652,11 +652,11 @@ else
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = -5; //105
-				camera.look = new THREE.Vector3(160,4,5); //160,4,115
+				camera.position.z = 105; //-5
+				camera.look = new THREE.Vector3(160,4,115); //160,4,5
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,0); //16,0,11
+				current_position = new THREE.Vector3(16,0,11); //16,0,0
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
@@ -2336,7 +2336,7 @@ else
 				round_time += delta;
 				if(round_time > ROUND_DURATION)
 				{
-					console.log("round tick");
+					//console.log("round tick");
 					player_wound_div.style.display = 'none';
 					round_time = 0;
 					
