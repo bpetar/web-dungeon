@@ -48,6 +48,7 @@ Monster = function ( ) {
 	
 	this.position = new THREE.Vector3(4, 0, 2);
 	this.target = new THREE.Vector3(4, 0, 2);
+	this.hitting = new THREE.Vector3(4, 0, 2); //dont ask
 	this.rotation = 0;
 	this.visible = true;
 	
@@ -363,6 +364,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 						//set target to own position because player checks monster target field to see if it is occupied
 						//while monster is attacking, his occupied space is only his position
+						this.hitting.x = this.target.x;
+						this.hitting.z = this.target.z;
 						this.target.x = this.position.x;
 						this.target.z = this.position.z;
 						//console.log("diagonal, x increase attack");
@@ -405,6 +408,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 						//console.log("diagonal, x reduce attack");
 						//set target to own position because player checks monster target field to see if it is occupied
 						//while monster is attacking, his occupied space is only his position
+						this.hitting.x = this.target.x;
+						this.hitting.z = this.target.z;
 						this.target.x = this.position.x;
 						this.target.z = this.position.z;
 					}
@@ -446,6 +451,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 						//set target to own position because player checks monster target field to see if it is occupied
 						//while monster is attacking, his occupied space is only his position
+						this.hitting.x = this.target.x;
+						this.hitting.z = this.target.z;
 						this.target.x = this.position.x;
 						this.target.z = this.position.z;
 						//console.log("diagonal, z reduce attack");
@@ -487,6 +494,8 @@ Monster.prototype.find_player = function ( player_pos ) {
 						this.mesh.setFrameRange(this.attack_startKeyframe,this.attack_endKeyframe);
 						//set target to own position because player checks monster target field to see if it is occupied
 						//while monster is attacking, his occupied space is only his position
+						this.hitting.x = this.target.x;
+						this.hitting.z = this.target.z;
 						this.target.x = this.position.x;
 						this.target.z = this.position.z;
 						//console.log("diagonal, z increase attack");
@@ -741,63 +750,69 @@ Monster.prototype.move = function ( delta ) {
 	if(this.should_attack)
 	{
 		//if the moment is right, make some attack roll
-		if(delta > 9)
+		if(this.mesh.currentKeyframe == 119)
 		{
 			this.should_attack = false;
-			//console.log("attack!" + delta);
+			console.log("attack!" + delta);
 			
 			//check if player moved already from that position
-			
-			// soundy Play hack attack sound
-			
-			//roll monster attack
-			var att_roll = 50*Math.random()+this.attack;
-			if(att_roll>PlayerDefense)
+			if((this.hitting.x == current_position.x)&&(this.hitting.z == current_position.z))
 			{
-				var dmg_roll = Math.round(this.dmg * Math.random()) + 1;
-				playerHPcurrent -= dmg_roll;
-				player_wound_div.style.display = "inline-block";
-				player_wound_div.innerHTML = dmg_roll;
-				// soundy Play player wounded ngh sound
-				audio_ngh.play();
+				// soundy Play hack attack sound
 				
-				//player death
-				if(playerHPcurrent <= 0)
+				//roll monster attack
+				var att_roll = 50*Math.random()+this.attack;
+				if(att_roll>PlayerDefense)
 				{
-					playerHPcurrent = 0;
-					player_HP_div.style.width = "1%";
-					player_HP_div.style.backgroundColor = "#990000";
-					//player dies. pause the game and write apropriate message.
-					player_dies();
-					if(this.name == "Crystal Elemental")
+					var dmg_roll = Math.round(this.dmg * Math.random()) + 1;
+					playerHPcurrent -= dmg_roll;
+					player_wound_div.style.display = "inline-block";
+					player_wound_div.innerHTML = dmg_roll;
+					// soundy Play player wounded ngh sound
+					audio_ngh.play();
+					
+					//player death
+					if(playerHPcurrent <= 0)
 					{
-						show_message("<br><br>You have been defeated by demotivated little elemental.. <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
-					}
-					else if(this.name == "Rock Golem")
-					{
-						show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+						playerHPcurrent = 0;
+						player_HP_div.style.width = "1%";
+						player_HP_div.style.backgroundColor = "#990000";
+						//player dies. pause the game and write apropriate message.
+						player_dies();
+						if(this.name == "Crystal Elemental")
+						{
+							show_message("<br><br>You have been defeated by demotivated little elemental.. <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+						}
+						else if(this.name == "Rock Golem")
+						{
+							show_message("<br><br>You have been smitten by overpowered stone pile! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+						}
+						else
+						{
+							show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+						}
 					}
 					else
 					{
-						show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350);
+						console.log("monster hits player: " + playerHPcurrent);
+						//update player health bar
+						var p = playerHPcurrent/playerHPmax*100;
+						player_HP_div.style.width = "" + p + "%";
+						if(p < 50)
+						{
+							//TODO: color green to red gradient can be smarter projection of percent
+							player_HP_div.style.backgroundColor = "#999900";
+						}
 					}
 				}
 				else
 				{
-					console.log("monster hits player: " + playerHPcurrent);
-					//update player health bar
-					var p = playerHPcurrent/playerHPmax*100;
-					player_HP_div.style.width = "" + p + "%";
-					if(p < 50)
-					{
-						//TODO: color green to red gradient can be smarter projection of percent
-						player_HP_div.style.backgroundColor = "#999900";
-					}
+					//miss
 				}
 			}
 			else
 			{
-				//miss
+				console.log("player escaped!");
 			}
 		}
 	}
