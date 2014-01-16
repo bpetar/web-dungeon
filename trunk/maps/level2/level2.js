@@ -53,6 +53,7 @@ var keyholes_array = [];
 //monsters
 
 var IDLE_ANIM_DURATION = 6200;
+var MONSTER_ATTACK_FRAME = 119;
 
 function MonsterOnClick1()
 {
@@ -239,6 +240,8 @@ var pickables_array = [[2,"Rock","models/rocky.js", 12,2, "media/rock.png", "Thi
 
 
 //teleports
+
+var teleport_array = [[18,11]];
 
 var teleport_pos_x = 180; //position on map
 var teleport_pos_z = 110; //position on map

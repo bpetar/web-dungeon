@@ -28,7 +28,7 @@ function addPillar(loader, x, z)
 		decorPillarke.position.x = x;
 		decorPillarke.position.z = z;
 
-		if(decorPillarModel != "")
+		if((typeof decorPillarModel != 'undefined') && (decorPillarModel != ""))
 		{
 			loader.load( decorPillarModel, decorPillarke.loadObject(decorPillarke) );
 		}
@@ -97,39 +97,48 @@ function load_level()
 {
 	var loader = new THREE.JSONLoader();
 
-	loader.load( doorway_model, loadDoorways );
-	loader.load( door_model, loadDoors );
-
-	//pillars
-	for(var i=0; i<pillar_array.length; i++) {
-
-		var pillarke = create_game_object();
-		pillarke.gameID = pillar_array[i][0];
-		pillarke.name = "pillar" + i;
-		pillarke.model = pillar_array[i][1];
-
-		pillarke.position.y = 0;
-		pillarke.position.x = pillar_array[i][2]*SQUARE_SIZE;
-		pillarke.position.z = pillar_array[i][3]*SQUARE_SIZE;
-
-		loader.load( pillarke.model, pillarke.loadObject(pillarke) );
-		
-		array_of_pillars.push(pillarke);
+	if((typeof doorsArr3D != 'undefined') && (doorsArr3D.length > 0))
+	{
+		loader.load( doorway_model, loadDoorways );
+		loader.load( door_model, loadDoors );
 	}
 	
-	//show_model(loader, "models/crystal.js", 16,1);
+	//pillars
+	if(typeof pillar_array != 'undefined')
+	{
+		for(var i=0; i<pillar_array.length; i++) {
+
+			var pillarke = create_game_object();
+			pillarke.gameID = pillar_array[i][0];
+			pillarke.name = "pillar" + i;
+			pillarke.model = pillar_array[i][1];
+
+			pillarke.position.y = 0;
+			pillarke.position.x = pillar_array[i][2]*SQUARE_SIZE;
+			pillarke.position.z = pillar_array[i][3]*SQUARE_SIZE;
+
+			loader.load( pillarke.model, pillarke.loadObject(pillarke) );
+			
+			array_of_pillars.push(pillarke);
+		}
+	}
+	
+	show_model(loader, "models/spears.js", 15,0);
 	
 	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
-	var teleport_map = THREE.ImageUtils.loadTexture( teleport_floor_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	
-	//teleport_map.wrapS = map.wrapT = THREE.RepeatWrapping;
-	teleport_map.anisotropy = 16;
-
+	//teleport
+	if(teleport_array.length > 0)
+	{
+		var teleport_map = THREE.ImageUtils.loadTexture( teleport_floor_texture_file );
+		teleport_map.anisotropy = 16;
+		var teleport_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: teleport_map, side: THREE.DoubleSide } );
+	}
+	
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
-	var teleport_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: teleport_map, side: THREE.DoubleSide } );
 
 	//floors
 	for(var i=0; i < floorsArr2D.length; i++)
@@ -154,7 +163,7 @@ function load_level()
 		else
 		{
 			//add floor tile
-			if(positionIsTeleport(floorsArr2D[i][0], floorsArr2D[i][1]))
+			if((teleport_array.length > 0) && (positionIsTeleport(floorsArr2D[i][0], floorsArr2D[i][1])))
 			{
 				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), teleport_material );
 			}
@@ -203,10 +212,13 @@ function load_level()
 	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
 	//writting on the wall texture
-	var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
-	mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
-	mapwrit.anisotropy = 16;
-	materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
+	if(writtingsArr.length>0)
+	{
+		var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
+		mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
+		mapwrit.anisotropy = 16;
+		materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
+	}
 	
 	//secret walls
 	for(var s=0; s<secretWallsArr.length; s++)

@@ -750,7 +750,7 @@ Monster.prototype.move = function ( delta ) {
 	if(this.should_attack)
 	{
 		//if the moment is right, make some attack roll
-		if(this.mesh.currentKeyframe == 119)
+		if(this.mesh.currentKeyframe == MONSTER_ATTACK_FRAME)
 		{
 			this.should_attack = false;
 			console.log("attack!" + delta);

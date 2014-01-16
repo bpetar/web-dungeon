@@ -213,6 +213,12 @@ if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
 		<script src="./maps/level2/level2.js"></script>
 <?php 
     }
+	else if (strcmp($lvl,'level3') == 0)
+	{
+?>
+		<script src="./maps/level3/level3.js"></script>
+<?php 
+    }
 	else
 	{
 ?>
@@ -271,7 +277,7 @@ else
 				
 				//level_complete_div.style.display = "inline-block";
 								
-				show_message("				<br><br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
+				show_message("<br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -427,8 +433,8 @@ else
 			var container;
 			var menu_div;
 			
-			var pickable_at_hand;
-			var pickable_at_hand_icon;
+			var pickable_at_hand = 0;
+			var pickable_at_hand_icon = 0;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
@@ -474,7 +480,7 @@ else
 			//player stats
 			var player_HP_div = 0;
 			var playerHPmax = 30;
-			var playerHPcurrent = 530;
+			var playerHPcurrent = 30;
 			var playerDead = false;
 			var playerCanHit = true;
 			var playerHitTimeout = WEAPON_SPEED;
@@ -548,11 +554,11 @@ else
 					{
 						info_dialog_div.style.backgroundImage = silly_background;
 						info_dialog_message_div.style.color = "#001100";
-						console.log("defines: " + info_dialog_message_div.style.color);
+						//console.log("defines: " + info_dialog_message_div.style.color);
 					}
 					else
 					{
-						console.log("undefines");
+						//console.log("undefines");
 						info_dialog_div.style.backgroundImage = "url(media/pannel_small.png)";
 						info_dialog_message_div.style.color = "#ddddd0";
 					}
@@ -652,11 +658,11 @@ else
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = 105; //-5
-				camera.look = new THREE.Vector3(160,4,115); //160,4,5
+				camera.position.z = -5; //-105
+				camera.look = new THREE.Vector3(160,4,5); //160,4,115
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,11); //16,0,0
+				current_position = new THREE.Vector3(16,0,0); //16,0,11
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
