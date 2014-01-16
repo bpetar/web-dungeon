@@ -16,12 +16,13 @@ var particle_geometry3 = 0;
 var teleport = 0;
 var teleport2 = 0;
 var teleport3 = 0;
-var teleport_pos = new THREE.Vector3(teleport_pos_x, 0, teleport_pos_z); //position on map
+var teleport_pos; //position on map
 
 //load teleport particles
 function load_teleport()
 {
 	//first sprite system
+	teleport_pos = new THREE.Vector3(teleport_pos_x, 0, teleport_pos_z);
 	particle_geometry = new THREE.Geometry();
 	var ssprite = THREE.ImageUtils.loadTexture( "media/sparkle1.png" );
 	for ( i = 0; i < 500; i ++ ) {
