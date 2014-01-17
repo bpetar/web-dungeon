@@ -247,6 +247,7 @@ else
 		<script src="./source/particles.js"></script>
 		<script src="./source/Detector.js"></script>
 		<script src="./source/button.js"></script>
+		<script src="./source/prop.js"></script>
 		<script src="./source/keyholes.js"></script>
 		<script src="./source/utils.js"></script>
 		<script src="./source/level.js"></script>
@@ -506,6 +507,7 @@ else
 			var audio_ambient;
 			var audio;
 			var mouse_over_button = -1;
+			var mouse_over_prop = -1;
 			var mouse_over_secret_wall = -1;
 			var mouse_over_keyhole = -1;
 			var item_over_keyhole = -1;
@@ -816,6 +818,18 @@ else
 							if((pillar_array[i][2] == x) && (pillar_array[i][3] == z))
 							{
 								return false;
+							}
+						}
+						
+						//check if prop is in that position
+						if(typeof propsArr != 'undefined')
+						{
+							for(i=0; i < propsArr.length; i++)
+							{
+								if((propsArr[i][1] == x) && (propsArr[i][2] == z))
+								{
+									return false;
+								}
 							}
 						}
 						
@@ -1198,6 +1212,7 @@ else
 			function resetCursor()
 			{
 				mouse_over_button = -1;
+				mouse_over_prop = -1;
 				mouse_over_secret_wall = -1;
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
@@ -1391,6 +1406,33 @@ else
 						}
 					}
 					
+					
+					//mouse over props
+					if(typeof propsArr != 'undefined')
+					{
+						for (var p=0; p<propsArr.length; p++)
+						{
+							if((propsArr[p][1] == look_pos.x)&&(propsArr[p][2] == look_pos.z))
+							{
+								console.log("prrrooopaaaaaaa");
+								if(propsArr[p].mesh != 0)
+								{
+									var intersects = ray.intersectObject( array_of_props[p].mesh );
+									
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										//console.log("prrrt");
+										//change mouse pointer to cursor
+										setCursor('pointer');
+										mouse_over_prop = p;
+										return;
+									}
+								}
+							}
+						}
+					}
+					
 					//mouse over keyholes
 					for (var k=0; k<keyholes_array.length; k++)
 					{
@@ -1536,6 +1578,7 @@ else
 				}
 				
 				mouse_over_button = -1;
+				mouse_over_prop = -1;
 				mouse_over_secret_wall = -1;
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
@@ -1895,6 +1938,13 @@ else
 							//info
 							DisplayInfoDiv("Buttons triggers some mechanism!");
 						}
+					}
+					
+					//prop 
+					if(mouse_over_prop > -1)
+					{
+						//do prop click action
+						array_of_props[mouse_over_prop].onPressFunc();
 					}
 					
 					//secret wall

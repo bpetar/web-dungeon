@@ -123,7 +123,9 @@ function load_level()
 		}
 	}
 	
-	show_model(loader, "models/spears.js", 15,0);
+	//show_model(loader, "models/spears.js", 15,0);
+	
+	load_props();
 	
 	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
@@ -190,17 +192,42 @@ function load_level()
 	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	for(i=0; i < floorsArr2D.length; i++)
 	{
-		object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-		//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-		object.rotation.set(-Math.PI/2, 0, 0);
-		object.receiveShadow = true;
+		var holeAboveSpot = false;
+		if(typeof holesAboveArr != 'undefined')
+		{
+			for (var h=0; h<holesAboveArr.length; h++)
+			{
+				if((holesAboveArr[h][0] == floorsArr2D[i][0]) && (holesAboveArr[h][1] == floorsArr2D[i][1]))
+				holeAboveSpot = true;
+			}
+		}
+		//if this ceiling tile is hole above, make a hole above, else make ceiling
 		
-	
-		object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-		object.position.y = 0.8*SQUARE_SIZE; //y
-		object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
+		if(holeAboveSpot)
+		{
+			//add hole model
+			var pos = new THREE.Vector3(0, 0, 0);
+			var rot = new THREE.Vector3(Math.PI, 0, 0);
+			pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
+			pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
+			pos.y = 8;
+			loader.load( hole_above_model, loadModel(pos,rot) );
+		}
+		else
+		{
+		
+			object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
+			//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+			object.rotation.set(-Math.PI/2, 0, 0);
+			object.receiveShadow = true;
+			
+		
+			object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+			object.position.y = 0.8*SQUARE_SIZE; //y
+			object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
 
-		scene.add( object );
+			scene.add( object );
+		}
 	}
 	
 	//walls
