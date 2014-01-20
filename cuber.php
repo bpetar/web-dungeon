@@ -655,16 +655,16 @@ else
 				source_ambient.src = 'media/ambient_music.mp3';
 				audio_ambient.appendChild(source_ambient);
 				
-				audio_ambient.play();
+				//audio_ambient.play();
 
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = -5; //-105
-				camera.look = new THREE.Vector3(160,4,5); //160,4,115
+				camera.position.z = 115; //-5
+				camera.look = new THREE.Vector3(160,4,125); //160,4,5
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,0); //16,0,11
+				current_position = new THREE.Vector3(16,0,12); //16,0,0
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
@@ -868,9 +868,12 @@ else
 			function positionIsTeleport(x,z) {
 				
 				//console.log("entered teleport!");
-				if((x == teleport_pos.x/10)&&(z == teleport_pos.z/10))
+				if(typeof teleport_pos != 'undefined' )
 				{
-					return true;
+					if((x == teleport_pos.x/10)&&(z == teleport_pos.z/10))
+					{
+						return true;
+					}
 				}
 				
 				return false;
