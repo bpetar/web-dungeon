@@ -660,11 +660,11 @@ else
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
-				camera.position.z = 115; //-5
-				camera.look = new THREE.Vector3(160,4,125); //160,4,5
+				camera.position.z = -5; //115
+				camera.look = new THREE.Vector3(160,4,5); //160,4,125
 				camera.lookAt(camera.look);
 				
-				current_position = new THREE.Vector3(16,0,12); //16,0,0
+				current_position = new THREE.Vector3(16,0,0); //16,0,12
 
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
@@ -713,7 +713,7 @@ else
 				scene.add( light2 );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( -50, -30, -50 ).normalize();
+				light2.position.set( -50, 30, -50 ).normalize();
 				light2.castShadow = true;
 				scene.add( light2 );
 
@@ -1191,7 +1191,7 @@ else
 
 			function loadModel(pos, rot) {
 				return function (geometry, materials ) {
-					materials[ 0 ].shading = THREE.FlatShading;
+					materials[ 0 ].shading = THREE.SmoothShading;
 					var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
 					mesh.position = pos;
 					mesh.rotation = rot;
