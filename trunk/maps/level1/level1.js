@@ -60,9 +60,9 @@ function MonsterOnClick1()
 {
 	if(this.mood == MONSTER_MAD)
 	{
-		DisplayInfoDiv("It seems demotivated..");
+		DisplayInfoDiv("It seems angry..");
 		//Play tounchy mad sound
-		this.audio_monster_roar.play();
+		this.audio_monster_click.play();
 	}
 	else
 	{
@@ -76,8 +76,10 @@ function MonsterOnItemClick1(pickable)
 {
 	DisplayInfoDiv("It doesn't want to take it..");
 	// soundy Play tounchy mad sound
+	this.audio_monster_click.play();
 	return false;
 }
+
 //monster inventory items: id, name, model, icon, picki
 var monster_pickables_array1 = [];
 // id, name, model, x, z, rot, hp, ac, attack, dmg, pickables, onclick, onitemclick, idlestart, idleend, walkstart, walkend, attackstart, attackend, mood

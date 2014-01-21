@@ -20,6 +20,9 @@ var floor_texture_file = 'maps/level3/media/floor.png';
 var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/media/ceiling.png';
 
+var wall_model = 'maps/level3/models/wallc.js';
+var decorPillarModel = "maps/level3/models/decorPillar2.js";
+
 //basic level models
 var hole_above_model = 'maps/level3/models/hole_above.js';
 //var niche_model = 'maps/level1/models/niche.js';

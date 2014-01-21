@@ -145,6 +145,59 @@ function load_level()
 	//floors
 	for(var i=0; i < floorsArr2D.length; i++)
 	{
+		var fx = floorsArr2D[i][0];
+		var fz = floorsArr2D[i][1];
+		var north_neighbor= false; //up
+		var south_neighbor= false; //down
+		var east_neighbor= false; //right
+		var west_neighbor= false; //left
+		
+		for(var ff=0; ff < floorsArr2D.length; ff++)
+		{
+			if((floorsArr2D[ff][0] == fx)&&(floorsArr2D[ff][1] == fz+1))
+			{
+				//this floortile has north neighbor
+				//console.log("tile has north x:" + fx + " z:" + fz);
+				north_neighbor=true;
+			}
+			if((floorsArr2D[ff][0] == fx)&&(floorsArr2D[ff][1] == fz-1))
+			{
+				//this floortile has south neighbor
+				south_neighbor=true;
+			}
+			if((floorsArr2D[ff][0] == fx+1)&&(floorsArr2D[ff][1] == fz))
+			{
+				//this floortile has west neighbor
+				west_neighbor=true;
+			}
+			if((floorsArr2D[ff][0] == fx-1)&&(floorsArr2D[ff][1] == fz))
+			{
+				//this floortile has east neighbor
+				east_neighbor=true;
+			}
+		}
+		
+		if((north_neighbor)&&(!south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+		{
+			console.log("tile has low corner x:" + fx + " z:" + fz);
+			//put supporter in the low corner
+		}
+		if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+		{
+			console.log("tile has high corner x:" + fx + " z:" + fz);
+			//put supporter in the up corner
+		}
+		if((west_neighbor)&&(!north_neighbor)&&(!south_neighbor)&&(!east_neighbor))
+		{
+			console.log("tile has right corner x:" + fx + " z:" + fz);
+			//put supporter in the right corner
+		}
+		if((east_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!south_neighbor))
+		{
+			console.log("tile has left corner x:" + fx + " z:" + fz);
+			//put supporter in the left corner
+		}
+		
 		holeSpot = false;
 		for (var h=0; h<holesArr.length; h++)
 		{
@@ -361,17 +414,32 @@ function load_level()
 				}
 				else
 				{
-					//load regular wall
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					if(typeof wall_model != 'undefined')
+					{
+						//load wall model instead of regular flat wall
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						rot.set(0, Math.PI, 0);
+						loader.load( wall_model, loadModel(pos, rot) );
+					}
+					else
+					{					
+						//load regular wall
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					}
 				}
-				//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-				object.rotation.set(0, Math.PI/2, 0);
-				object.receiveShadow = true;
-				object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
-				object.position.y = 0.4*SQUARE_SIZE; //y
-				object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-				scene.add( object );
 				
+				if(typeof wall_model == 'undefined')
+				{
+					//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+					object.rotation.set(0, Math.PI/2, 0);
+					object.receiveShadow = true;
+					object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
+					scene.add( object );
+				}
 			}
 		}
 		if(rightWall)
@@ -424,19 +492,32 @@ function load_level()
 				}
 				else
 				{
-					//load regular wall
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					if(typeof wall_model != 'undefined')
+					{
+						//load wall model instead of regular flat wall
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						rot.set(0, 0, 0);
+						loader.load( wall_model, loadModel(pos, rot) );
+					}
+					else
+					{					
+						//load regular wall
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					}
 				}
 
-				object.rotation.set(0, Math.PI/2, 0);
-				object.receiveShadow = true;
-				
+				if(typeof wall_model == 'undefined')
+				{
+					object.rotation.set(0, Math.PI/2, 0);
+					object.receiveShadow = true;
+					object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
 			
-				object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
-				object.position.y = 0.4*SQUARE_SIZE; //y
-				object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-		
-				scene.add( object );
+					scene.add( object );
+				}
 			}
 		}
 		if(frontWall)
@@ -490,19 +571,33 @@ function load_level()
 				}
 				else
 				{
-					//load regular wall
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					if(typeof wall_model != 'undefined')
+					{
+						//load wall model instead of regular flat wall
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
+						rot.set(0, Math.PI/2, 0);
+						loader.load( wall_model, loadModel(pos, rot) );
+					}
+					else
+					{					
+						//load regular wall
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					}
 				}
-				//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-				object.rotation.set(0, Math.PI, 0);
-				object.receiveShadow = true;
 				
+				if(typeof wall_model == 'undefined')
+				{
+					//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+					object.rotation.set(0, Math.PI, 0);
+					object.receiveShadow = true;
+					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
 			
-				object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-				object.position.y = 0.4*SQUARE_SIZE; //y
-				object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
-		
-				scene.add( object );
+					scene.add( object );
+				}
 			}
 		}
 		if(backWall)
@@ -555,19 +650,33 @@ function load_level()
 				}
 				else
 				{
-					//load regular wall
-					object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					if(typeof wall_model != 'undefined')
+					{
+						//load wall model instead of regular flat wall
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
+						rot.set(0, -Math.PI/2, 0);
+						loader.load( wall_model, loadModel(pos, rot) );
+					}
+					else
+					{					
+						//load regular wall
+						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+					}
 				}
-				//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-				object.rotation.set(0, Math.PI, 0);
-				object.receiveShadow = true;
-				
-			
-				object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-				object.position.y = 0.4*SQUARE_SIZE; //y
-				object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
-		
-				scene.add( object );
+
+
+				if(typeof wall_model == 'undefined')
+				{
+					//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+					object.rotation.set(0, Math.PI, 0);
+					object.receiveShadow = true;
+					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
+					scene.add( object );
+				}
 			}
 		}
 	}

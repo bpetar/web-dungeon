@@ -59,6 +59,8 @@ Monster = function ( ) {
 	this.target_rotation = 0;
 	this.should_attack = false;
 	
+	this.first_roar = false;
+	
 	this.VIEW_DISTANCE = 4;
 	
 	this.audio_monster_wound = document.createElement('audio');
@@ -74,6 +76,14 @@ Monster = function ( ) {
 Monster.prototype.deal_damage = function ( dmg_done ) {
 
 	this.hp -= dmg_done;
+	
+	var roar = false;
+	
+	if(this.mood == MONSTER_IDLE)
+	{
+		//monster was hit while it was chillin, make him roar angrily!
+		roar = true;
+	}
 	this.mood = MONSTER_MAD; //monster get angry
 	console.log("player makes dmg: " + dmg_done + ", monster hp is now: " + this.hp);
 	DisplayMonsterDmg(dmg_done);
@@ -125,14 +135,22 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 			if(array_of_monsters[m] == this)
 			{
 				console.log("splicing monster number: " + m);
-				array_of_monsters.splice(m,1); //TODO fix hard coded for one monster!
+				array_of_monsters.splice(m,1);
 			}
 		}
 		
 	}
 	else
 	{
-		this.audio_monster_wound.play();
+		if(roar)
+		{
+			this.audio_monster_roar.play();
+			this.first_roar = true;
+		}
+		else
+		{
+			this.audio_monster_wound.play();
+		}
 	}
 };
 
@@ -348,6 +366,12 @@ Monster.prototype.find_player = function ( player_pos ) {
 		if(this.position.distanceTo(player_pos) < 6)
 		{
 			//console.log("diagonal, but close");
+			if(this.first_roar == false)
+			{
+				this.first_roar = true;
+				this.audio_monster_roar.play();
+			}
+			
 			//reduce x if possible
 			if((player_pos.x > this.position.x) && canMoveTo(this.gameID,this.position.x+1,this.position.z))
 			{
@@ -759,6 +783,7 @@ Monster.prototype.move = function ( delta ) {
 			if((this.hitting.x == current_position.x)&&(this.hitting.z == current_position.z))
 			{
 				// soundy Play hack attack sound
+				this.audio_monster_attack.play();
 				
 				//roll monster attack
 				var att_roll = 50*Math.random()+this.attack;
