@@ -49,6 +49,7 @@ var buttons_array = [];
 //keyholes
 var keyholes_array = [];
 
+var win_area = [[7,2, "Secret area found!",0]];
 
 
 //monsters
@@ -98,7 +99,8 @@ function MonsterOnItemClick1(pickable)
 				console.log("monster has no pickable item list!");
 			}
 			
-			//// soundy Play Golem happy sound
+			// Play Golem happy sound
+			this.audio_monster_click.play();
 			
 			//monster move from guarding pos
 			this.mood = MONSTER_WALK;
@@ -111,7 +113,9 @@ function MonsterOnItemClick1(pickable)
 		{
 			//monster get angry
 			this.mood = MONSTER_MAD;
-			// soundy Play tounchy mad sound
+			// Play tounchy mad sound
+			this.audio_monster_roar.play();
+			
 			console.log("monster got mad");
 			DisplayInfoDiv("This offer makes Rock Golem angry!!");
 		}
@@ -138,7 +142,8 @@ var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30
 function showScroll()
 {
 	console.log("Showing scroll content!");
-	show_message(" <br> " + "The world built on dreams reaches for the dreams built in this world. Are you in a dream?" + " <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/scroll.png)", "Papyrus, fantasy");
+	audio_scroll.play();
+	show_message(" <br> " + "The world built on dreams reaches for the dreams built in this world. Are you in a dream?" + " <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/scroll.png)", "Papyrus, fantasy");
 }
 
 // id, name, model, icon, useHint, script function onUse
@@ -216,7 +221,8 @@ function niche_onItemAdd (nicheID, itemID)
 		console.log("open portal...");
 		//load teleport();
 		load_teleport();
-		
+		//play win sound
+		audio_win2.play();
 	}
 }
 

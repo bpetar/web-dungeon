@@ -277,7 +277,8 @@ else
 				//add registration and feedback options
 				
 				//level_complete_div.style.display = "inline-block";
-								
+				audio_fanfare.play();
+				
 				show_message("<br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
 			}
 			
@@ -377,6 +378,8 @@ else
 							
 							//Damage monster
 							monster.deal_damage(dmg_roll);
+							
+							audio_cling.play();
 
 						}
 						else
@@ -503,9 +506,17 @@ else
 			var audio_miss;
 			var audio_ngh;
 			var audio_cling;
+			var audio_click;
+			var audio_click2;
+			var audio_drop;
+			var audio_drop_rock;
 			var audio_door;
+			var audio_scroll;
 			var audio_ambient;
+			var audio_fanfare;
 			var audio_win1;
+			var audio_win2;
+			var audio_enchant;
 			var audio;
 			var mouse_over_button = -1;
 			var mouse_over_prop = -1;
@@ -524,10 +535,21 @@ else
 			init();
 			animate();
 
+			function mouse_click()
+			{
+				if((mouse_over_prop != -1)||(mouse_over_item_in_inventory != -1)||(mouse_over_item_in_container != -1))
+				{
+					return true;
+				}
+				return false;
+			}
+			
 			function hide_message()
 			{
 				//remove dialog screen
 				info_dialog_div.style.display = "none";
+				//play sound 
+				audio_click.play();
 			}
 			
 			function show_message(message, width, height, silly_background, fonty_face) {
@@ -646,22 +668,62 @@ else
 				source_cling.src = 'media/cling.mp3';
 				audio_cling.appendChild(source_cling);
 
+				audio_click = document.createElement('audio');
+				var source_click = document.createElement('source');
+				source_click.src = 'media/click.mp3';
+				audio_click.appendChild(source_click);
+
+				audio_click2 = document.createElement('audio');
+				var source_click2 = document.createElement('source');
+				source_click2.src = 'media/click2.mp3';
+				audio_click2.appendChild(source_click2);
+
+				audio_drop = document.createElement('audio');
+				var source_drop = document.createElement('source');
+				source_drop.src = 'media/drop.mp3';
+				audio_drop.appendChild(source_drop);
+
+				audio_drop_rock = document.createElement('audio');
+				var source_drop_rock = document.createElement('source');
+				source_drop_rock.src = 'media/drop_rock.mp3';
+				audio_drop_rock.appendChild(source_drop_rock);
+
 				audio_door = document.createElement('audio');
 				var source_door = document.createElement('source');
 				source_door.src = 'media/door.mp3';
 				audio_door.appendChild(source_door);
-
+				
+				audio_scroll = document.createElement('audio');
+				var source_scroll = document.createElement('source');
+				source_scroll.src = 'media/scroll.mp3';
+				audio_scroll.appendChild(source_scroll);
 				
 				audio_win1 = document.createElement('audio');
 				var source_win1 = document.createElement('source');
 				source_win1.src = 'media/win1.mp3';
 				audio_win1.appendChild(source_win1);
 				
+				audio_win2 = document.createElement('audio');
+				var source_win2 = document.createElement('source');
+				source_win2.src = 'media/win2.mp3';
+				audio_win2.appendChild(source_win2);
+
+				audio_enchant = document.createElement('audio');
+				var source_enchant = document.createElement('source');
+				source_enchant.src = 'media/enchant.mp3';
+				audio_enchant.appendChild(source_enchant);
+
+				audio_fanfare = document.createElement('audio');
+				var source_fanfare = document.createElement('source');
+				source_fanfare.src = 'media/victory_fanfare.mp3';
+				audio_fanfare.appendChild(source_fanfare);
+				
 				audio_ambient = document.createElement('audio');
 				var source_ambient = document.createElement('source');
 				source_ambient.src = ambient_music_file;
 				audio_ambient.appendChild(source_ambient);
 				
+				audio_ambient.volume = 0.4;
 				audio_ambient.play();
 
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -1682,6 +1744,12 @@ else
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				
+				if(mouse_click())
+				{
+					//play click sound
+					audio_click2.play();
+				}
+				
 				//if player is holding some item in hand (under mouse pointer)
 				if(pickable_at_hand)
 				{
@@ -1691,7 +1759,7 @@ else
 					{
 						//alert("yo yo " + pickable_at_hand);
 						var item_name = pickable_at_hand.name;
-						
+						audio_click.play();
 						add_to_inventory(pickable_at_hand, slot_index);
 						pickable_at_hand_icon.style.left = "-170px";
 						pickable_at_hand_icon = 0;
@@ -1724,7 +1792,7 @@ else
 							pickable_at_hand_icon.style.left = "-170px";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
-							
+							audio_click.play();
 							return;
 						}
 					}
@@ -1739,6 +1807,7 @@ else
 						pickable_at_hand_icon.style.left = "-170px";
 						pickable_at_hand_icon = 0;	
 						
+						audio_drop.play();
 						return;
 					}
 					
@@ -1846,7 +1915,19 @@ else
 							}
 						}
 					}
-					
+
+					//play drop sound
+					if(pickable_at_hand.name=="Rock")
+					{
+						console.log("sdasdasd" + pickable_at_hand.name);
+						audio_drop_rock.play();
+					}
+					else
+					{
+						console.log("fffffffffffffasdasdasd" + pickable_at_hand.name);
+						audio_drop.play();
+					}
+
 					//var pos = camera.position.clone().add(looker);
 					pickable_at_hand.mesh.position = camera.position.clone().add(looker);
 					if(plateID>-1)
@@ -1860,7 +1941,6 @@ else
 					pickable_at_hand.mesh.visible = true;
 					pickable_at_hand = 0;
 
-					
 					pickable_at_hand_icon.style.left = "-170px";
 					pickable_at_hand_icon = 0;
 					
@@ -2007,6 +2087,7 @@ else
 							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
 							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
+								audio_click.play();
 								console.log("looking at writting!");
 								show_message(" <br> " + writtingsArr[n][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300);
 								//DisplayInfoDiv("Ancient writting deciphered..");
@@ -2067,6 +2148,7 @@ else
 									}
 									pickable_at_hand.plated = -1;
 								}
+								audio_click2.play();
 								inventorySlide = 1;
 								break;
 							}
