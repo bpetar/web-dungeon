@@ -2194,9 +2194,9 @@ else
 								if((win_area[0][0]==current_position.x)&&(win_area[0][1]==current_position.z)&&(win_area[0][3]==0))
 								{
 									//play win sound
-									sound_win1.play();
+									audio_win1.play();
 									//show win message
-									console.log(win_area[0][2]);
+									DisplayInfoDiv(win_area[0][2]);
 									//set area flag to discovered
 									win_area[0][3]=1;
 								}
