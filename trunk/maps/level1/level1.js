@@ -141,7 +141,8 @@ function onUnpressPlate1()
 function showScroll()
 {
 	console.log("Showing scroll content!");
-	show_message(" <br> " + "Search the walls.." + " <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/scroll.png)", "Papyrus, fantasy");
+	audio_scroll.play();
+	show_message(" <br> " + "Search the walls.." + " <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/scroll.png)", "Papyrus, fantasy");
 }
 
 // id, name, model, icon, useHint, script function onUse
@@ -247,8 +248,15 @@ var teleport_array = [[5,14]];
 var teleport_pos_x = 50; //position on map
 var teleport_pos_z = 140; //position on map
 
-function teleportGo()
+function changeLevel()
 {
 	window.location.href = 'cuber.php?lvl=level2';
+}
+
+function teleportGo()
+{
+	audio_enchant.play();
+	setTimeout(changeLevel, 1000);
+	
 }
 
