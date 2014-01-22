@@ -8,7 +8,7 @@ function onLoad()
 var levelNumber = 3;
 
 // map arrays..
-var floorsArr2D = [[16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [15,0], [15,2], [15,4], [15,6]];
+var floorsArr2D = [[16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [16,-1], [15,0], [15,2], [15,4], [15,6]];
 var holesArr = [];
 var holesAboveArr = [[15,0], [15,2], [15,4], [15,6]];
 var writtingsArr = [];
@@ -21,7 +21,7 @@ var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/media/ceiling.png';
 
 var wall_model = 'maps/level3/models/wallc.js';
-var decorPillarModel = "maps/level3/models/decorPillar2.js";
+//var decorPillarModel = "maps/level3/models/decorPillar2.js";
 
 //basic level models
 var hole_above_model = 'maps/level3/models/hole_above.js';
@@ -32,6 +32,7 @@ var hole_above_model = 'maps/level3/models/hole_above.js';
 //level related values
 fog_color = 0x999955;
 fog_intensity = 0.009525;
+var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 
 
 function propOnClick1()

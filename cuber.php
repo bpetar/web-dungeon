@@ -505,6 +505,7 @@ else
 			var audio_cling;
 			var audio_door;
 			var audio_ambient;
+			var audio_win1;
 			var audio;
 			var mouse_over_button = -1;
 			var mouse_over_prop = -1;
@@ -650,12 +651,18 @@ else
 				source_door.src = 'media/door.mp3';
 				audio_door.appendChild(source_door);
 
+				
+				audio_win1 = document.createElement('audio');
+				var source_win1 = document.createElement('source');
+				source_win1.src = 'media/win1.mp3';
+				audio_win1.appendChild(source_win1);
+				
 				audio_ambient = document.createElement('audio');
 				var source_ambient = document.createElement('source');
-				source_ambient.src = 'media/ambient_music.mp3';
+				source_ambient.src = ambient_music_file;
 				audio_ambient.appendChild(source_ambient);
 				
-				//audio_ambient.play();
+				audio_ambient.play();
 
 				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
 				camera.position.x = 160;
@@ -713,7 +720,7 @@ else
 				scene.add( light2 );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( -50, 30, -50 ).normalize();
+				light2.position.set( -50, -30, -50 ).normalize();
 				light2.castShadow = true;
 				scene.add( light2 );
 
@@ -2179,6 +2186,20 @@ else
 							{
 								//animate fall into hole
 								fallInHole();
+							}
+							
+							
+							if(typeof win_area != 'undefined')
+							{
+								if((win_area[0][0]==current_position.x)&&(win_area[0][1]==current_position.z)&&(win_area[0][3]==0))
+								{
+									//play win sound
+									sound_win1.play();
+									//show win message
+									console.log(win_area[0][2]);
+									//set area flag to discovered
+									win_area[0][3]=1;
+								}
 							}
 							
 							//check if player was standing on press plate before this move..

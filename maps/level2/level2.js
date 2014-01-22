@@ -28,8 +28,9 @@ var doorway_model = 'maps/level2/models/doorway.js';
 var door_model = 'models/door.js';
 
 //level related values
-fog_color = 0x559955;
-fog_intensity = 0.011525;
+var fog_color = 0x559955;
+var fog_intensity = 0.011525;
+var ambient_music_file = 'maps/level2/media/mountain_path.mp3';
 
 // id, name, model, x, z, icon
 var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];

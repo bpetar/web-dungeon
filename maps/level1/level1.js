@@ -28,8 +28,10 @@ var doorway_model = 'maps/level1/models/doorway.js';
 var door_model = 'maps/level1/models/door.js';
 
 //level related values
-fog_color = 0x555599;
-fog_intensity = 0.009525;
+var fog_color = 0x555599;
+var fog_intensity = 0.009525;
+var ambient_music_file = 'media/ambient_music.mp3';
+var win_area = [[17,9, "Secret area found!",0]];
 
 // id, name, model, x, z, icon
 var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry2.js", 16,9,3]];
