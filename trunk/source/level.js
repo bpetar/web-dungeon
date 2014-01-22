@@ -181,6 +181,7 @@ function load_level()
 		{
 			console.log("tile has low corner x:" + fx + " z:" + fz);
 			//put supporter in the low corner
+			show_model(loader, "models/suporter.js", 16,-1.5);
 		}
 		if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
 		{

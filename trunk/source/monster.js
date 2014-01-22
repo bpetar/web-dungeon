@@ -779,12 +779,12 @@ Monster.prototype.move = function ( delta ) {
 			this.should_attack = false;
 			console.log("attack!" + delta);
 			
+			// soundy Play hack attack sound
+			this.audio_monster_attack.play();
+				
 			//check if player moved already from that position
 			if((this.hitting.x == current_position.x)&&(this.hitting.z == current_position.z))
 			{
-				// soundy Play hack attack sound
-				this.audio_monster_attack.play();
-				
 				//roll monster attack
 				var att_roll = 50*Math.random()+this.attack;
 				if(att_roll>PlayerDefense)
