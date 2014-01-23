@@ -181,7 +181,7 @@
 		</div>
 		
 		<div id="info_dialog" style="position:absolute; display:none; width:750px; height:450px; top:0; bottom: 0; left: 0; right: 0; opacity:0.8; background-color: #001100; margin: auto; background:url(media/pannel_small.png); background-size: 100% 100%;">
-			<div id="info_message" style="font-size:20px; font-family: Copperplate, 'Copperplate Gothic Light', fantasy; font-weight:normal; color: #ddddd0; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
+			<div id="info_message" style="font-size:20px; font-family: Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville; font-weight:normal; color: #ddddd0; padding-top:70px; padding-bottom: 30px; padding-left:100px; padding-right: 100px;"> 
 			<p>Welcome to the Web Dungeon game test!</p> 
 			
 			<p>Use <span style="color:#dd3333">QWEASD</span> keys to move around and left mouse button to click. Browser reload button gets you back on start.</p>
@@ -279,7 +279,7 @@ else
 				//level_complete_div.style.display = "inline-block";
 				audio_fanfare.play();
 				
-				show_message("<br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800);
+				show_message("<br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -552,7 +552,7 @@ else
 				audio_click.play();
 			}
 			
-			function show_message(message, width, height, silly_background, fonty_face) {
+			function show_message(message, width, height, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
 				if(info_dialog_div.style.display == "none")
 				{
 					info_dialog_message_div.innerHTML = message;
@@ -575,29 +575,16 @@ else
 						info_dialog_div.style.height = "450px";
 					}
 
-					if(typeof silly_background != "undefined")
-					{
-						info_dialog_div.style.backgroundImage = silly_background;
-						info_dialog_message_div.style.color = "#001100";
-						//console.log("defines: " + info_dialog_message_div.style.color);
-					}
-					else
-					{
-						//console.log("undefines");
-						info_dialog_div.style.backgroundImage = "url(media/pannel_small.png)";
-						info_dialog_message_div.style.color = "#ddddd0";
-					}
-					
-					if(typeof fonty_face != "undefined")
-					{
-						info_dialog_message_div.style.fontFamily = fonty_face;
-						info_dialog_message_div.style.fontWeight = "600";
-					}
-					else
-					{
-						info_dialog_message_div.style.fontFamily = "Copperplate, 'Copperplate Gothic Light', fantasy"; 
-						info_dialog_message_div.style.fontWeight = "400";
-					}
+					//info_dialog_div.style.backgroundImage = "url(media/pannel_small.png)";
+					//info_dialog_message_div.style.color = "#ddddd0";
+					//info_dialog_message_div.style.fontFamily = "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville"; 
+					//info_dialog_message_div.style.fontWeight = "400";
+
+					info_dialog_div.style.backgroundImage = silly_background;
+					info_dialog_message_div.style.color = fonty_color;
+					info_dialog_message_div.style.fontFamily = fonty_face;
+					info_dialog_message_div.style.fontWeight = fonty_weight;
+					info_dialog_message_div.style.fontSize = fonty_size;
 					
 					info_dialog_div.style.display = "inline";
 				}
@@ -2089,7 +2076,7 @@ else
 							{
 								audio_click.play();
 								console.log("looking at writting!");
-								show_message(" <br> " + writtingsArr[n][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300);
+								show_message(" <br> " + writtingsArr[n][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 								//DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
@@ -2451,7 +2438,7 @@ else
 						{
 							alerted = true;
 							//alert("game over");
-							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again. <br><br><br><br><br> <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>");
+							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again. <br><br><br><br><br> <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 600, 400, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 							player_dies();
 						}
 					}
