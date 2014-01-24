@@ -1,6 +1,6 @@
 //various utility functions..
 
-function show_model(loader, model_file, x, z)
+function show_model(loader, model_file, x, z, rot)
 {
 
 		var test = create_game_object();
@@ -11,5 +11,7 @@ function show_model(loader, model_file, x, z)
 		test.position.x = x*SQUARE_SIZE;
 		test.position.z = z*SQUARE_SIZE;
 
+		test.rotation.y = rot;
+		
 		loader.load( test.model, test.loadObject(test) );
 }
