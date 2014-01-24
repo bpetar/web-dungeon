@@ -181,24 +181,38 @@ function load_level()
 		{
 			console.log("tile has low corner x:" + fx + " z:" + fz);
 			//put supporter in the low corner
-			show_model(loader, "models/suporter.js", 16,-1.5);
+			show_model(loader, "models/suporter.js", fx,fz-0.5,0);
 		}
 		if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
 		{
 			console.log("tile has high corner x:" + fx + " z:" + fz);
 			//put supporter in the up corner
+			show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
 		}
 		if((west_neighbor)&&(!north_neighbor)&&(!south_neighbor)&&(!east_neighbor))
 		{
 			console.log("tile has right corner x:" + fx + " z:" + fz);
 			//put supporter in the right corner
+			show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
 		}
 		if((east_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!south_neighbor))
 		{
 			console.log("tile has left corner x:" + fx + " z:" + fz);
 			//put supporter in the left corner
+			show_model(loader, "models/suporter.js", fx+0.5,fz,-Math.PI/2);
 		}
 		
+		if((east_neighbor)&&(north_neighbor)&&(!west_neighbor)&&(south_neighbor))
+		{
+			//one supporter on the right to ablige start of corridor
+			show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
+		}
+		if((east_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(south_neighbor))
+		{
+			//one supporter on the low to ablige start of corridor
+			show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+		}
+
 		holeSpot = false;
 		for (var h=0; h<holesArr.length; h++)
 		{
