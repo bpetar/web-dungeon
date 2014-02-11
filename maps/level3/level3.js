@@ -8,7 +8,7 @@ function onLoad()
 var levelNumber = 3;
 
 // map arrays..
-var floorsArr2D = [[16,7], [16,8], [15,8], [17,8], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [15,0], [15,2], [15,4], [15,6]];
+var floorsArr2D = [[16,7], [16,8], [15,8], [17,8], [18,8], [19,8], [20,8], [19,7], [19,6], [18,6], [19,5], [19,4], [18,4], [19,3], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [15,0], [15,2], [15,4], [15,6]];
 var holesArr = [];
 var holesAboveArr = [[15,0], [15,2], [15,4], [15,6]];
 var writtingsArr = [];
@@ -21,6 +21,11 @@ var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/media/ceiling.png';
 
 var wall_model = 'maps/level3/models/wallc.js';
+var wall_model_curve_left = 'maps/level3/models/wallcl.js';
+var wall_model_curve_right = 'maps/level3/models/wallcr.js';
+var wall_model_durve_lr = 'maps/level3/models/walldlr.js';
+var wall_model_durve_l = 'maps/level3/models/walldl.js';
+
 //var decorPillarModel = "maps/level3/models/decorPillar2.js";
 
 //basic level models

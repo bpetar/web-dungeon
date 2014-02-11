@@ -19,7 +19,7 @@ function addPillar(loader, x, z)
 	if(!decorPillarAlreadyAdded(decorPil))
 	{
 		array_of_decorPillars.push(decorPil);
-		console.log("pillar added, x:" + decorPil.x + ", z:" + decorPil.z);
+		//console.log("pillar added, x:" + decorPil.x + ", z:" + decorPil.z);
 		
 		var decorPillarke = create_game_object();
 		decorPillarke.name = "decorPillar";
@@ -33,10 +33,10 @@ function addPillar(loader, x, z)
 			loader.load( decorPillarModel, decorPillarke.loadObject(decorPillarke) );
 		}
 	}
-	else
-	{
-		console.log("pillar alredy in the queue, x:" + decorPil.x + ", z:" + decorPil.z);
-	}
+	//else
+	//{
+		//console.log("pillar alredy in the queue, x:" + decorPil.x + ", z:" + decorPil.z);
+	//}
 }
 
 function loadDoorways( geometry, materials )
@@ -349,6 +349,9 @@ function load_level()
 		var rightWall = true;
 		var frontWall = true;
 		var backWall = true;
+		var frontRightWall = true;
+		var backRightWall = true;
+		var leftFrontWall = true;
 		var xTile = floorsArr2D[i][0];
 		var yTile = floorsArr2D[i][1];
 		//make walls around floor tile, but check if it has neighboring tile..
@@ -360,6 +363,16 @@ function load_level()
 				{
 					//there is floor tile to the left - no LeftWall.
 					leftWall = false;
+					
+					//leftFrontWall
+					for(k=0; k < floorsArr2D.length; k++)
+					{
+						if((floorsArr2D[j][0]==floorsArr2D[k][0])&&(floorsArr2D[j][1]+1==floorsArr2D[k][1]))
+						{
+							console.log("Pera deformera left front");
+							leftFrontWall = false;
+						}
+					}
 				}
 				if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
 				{
@@ -370,12 +383,36 @@ function load_level()
 				{
 					//there is floor tile to the front - no FrontWall.
 					frontWall = false;
+					
+					for(k=0; k < floorsArr2D.length; k++)
+					{
+						if((floorsArr2D[j][0]-1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
+						{
+							//console.log("Pera deformera front");
+							frontRightWall = false;
+						}
+					}
 				}
 				if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile-1))
 				{
 					//there is floor tile to the back - no BackWall.
 					backWall = false;
+
+					for(k=0; k < floorsArr2D.length; k++)
+					{
+						if((floorsArr2D[j][0]-1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
+						{
+							//console.log("Pera deformera back");
+							backRightWall = false;
+						}
+					}
 				}
+				
+				// if(frontWall == false)
+				// {
+					//check north tile
+					// frontRightWall = false;
+				// }
 			}
 		}
 		
@@ -436,7 +473,20 @@ function load_level()
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						rot.set(0, Math.PI, 0);
-						loader.load( wall_model, loadModel(pos, rot) );
+						
+						//console.log("pera" + frontWall);
+						//if((typeof wall_model_curve_left != 'undefined')&&(north_neighbor)&&(!south_neighbor)&&(!west_neighbor)&&(east_neighbor))
+						if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
+						{
+							//console.log("pera1");
+							//left_wall_curve_down
+							loader.load( wall_model_curve_left, loadModel(pos, rot) );
+						}
+						else
+						{
+							//console.log("pera2");
+							loader.load( wall_model, loadModel(pos, rot) );
+						}
 					}
 					else
 					{					
@@ -514,7 +564,16 @@ function load_level()
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						rot.set(0, 0, 0);
-						loader.load( wall_model, loadModel(pos, rot) );
+						if((typeof wall_model_durve_lr != 'undefined')&&(!frontWall)&&(!backWall)&&(!frontRightWall)&&(!backRightWall))
+						{
+							console.log("pera gown");
+							//model should be curved short to both sides
+							loader.load( wall_model_durve_lr, loadModel(pos, rot) );
+						}
+						else
+						{
+							loader.load( wall_model, loadModel(pos, rot) );
+						}
 					}
 					else
 					{					
@@ -593,7 +652,17 @@ function load_level()
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 						rot.set(0, Math.PI/2, 0);
-						loader.load( wall_model, loadModel(pos, rot) );
+						
+						if((typeof wall_model_durve_l != 'undefined')&&(!leftWall)&&(!leftFrontWall))
+						{
+							console.log("pera frrr");
+							//left_wall_durve_down
+							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+						}
+						else
+						{						
+							loader.load( wall_model, loadModel(pos, rot) );
+						}
 					}
 					else
 					{					
@@ -672,7 +741,17 @@ function load_level()
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
 						rot.set(0, -Math.PI/2, 0);
-						loader.load( wall_model, loadModel(pos, rot) );
+
+						if((typeof wall_model_curve_right != 'undefined')&&(!frontWall)&&(leftWall)&&(!rightWall))
+						{
+							console.log("pera down");
+							//left_wall_curve_down
+							loader.load( wall_model_curve_right, loadModel(pos, rot) );
+						}
+						else
+						{
+							loader.load( wall_model, loadModel(pos, rot) );
+						}
 					}
 					else
 					{					
