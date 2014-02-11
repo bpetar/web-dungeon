@@ -47,11 +47,11 @@
 		Menu
 		</div>
 		
-		<div id="gui" style="position:absolute; left:70px; top:70px;">
+		<div id="gui" style="cursor: pointer; position:absolute; left:70px; top:70px;">
 			<div id="player1" style="border:2px solid;">
 				<div id="player1top" style="border:1px solid red; float: left;">
 					<div id="player1topimg" style="float: left;">
-					<img src="media/profile1.jpg" onClick='inventory_show("Inventory will popup here!")'> 
+					<img src="media/profile.png" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
 					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:30px; padding-left:10px; position:absolute; left:10px; top:10px;  height:65px; width:170px; background: url(media/wound.png)">
 					13
@@ -61,15 +61,18 @@
 						<!-- <img src="media/health.png">  -->
 						</div>
 						<!-- <br> -->
-						<div id="player1tophand" style="border:1px solid blue; opacity:1.0;">
-						<img src="media/mace.png" onClick='player_attack()'> 
+						<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
+						<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px" onClick="player_attack(true)">
+						</div>
+						<div id="player1rhand" style="border:1px solid blue; opacity:1.0;">
+						<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px" onClick="player_attack(false)"> 
 						</div>
 					</div>
 				</div>
 				<br>
-				Drn Inatdzija
+				Martin
 			</div>
-			<br>
+			<br><!--
 			<br>
 			<div id="player2" style="border:2px solid; opacity:0.4;">
 				<div id="player2top" style="border:1px solid red; float: left;">
@@ -84,7 +87,7 @@
 				</div>
 				<br>
 				Mech Cloaker
-			</div>
+			</div>-->
 		</div>
 
 		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-41px;">
@@ -353,50 +356,64 @@ else
 				audio_player_death.play();
 			}
 			
-			function player_attack() {
+			function player_attack(left) {
 				if(playerDead)
 					return;
 					
-				if(playerCanHit)
+				//cant attack for a while now
+				if(left && playerCanHitLeft)
 				{
-					//cant attack for a while now
-					playerCanHit = false;
-					playerHitTimeout = WEAPON_SPEED*1000;
-					weaponDiv.style.opacity=0.5;
+					playerCanHitLeft = false;
+					playerHitTimeoutLeft = WEAPON_SPEED*1000;
+					lhandDiv.style.opacity=0.5;
+				}
+				else if(!left && playerCanHitRight)
+				{
+					playerCanHitRight = false;
+					playerHitTimeoutRight = WEAPON_SPEED*1000;
+					rhandDiv.style.opacity=0.5;
+				}
+				else
+				{
+					//hands are bussy
+					return;
+				}
 					
-					//is monster in front of player?
-					var monster = monsterInFrontOfPlayer();
-					if(monster)
+				//is monster in front of player?
+				var monster = monsterInFrontOfPlayer();
+				if(monster)
+				{
+					//swing that weapon
+					var att_roll = 50*Math.random()+PlayerAttack;
+					console.log("player swings whatever he's holding in hand, att_roll: " + att_roll);
+					if(att_roll > monster.defense)
 					{
-						//swing that weapon
-						var att_roll = 50*Math.random()+PlayerAttack;
-						console.log("player swings whatever he's holding in hand, att_roll: " + att_roll);
-						if(att_roll > monster.defense)
-						{
-							//Hit!
-							var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
-							
-							//Damage monster
-							monster.deal_damage(dmg_roll);
-							
-							audio_cling.play();
+						//Hit!
+						var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
+						
+						//Damage monster
+						monster.deal_damage(dmg_roll);
+						
+						audio_cling.load();
+						audio_cling.play();
 
-						}
-						else
-						{
-							//Miss!
-							DisplayMonsterDmg("Miss!");
-							//Play miss sound swoosh
-							audio_miss.play();
-						}
 					}
 					else
 					{
 						//Miss!
 						DisplayMonsterDmg("Miss!");
-						//Play miss sound swoosh or cling
+						//Play miss sound swoosh
+						audio_miss.load();
 						audio_miss.play();
 					}
+				}
+				else
+				{
+					//Miss!
+					DisplayMonsterDmg("Miss!");
+					//Play miss sound swoosh or cling
+					audio_miss.load();
+					audio_miss.play();
 				}
 			}
 			
@@ -440,6 +457,9 @@ else
 			var pickable_at_hand = 0;
 			var pickable_at_hand_icon = 0;
 			
+			var left_hand_item = 0;
+			var right_hand_item = 0;
+			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
 			///var y_pos = 0;
@@ -477,7 +497,8 @@ else
 			var showMonsterDmg = false;
 			var showPlayerDmg = false;
 			var SHOW_DAMAGE_TIME = 1;
-			var weaponDiv = 0; //id=player1tophand
+			var lhandDiv = 0; //id=player1lhand
+			var rhandDiv = 0; //id=player1rhand
 			
 			var level_complete_div = 0;
 			
@@ -486,8 +507,10 @@ else
 			var playerHPmax = 30;
 			var playerHPcurrent = 30;
 			var playerDead = false;
-			var playerCanHit = true;
-			var playerHitTimeout = WEAPON_SPEED;
+			var playerCanHitLeft = true;
+			var playerCanHitRight = true;
+			var playerHitTimeoutLeft = WEAPON_SPEED;
+			var playerHitTimeoutRight = WEAPON_SPEED;
 			var PlayerAttack = 30;
 			var PlayerDefense = 50;
 			
@@ -528,6 +551,8 @@ else
 			var item_over_monster = -1;
 			var mouse_over_item_in_inventory = -1;
 			var mouse_over_item_in_container = -1;
+			var item_over_left_hand = -1;
+			var item_over_right_hand = -1;
 			
 			var gui_left_div = 0;
 			var gui_right_div = 0;
@@ -755,8 +780,10 @@ else
 				info_tip_div = document.getElementById('info_tip');
 				info_tip_div.style.display = 'none';
 
-				weaponDiv = document.getElementById('player1tophand');
-				weaponDiv.style.opacity=1.0;
+				rhandDiv = document.getElementById('player1rhand');
+				rhandDiv.style.opacity=1.0;
+				lhandDiv = document.getElementById('player1lhand');
+				lhandDiv.style.opacity=1.0;
 				
 				light = new THREE.SpotLight();
 				light.position.set( -155, 5, 10 );
@@ -1564,6 +1591,14 @@ else
 				else //pickable is at hand
 				{
 				
+					//pickable over players hand
+					console.log("y_pos:" + y_pos + ", left:" + lhandDiv.offsetLeft + ", top:" + lhandDiv.offsetTop);
+					if((x_pos > lhandDiv.offsetLeft)&&(x_pos < lhandDiv.offsetLeft+72)&&(y_pos < lhandDiv.offsetTop+72)&&(y_pos > lhandDiv.offsetTop))
+					{
+						console.log("grrrrrr");
+						item_over_left_hand = 1;
+					}
+					
 					//pickable over keyhole
 					for (var b=0; b<keyholes_array.length; b++)
 					{
@@ -1636,6 +1671,8 @@ else
 					}
 				}
 				
+				item_over_left_hand = -1;
+				item_over_right_hand = -1;
 				mouse_over_button = -1;
 				mouse_over_prop = -1;
 				mouse_over_secret_wall = -1;
@@ -1847,6 +1884,64 @@ else
 						return;
 					}
 
+					if(item_over_left_hand != -1)
+					{
+						//if(item_can_be_placed_in_hand)
+						{
+							var tmp_hand_item = 0;
+							//add item to players hand
+							if(left_hand_item != 0)
+							{
+								tmp_hand_item = left_hand_item;
+								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								left_hand_item = pickable_at_hand;
+								//pickable at hand is replaced with hand item
+								pickable_at_hand_icon.src = tmp_hand_item.icon;
+								pickable_at_hand = tmp_hand_item;
+							}
+							else
+							{
+								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								left_hand_item = pickable_at_hand;
+								//pickable at hand is gone
+								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon = 0;
+								pickable_at_hand = 0;
+							}
+						}
+						
+						return;
+					}
+
+					if(item_over_right_hand != -1)
+					{
+						//if(item_can_be_placed_in_hand)
+						{
+							var tmp_hand_item = 0;
+							//add item to players hand
+							if(right_hand_item != 0)
+							{
+								tmp_hand_item = right_hand_item;
+								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								right_hand_item = pickable_at_hand;
+								//pickable at hand is replaced with hand item
+								pickable_at_hand_icon.src = tmp_hand_item.icon;
+								pickable_at_hand = tmp_hand_item;
+							}
+							else
+							{
+								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								right_hand_item = pickable_at_hand;
+								//pickable at hand is gone
+								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon = 0;
+								pickable_at_hand = 0;
+							}
+						}
+						
+						return;
+					}
+					
 					//if click is too high, do nothing (throwing to be implemented later)
 					
 					
@@ -2207,19 +2302,32 @@ else
 						}
 					}
 					
-					if(playerCanHit == false)
+					if(playerCanHitLeft == false)
 					{
-						playerHitTimeout -= elapsed;
+						playerHitTimeoutLeft -= elapsed;
 						
-						if(playerHitTimeout < 0)
+						if(playerHitTimeoutLeft < 0)
 						{
-							console.log("hit available again, elapsed: " + elapsed);
-							playerHitTimeout = 0;
-							playerCanHit = true;
-							weaponDiv.style.opacity=1.0;
+							console.log("left hit available again");
+							playerHitTimeoutLeft = 0;
+							playerCanHitLeft = true;
+							lhandDiv.style.opacity=1.0;
 						}
 					}
 					
+					if(playerCanHitRight == false)
+					{
+						playerHitTimeoutRight -= elapsed;
+						
+						if(playerHitTimeoutRight < 0)
+						{
+							console.log("right hit available again");
+							playerHitTimeoutRight = 0;
+							playerCanHitRight = true;
+							rhandDiv.style.opacity=1.0;
+						}
+					}
+
 					//animate camera move
 					if(cameraMove)
 					{

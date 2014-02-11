@@ -95,6 +95,8 @@ var array_of_pillars = [];
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level()
 {
+	console.log("level start time: " + Date.now());
+	
 	var loader = new THREE.JSONLoader();
 
 	if((typeof doorsArr3D != 'undefined') && (doorsArr3D.length > 0))
@@ -123,7 +125,7 @@ function load_level()
 		}
 	}
 	
-	//show_model(loader, "models/spears.js", 15,0);
+	//show_model(loader, "models/stake.js", 16,0);
 	
 	load_props();
 	
@@ -754,7 +756,7 @@ function load_level()
 						}
 					}
 					else
-					{					
+					{
 						//load regular wall
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 					}
@@ -774,4 +776,6 @@ function load_level()
 			}
 		}
 	}
+	
+	console.log("level end time: " + Date.now());
 }
