@@ -81,7 +81,7 @@ var buttons_array = [];
 var keyholes_array = [];
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
+var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."], [3,"Stake","models/stake.js", 15,0, "media/stake.png", "Pointy stick, better then nothing."]];
 ////////////////////////////////////////////////
 
 var monster_array = [];
