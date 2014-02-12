@@ -31,6 +31,12 @@ function create_game_object () {
 	gobject.useScript = 0;
 	gobject.consumable = false;
 
+	//empty hand values
+	gobject.weapon_speed = 3;
+	gobject.weapon_dmg = 1;
+	gobject.weapon_dmg_bonus = 0;
+	gobject.weapon_attack_bonus = 0;
+				
 	gobject.name_id = 0;
 	gobject.description_id = 0;
 	gobject.loadObject = loadObject;

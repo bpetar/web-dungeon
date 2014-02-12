@@ -27,6 +27,13 @@ function load_pickables () {
 		{
 			picki.consumable = (pickables_array[i][8] == 1)?true:false;
 		}
+		if(pickables_array[i].length>12)
+		{
+			picki.weapon_speed = pickables_array[i][9];
+			picki.weapon_dmg = pickables_array[i][10];
+			picki.weapon_dmg_bonus = pickables_array[i][11];
+			picki.weapon_attack_bonus = pickables_array[i][12];
+		}
 		picki.niched = -1; //flag indicating if pickable is in the niche
 		picki.plated = -1; //flag indicating if pickable is in the niche
 
