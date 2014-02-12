@@ -62,10 +62,10 @@
 						</div>
 						<!-- <br> -->
 						<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
-						<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px" onClick="player_attack(true)">
+						<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px">
 						</div>
 						<div id="player1rhand" style="border:1px solid blue; opacity:1.0;">
-						<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px" onClick="player_attack(false)"> 
+						<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px"> 
 						</div>
 					</div>
 				</div>
@@ -360,15 +360,36 @@ else
 				if(playerDead)
 					return;
 					
-				//cant attack for a while now
+				//empty hand attack/dmg values
+				var w_speed = 3;
+				var w_dmg = 1;
+				var w_dmg_bonus = 0;
+				var w_attack_bonus = 0;
+
 				if(left && playerCanHitLeft)
 				{
+					if(left_hand_item != 0)
+					{
+						w_speed = left_hand_item.weapon_speed;
+						w_dmg = left_hand_item.weapon_dmg;
+						w_dmg_bonus = left_hand_item.weapon_dmg_bonus;
+						w_attack_bonus = left_hand_item.weapon_attack_bonus;
+					}
+					console.log("left weapon dmg: " + w_dmg);
 					playerCanHitLeft = false;
-					playerHitTimeoutLeft = WEAPON_SPEED*1000;
+					playerHitTimeoutLeft = w_speed*1000;
 					lhandDiv.style.opacity=0.5;
 				}
 				else if(!left && playerCanHitRight)
 				{
+					if(right_hand_item != 0)
+					{
+						w_speed = right_hand_item.weapon_speed;
+						w_dmg = right_hand_item.weapon_dmg;
+						w_dmg_bonus = right_hand_item.weapon_dmg_bonus;
+						w_attack_bonus = right_hand_item.weapon_attack_bonus;
+					}
+					console.log("right weapon dmg: " + w_dmg);
 					playerCanHitRight = false;
 					playerHitTimeoutRight = WEAPON_SPEED*1000;
 					rhandDiv.style.opacity=0.5;
@@ -378,7 +399,7 @@ else
 					//hands are bussy
 					return;
 				}
-					
+
 				//is monster in front of player?
 				var monster = monsterInFrontOfPlayer();
 				if(monster)
@@ -553,7 +574,12 @@ else
 			var mouse_over_item_in_container = -1;
 			var item_over_left_hand = -1;
 			var item_over_right_hand = -1;
+			var mouse_over_left_hand = -1;
+			var mouse_over_right_hand = -1;
 			
+			var gui_div_left_pos = 70;
+			var gui_div_top_pos = 70;
+
 			var gui_left_div = 0;
 			var gui_right_div = 0;
 
@@ -1307,6 +1333,10 @@ else
 				mouse_over_item_in_container = -1;
 				item_over_keyhole = -1;
 				item_over_monster = -1
+				mouse_over_left_hand = -1;
+				mouse_over_right_hand = -1;
+				item_over_left_hand = -1;
+				item_over_right_hand = -1;
 				setCursor('auto');
 			}
 			
@@ -1365,6 +1395,18 @@ else
 						}
 					}
 					mouse_over_item_in_container = -1;
+					
+					//mouse over players hand
+					if((x_pos > lhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < lhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < lhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > lhandDiv.offsetTop+gui_div_top_pos))
+					{
+						mouse_over_left_hand = 1;
+						return;
+					}
+					if((x_pos > rhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < rhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < rhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > rhandDiv.offsetTop+gui_div_top_pos))
+					{
+						mouse_over_right_hand = 1;
+						return;
+					}
 					
 					//mouse over pickables
 					for (var i=0; i< array_of_pickables.length; i++)
@@ -1592,11 +1634,16 @@ else
 				{
 				
 					//pickable over players hand
-					console.log("y_pos:" + y_pos + ", left:" + lhandDiv.offsetLeft + ", top:" + lhandDiv.offsetTop);
-					if((x_pos > lhandDiv.offsetLeft)&&(x_pos < lhandDiv.offsetLeft+72)&&(y_pos < lhandDiv.offsetTop+72)&&(y_pos > lhandDiv.offsetTop))
+					if((x_pos > lhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < lhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < lhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > lhandDiv.offsetTop+gui_div_top_pos))
+					{
+						item_over_left_hand = 1;
+						return;
+					}
+					if((x_pos > rhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < rhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < rhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > rhandDiv.offsetTop+gui_div_top_pos))
 					{
 						console.log("grrrrrr");
-						item_over_left_hand = 1;
+						item_over_right_hand = 1;
+						return;
 					}
 					
 					//pickable over keyhole
@@ -1683,6 +1730,8 @@ else
 				mouse_over_item_in_container = -1;
 				item_over_keyhole = -1;
 				item_over_monster = -1
+				mouse_over_left_hand = -1;
+				mouse_over_right_hand = -1;
 				setCursor('auto');
 			}
 
@@ -2041,6 +2090,70 @@ else
 						monster.OnClick();
 					}
 					
+					if(mouse_over_left_hand != -1)
+					{
+						if(isRightMB)
+						{
+							//attack!
+							player_attack(true);
+							m_RMBEventWasUsed = true;
+						}
+						else
+						{
+							//take item from players hand
+							if(left_hand_item != 0)
+							{
+								document.getElementById("lefthandimg").src = "media/lhand.png";
+								//pickable at hand becomes hand item
+								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								pickable_at_hand_icon.src = left_hand_item.icon;
+								pickable_at_hand = left_hand_item;
+								left_hand_item = 0;
+								console.log("pickable at hand should be something");
+							}
+							else
+							{
+								//no item in hand, hint:use right click to attack
+								console.log("use right click to attack!");
+								DisplayInfoDiv("Right click to attack, left to place item..");
+							}
+						}
+						
+						return;
+					}
+
+					if(mouse_over_right_hand != -1)
+					{
+						if(isRightMB)
+						{
+							//attack!
+							player_attack(false);
+							m_RMBEventWasUsed = true;
+						}
+						else
+						{
+							//take item from players hand
+							if(right_hand_item != 0)
+							{
+								document.getElementById("righthandimg").src = "media/rhand.png";
+								//pickable at hand becomes hand item
+								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+								pickable_at_hand_icon.src = right_hand_item.icon;
+								pickable_at_hand = right_hand_item;
+								right_hand_item = 0;
+								console.log("pickable at hand should be something right");
+							}
+							else
+							{
+								//no item in hand, use right click to attack
+								console.log("use right click to attack!");
+								DisplayInfoDiv("Right click to attack, left to place item..");
+							}
+						}
+						
+						return;
+					}
+
 					//check if item from inventory is clicked
 					if(mouse_over_item_in_inventory != -1)
 					{

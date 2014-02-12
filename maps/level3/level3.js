@@ -8,7 +8,7 @@ function onLoad()
 var levelNumber = 3;
 
 // map arrays..
-var floorsArr2D = [[16,7], [16,8], [15,8], [17,8], [18,8], [19,8], [20,8], [19,7], [19,6], [18,6], [19,5], [19,4], [18,4], [19,3], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [15,0], [15,2], [15,4], [15,6]];
+var floorsArr2D = [[16,7], [16,8], [15,8], [14,8], [13,8], [12,8], [11,8], [10,8], [9,8], [8,8], [17,8], [18,8], [19,8], [20,8], [19,7], [19,6], [18,6], [19,5], [19,4], [18,4], [19,3], [19,2], [18,2], [19,1], [19,0], [18,0], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0], [15,0], [15,2], [15,4], [15,6], [13,7], [13,6], [12,6], [13,5], [13,4], [12,4], [13,3], [13,2], [12,2], [13,1], [13,0], [12,0], [10,7], [10,6], [9,6], [10,5], [10,4], [9,4], [10,3], [10,2], [9,2], [10,1], [10,0], [9,0], [19,9], [19,10], [18,10],[19,11], [19,12], [18,12], [19,13], [19,14], [18,14], [19,15], [19,16], [18,16], [16,9], [16,10], [15,10],[16,11], [16,12], [15,12], [16,13], [16,14], [15,14], [16,15], [16,16], [15,16], [13,9], [13,10], [12,10],[13,11], [13,12], [12,12], [13,13], [13,14], [12,14], [13,15], [13,16], [12,16], [10,9], [10,10], [9,10],[10,11], [10,12], [9,12], [10,13], [10,14], [9,14], [10,15], [10,16], [9,16]];
 var holesArr = [];
 var holesAboveArr = [[15,0], [15,2], [15,4], [15,6]];
 var writtingsArr = [];
@@ -20,6 +20,7 @@ var floor_texture_file = 'maps/level3/media/floor.png';
 var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/media/ceiling.png';
 
+var curved_walls = true;
 var wall_model = 'maps/level3/models/wallc.js';
 var wall_model_curve_left = 'maps/level3/models/wallcl.js';
 var wall_model_curve_right = 'maps/level3/models/wallcr.js';
@@ -61,7 +62,7 @@ function propOnClick4()
 }
 
 //props x,z,model,onClick script
-var propsArr = [[111,15,0,"models/spears.js",propOnClick1], [112,15,2,"models/spears.js", propOnClick2], [113,15,4,"models/spears.js", propOnClick3], [114,15,6,"models/spears.js", propOnClick4]];
+var propsArr = [[123,18,6,"models/spears.js",propOnClick4], [124,18,4,"models/spears.js",propOnClick4], [125,18,2,"models/spears.js",propOnClick4], [126,18,0,"models/spears.js",propOnClick4], [127,18,10,"models/spears.js",propOnClick4], [128,18,12,"models/spears.js",propOnClick4], [129,18,14,"models/spears.js",propOnClick4], [130,18,16,"models/spears.js",propOnClick4], [131,15,10,"models/spears.js",propOnClick4], [132,15,12,"models/spears.js",propOnClick4], [133,15,14,"models/spears.js",propOnClick4], [134,15,16,"models/spears.js",propOnClick4], [135,12,10,"models/spears.js",propOnClick4], [136,12,12,"models/spears.js",propOnClick4], [137,12,14,"models/spears.js",propOnClick4], [138,12,16,"models/spears.js",propOnClick4], [139,9,10,"models/spears.js",propOnClick4], [140,9,12,"models/spears.js",propOnClick4], [141,9,14,"models/spears.js",propOnClick4], [142,9,16,"models/spears.js",propOnClick4], [111,15,0,"models/spears.js",propOnClick1], [112,15,2,"models/spears.js", propOnClick2], [113,15,4,"models/spears.js", propOnClick3], [114,15,6,"models/spears.js", propOnClick4], [115,12,6,"models/spears.js",propOnClick4], [116,12,4,"models/spears.js",propOnClick4], [117,12,2,"models/spears.js",propOnClick4], [118,12,0,"models/spears.js",propOnClick4], [119,9,6,"models/spears.js",propOnClick4], [120,9,4,"models/spears.js",propOnClick4], [121,9,2,"models/spears.js",propOnClick4], [122,9,0,"models/spears.js",propOnClick4]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -81,7 +82,7 @@ var buttons_array = [];
 var keyholes_array = [];
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."], [3,"Stake","models/stake.js", 15,0, "media/stake.png", "Pointy stick, better then nothing."]];
+var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."], [3,"Stake","models/stake.js", 15,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0]];
 ////////////////////////////////////////////////
 
 var monster_array = [];
