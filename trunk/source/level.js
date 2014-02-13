@@ -153,7 +153,9 @@ function load_walls(loader)
 			var backRightWall = true;
 			var backLeftWall = true;
 			var leftFrontWall = true;
+			var leftBackWall = true;
 			var rightFrontWall = true;
+			var rightBackWall = true;
 			var xTile = floorsArr2D[i][0];
 			var yTile = floorsArr2D[i][1];
 			//make walls around floor tile, but check if it has neighboring tile..
@@ -173,6 +175,10 @@ function load_walls(loader)
 							{
 								leftFrontWall = false;
 							}
+							if((floorsArr2D[j][0]==floorsArr2D[k][0])&&(floorsArr2D[j][1]-1==floorsArr2D[k][1]))
+							{
+								leftBackWall = false;
+							}
 						}
 					}
 					if((floorsArr2D[j][0] == xTile-1) && (floorsArr2D[j][1] == yTile))
@@ -185,6 +191,10 @@ function load_walls(loader)
 							if((floorsArr2D[j][0]==floorsArr2D[k][0])&&(floorsArr2D[j][1]+1==floorsArr2D[k][1]))
 							{
 								rightFrontWall = false;
+							}
+							if((floorsArr2D[j][0]==floorsArr2D[k][0])&&(floorsArr2D[j][1]-1==floorsArr2D[k][1]))
+							{
+								rightBackWall = false;
 							}
 						}
 					}
@@ -300,7 +310,7 @@ function load_walls(loader)
 						else if((typeof wall_model_durve_r != 'undefined')&&(!backWall)&&(!frontLeftWall))
 						{
 							//left wall durve right
-							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+							loader.load( wall_model_durve_r, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -444,7 +454,7 @@ function load_walls(loader)
 							//left_wall_durve_down
 							loader.load( wall_model_durve_l, loadModel(pos, rot) );
 						}
-						else if((typeof wall_model_durve_r != 'undefined')&&(!leftWall)&&(!rightFrontWall))
+						else if((typeof wall_model_durve_r != 'undefined')&&(!rightFrontWall))
 						{
 							//left_wall_durve_down
 							loader.load( wall_model_durve_r, loadModel(pos, rot) );
@@ -522,6 +532,16 @@ function load_walls(loader)
 						{
 							//left_wall_curve_down
 							loader.load( wall_model_curve_right, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_r != 'undefined')&&(!leftBackWall))
+						{
+							//left_wall_curve_down
+							loader.load( wall_model_durve_r, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_l != 'undefined')&&(!rightBackWall))
+						{
+							//left_wall_curve_down
+							loader.load( wall_model_durve_l, loadModel(pos, rot) );
 						}
 						else
 						{
