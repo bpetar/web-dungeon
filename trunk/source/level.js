@@ -101,6 +101,8 @@ function load_walls(loader)
 	map.anisotropy = 16;
 	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
+	var materialwrit;
+	
 	//writting on the wall texture
 	if(writtingsArr.length>0)
 	{
@@ -147,8 +149,11 @@ function load_walls(loader)
 			var frontWall = true;
 			var backWall = true;
 			var frontRightWall = true;
+			var frontLeftWall = true;
 			var backRightWall = true;
+			var backLeftWall = true;
 			var leftFrontWall = true;
+			var rightFrontWall = true;
 			var xTile = floorsArr2D[i][0];
 			var yTile = floorsArr2D[i][1];
 			//make walls around floor tile, but check if it has neighboring tile..
@@ -174,6 +179,14 @@ function load_walls(loader)
 					{
 						//there is floor tile to the right - no RightWall.
 						rightWall = false;
+						
+						for(k=0; k < floorsArr2D.length; k++)
+						{
+							if((floorsArr2D[j][0]==floorsArr2D[k][0])&&(floorsArr2D[j][1]+1==floorsArr2D[k][1]))
+							{
+								rightFrontWall = false;
+							}
+						}
 					}
 					if((floorsArr2D[j][0] == xTile) && (floorsArr2D[j][1] == yTile+1))
 					{
@@ -185,6 +198,10 @@ function load_walls(loader)
 							if((floorsArr2D[j][0]-1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
 							{
 								frontRightWall = false;
+							}
+							if((floorsArr2D[j][0]+1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
+							{
+								frontLeftWall = false;
 							}
 						}
 					}
@@ -198,6 +215,10 @@ function load_walls(loader)
 							if((floorsArr2D[j][0]-1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
 							{
 								backRightWall = false;
+							}
+							if((floorsArr2D[j][0]+1==floorsArr2D[k][0])&&(floorsArr2D[j][1]==floorsArr2D[k][1]))
+							{
+								backLeftWall = false;
 							}
 						}
 					}
@@ -263,8 +284,23 @@ function load_walls(loader)
 						
 						if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
 						{
-							//left_wall_curve_down
+							//left wall curve left
 							loader.load( wall_model_curve_left, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_curve_right != 'undefined')&&(frontWall)&&(!backWall))
+						{
+							//left wall curve right
+							loader.load( wall_model_curve_right, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_l != 'undefined')&&(!frontWall)&&(!backLeftWall))
+						{
+							//left wall durve left
+							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_r != 'undefined')&&(!backWall)&&(!frontLeftWall))
+						{
+							//left wall durve right
+							loader.load( wall_model_durve_l, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -329,10 +365,15 @@ function load_walls(loader)
 						var rot = new THREE.Vector3(0, 0, 0);
 						pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						rot.set(0, 0, 0);
-						if((typeof wall_model_durve_lr != 'undefined')&&(!frontWall)&&(!backWall)&&(!frontRightWall)&&(!backRightWall))
+						if((typeof wall_model_durve_lr != 'undefined')&&(!frontRightWall)&&(!backRightWall))
 						{
 							//model should be curved short to both sides
 							loader.load( wall_model_durve_lr, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_l != 'undefined')&&(!backWall)&&(!frontRightWall))
+						{
+							//model should be curved short (durve) to left side
+							loader.load( wall_model_durve_l, loadModel(pos, rot) );
 						}
 						else
 						{
@@ -398,10 +439,20 @@ function load_walls(loader)
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 						rot.set(0, Math.PI/2, 0);
 						
-						if((typeof wall_model_durve_l != 'undefined')&&(!leftWall)&&(!leftFrontWall))
+						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall))
 						{
 							//left_wall_durve_down
 							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_durve_r != 'undefined')&&(!leftWall)&&(!rightFrontWall))
+						{
+							//left_wall_durve_down
+							loader.load( wall_model_durve_r, loadModel(pos, rot) );
+						}
+						else if((typeof wall_model_curve_left != 'undefined')&&(leftWall)&&(!rightWall)&&(!backWall))
+						{
+							//left_wall_curve_down
+							loader.load( wall_model_curve_left, loadModel(pos, rot) );
 						}
 						else
 						{						
@@ -485,6 +536,7 @@ function load_walls(loader)
 	//regular walls
 	else
 	{
+		console.log("writ retular walls");
 		for(i=0; i < floorsArr2D.length; i++)
 		{
 			var leftWall = true;
@@ -574,14 +626,13 @@ function load_walls(loader)
 					{
 						//load regular wall
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-						object.rotation.set(0, Math.PI/2, 0);
-						object.receiveShadow = true;
-						object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-						scene.add( object );
 					}
+					object.rotation.set(0, Math.PI/2, 0);
+					object.receiveShadow = true;
+					object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
+					scene.add( object );
 				}
 			}
 			
@@ -637,13 +688,13 @@ function load_walls(loader)
 					{
 						//load regular wall
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						object.rotation.set(0, Math.PI/2, 0);
-						object.receiveShadow = true;
-						object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
-						scene.add( object );
 					}
+					object.rotation.set(0, Math.PI/2, 0);
+					object.receiveShadow = true;
+					object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
+					scene.add( object );
 				}
 			}
 			if(frontWall)
@@ -699,13 +750,13 @@ function load_walls(loader)
 					{
 						//load regular wall
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						object.rotation.set(0, Math.PI, 0);
-						object.receiveShadow = true;
-						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
-						scene.add( object );
 					}
+					object.rotation.set(0, Math.PI, 0);
+					object.receiveShadow = true;
+					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
+					scene.add( object );
 				}
 			}
 			if(backWall)
@@ -760,13 +811,13 @@ function load_walls(loader)
 					{
 						//load regular wall
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-						object.rotation.set(0, Math.PI, 0);
-						object.receiveShadow = true;
-						object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-						object.position.y = 0.4*SQUARE_SIZE; //y
-						object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
-						scene.add( object );
 					}
+					object.rotation.set(0, Math.PI, 0);
+					object.receiveShadow = true;
+					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+					object.position.y = 0.4*SQUARE_SIZE; //y
+					object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
+					scene.add( object );
 				}
 			}
 		}
