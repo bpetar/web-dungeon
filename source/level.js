@@ -882,7 +882,7 @@ function load_level()
 	
 	load_props();
 	
-	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
+	var map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	
@@ -896,6 +896,11 @@ function load_level()
 	
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
+
+	var ceiling_map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
+	ceiling_map.wrapS = ceiling_map.wrapT = THREE.RepeatWrapping;
+	ceiling_map.anisotropy = 16;
+	var ceiling_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map:ceiling_map, side: THREE.DoubleSide } );
 
 	//floors
 	for(var i=0; i < floorsArr2D.length; i++)
@@ -1005,16 +1010,12 @@ function load_level()
 	
 			scene.add( object );
 		}
-	}
-	
-	//ceiling
-	
-	map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
-	map.wrapS = map.wrapT = THREE.RepeatWrapping;
-	map.anisotropy = 16;
-	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-	for(i=0; i < floorsArr2D.length; i++)
-	{
+		
+		
+		
+		
+		
+		//ceiling
 		var holeAboveSpot = false;
 		if(typeof holesAboveArr != 'undefined')
 		{
@@ -1026,31 +1027,58 @@ function load_level()
 		}
 		//if this ceiling tile is hole above, make a hole above, else make ceiling
 		
+		var pos = new THREE.Vector3(0, 0, 0);
+		var rot = new THREE.Vector3(Math.PI, 0, 0);
+		pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
+		pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
+		pos.y = 8;
 		if(holeAboveSpot)
 		{
 			//add hole model
-			var pos = new THREE.Vector3(0, 0, 0);
-			var rot = new THREE.Vector3(Math.PI, 0, 0);
-			pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
-			pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
-			pos.y = 8;
 			loader.load( hole_above_model, loadModel(pos,rot) );
 		}
 		else
 		{
 		
-			object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
-			//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
-			object.rotation.set(-Math.PI/2, 0, 0);
-			//object.receiveShadow = true;
+			if ((typeof curved_ceiling != 'undefined')&&(curved_ceiling == true))
+			{
+				if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+				{
+					rot.set(0, -Math.PI/2, 0);
+					loader.load( celing_model_fb, loadModel(pos, rot) );
+				}
+				else if((!north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor))
+				{
+					rot.set(0, 0, 0);
+					loader.load( celing_model_fb, loadModel(pos, rot) );
+				}
+				else if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(east_neighbor))
+				{
+					rot.set(0, -Math.PI/2, 0);
+					loader.load( celing_model_fb, loadModel(pos, rot) );
+				}
+				else if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(east_neighbor))
+				{
+					rot.set(0, -Math.PI/2, 0);
+					loader.load( celing_model_fb, loadModel(pos, rot) );
+				}
+			}
+			else
+			{
+				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), ceiling_material );
+				//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
+				object.rotation.set(-Math.PI/2, 0, 0);
+				//object.receiveShadow = true;
+				
 			
-		
-			object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
-			object.position.y = 0.8*SQUARE_SIZE; //y
-			object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
+				object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
+				object.position.y = 0.8*SQUARE_SIZE; //y
+				object.position.z = floorsArr2D[i][1]*SQUARE_SIZE; //z
 
-			scene.add( object );
+				scene.add( object );
+			}
 		}
+
 	}
 	
 	

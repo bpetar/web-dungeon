@@ -813,22 +813,40 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
-				var ambientLight = new THREE.AmbientLight( 0x202010 ); // soft white light
+				var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
 				scene.add( ambientLight );
 
-				pointLight = new THREE.PointLight(0xffffaa, 0.5, 40);
-				pointLight.position.set( 160, 5, 0 );
-				pointLight.castShadow = true;
+				pointLight = new THREE.PointLight(0xffffbb, 1, 40);
+				pointLight.position.set( 160, 4, 0 );
+				//pointLight.castShadow = true;
 				scene.add( pointLight );
+
+				spotLight = new THREE.SpotLight();
+				spotLight.position.set( 150, 24, 0 );
+				spotLight.target.position.set( 150, 0, 0 );
+				//pointLight.castShadow = true;
+				scene.add( spotLight );
+
+				spotLight = new THREE.SpotLight();
+				spotLight.position.set( 150, 24, 10 );
+				spotLight.target.position.set( 150, 0, 120 );
+				//pointLight.castShadow = true;
+				scene.add( spotLight );
+
+				spotLight = new THREE.SpotLight();
+				spotLight.position.set( 180, 24, 20 );
+				spotLight.target.position.set( 180, 0, 20 );
+				//pointLight.castShadow = true;
+				scene.add( spotLight );
 				
-				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( 50, 50, 50 ).normalize();
-				light2.castShadow = true;
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( 50, 50, 50 ).normalize();
+				//light2.castShadow = true;
 				//scene.add( light2 );
 				
-				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( -50, -30, -50 ).normalize();
-				light2.castShadow = true;
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( -50, -30, -50 ).normalize();
+				//light2.castShadow = true;
 				//scene.add( light2 );
 
 				light2 = new THREE.DirectionalLight( 0xffffff );
@@ -2481,7 +2499,7 @@ else
 						camera.position.add(deltaLooker);
 						camera.look.add(deltaLooker);
 						camera.lookAt(camera.look);
-						pointLight.position.set(camera.position.x, 4, camera.position.z);
+						pointLight.position.add(deltaLooker);
 						if (cameraDelta >= SQUARE_SIZE-0.3)
 						{
 							//console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
@@ -2498,6 +2516,9 @@ else
 							cameraOriginalPosition.multiplyScalar(0);
 							cameraOriginalLook.multiplyScalar(0);
 							cameraDelta = 0;
+							
+							pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
+							
 							//check if player stepped onto hole in the ground
 							if(positionIsHole(current_position.x, current_position.z))
 							{
@@ -2588,6 +2609,7 @@ else
 						camera.position.add(deltaRotateMover);
 						camera.look.add(deltaRotateTurner);
 						camera.lookAt(camera.look);
+						//pointLight.position.set(camera.look.x, 4, camera.look.z);
 						//cameraRotateMover
 						//cameraLooker
 						//cameraOriginalLook
