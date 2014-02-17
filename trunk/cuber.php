@@ -577,6 +577,8 @@ else
 			var mouse_over_left_hand = -1;
 			var mouse_over_right_hand = -1;
 			
+			var pointLight;
+			
 			var gui_div_left_pos = 70;
 			var gui_div_top_pos = 70;
 
@@ -811,20 +813,23 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
-				light = new THREE.SpotLight();
-				light.position.set( -155, 5, 10 );
-				light.castShadow = true;
-				//scene.add( light );
+				var ambientLight = new THREE.AmbientLight( 0x202010 ); // soft white light
+				scene.add( ambientLight );
+
+				pointLight = new THREE.PointLight(0xffffaa, 0.5, 40);
+				pointLight.position.set( 160, 5, 0 );
+				pointLight.castShadow = true;
+				scene.add( pointLight );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
 				light2.position.set( 50, 50, 50 ).normalize();
 				light2.castShadow = true;
-				scene.add( light2 );
+				//scene.add( light2 );
 				
 				light2 = new THREE.DirectionalLight( 0xffffff );
 				light2.position.set( -50, -30, -50 ).normalize();
 				light2.castShadow = true;
-				scene.add( light2 );
+				//scene.add( light2 );
 
 				light2 = new THREE.DirectionalLight( 0xffffff );
 				light2.position.set( 50, -10, -30 ).normalize();
@@ -2476,11 +2481,11 @@ else
 						camera.position.add(deltaLooker);
 						camera.look.add(deltaLooker);
 						camera.lookAt(camera.look);
-						
+						pointLight.position.set(camera.position.x, 4, camera.position.z);
 						if (cameraDelta >= SQUARE_SIZE-0.3)
 						{
-							console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
-							console.log("stop move cameraLooker.x: " + cameraLooker.x);
+							//console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
+							//console.log("stop move cameraLooker.x: " + cameraLooker.x);
 							cameraMove = false;
 							camera.position.multiplyScalar(0);
 							camera.position.add(cameraOriginalPosition.add(cameraLooker));

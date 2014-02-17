@@ -38,7 +38,7 @@ var hole_above_model = 'maps/level3/models/hole_above.js';
 //var door_model = 'maps/level1/models/door.js';
 
 //level related values
-fog_color = 0x999955;
+fog_color = 0x111100;
 fog_intensity = 0.009525;
 var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 
