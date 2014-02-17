@@ -22,13 +22,14 @@ var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/models/dirt.png';
 
 var curved_walls = true;
+var curved_ceiling = false;
 var wall_model = 'maps/level3/models/wallc.js';
 var wall_model_curve_left = 'maps/level3/models/wallcl.js';
 var wall_model_curve_right = 'maps/level3/models/wallcr.js';
 var wall_model_durve_lr = 'maps/level3/models/walldlr.js';
 var wall_model_durve_l = 'maps/level3/models/walldl.js';
 var wall_model_durve_r = 'maps/level3/models/walldr.js';
-
+var celing_model_fb = 'maps/level3/models/ceiling.js';
 //var decorPillarModel = "maps/level3/models/decorPillar2.js";
 
 //basic level models
