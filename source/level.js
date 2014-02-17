@@ -997,7 +997,7 @@ function load_level()
 				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
 			}
 			object.rotation.set(-Math.PI/2, 0, 0);
-			object.receiveShadow = true;
+			//object.receiveShadow = true;
 			
 			object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
 			object.position.y = 0; //y
@@ -1042,7 +1042,7 @@ function load_level()
 			object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
 			//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 			object.rotation.set(-Math.PI/2, 0, 0);
-			object.receiveShadow = true;
+			//object.receiveShadow = true;
 			
 		
 			object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
