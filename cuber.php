@@ -1875,25 +1875,56 @@ else
 					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
 					if(slot_index > 0)
 					{
-						//alert("yo yo " + pickable_at_hand);
-						var item_name = pickable_at_hand.name;
-						audio_click.play();
-						add_to_inventory(pickable_at_hand, slot_index);
-						pickable_at_hand_icon.style.left = "-170px";
-						pickable_at_hand_icon = 0;
-						pickable_at_hand = 0;
-						
-						//onetime inventory tip..
-						if((levelNumber == 1)&&(inventory_tip_shown == false))
+						//get item from inventory (if any)
+						var slot_item = inventory_item_clicked(x_pos,y_pos);
+						if(slot_item != 0)
 						{
-							DisplayInfoDiv("Press 'i' to close inventory..");
-							inventory_tip_shown = true;
-						}
+							if(isRightMB)
+							{
+								console.log("combining " + pickable_at_hand.name + " with " + slot_item.name);
+								m_RMBEventWasUsed = true;
+								//combine items
+								//pickable_at_hand.combineScript()
+								
+								DisplayInfoDiv("Can't combine these two item..");
+								return;
+							}
+							
+							//replace is in order..
+							audio_click.play();
 
-						if((levelNumber == 1)&&(item_name == "Scroll"))
+							//remove picked from inventory
+							inventory_item_remove(slot_item);
+							//add new one to inventory
+							add_to_inventory(pickable_at_hand, slot_index);
+							
+							//place inventory item at hand
+							pickable_at_hand = slot_item;
+							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+							pickable_at_hand_icon.src = slot_item.icon;
+						}
+						else
 						{
-							DisplayInfoDiv("Right click to read scroll..");
-							inventory_tip_shown = true;
+							//put item to inventory
+							var item_name = pickable_at_hand.name;
+							audio_click.play();
+							add_to_inventory(pickable_at_hand, slot_index);
+							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon = 0;
+							pickable_at_hand = 0;
+							
+							//onetime inventory tip..
+							if((levelNumber == 1)&&(inventory_tip_shown == false))
+							{
+								DisplayInfoDiv("Press 'i' to close inventory..");
+								inventory_tip_shown = true;
+							}
+
+							if((levelNumber == 1)&&(item_name == "Scroll"))
+							{
+								DisplayInfoDiv("Right click to read scroll..");
+								inventory_tip_shown = true;
+							}
 						}
 						
 						return;
