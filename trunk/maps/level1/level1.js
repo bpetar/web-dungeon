@@ -236,7 +236,7 @@ function healingScript()
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Rock","models/rocky.js", 16,0, "media/rock.png", "This is too hard to chew.."]];
+var pickables_array = [[2,"Rock","models/rocky.js", 16,0,0, "media/rock.png", "This is too hard to chew.."]];
 ////////////////////////////////////////////////
 
 

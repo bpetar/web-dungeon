@@ -15,24 +15,24 @@ function load_pickables () {
 		picki.model = pickables_array[i][2];
 		picki.position.x = pickables_array[i][3]*SQUARE_SIZE-2;
 		picki.position.z = pickables_array[i][4]*SQUARE_SIZE-4;
-		picki.position.y = 0;
-		picki.icon = pickables_array[i][5];
-		picki.useHint = pickables_array[i][6];
-		if(pickables_array[i].length>7)
-		{
-			console.log("pickable script function being loaded: " + picki.name);
-			picki.useScript = pickables_array[i][7];
-		}
+		picki.position.y = pickables_array[i][5];
+		picki.icon = pickables_array[i][6];
+		picki.useHint = pickables_array[i][7];
 		if(pickables_array[i].length>8)
 		{
-			picki.consumable = (pickables_array[i][8] == 1)?true:false;
+			console.log("pickable script function being loaded: " + picki.name);
+			picki.useScript = pickables_array[i][8];
 		}
-		if(pickables_array[i].length>12)
+		if(pickables_array[i].length>9)
 		{
-			picki.weapon_speed = pickables_array[i][9];
-			picki.weapon_dmg = pickables_array[i][10];
-			picki.weapon_dmg_bonus = pickables_array[i][11];
-			picki.weapon_attack_bonus = pickables_array[i][12];
+			picki.consumable = (pickables_array[i][9] == 1)?true:false;
+		}
+		if(pickables_array[i].length>13)
+		{
+			picki.weapon_speed = pickables_array[i][10];
+			picki.weapon_dmg = pickables_array[i][11];
+			picki.weapon_dmg_bonus = pickables_array[i][12];
+			picki.weapon_attack_bonus = pickables_array[i][13];
 		}
 		picki.niched = -1; //flag indicating if pickable is in the niche
 		picki.plated = -1; //flag indicating if pickable is in the niche
