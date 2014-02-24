@@ -88,7 +88,16 @@ var keyholes_array = [];
 var pickables_array = [[2,"Root","models/rocky.js", 16.5,4.5,7, "media/rock.png", "Still not that hungry.."], [3,"Stake","models/stake.js", 15,0,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","models/rocky.js", 20.6,8,7, "media/rock.png", "Still not that hungry.."]];
 ////////////////////////////////////////////////
 
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,8,3, 100, 35, 20, 30, wormPickables, WormOnClick1, WormOnItemClick1,0,90,90,138,140,179,0,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var wormPickables = [];
+function WormOnClick1()
+{
+}
+function WormOnItemClick1()
+{
+}
+var IDLE_ANIM_DURATION = 3300;
+var MONSTER_ATTACK_FRAME = 40;
+var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,8,2, 100, 35, 20, 30, wormPickables, WormOnClick1, WormOnItemClick1,1,25,25,50,50,75,0,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 var teleport_array = [];
 
