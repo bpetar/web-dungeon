@@ -97,7 +97,7 @@ function WormOnItemClick1()
 }
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,16,2, 100, 35, 20, 30, wormPickables, WormOnClick1, WormOnItemClick1,1,25,25,50,50,75,0,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,16,2, 100, 35, 20, 30, wormPickables, WormOnClick1, WormOnItemClick1,1,25,25,50,50,75,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 var teleport_array = [];
 
