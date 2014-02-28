@@ -41,37 +41,104 @@
 	
 <body>
 	
-	<div id='main'>
+<div id='main'>
 	
-	<div id='top_info' style='height:9%; border:1px solid white;'>
-<br>
-	  Dungeon editor allows you to draw map, then add items, doors, pits, secret walls, niches, monsters, teleports, etc. You can change textures and upload your own. You need computer with moderate 3D graphics card and browser that supports WebGL, most of popular browsers do, except Internet Explorer. 
-<br>
+	<div id='top_info' style='padding:5px; text-align:left; height:10%; width:50%;'>
+	<br>
+	  Dungeon editor allows you to draw map, then add items, doors, pits, secret walls, niches, monsters, teleports, etc. You can change textures and upload your own. 
+	<br>
 	</div>
 	
-	<div id='dungeon' style='height:45%; border:1px solid red;'>
-	dung
-		<div id='dungeon_left_indent' style='height:100%; width:50px; float: left; '>
+	<div id='dungeon' style='height:70%; display: inline-block; '>
+		<div id='greed' style='background:url(media/scroll.png); height:100%; background-size: 100% 100%; float: left;'>
+			<div id='dungeon_left_indent' style='height:100%; width:80px; float: left;'>
+			</div>
+			<div id='dungeon_grid_container' style='height:100%; float: left;'>
+				<div id='dungeon_top_indent' style='height:10%; width:100%;'>
+				</div>
+				<div id='grid_view' style='height:80%;'>
+				</div>
+				<div id='dungeon_bottom_indent' style='height:9%; width:100%;'>
+				</div>
+			</div>
+			<div id='grid_middle_indent' style='height:100%; width:80px; float: left;'>
+			</div>
 		</div>
-		<div id='dungeon_view' style='height:100%; float: left; border:1px solid yellow;'>
+		<div id='grid_right_indent' style='height:100%; width:50px; float: left;'>
 		</div>
-		<div id='textures' style='float: left; border:1px solid blue;'>
-		textures
+		<div id='dungeon_view_border' style='background:url(media/border.png); height:95%; background-size: 100% 100%; padding:10px; float: left;'>
+		<div id='dungeon_view' style='height:100%;'>
 		</div>
+		</div>
+		<div id='grid_right_indent' style='height:100%; width:10px; float: left;'>
+		</div>
+		
 	</div>
-	<div id='grid' style='height:45%; border:1px solid green;'>
-	grid
+	
+	<br>
+	<div id='grid' style='height:20%; '>
 		<div id='grid_left_indent' style='height:100%; width:50px; float: left;'>
 		</div>
-		<div id='grid_view' style='height:100%; background:url(media/map.png); float: left; border:1px solid yellow;'>
-		</div>
 		<div id='grid_elements' style='float: left; border:1px solid blue;'>
+		
 		elements
+		
+		
+		
+		
+		</div>
+		<div id='grid_middle_indent' style='height:100%; width:50px; float: left;'>
+		</div>
+		
+		<div id='texture_elements' style='float: left; '>
+			<div id="tex1" style='float: left;  width:70px; height:80px; '> <br>Wall Textures
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+
+			<div id="tex1" style='float: left;  width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+			
+			<div id="tex2" style='float: left; border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/stone_wall_01_01.png); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+
+			<div id="tex3" style='float: left; width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+			
+			
+			<div id="tex1" style='float: left;  width:70px; height:80px; '> 
+			
+			<br>Floor Textures
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+
+			<div id="ftex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+			
+			<div id="ftex2" style='float: left;  border: 1px solid transparent; width:80px; height:80px; background:url(maps/level2/media/floor.jpg); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+
+			<div id="ftex3" style='float: left; border: 1px solid transparent; width:80px; height:80px; background:url(maps/level3/media/floor.png); background-size: 100% 100%;'>
+			</div>
+			<div id="pad" style='float: left;width:5px; height:80px;'></div>
+
+			<form id="form1" style='float: left;'>
+				<input type='file' id="imgInp" onchange="readURL(); " style='float: left; border: 1px solid transparent; width:80px; height:80px; background-size: 100% 100%;'/>
+			</form>
+
+		</div>
+		
+		<div id='grid_right_indent' style='height:100%; width:50px; float: left;'>
 		</div>
 	</div>
 
 	
-	</div>
+</div>
+	(C) Mystic Peanut Entertainment..
 	
 	<script src="./source/three.min.js"></script>
 	<script>
@@ -93,8 +160,14 @@
 	var SQUARE_SIZE = 10;
 	var grid_size = 20;
 	var grid_container = document.getElementById( 'grid_view' );
+	var div_ftex1 = document.getElementById( 'ftex1' );
+	var div_ftex2 = document.getElementById( 'ftex2' );
+	var div_ftex3 = document.getElementById( 'ftex3' );
+	var div_old_floor = div_ftex1;
 	var element_at_hand = TILE_FLOOR;
 	var current_position = new THREE.Vector3(10,3,2); //x,z,up
+	
+	var dungeon_container;
 	
 	var scenObjArr = [];
 	var mapArr = new Array(grid_size);
@@ -372,6 +445,11 @@
 					grid_element.innerHTML = "+";
 					mapArr[i][j].type = TILE_FLOOR; //init with empty square
 				}
+				if((j==10)&&(i==16))
+				{
+					grid_element.style.border = "1px solid black";
+					mapArr[i][j].type = TILE_FLOOR; //init with empty square
+				}
 			}
 			
 			//???wtf
@@ -394,14 +472,28 @@
 		mousePressed = false;
 	}
 
-
+	function onWindowResize() {
+		renderer.setSize( dungeon_container.offsetHeight,dungeon_container.offsetHeight );
+	}
+	
+	function setFloorTex(fdiv)
+	{
+		if(div_old_floor != fdiv)
+		{
+			div_old_floor.style.border = "1px solid transparent";
+			fdiv.style.border = "1px solid green";
+			div_old_floor = fdiv;
+		}
+	}
+	
+	
 	function init()
 	{
 		//scene
 		scene = new THREE.Scene();
 
 		//renderer
-		var dungeon_container = document.getElementById( 'dungeon_view' );
+		dungeon_container = document.getElementById( 'dungeon_view' );
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setSize( dungeon_container.offsetHeight,dungeon_container.offsetHeight);
 		dungeon_container.appendChild( renderer.domElement );
@@ -416,6 +508,14 @@
 		
 		var ambientLight = new THREE.AmbientLight( 0xf0f0f0 ); // soft white light
 		scene.add( ambientLight );
+		var light2 = new THREE.DirectionalLight( 0xffffff );
+		light2.position.set( 50, 50, 50 ).normalize();
+		light2.castShadow = true;
+		scene.add( light2 );
+		var light3 = new THREE.DirectionalLight( 0xffffff );
+		light3.position.set( -50, -30, -50 ).normalize();
+		light3.castShadow = true;
+		scene.add( light3 );
 
 		//init map array
 		for (var m=0; m<grid_size; m++)
@@ -425,6 +525,7 @@
 		
 		document.addEventListener( 'mousedown', onMouseDown, false );
 		document.addEventListener( 'mouseup', onMouseUp, false );
+		window.addEventListener( 'resize', onWindowResize, false );
 
 		//init grid
 		draw_grid();
@@ -435,8 +536,11 @@
 		//to be called on every change
 		createFloorArrFromMap();
 		
-		//create dungeon fromFloorArr
-		//createDungeonFromFloorArr();
+		div_ftex1.onmousedown = function(arg1) { return function() { setFloorTex(arg1); }}(div_ftex1);
+		div_ftex2.onmousedown = function(arg1) { return function() { setFloorTex(arg1); }}(div_ftex2);
+		div_ftex3.onmousedown = function(arg1) { return function() { setFloorTex(arg1); }}(div_ftex3);
+		
+		imgInput = document.getElementById('imgInp');
 	}
 	
 	function animate() {
@@ -452,6 +556,35 @@
 	init();
 	animate();
 	
+	var imgInput;
+	
+	function readURL() {
+		var input = imgInput.files[0];
+		console.log("peraaaa");
+		if (input) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				imgInput.style.backgroundImage = "url(" + reader.result + ")";
+				
+				console.log("peraaaa here1?");
+				var map = THREE.ImageUtils.loadTexture( reader.result );
+				map.wrapS = map.wrapT = THREE.RepeatWrapping;
+				map.anisotropy = 16;
+				console.log("peraaaa here3?");
+				var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+				console.log("peraaaa here2?");
+				floor_object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
+				
+				console.log("peraaaa here?");
+				
+				createDungeonFromFloorArr();
+
+			}
+			reader.readAsDataURL(input);
+		}
+    }
+    
+    
 	</script>
 	
 </body>
