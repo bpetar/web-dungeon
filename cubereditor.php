@@ -95,15 +95,15 @@
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="tex1" style='float: left;  width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			<div id="wtex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/stone_wall_01_01.png); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 			
-			<div id="tex2" style='float: left; border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/stone_wall_01_01.png); background-size: 100% 100%;'>
+			<div id="wtex2" style='float: left; width:80px; height:80px; background:url(maps/level2/media/wall.jpg); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="tex3" style='float: left; width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			<div id="wtex3" style='float: left; width:80px; height:80px; background:url(maps/level3/media/wall.png); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 			
@@ -164,6 +164,10 @@
 	var div_ftex2 = document.getElementById( 'ftex2' );
 	var div_ftex3 = document.getElementById( 'ftex3' );
 	var div_old_floor = div_ftex1;
+	var div_wtex1 = document.getElementById( 'wtex1' );
+	var div_wtex2 = document.getElementById( 'wtex2' );
+	var div_wtex3 = document.getElementById( 'wtex3' );
+	var div_old_wall = div_wtex1;
 	var element_at_hand = TILE_FLOOR;
 	var current_position = new THREE.Vector3(10,3,2); //x,z,up
 	
@@ -483,9 +487,36 @@
 			div_old_floor.style.border = "1px solid transparent";
 			fdiv.style.border = "1px solid green";
 			div_old_floor = fdiv;
+
+			//alert(wdiv.style.backgroundImage.slice(4, -1));
+			var map = THREE.ImageUtils.loadTexture( fdiv.style.backgroundImage.slice(4, -1) );
+			map.wrapS = map.wrapT = THREE.RepeatWrapping;
+			map.anisotropy = 16;
+			var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+			floor_object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
+			
+			createDungeonFromFloorArr();
 		}
 	}
 	
+	function setWallTex(wdiv)
+	{
+		if(div_old_wall != wdiv)
+		{
+			div_old_wall.style.border = "1px solid transparent";
+			wdiv.style.border = "1px solid green";
+			div_old_wall = wdiv;
+			
+			//alert(wdiv.style.backgroundImage.slice(4, -1));
+			var map = THREE.ImageUtils.loadTexture( wdiv.style.backgroundImage.slice(4, -1) );
+			map.wrapS = map.wrapT = THREE.RepeatWrapping;
+			map.anisotropy = 16;
+			var wall_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+			wall_object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), wall_material );
+			
+			createDungeonFromFloorArr();
+		}
+	}
 	
 	function init()
 	{
@@ -540,6 +571,10 @@
 		div_ftex2.onmousedown = function(arg1) { return function() { setFloorTex(arg1); }}(div_ftex2);
 		div_ftex3.onmousedown = function(arg1) { return function() { setFloorTex(arg1); }}(div_ftex3);
 		
+		div_wtex1.onmousedown = function(arg1) { return function() { setWallTex(arg1); }}(div_wtex1);
+		div_wtex2.onmousedown = function(arg1) { return function() { setWallTex(arg1); }}(div_wtex2);
+		div_wtex3.onmousedown = function(arg1) { return function() { setWallTex(arg1); }}(div_wtex3);
+
 		imgInput = document.getElementById('imgInp');
 	}
 	
@@ -566,16 +601,11 @@
 			reader.onload = function (e) {
 				imgInput.style.backgroundImage = "url(" + reader.result + ")";
 				
-				console.log("peraaaa here1?");
 				var map = THREE.ImageUtils.loadTexture( reader.result );
 				map.wrapS = map.wrapT = THREE.RepeatWrapping;
 				map.anisotropy = 16;
-				console.log("peraaaa here3?");
 				var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-				console.log("peraaaa here2?");
 				floor_object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
-				
-				console.log("peraaaa here?");
 				
 				createDungeonFromFloorArr();
 
