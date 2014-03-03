@@ -258,7 +258,7 @@
 		}*/
 
 		//remove all
-		for (var o=1; o<scenObjArr.length; o++)
+		for (var o=0; o<scenObjArr.length; o++)
 		{
 			scene.remove(scenObjArr[o]);
 			//scenObjArr[o].deallocate();
@@ -278,7 +278,7 @@
 			
 			//if(!floor_tile_already_exist)
 			{
-				console.log("ugi");
+				console.log("ugi" + floorsArr2D[i][1]);
 				//add floor tile to scene
 				var object = floor_object.clone();
 				object.rotation.set(-Math.PI/2, 0, 0);
@@ -596,15 +596,22 @@
 	function readURL() {
 		var input = imgInput.files[0];
 		console.log("peraaaa");
+		
+		var image = document.createElement( 'img' );
+		var texture = new THREE.Texture( image );
+		image.onload = function()  {
+			texture.needsUpdate = true;
+		};
+	
 		if (input) {
 			var reader = new FileReader();
 			reader.onload = function (e) {
-				imgInput.style.backgroundImage = "url(" + reader.result + ")";
-				
-				var map = THREE.ImageUtils.loadTexture( reader.result );
-				map.wrapS = map.wrapT = THREE.RepeatWrapping;
-				map.anisotropy = 16;
-				var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+				//imgInput.style.backgroundImage = "url(" + reader.result + ")";
+				image.src = e.target.result;
+				//var map = THREE.ImageUtils.loadTexture( e.target.result );
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.anisotropy = 16;
+				var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: texture, side: THREE.DoubleSide } );
 				floor_object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
 				
 				createDungeonFromFloorArr();
