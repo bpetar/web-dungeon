@@ -50,7 +50,7 @@
 	</div>
 	
 	<div id='dungeon' style='height:70%; display: inline-block; '>
-		<div id='greed' style='background:url(media/scroll.png); height:100%; background-size: 100% 100%; float: left;'>
+		<div id='greed' style='background:url("media/scroll.png"); height:100%; background-size: 100% 100%; float: left;'>
 			<div id='dungeon_left_indent' style='height:100%; width:80px; float: left;'>
 			</div>
 			<div id='dungeon_grid_container' style='height:100%; float: left;'>
@@ -66,7 +66,7 @@
 		</div>
 		<div id='grid_right_indent' style='height:100%; width:50px; float: left;'>
 		</div>
-		<div id='dungeon_view_border' style='background:url(media/border.png); height:95%; background-size: 100% 100%; padding:10px; float: left;'>
+		<div id='dungeon_view_border' style='background:url("media/border.png"); height:95%; background-size: 100% 100%; padding:10px; float: left;'>
 		<div id='dungeon_view' style='height:100%;'>
 		</div>
 		</div>
@@ -95,15 +95,15 @@
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="wtex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/stone_wall_01_01.png); background-size: 100% 100%;'>
+			<div id="wtex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url("maps/level1/media/stone_wall_01_01.png"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 			
-			<div id="wtex2" style='float: left; width:80px; height:80px; background:url(maps/level2/media/wall.jpg); background-size: 100% 100%;'>
+			<div id="wtex2" style='float: left; width:80px; height:80px; background:url("maps/level2/media/wall.jpg"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="wtex3" style='float: left; width:80px; height:80px; background:url(maps/level3/media/wall.png); background-size: 100% 100%;'>
+			<div id="wtex3" style='float: left; width:80px; height:80px; background:url("maps/level3/media/wall.png"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 			
@@ -114,15 +114,15 @@
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="ftex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url(maps/level1/media/floor_11_1.png); background-size: 100% 100%;'>
+			<div id="ftex1" style='float: left;  border:1px solid green; width:80px; height:80px; background:url("maps/level1/media/floor_11_1.png"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 			
-			<div id="ftex2" style='float: left;  border: 1px solid transparent; width:80px; height:80px; background:url(maps/level2/media/floor.jpg); background-size: 100% 100%;'>
+			<div id="ftex2" style='float: left;  border: 1px solid transparent; width:80px; height:80px; background:url("maps/level2/media/floor.jpg"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
-			<div id="ftex3" style='float: left; border: 1px solid transparent; width:80px; height:80px; background:url(maps/level3/media/floor.png); background-size: 100% 100%;'>
+			<div id="ftex3" style='float: left; border: 1px solid transparent; width:80px; height:80px; background:url("maps/level3/media/floor.png"); background-size: 100% 100%;'>
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
@@ -156,6 +156,10 @@
 	var floor_texture_file = 'maps/level1/media/floor_11_1.png';
 	var wall_texture_file = 'maps/level1/media/stone_wall_01_01.png';
 	var ceiling_texture_file = 'maps/level1/media/ceiling.png';
+	
+	var BROWSER_CHROME = 0;
+	var BROWSER_FIREFOX = 1;
+	var browser = BROWSER_CHROME;
 	
 	var SQUARE_SIZE = 10;
 	var grid_size = 20;
@@ -434,7 +438,7 @@
 				grid_element.style.border = "1px solid transparent";
 				grid_element.style.width = "" + (grid_container.offsetHeight/grid_size-2) + "px";
 				grid_element.style.height = "" + (grid_container.offsetHeight/grid_size-2) + "px";
-				grid_element.style.float = "left";
+				grid_element.style.setProperty('float', 'left');
 				
 				//grid_element.appendChild(document.createTextNode('O'));
 				grid_container.appendChild(grid_element);
@@ -487,9 +491,11 @@
 			div_old_floor.style.border = "1px solid transparent";
 			fdiv.style.border = "1px solid green";
 			div_old_floor = fdiv;
-
-			//alert(wdiv.style.backgroundImage.slice(4, -1));
-			var map = THREE.ImageUtils.loadTexture( fdiv.style.backgroundImage.slice(4, -1) );
+			var start = 4; 
+			var end = -1;
+			//browser firefox has quotes around backgroundImage file path, chrome has not, so we have to check here:
+			if(browser == BROWSER_FIREFOX){start = 5; end = -2;}
+			var map = THREE.ImageUtils.loadTexture( fdiv.style.backgroundImage.slice(start, end) );
 			map.wrapS = map.wrapT = THREE.RepeatWrapping;
 			map.anisotropy = 16;
 			var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
@@ -506,9 +512,11 @@
 			div_old_wall.style.border = "1px solid transparent";
 			wdiv.style.border = "1px solid green";
 			div_old_wall = wdiv;
-			
-			//alert(wdiv.style.backgroundImage.slice(4, -1));
-			var map = THREE.ImageUtils.loadTexture( wdiv.style.backgroundImage.slice(4, -1) );
+			var start = 4; 
+			var end = -1;
+			//browser firefox has quotes around backgroundImage file path, chrome has not, so we have to check here:
+			if(browser == BROWSER_FIREFOX){start = 5; end = -2;}
+			var map = THREE.ImageUtils.loadTexture( wdiv.style.backgroundImage.slice(start, end) );
 			map.wrapS = map.wrapT = THREE.RepeatWrapping;
 			map.anisotropy = 16;
 			var wall_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
@@ -520,6 +528,12 @@
 	
 	function init()
 	{
+		//browser detection
+		if (navigator.userAgent.indexOf('Firefox') != -1 )
+			browser = BROWSER_FIREFOX;
+		else if (navigator.userAgent.indexOf('Chrome') != -1 )
+			browser = BROWSER_CHROME;
+		
 		//scene
 		scene = new THREE.Scene();
 
