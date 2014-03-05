@@ -234,7 +234,13 @@
 				}
 			}
 		}
-		console.log(floorsArr2D);
+		
+		var floorsArr2DStr="floorsArr2D = [";
+		for(var f=0; f<floorsArr2D.length; f++)
+		{
+			floorsArr2DStr += "["+floorsArr2D[f]+ "], ";
+		}
+		console.log(floorsArr2DStr);
 		
 		createDungeonFromFloorArr();
 	}
@@ -282,7 +288,7 @@
 			
 			//if(!floor_tile_already_exist)
 			{
-				console.log("ugi" + floorsArr2D[i][1]);
+				//console.log("ugi" + floorsArr2D[i][1]);
 				//add floor tile to scene
 				var object = floor_object.clone();
 				object.rotation.set(-Math.PI/2, 0, 0);
@@ -408,7 +414,7 @@
 	function setDivField(divy,i,j)
 	{
 		//called when div is clicked
-		console.log("inhere.asdasd." + i + " " + j );
+		//console.log("inhere.asdasd." + i + " " + j );
 		if(element_at_hand == mapArr[i][j].type)
 		{
 			mapArr[i][j].type = TILE_EMPTY; //floor, door, etc
@@ -609,7 +615,7 @@
 	
 	function readURL() {
 		var input = imgInput.files[0];
-		console.log("peraaaa");
+		//console.log("peraaaa");
 		
 		var image = document.createElement( 'img' );
 		var texture = new THREE.Texture( image );
