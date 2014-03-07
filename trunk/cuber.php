@@ -2670,26 +2670,9 @@ else
 					//animate doors opening/closing
 					for(i=0; i < doorsArr3D.length; i++)
 					{
-						if(doorsArr3D[i][5] == 1) //openable
+						if(doorsArr3D[i][5] == 1) //being animated..
 						{
-							if(doorsArr3D[i][3] == 0) //closed
-							{
-								doorsArr3D[i][4].position.y -= elapsed/400;
-								if(doorsArr3D[i][4].position.y < 0.01) 
-								{
-									doorsArr3D[i][5] = 0;
-									audio_door.pause();
-								}
-							}
-							else 
-							{
-								doorsArr3D[i][4].position.y += elapsed/400;
-								if(doorsArr3D[i][4].position.y > 7.5) 
-								{
-									doorsArr3D[i][5] = 0;
-									audio_door.pause();
-								}
-							}
+							animateDoor(doorsArr3D[i],elapsed);
 						}
 					}
 					
