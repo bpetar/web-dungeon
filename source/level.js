@@ -50,15 +50,23 @@ function loadDoorways( geometry, materials )
 		mesh.position.x = doorsArr3D[i][0]*10;
 		mesh.position.z = doorsArr3D[i][1]*10;
 		mesh.position.y = 0;
-		if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
+		if(doorsArr3D[i][2] == 0)
 		{
-			mesh.rotation.set(0,0, 0);
+			mesh.rotation.set(0,0,0);
 		}
-		else
+		else if(doorsArr3D[i][2] == 1) 
 		{
-			mesh.rotation.set(0,Math.PI/2, 0);
+			mesh.rotation.set(0,Math.PI*3/2,0);
 		}
-		mesh.castShadow = true;
+		else if(doorsArr3D[i][2] == 2) 
+		{
+			mesh.rotation.set(0,Math.PI,0);
+		}
+		else if(doorsArr3D[i][2] == 3) 
+		{
+			mesh.rotation.set(0,Math.PI/2,0);
+		}
+		//mesh.castShadow = true;
 		mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
 		scene.add( mesh );
 	}
@@ -75,16 +83,24 @@ function loadDoors( geometry, materials )
 		doorsArr3D[i][4].position.x = doorsArr3D[i][0]*10;
 		doorsArr3D[i][4].position.z = doorsArr3D[i][1]*10;
 		doorsArr3D[i][4].position.y = 0;
-		if((doorsArr3D[i][2] == 1) || (doorsArr3D[i][2] == 3))
+		if(doorsArr3D[i][2] == 0)
 		{
 			doorsArr3D[i][4].rotation.set(0,0,0);
 		}
-		else
+		else if(doorsArr3D[i][2] == 1) 
+		{
+			doorsArr3D[i][4].rotation.set(0,Math.PI*3/2,0);
+		}
+		else if(doorsArr3D[i][2] == 2) 
+		{
+			doorsArr3D[i][4].rotation.set(0,Math.PI,0);
+		}
+		else if(doorsArr3D[i][2] == 3) 
 		{
 			doorsArr3D[i][4].rotation.set(0,Math.PI/2,0);
 		}
 		
-		doorsArr3D[i][4].castShadow = true;
+		//doorsArr3D[i][4].castShadow = true;
 		doorsArr3D[i][4].scale.x = doorsArr3D[i][4].scale.y = doorsArr3D[i][4].scale.z = 1;
 		scene.add( doorsArr3D[i][4] );
 	}
@@ -121,7 +137,7 @@ function load_walls(loader)
 			//left secret wall
 			object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 			object.rotation.set(0, Math.PI/2, 0);
-			object.receiveShadow = true;
+			//object.receiveShadow = true;
 			object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
 			object.position.y = 0.4*SQUARE_SIZE; //y
 			object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
@@ -648,7 +664,7 @@ function load_walls(loader)
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 					}
 					object.rotation.set(0, Math.PI/2, 0);
-					object.receiveShadow = true;
+					//object.receiveShadow = true;
 					object.position.x = (floorsArr2D[i][0]+0.5)*SQUARE_SIZE; //x
 					object.position.y = 0.4*SQUARE_SIZE; //y
 					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
@@ -710,7 +726,7 @@ function load_walls(loader)
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 					}
 					object.rotation.set(0, Math.PI/2, 0);
-					object.receiveShadow = true;
+					//object.receiveShadow = true;
 					object.position.x = (floorsArr2D[i][0]-0.5)*SQUARE_SIZE; //x
 					object.position.y = 0.4*SQUARE_SIZE; //y
 					object.position.z = (floorsArr2D[i][1])*SQUARE_SIZE; //z
@@ -772,7 +788,7 @@ function load_walls(loader)
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 					}
 					object.rotation.set(0, Math.PI, 0);
-					object.receiveShadow = true;
+					//object.receiveShadow = true;
 					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
 					object.position.y = 0.4*SQUARE_SIZE; //y
 					object.position.z = (floorsArr2D[i][1]+0.5)*SQUARE_SIZE; //z
@@ -833,7 +849,7 @@ function load_walls(loader)
 						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 					}
 					object.rotation.set(0, Math.PI, 0);
-					object.receiveShadow = true;
+					//object.receiveShadow = true;
 					object.position.x = floorsArr2D[i][0]*SQUARE_SIZE; //x
 					object.position.y = 0.4*SQUARE_SIZE; //y
 					object.position.z = (floorsArr2D[i][1]-0.5)*SQUARE_SIZE; //z
@@ -937,40 +953,44 @@ function load_level()
 			}
 		}
 		
-		if((north_neighbor)&&(!south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+		if(typeof suporter_model != 'undefined')
 		{
-			console.log("tile has low corner x:" + fx + " z:" + fz);
-			//put supporter in the low corner
-			show_model(loader, "models/suporter.js", fx,fz-0.5,0);
-		}
-		if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
-		{
-			console.log("tile has high corner x:" + fx + " z:" + fz);
-			//put supporter in the up corner
-			show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
-		}
-		if((west_neighbor)&&(!north_neighbor)&&(!south_neighbor)&&(!east_neighbor))
-		{
-			console.log("tile has right corner x:" + fx + " z:" + fz);
-			//put supporter in the right corner
-			show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
-		}
-		if((east_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!south_neighbor))
-		{
-			console.log("tile has left corner x:" + fx + " z:" + fz);
-			//put supporter in the left corner
-			show_model(loader, "models/suporter.js", fx+0.5,fz,-Math.PI/2);
-		}
-		
-		if((east_neighbor)&&(north_neighbor)&&(!west_neighbor)&&(south_neighbor))
-		{
-			//one supporter on the right to ablige start of corridor
-			show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
-		}
-		if((east_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(south_neighbor))
-		{
-			//one supporter on the low to ablige start of corridor
-			show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+			if((north_neighbor)&&(!south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+			{
+				console.log("tile has low corner x:" + fx + " z:" + fz);
+				//put supporter in the low corner
+				show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+			}
+			if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
+			{
+				console.log("tile has high corner x:" + fx + " z:" + fz);
+				//put supporter in the up corner
+				show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
+			}
+			if((west_neighbor)&&(!north_neighbor)&&(!south_neighbor)&&(!east_neighbor))
+			{
+				console.log("tile has right corner x:" + fx + " z:" + fz);
+				//put supporter in the right corner
+				show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
+			}
+			if((east_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!south_neighbor))
+			{
+				console.log("tile has left corner x:" + fx + " z:" + fz);
+				//put supporter in the left corner
+				show_model(loader, "models/suporter.js", fx+0.5,fz,-Math.PI/2);
+			}
+			
+			if((east_neighbor)&&(north_neighbor)&&(!west_neighbor)&&(south_neighbor))
+			{
+				//one supporter on the right to ablige start of corridor
+				show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
+			}
+			if((east_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(south_neighbor))
+			{
+				//one supporter on the low to ablige start of corridor
+				show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+			}
+			//TODO!!!
 		}
 
 		holeSpot = false;
