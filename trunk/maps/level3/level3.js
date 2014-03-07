@@ -14,7 +14,7 @@ var holesArr = [];
 var holesAboveArr = [[15,0], [15,2], [15,4], [15,6], [12,0], [12,2], [12,4], [12,6], [9,0], [9,2], [9,4], [9,6], [18,0], [18,2], [18,4], [18,6], [15,10], [15,12], [15,14], [15,16], [12,10], [12,12], [12,14], [12,16], [9,10], [9,12], [9,14], [9,16], [18,10], [18,12], [18,14], [18,16]];
 var writtingsArr = [];
 var secretWallsArr = []; //x,y,orientation
-var doorsArr3D = [[16,3,0,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
+var doorsArr3D = [[16,3,0,0,0,0,1,7], [15,8,1,0,0,0,1,7], [16,5,2,0,0,0,1,7], [17,8,3,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
 
 //basic level textures
 var floor_texture_file = 'maps/level3/media/floor.png';
@@ -22,6 +22,7 @@ var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/models/dirt.png';
 
 var curved_walls = true;
+var suporter_model = "models/suporter.js";
 var curved_ceiling = false;
 var wall_model = 'maps/level3/models/wallc.js';
 var wall_model_curve_left = 'maps/level3/models/wallcl.js';
@@ -35,8 +36,8 @@ var celing_model_fb = 'maps/level3/models/ceiling.js';
 //basic level models
 var hole_above_model = 'maps/level3/models/hole_above.js';
 //var niche_model = 'maps/level1/models/niche.js';
-var doorway_model = 'maps/level1/models/doorway.js';
-var door_model = 'maps/level1/models/door.js';
+var doorway_model = 'maps/level3/models/doorway.js';
+var door_model = 'maps/level3/models/door.js';
 
 //level related values
 fog_color = 0x111100;

@@ -167,7 +167,7 @@ function niche_onItemAdd (nicheID, itemID)
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
 	nicheArr[nicheID][5] = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
 	nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
-	nicheArr[nicheID][5].receiveShadow = true;
+	//nicheArr[nicheID][5].receiveShadow = true;
 	nicheArr[nicheID][5].position.y = 0.4*SQUARE_SIZE; //y
 	if(nicheArr[nicheID][2] == 1) 
 	{

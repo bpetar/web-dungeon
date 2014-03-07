@@ -766,7 +766,7 @@ else
 				audio_ambient.volume = 0.4;
 				audio_ambient.play();
 
-				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 2, 10000 );
 				camera.position.x = 160;
 				camera.position.y = 4;
 				camera.position.z = -5; //115
@@ -813,8 +813,8 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
-				var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
-				scene.add( ambientLight );
+				/*var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
+				scene.add( ambientLight );*/
 
 				pointLight = new THREE.PointLight(0xffffbb, 1, 40);
 				pointLight.position.set( 160, 4, 0 );
@@ -849,9 +849,9 @@ else
 				//light2.castShadow = true;
 				//scene.add( light2 );
 
-				light2 = new THREE.DirectionalLight( 0xffffff );
-				light2.position.set( 50, -10, -30 ).normalize();
-				light2.castShadow = true;
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( 50, -10, -30 ).normalize();
+				//light2.castShadow = true;
 				//scene.add( light2 );
 
 				//level specific action on load

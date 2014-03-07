@@ -90,12 +90,43 @@ function animateDoor(door, elapsed)
 			{
 				if(door[3] == 0) //closing..
 				{
+					var oldz = Math.sin(door[4].rotation.y);
+					var oldx = Math.cos(door[4].rotation.y);
+					door[4].rotation.y -= elapsed/600;
+					var newz = Math.sin(door[4].rotation.y);
+					var newx = Math.cos(door[4].rotation.y);
+					var deltaz = oldz - newz;
+					var deltax = oldx - newx;
+					door[4].position.x += deltax*4;
+					door[4].position.z -= deltaz*4;
+					
 					orientation = door[2];
 					if(orientation == 0)
 					{
-						door[4].position.x -= elapsed/300;
-						door[4].position.z -= elapsed/400;
-						door[4].rotation.y -= elapsed/600;
+						if(door[4].rotation.y < 0.1) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 1)
+					{
+						if(door[4].rotation.y < Math.PI*3/2) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 2)
+					{
+						if(door[4].rotation.y < Math.PI) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 3)
+					{
 						if(door[4].rotation.y < Math.PI/2) 
 						{
 							door[5] = 0;
@@ -105,28 +136,51 @@ function animateDoor(door, elapsed)
 				}
 				else 
 				{
+					var oldz = Math.sin(door[4].rotation.y);
+					var oldx = Math.cos(door[4].rotation.y);
+					door[4].rotation.y += elapsed/600;
+					var newz = Math.sin(door[4].rotation.y);
+					var newx = Math.cos(door[4].rotation.y);
+					var deltaz = oldz - newz;
+					var deltax = oldx - newx;
+					door[4].position.x += deltax*4;
+					door[4].position.z -= deltaz*4;
+
 					//opening door to the left, depends on initial door rotation
 					orientation = door[2];
 					if(orientation == 0)
 					{
-						if (angle == -1) angle = door[4].rotation.y;
-						console.log("angle:" + angle + ", 90:" + Math.PI/2);
-						var oldz = Math.cos(door[4].rotation.y);
-						var oldx = Math.sin(door[4].rotation.y);
-						door[4].rotation.y += elapsed/600;
-						var newz = Math.cos(door[4].rotation.y);
-						var newx = Math.sin(door[4].rotation.y);
-						var deltaz = oldz - newz;
-						var deltax = oldx - newx;
-						door[4].position.x += deltax*4;
-						door[4].position.z += deltaz*4;
-						
+						if(door[4].rotation.y > Math.PI/2) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 1)
+					{
+						if(door[4].rotation.y > Math.PI*2) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 2)
+					{
+						if(door[4].rotation.y > Math.PI*3/2) 
+						{
+							door[5] = 0;
+							audio_door.pause();
+						}
+					}
+					else if(orientation == 3)
+					{
 						if(door[4].rotation.y > Math.PI) 
 						{
 							door[5] = 0;
 							audio_door.pause();
 						}
 					}
+
 				}
 			}
 			break;
