@@ -813,53 +813,15 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
-				/*var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
-				scene.add( ambientLight );*/
-
-				pointLight = new THREE.PointLight(0xffffbb, 1, 40);
-				pointLight.position.set( 160, 4, 0 );
-				//pointLight.castShadow = true;
-				scene.add( pointLight );
-
-				spotLight = new THREE.SpotLight();
-				spotLight.position.set( 150, 24, 0 );
-				spotLight.target.position.set( 150, 0, 0 );
-				//pointLight.castShadow = true;
-				scene.add( spotLight );
-
-				spotLight = new THREE.SpotLight();
-				spotLight.position.set( 150, 24, 10 );
-				spotLight.target.position.set( 150, 0, 120 );
-				//pointLight.castShadow = true;
-				scene.add( spotLight );
-
-				spotLight = new THREE.SpotLight();
-				spotLight.position.set( 180, 24, 20 );
-				spotLight.target.position.set( 180, 0, 20 );
-				//pointLight.castShadow = true;
-				scene.add( spotLight );
-				
-				//light2 = new THREE.DirectionalLight( 0xffffff );
-				//light2.position.set( 50, 50, 50 ).normalize();
-				//light2.castShadow = true;
-				//scene.add( light2 );
-				
-				//light2 = new THREE.DirectionalLight( 0xffffff );
-				//light2.position.set( -50, -30, -50 ).normalize();
-				//light2.castShadow = true;
-				//scene.add( light2 );
-
-				//light2 = new THREE.DirectionalLight( 0xffffff );
-				//light2.position.set( 50, -10, -30 ).normalize();
-				//light2.castShadow = true;
-				//scene.add( light2 );
-
 				//level specific action on load
 				onLoad();
 				
 				//load level walls and floors etc..
 				load_level();
 
+				//load lights
+				load_lights();
+				
 				//load pickables
 				load_pickables();
 				

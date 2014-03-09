@@ -40,8 +40,6 @@ var doorway_model = 'maps/level3/models/doorway.js';
 var door_model = 'maps/level3/models/door.js';
 
 //level related values
-fog_color = 0x111100;
-fog_intensity = 0.009525;
 var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 
 
@@ -98,7 +96,34 @@ function WormOnItemClick1()
 }
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,16,2, 100, 35, 20, 30, wormPickables, WormOnClick1, WormOnItemClick1,1,25,25,50,50,75,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,16,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 var teleport_array = [];
 
+var point_light_color = 0xffffaa;
+fog_color = 0x111100;
+fog_intensity = 0.008525;
+
+function load_level_lights()
+{
+
+	//pointLight.color = 0xffff10; //not working?
+	
+	//spotLight = new THREE.SpotLight();
+	//spotLight.position.set( 150, 24, 0 );
+	//spotLight.target.position.set( 150, 0, 0 );
+	//pointLight.castShadow = true;
+	//scene.add( spotLight );
+
+	//spotLight = new THREE.SpotLight();
+	//spotLight.position.set( 150, 24, 10 );
+	//spotLight.target.position.set( 150, 0, 120 );
+	//pointLight.castShadow = true;
+	//scene.add( spotLight );
+
+	//spotLight = new THREE.SpotLight();
+	//spotLight.position.set( 180, 24, 20 );
+	//spotLight.target.position.set( 180, 0, 20 );
+	//pointLight.castShadow = true;
+	//scene.add( spotLight );
+}
