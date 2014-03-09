@@ -28,8 +28,6 @@ var doorway_model = 'maps/level1/models/doorway.js';
 var door_model = 'maps/level1/models/door.js';
 
 //level related values
-var fog_color = 0x555599;
-var fog_intensity = 0.009525;
 var ambient_music_file = 'media/ambient_music.mp3';
 var win_area = [[17,9, "Secret area found!",0]];
 
@@ -260,3 +258,23 @@ function teleportGo()
 	
 }
 
+var fog_color = 0x000033;
+var fog_intensity = 0.008525;
+var point_light_color = 0xaaaaff;
+function load_level_lights()
+{
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( 50, 50, 50 ).normalize();
+				//light2.castShadow = true;
+				//scene.add( light2 );
+				
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( -50, -30, -50 ).normalize();
+				//light2.castShadow = true;
+				//scene.add( light2 );
+
+				//light2 = new THREE.DirectionalLight( 0xffffff );
+				//light2.position.set( 50, -10, -30 ).normalize();
+				//light2.castShadow = true;
+				//scene.add( light2 );
+}

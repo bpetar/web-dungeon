@@ -860,6 +860,24 @@ function load_walls(loader)
 	}
 }
 
+function load_lights()
+{
+	/*var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
+	scene.add( ambientLight );*/
+
+	pointColor=0xffffff;
+	if(typeof point_light_color != 'undefined') pointColor = point_light_color;
+	pointLight = new THREE.PointLight(pointColor, 1, 40);
+	pointLight.position.set( 160, 4, 0 );
+	//pointLight.castShadow = true;
+	scene.add( pointLight );
+	
+	//load lights specific for each level
+	if(typeof load_level_lights != 'undefined')
+	{
+		load_level_lights();
+	}
+}
 
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level()

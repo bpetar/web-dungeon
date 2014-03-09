@@ -28,8 +28,8 @@ var doorway_model = 'maps/level2/models/doorway.js';
 var door_model = 'models/door.js';
 
 //level related values
-var fog_color = 0x559955;
-var fog_intensity = 0.011525;
+var fog_color = 0x226622;
+var fog_intensity = 0.008525;
 var ambient_music_file = 'maps/level2/media/mountain_path.mp3';
 
 // id, name, model, x, z, icon
