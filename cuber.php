@@ -53,7 +53,7 @@
 					<div id="player1topimg" style="float: left;">
 					<img src="media/profile.png" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
-					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:30px; padding-left:10px; position:absolute; left:10px; top:10px;  height:65px; width:170px; background: url(media/wound.png)">
+					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
 					13
 					</div>
 					<div id="hpandweapon" style="border:1px solid green; margin-left: 110px;">
@@ -728,9 +728,11 @@ else
 				source_drop_rock.src = 'media/drop_rock.mp3';
 				audio_drop_rock.appendChild(source_drop_rock);
 
+				
 				audio_door = document.createElement('audio');
 				var source_door = document.createElement('source');
 				source_door.src = 'media/door.mp3';
+				if(typeof door_audio != 'undefined') source_door.src = door_audio;
 				audio_door.appendChild(source_door);
 				
 				audio_scroll = document.createElement('audio');
@@ -1406,11 +1408,17 @@ else
 					//mouse over players hand
 					if((x_pos > lhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < lhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < lhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > lhandDiv.offsetTop+gui_div_top_pos))
 					{
+						console.log("leeeeeeeeeft");
+						setCursor('pointer');
 						mouse_over_left_hand = 1;
+						mouse_over_right_hand = -1;
 						return;
 					}
 					if((x_pos > rhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < rhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < rhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > rhandDiv.offsetTop+gui_div_top_pos))
 					{
+						console.log("riiiiiiight");
+						setCursor('pointer');
+						mouse_over_left_hand = -1;
 						mouse_over_right_hand = 1;
 						return;
 					}
@@ -1907,6 +1915,64 @@ else
 							return;
 						}
 					}
+
+					if(item_over_left_hand != -1)
+					{
+						//if(item_can_be_placed_in_hand)
+						{
+							var tmp_hand_item = 0;
+							//add item to players hand
+							if(left_hand_item != 0)
+							{
+								tmp_hand_item = left_hand_item;
+								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								left_hand_item = pickable_at_hand;
+								//pickable at hand is replaced with hand item
+								pickable_at_hand_icon.src = tmp_hand_item.icon;
+								pickable_at_hand = tmp_hand_item;
+							}
+							else
+							{
+								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								left_hand_item = pickable_at_hand;
+								//pickable at hand is gone
+								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon = 0;
+								pickable_at_hand = 0;
+							}
+						}
+						
+						return;
+					}
+
+					if(item_over_right_hand != -1)
+					{
+						//if(item_can_be_placed_in_hand)
+						{
+							var tmp_hand_item = 0;
+							//add item to players hand
+							if(right_hand_item != 0)
+							{
+								tmp_hand_item = right_hand_item;
+								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								right_hand_item = pickable_at_hand;
+								//pickable at hand is replaced with hand item
+								pickable_at_hand_icon.src = tmp_hand_item.icon;
+								pickable_at_hand = tmp_hand_item;
+							}
+							else
+							{
+								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								right_hand_item = pickable_at_hand;
+								//pickable at hand is gone
+								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon = 0;
+								pickable_at_hand = 0;
+							}
+						}
+						
+						return;
+					}
 					
 					//check if player is trying to put it in the niche
 					var nicheID = niche_clicked_in(x_pos,y_pos);
@@ -1971,63 +2037,7 @@ else
 						return;
 					}
 
-					if(item_over_left_hand != -1)
-					{
-						//if(item_can_be_placed_in_hand)
-						{
-							var tmp_hand_item = 0;
-							//add item to players hand
-							if(left_hand_item != 0)
-							{
-								tmp_hand_item = left_hand_item;
-								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
-								left_hand_item = pickable_at_hand;
-								//pickable at hand is replaced with hand item
-								pickable_at_hand_icon.src = tmp_hand_item.icon;
-								pickable_at_hand = tmp_hand_item;
-							}
-							else
-							{
-								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
-								left_hand_item = pickable_at_hand;
-								//pickable at hand is gone
-								pickable_at_hand_icon.style.left = "-170px";
-								pickable_at_hand_icon = 0;
-								pickable_at_hand = 0;
-							}
-						}
-						
-						return;
-					}
 
-					if(item_over_right_hand != -1)
-					{
-						//if(item_can_be_placed_in_hand)
-						{
-							var tmp_hand_item = 0;
-							//add item to players hand
-							if(right_hand_item != 0)
-							{
-								tmp_hand_item = right_hand_item;
-								document.getElementById("righthandimg").src = pickable_at_hand.icon;
-								right_hand_item = pickable_at_hand;
-								//pickable at hand is replaced with hand item
-								pickable_at_hand_icon.src = tmp_hand_item.icon;
-								pickable_at_hand = tmp_hand_item;
-							}
-							else
-							{
-								document.getElementById("righthandimg").src = pickable_at_hand.icon;
-								right_hand_item = pickable_at_hand;
-								//pickable at hand is gone
-								pickable_at_hand_icon.style.left = "-170px";
-								pickable_at_hand_icon = 0;
-								pickable_at_hand = 0;
-							}
-						}
-						
-						return;
-					}
 					
 					//if click is too high, do nothing (throwing to be implemented later)
 					
@@ -2130,6 +2140,8 @@ else
 					
 					if(mouse_over_left_hand != -1)
 					{
+						console.log("lefteeeee");
+						
 						if(isRightMB)
 						{
 							//attack!
@@ -2157,11 +2169,13 @@ else
 							}
 						}
 						
+						mouse_over_left_hand = -1;
 						return;
 					}
 
 					if(mouse_over_right_hand != -1)
 					{
+						console.log("righteeeee");
 						if(isRightMB)
 						{
 							//attack!
@@ -2188,7 +2202,7 @@ else
 								DisplayInfoDiv("Right click to attack, left to place item..");
 							}
 						}
-						
+						mouse_over_right_hand = -1;
 						return;
 					}
 
