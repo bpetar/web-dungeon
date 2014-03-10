@@ -166,30 +166,30 @@ function niche_onItemAdd (nicheID, itemID)
 	nicheArr[nicheID][4] = 0;
 	
 	//draw wall over niche
-	var map = THREE.ImageUtils.loadTexture( 'media/wall.jpg' );
+	var map = THREE.ImageUtils.loadTexture( wall_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
-	nicheArr[nicheID][5] = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+	nicheArr[nicheID][5] = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
 	nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
-	nicheArr[nicheID][5].receiveShadow = true;
+	//nicheArr[nicheID][5].receiveShadow = true;
 	nicheArr[nicheID][5].position.y = 0.4*SQUARE_SIZE; //y
 	if(nicheArr[nicheID][2] == 1) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]-0.5)*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]-0.5)*SQUARE_SIZE+0.2; //x
 		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
 		nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
 	}
 	if(nicheArr[nicheID][2] == 3) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]+0.5)*SQUARE_SIZE; //x
+		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]+0.5)*SQUARE_SIZE-0.3; //x
 		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
 		nicheArr[nicheID][5].rotation.set(0, -Math.PI/2, 0);
 	}
 	if(nicheArr[nicheID][2] == 0) 
 	{
 		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0])*SQUARE_SIZE; //x
-		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]+0.5)*SQUARE_SIZE; //z
+		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]+0.5)*SQUARE_SIZE-0.2; //z
 		nicheArr[nicheID][5].rotation.set(0, 0, 0);
 	}
 	if(nicheArr[nicheID][2] == 2) 

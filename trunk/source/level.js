@@ -867,7 +867,7 @@ function load_lights()
 
 	pointColor=0xffffff;
 	if(typeof point_light_color != 'undefined') pointColor = point_light_color;
-	pointLight = new THREE.PointLight(pointColor, 1, 40);
+	pointLight = new THREE.PointLight(pointColor, 2, 40);
 	pointLight.position.set( 160, 4, 0 );
 	//pointLight.castShadow = true;
 	scene.add( pointLight );
@@ -916,7 +916,7 @@ function load_level()
 	
 	load_props();
 	
-	var map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
+	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	
@@ -928,7 +928,7 @@ function load_level()
 		var teleport_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: teleport_map, side: THREE.DoubleSide } );
 	}
 	
-	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
+	var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
 
 	var ceiling_map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
@@ -1003,10 +1003,20 @@ function load_level()
 				//one supporter on the right to ablige start of corridor
 				show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
 			}
-			if((east_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(south_neighbor))
+			if((south_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(east_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
 				show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+			}
+			if((west_neighbor)&&(north_neighbor)&&(!east_neighbor)&&(south_neighbor))
+			{
+				//one supporter on the low to ablige start of corridor
+				show_model(loader, "models/suporter.js", fx+0.5,fz,3*Math.PI/2);
+			}
+			if((north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor))
+			{
+				//one supporter on the low to ablige start of corridor
+				show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
 			}
 			//TODO!!!
 		}
@@ -1037,7 +1047,7 @@ function load_level()
 			}
 			else
 			{
-				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), material );
+				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
 			}
 			object.rotation.set(-Math.PI/2, 0, 0);
 			//object.receiveShadow = true;
