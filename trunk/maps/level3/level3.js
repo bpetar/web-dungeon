@@ -19,7 +19,7 @@ var secretWallsArr = []; //x,y,orientation
 var doorsArr3D = [[16,3,0,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
 
 //basic level textures
-var floor_texture_file = 'maps/level3/media/floor.png';
+var floor_texture_file = 'maps/level3/models/dirtpath.png';
 var wall_texture_file = 'maps/level3/media/wall.png';
 var ceiling_texture_file = 'maps/level3/models/dirt.png';
 
