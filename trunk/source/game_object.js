@@ -44,21 +44,81 @@ function create_game_object () {
 	return gobject;
 }
 
+
+//check if model is already being downloaded, and wait for it to download and clone it...
+function loadGameObjectCheck(loader, gobject)
+{
+	//console.log("loadGameObjectCheck: " + gobject.name);
+	var object = modelAlreadyLoaded(gobject.name);
+	if(object != -1)
+	{
+		//already put to download
+		//object loading is in progress
+		//wait till object is loaded and link to it
+		if(object == 0)
+		{
+			if(typeof modelWaiters[gobject.name] == 'undefined')
+			{
+				modelWaiters[gobject.name] = new Array();
+			}
+			modelWaiters[gobject.name].push([gobject.position,gobject.rotation]);
+			return;
+		}
+		
+		console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
+		gobject.mesh = object.clone();
+		gobject.mesh.position = gobject.position;
+		gobject.mesh.rotation = gobject.rotation;
+		gobject.id=gobject.mesh.id;
+		gobject.mesh.visible = gobject.visible;
+		scene.add( gobject.mesh );		
+	}
+	else
+	{
+		//download it first time..
+		loaded3Dmodels.push([gobject.name,0]);
+		loader.load( gobject.model, gobject.loadObject(gobject) );
+		console.log("loadGameObjectCheck loading first time: " + gobject.name);
+	}
+	
+}
+
 //load 3d mesh callback function
 function loadObject( gobject ) {
 	return function (geometry, materials ) {
 
-		//alert("pera object loader: " + gobject.name);
-		materials[ 0 ].shading = THREE.FlatShading;
-		gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-		gobject.mesh.position = gobject.position;
-		gobject.mesh.rotation = gobject.rotation;
-		gobject.mesh.name = gobject.name;
-		//alert("object id before adding to scene: " + gobject.mesh.name);
-		gobject.id = gobject.mesh.id;
-		gobject.mesh.visible = gobject.visible;
-		scene.add( gobject.mesh );
+			console.log("loadObject : " + gobject.name);
+			
+			materials[ 0 ].shading = THREE.FlatShading;
+			gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+			
+			for(var i=0; i< loaded3Dmodels.length; i++)
+			{
+				if(loaded3Dmodels[i][0] == gobject.name)
+				{
+					//set loaded model
+					loaded3Dmodels[i][1] = gobject.mesh;
+				}
+			}
+			
+			gobject.mesh.position = gobject.position;
+			gobject.mesh.rotation = gobject.rotation;
+			gobject.mesh.name = gobject.name;
+			gobject.id = gobject.mesh.id;
+			gobject.mesh.visible = gobject.visible;
+			scene.add( gobject.mesh );
 		
-		//alert("object id after adding to scene: " + gobject.mesh.visible);
+			if(typeof modelWaiters[gobject.name] != 'undefined')
+			{
+				//console.log("loadModel waiters are existing " + gobject.name);
+				for (var i=0; i< modelWaiters[gobject.name].length; i++)
+				{
+					//console.log("loadModel waiter cloned: " + gobject.name);
+					var clone = gobject.mesh.clone();
+					clone.position = modelWaiters[gobject.name][i][0];
+					clone.rotation = modelWaiters[gobject.name][i][1];
+					scene.add( clone );
+				}
+			}
 	}
 }

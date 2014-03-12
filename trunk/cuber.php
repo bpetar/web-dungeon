@@ -1290,31 +1290,10 @@ else
 			
 			function remove_loading_screen()
 			{
-				console.log("last model loaded");
-			}
-			
-			function loadModel(pos, rot) {
-				return function (geometry, materials ) {
-					materials[ 0 ].shading = THREE.SmoothShading;
-					var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-					mesh.position = pos;
-					mesh.rotation = rot;
-					scene.add( mesh );
-					
-					//progress
-					modelNumber++;
-					if(typeof totalModels != 'undefined')
-					{
-						var perc = (modelNumber*100)/totalModels;
-						console.log("loading percent: " + perc);
-					}
-					
-					if(lastModelTimer!=0)
-					{
-						clearTimeout(lastModelTimer);
-					}
-					lastModelTimer=setTimeout(remove_loading_screen,2000);
-				}
+				console.log("remove loading screen");
+				//remove loading screen
+				loading_div.style.display = "none";
+				document.getElementById( 'info_dialog_button' ).focus();
 			}
 			
 			function setCursor(pointer)

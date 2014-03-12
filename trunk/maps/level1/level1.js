@@ -13,6 +13,8 @@ var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,
 var holesArr = [];
 var writtingsArr = [[16,1,1,"Put some weight..",0]]; 
 
+var models3D = ['maps/level1/models/hole.js', 'maps/level1/models/niche.js', 'maps/level1/models/doorway.js', 'maps/level1/models/door.js', 'models/tapestry1.js', 'models/tapestry2.js', 'maps/level1/models/chest2.js', 'maps/level1/models/pillar.js', 'maps/level1/models/button_small.js', 'models/keyhole.js', 'models/crystal.js', 'models/rocky.js'];
+
 //basic level textures
 var floor_texture_file = 'maps/level1/media/floor_11_1.png';
 var wall_texture_file = 'maps/level1/media/stone_wall_01_01.png';
