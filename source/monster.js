@@ -181,10 +181,6 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		console.log("adding monstere " + munster.mesh.name);
 		scene.add( munster.mesh );
-		
-		//remove loading screen
-		loading_div.style.display = "none";
-		document.getElementById( 'info_dialog_button' ).focus();
 
 	}
 

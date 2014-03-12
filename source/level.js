@@ -15,28 +15,25 @@ function decorPillarAlreadyAdded (decorPil)
 
 function addPillar(loader, x, z)
 {
-	var decorPil = new THREE.Vector3(x, 0, z);
-	if(!decorPillarAlreadyAdded(decorPil))
+	if((typeof decorPillarModel != 'undefined') && (decorPillarModel != ""))
 	{
-		array_of_decorPillars.push(decorPil);
-		//console.log("pillar added, x:" + decorPil.x + ", z:" + decorPil.z);
-		
-		var decorPillarke = create_game_object();
-		decorPillarke.name = "decorPillar";
-
-		decorPillarke.position.y = 0;
-		decorPillarke.position.x = x;
-		decorPillarke.position.z = z;
-
-		if((typeof decorPillarModel != 'undefined') && (decorPillarModel != ""))
+		var decorPil = new THREE.Vector3(x, 0, z);
+		if(!decorPillarAlreadyAdded(decorPil))
 		{
-			loader.load( decorPillarModel, decorPillarke.loadObject(decorPillarke) );
+			array_of_decorPillars.push(decorPil);
+			
+			var decorPillarke = create_game_object();
+			decorPillarke.name = "decorPillar";
+			decorPillarke.model = decorPillarModel;
+
+			decorPillarke.position.y = 0;
+			decorPillarke.position.x = x;
+			decorPillarke.position.z = z;
+
+			loadGameObjectCheck(loader, decorPillarke);
+			//loader.load( decorPillarModel, decorPillarke.loadObject(decorPillarke) );
 		}
 	}
-	//else
-	//{
-		//console.log("pillar alredy in the queue, x:" + decorPil.x + ", z:" + decorPil.z);
-	//}
 }
 
 function loadDoorways( geometry, materials )
@@ -44,9 +41,34 @@ function loadDoorways( geometry, materials )
 
 	materials[ 0 ].shading = THREE.FlatShading;
 
-	for(var i=0; i<doorsArr3D.length; i++)
+	//first door are created, others are cloned..
+	var doorwayMesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+	doorwayMesh.position.x = doorsArr3D[0][0]*10;
+	doorwayMesh.position.z = doorsArr3D[0][1]*10;
+	doorwayMesh.position.y = 0;
+	if(doorsArr3D[0][2] == 0)
 	{
-		mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		doorwayMesh.rotation.set(0,0,0);
+	}
+	else if(doorsArr3D[0][2] == 1) 
+	{
+		doorwayMesh.rotation.set(0,Math.PI*3/2,0);
+	}
+	else if(doorsArr3D[0][2] == 2) 
+	{
+		doorwayMesh.rotation.set(0,Math.PI,0);
+	}
+	else if(doorsArr3D[0][2] == 3) 
+	{
+		doorwayMesh.rotation.set(0,Math.PI/2,0);
+	}
+	//mesh.castShadow = true;
+	doorwayMesh.scale.x = doorwayMesh.scale.y = doorwayMesh.scale.z = 1;
+	scene.add( doorwayMesh );
+		
+	for(var i=1; i<doorsArr3D.length; i++)
+	{
+		mesh = doorwayMesh.clone();
 		mesh.position.x = doorsArr3D[i][0]*10;
 		mesh.position.z = doorsArr3D[i][1]*10;
 		mesh.position.y = 0;
@@ -77,9 +99,36 @@ function loadDoors( geometry, materials )
 
 	materials[ 0 ].shading = THREE.FlatShading;
 
-	for(var i=0; i<doorsArr3D.length; i++)
+	//first door are created, others are cloned..
+	var doorMesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+	doorsArr3D[0][4] = doorMesh;
+	doorsArr3D[0][4].position.x = doorsArr3D[0][0]*10;
+	doorsArr3D[0][4].position.z = doorsArr3D[0][1]*10;
+	doorsArr3D[0][4].position.y = 0;
+	if(doorsArr3D[0][2] == 0)
 	{
-		doorsArr3D[i][4] = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		doorsArr3D[0][4].rotation.set(0,0,0);
+	}
+	else if(doorsArr3D[0][2] == 1) 
+	{
+		doorsArr3D[0][4].rotation.set(0,Math.PI*3/2,0);
+	}
+	else if(doorsArr3D[0][2] == 2) 
+	{
+		doorsArr3D[0][4].rotation.set(0,Math.PI,0);
+	}
+	else if(doorsArr3D[0][2] == 3) 
+	{
+		doorsArr3D[0][4].rotation.set(0,Math.PI/2,0);
+	}
+	
+	//doorsArr3D[0][4].castShadow = true;
+	doorsArr3D[0][4].scale.x = doorsArr3D[0][4].scale.y = doorsArr3D[0][4].scale.z = 1;
+	scene.add( doorsArr3D[0][4] );
+		
+	for(var i=1; i<doorsArr3D.length; i++)
+	{
+		doorsArr3D[i][4] = doorMesh.clone();
 		doorsArr3D[i][4].position.x = doorsArr3D[i][0]*10;
 		doorsArr3D[i][4].position.z = doorsArr3D[i][1]*10;
 		doorsArr3D[i][4].position.y = 0;
@@ -108,6 +157,123 @@ function loadDoors( geometry, materials )
 
 var array_of_pillars = [];
 
+var loaded3Dmodels = [];
+var modelWaiters = {};
+
+//check if model is already loaded
+function modelAlreadyLoaded(name)
+{
+	for(var i=0; i< loaded3Dmodels.length; i++)
+	{
+		if(loaded3Dmodels[i][0] == name)
+		{
+			return loaded3Dmodels[i][1];
+		}
+	}
+	
+	return -1;
+}
+
+function loadModel(pos, rot, name) {
+	return function (geometry, materials ) {
+	
+		materials[ 0 ].shading = THREE.SmoothShading;
+		var mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		
+		for(var i=0; i< loaded3Dmodels.length; i++)
+		{
+			if(loaded3Dmodels[i][0] == name)
+			{
+				//set loaded model
+				loaded3Dmodels[i][1] = mesh;
+			}
+		}
+		
+		mesh.position = pos;
+		mesh.rotation = rot;
+		scene.add( mesh );
+		
+		//clone all waiters
+		//console.log("loadModel checking for waiters: " + name);
+		if(typeof modelWaiters[name] != 'undefined')
+		{
+			//console.log("loadModel waiters are existing " + name);
+			for (var i=0; i< modelWaiters[name].length; i++)
+			{
+				//console.log("loadModel waiter cloned: " + name);
+				var clone = mesh.clone();
+				clone.position = modelWaiters[name][i][0];
+				clone.rotation = modelWaiters[name][i][1];
+				scene.add( clone );
+			}
+		}
+		
+		//progress
+		modelNumber++;
+		console.log("loading model nb: " + modelNumber + ", name: " + name);
+		if(typeof totalModels != 'undefined')
+		{
+			var perc = (modelNumber*100)/totalModels;
+			console.log("loading percent: " + perc);
+		}
+		
+		
+		//TODO REMOVE
+		if(lastModelTimer!=0)
+		{
+			clearTimeout(lastModelTimer);
+		}
+		lastModelTimer=setTimeout(remove_loading_screen,1000);
+	}
+}
+
+function loadModelCheck(loader, pos, rot, name)
+{
+	//console.log("loadModelCheck: " + name);
+	var object = modelAlreadyLoaded(name);
+	if(object != -1)
+	{
+		//object loading is in progress
+		//wait till object is loaded and link to it
+		if(object == 0)
+		{
+			//console.log("loadModelCheck queue for waiting: " + name);
+			if(typeof modelWaiters[name] == 'undefined')
+			{
+				modelWaiters[name] = new Array();
+			}
+			modelWaiters[name].push([pos,rot]);
+
+			return;
+		}
+		
+		//console.log("loadModelCheck, model loaded!: " + name);
+		var clony = object.clone();
+		clony.position = pos;
+		clony.rotation = rot;
+		scene.add( clony );
+	}
+	else
+	{
+		//download it first time..
+		loaded3Dmodels.push([name,0]);
+		loader.load( name, loadModel(pos, rot, name) );
+		//console.log("loadModelCheck loading first time: " + name);
+	}
+
+}
+
+function loadLevelModels()
+{
+	//for(var i=0; i< models3D.length; i++)
+	//{
+	//	loader.load( models3D[i], loadModel(0, 0, models3D[i]) );
+	//}
+}
+
+function loadLevelTextures()
+{
+}
 
 function load_walls(loader)
 {
@@ -279,7 +445,19 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 					rot.set(0, -Math.PI/2, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					
+					var object = modelAlreadyLoaded(niche_model);
+					if(object != -1)
+					{
+						var clony = object.clone();
+						clony.position = pos;
+						clony.rotation = rot;
+						scene.add( clony );
+					}
+					else
+					{
+						loadModelCheck(loader, pos, rot, niche_model);
+					}
 				}
 				else
 				{
@@ -311,26 +489,26 @@ function load_walls(loader)
 						if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
 						{
 							//left wall curve left
-							loader.load( wall_model_curve_left, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_curve_left) ;
 						}
 						else if((typeof wall_model_curve_right != 'undefined')&&(frontWall)&&(!backWall))
 						{
 							//left wall curve right
-							loader.load( wall_model_curve_right, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_curve_right) ;
 						}
 						else if((typeof wall_model_durve_l != 'undefined')&&(!frontWall)&&(!backLeftWall))
 						{
 							//left wall durve left
-							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_l) ;
 						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!backWall)&&(!frontLeftWall))
 						{
 							//left wall durve right
-							loader.load( wall_model_durve_r, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_r) ;
 						}
 						else
 						{
-							loader.load( wall_model, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model);
 						}
 					}
 				}
@@ -363,7 +541,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 					rot.set(0, Math.PI/2, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -394,16 +572,16 @@ function load_walls(loader)
 						if((typeof wall_model_durve_lr != 'undefined')&&(!frontRightWall)&&(!backRightWall))
 						{
 							//model should be curved short to both sides
-							loader.load( wall_model_durve_lr, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_lr);
 						}
 						else if((typeof wall_model_durve_l != 'undefined')&&(!backWall)&&(!frontRightWall))
 						{
 							//model should be curved short (durve) to left side
-							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
 						else
 						{
-							loader.load( wall_model, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model);
 						}
 					}
 				}
@@ -436,7 +614,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 					rot.set(0, Math.PI, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -468,21 +646,21 @@ function load_walls(loader)
 						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall))
 						{
 							//left_wall_durve_down
-							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!rightFrontWall))
 						{
 							//left_wall_durve_down
-							loader.load( wall_model_durve_r, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_r);
 						}
 						else if((typeof wall_model_curve_left != 'undefined')&&(leftWall)&&(!rightWall)&&(!backWall))
 						{
 							//left_wall_curve_down
-							loader.load( wall_model_curve_left, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_curve_left);
 						}
 						else
 						{						
-							loader.load( wall_model, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model);
 						}
 					}
 				}
@@ -515,7 +693,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
 					rot.set(0, 0, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -547,21 +725,21 @@ function load_walls(loader)
 						if((typeof wall_model_curve_right != 'undefined')&&(!frontWall)&&(leftWall)&&(!rightWall))
 						{
 							//left_wall_curve_down
-							loader.load( wall_model_curve_right, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_curve_right);
 						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!leftBackWall))
 						{
 							//left_wall_curve_down
-							loader.load( wall_model_durve_r, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_r);
 						}
 						else if((typeof wall_model_durve_l != 'undefined')&&(!rightBackWall))
 						{
 							//left_wall_curve_down
-							loader.load( wall_model_durve_l, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
 						else
 						{
-							loader.load( wall_model, loadModel(pos, rot) );
+							loadModelCheck(loader, pos, rot, wall_model);
 						}
 					}
 				}
@@ -637,7 +815,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 					rot.set(0, -Math.PI/2, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -699,7 +877,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 					rot.set(0, Math.PI/2, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -760,7 +938,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 					rot.set(0, Math.PI, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -822,7 +1000,7 @@ function load_walls(loader)
 					var rot = new THREE.Vector3(0, 0, 0);
 					pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
 					rot.set(0, 0, 0);
-					loader.load( niche_model, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -879,6 +1057,8 @@ function load_lights()
 	}
 }
 
+
+
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level()
 {
@@ -886,6 +1066,7 @@ function load_level()
 	
 	var loader = new THREE.JSONLoader();
 
+	
 	if((typeof doorsArr3D != 'undefined') && (doorsArr3D.length > 0))
 	{
 		loader.load( doorway_model, loadDoorways );
@@ -906,7 +1087,7 @@ function load_level()
 			pillarke.position.x = pillar_array[i][2]*SQUARE_SIZE;
 			pillarke.position.z = pillar_array[i][3]*SQUARE_SIZE;
 
-			loader.load( pillarke.model, pillarke.loadObject(pillarke) );
+			loadGameObjectCheck(loader,pillarke);
 			
 			array_of_pillars.push(pillarke);
 		}
@@ -975,48 +1156,72 @@ function load_level()
 		{
 			if((north_neighbor)&&(!south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
 			{
-				console.log("tile has low corner x:" + fx + " z:" + fz);
+				//console.log("tile has low corner x:" + fx + " z:" + fz);
 				//put supporter in the low corner
-				show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz-0.5)*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, 0, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx,fz-0.5,0);
 			}
 			if((south_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!east_neighbor))
 			{
-				console.log("tile has high corner x:" + fx + " z:" + fz);
+				//console.log("tile has high corner x:" + fx + " z:" + fz);
 				//put supporter in the up corner
-				show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
+				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz+0.5)*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, Math.PI, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx,fz+0.5,Math.PI);
 			}
 			if((west_neighbor)&&(!north_neighbor)&&(!south_neighbor)&&(!east_neighbor))
 			{
-				console.log("tile has right corner x:" + fx + " z:" + fz);
+				//console.log("tile has right corner x:" + fx + " z:" + fz);
 				//put supporter in the right corner
-				show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
+				var suporter_pos = new THREE.Vector3((fx-0.5)*SQUARE_SIZE, 0, fz*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, Math.PI/2, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx-0.5,fz,Math.PI/2);
 			}
 			if((east_neighbor)&&(!north_neighbor)&&(!west_neighbor)&&(!south_neighbor))
 			{
-				console.log("tile has left corner x:" + fx + " z:" + fz);
+				//console.log("tile has left corner x:" + fx + " z:" + fz);
 				//put supporter in the left corner
-				show_model(loader, "models/suporter.js", fx+0.5,fz,-Math.PI/2);
+				var suporter_pos = new THREE.Vector3((fx+0.5)*SQUARE_SIZE, 0, fz*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, -Math.PI/2, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx+0.5,fz,-Math.PI/2);
 			}
 			
 			if((east_neighbor)&&(north_neighbor)&&(!west_neighbor)&&(south_neighbor))
 			{
 				//one supporter on the right to ablige start of corridor
-				show_model(loader, "models/suporter.js", fx-0.5,fz,Math.PI/2);
+				var suporter_pos = new THREE.Vector3((fx-0.5)*SQUARE_SIZE, 0, fz*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, Math.PI/2, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx-0.5,fz,Math.PI/2);
 			}
 			if((south_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(east_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
-				show_model(loader, "models/suporter.js", fx,fz-0.5,0);
+				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz-0.5)*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, 0, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx,fz-0.5,0);
 			}
 			if((west_neighbor)&&(north_neighbor)&&(!east_neighbor)&&(south_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
-				show_model(loader, "models/suporter.js", fx+0.5,fz,3*Math.PI/2);
+				var suporter_pos = new THREE.Vector3((fx+0.5)*SQUARE_SIZE, 0, fz*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, 3*Math.PI/2, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx+0.5,fz,3*Math.PI/2);
 			}
 			if((north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
-				show_model(loader, "models/suporter.js", fx,fz+0.5,Math.PI);
+				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz+0.5)*SQUARE_SIZE);
+				var suporter_rot = new THREE.Vector3(0, Math.PI, 0);
+				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
+				//show_model(loader, suporter_model, fx,fz+0.5,Math.PI);
 			}
 			//TODO!!!
 		}
@@ -1036,7 +1241,7 @@ function load_level()
 			var rot = new THREE.Vector3(0, 0, 0);
 			pos.x = floorsArr2D[i][0]*SQUARE_SIZE;
 			pos.z = floorsArr2D[i][1]*SQUARE_SIZE;
-			loader.load( hole_model, loadModel(pos,rot) );
+			loadModelCheck(loader, pos, rot, hole_model);
 		}
 		else
 		{
@@ -1083,7 +1288,7 @@ function load_level()
 		if(holeAboveSpot)
 		{
 			//add hole model
-			loader.load( hole_above_model, loadModel(pos,rot) );
+			loadModelCheck(loader, pos,rot, hole_above_model);
 		}
 		else
 		{
@@ -1093,22 +1298,22 @@ function load_level()
 				if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(!east_neighbor))
 				{
 					rot.set(0, -Math.PI/2, 0);
-					loader.load( celing_model_fb, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, celing_model_fb);
 				}
 				else if((!north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor))
 				{
 					rot.set(0, 0, 0);
-					loader.load( celing_model_fb, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, celing_model_fb);
 				}
 				else if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(east_neighbor))
 				{
 					rot.set(0, -Math.PI/2, 0);
-					loader.load( celing_model_fb, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, celing_model_fb);
 				}
 				else if((north_neighbor)&&(south_neighbor)&&(!west_neighbor)&&(east_neighbor))
 				{
 					rot.set(0, -Math.PI/2, 0);
-					loader.load( celing_model_fb, loadModel(pos, rot) );
+					loadModelCheck(loader, pos, rot, celing_model_fb);
 				}
 			}
 			else
@@ -1139,5 +1344,5 @@ function load_level()
 	//walls
 	load_walls(loader);
 	
-	console.log("level end time: " + Date.now());
+	console.log("level end time:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
 }
