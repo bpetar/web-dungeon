@@ -945,6 +945,16 @@ else
 						return true;
 					}
 				}
+				
+				//stairs
+				for(i=0; i < stairsArr.length; i++)
+				{
+					if((stairsArr[i][0] == x) && (stairsArr[i][1] == z))
+					{
+						return true;
+					}
+				}
+				
 				return false;
 			}
 			
@@ -2580,6 +2590,16 @@ else
 									//show final register/feedback level complete screen!
 									//displayLevelCompleteDialog();
 									teleportGo();
+								}
+							}
+							
+							//if stepped on stairs..
+							for(i=0; i < stairsArr.length; i++)
+							{
+								if((stairsArr[i][0] == current_position.x) && (stairsArr[i][1] == current_position.z))
+								{
+									//go to next level..
+									console.log("go to next level: " + stairsArr[i][5]);
 								}
 							}
 						}
