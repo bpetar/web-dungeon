@@ -464,14 +464,14 @@ function load_walls(loader)
 					
 					if(writtingIsOnTheWall > -1)
 					{
-						//TODO: load curved wall with writting
-						var pos = new THREE.Vector3(0, 0, 0);
-						var rot = new THREE.Vector3(0, 0, 0);
-						pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
-						rot.set(0, Math.PI, 0);
-						loadModelCheck(loader, pos, rot, wall_model_curve_writ) ;
-						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						//writtingsArr[writtingIsOnTheWall][4] = object;
+						//load curved wall with writting
+						var wallWrit = create_game_object();
+						wallWrit.name = "writting";
+						wallWrit.model = wall_model_curve_writ;
+						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						wallWrit.rotation = new THREE.Vector3(0, Math.PI, 0);
+						loadGameObjectCheck(loader, wallWrit) ;
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit; //this will change dynamically from 0 to pointer?
 					}
 					else
 					{
@@ -553,12 +553,14 @@ function load_walls(loader)
 					
 					if(writtingIsOnTheWall > -1)
 					{
-						//TODO: load curved wall with writting
-						var pos = new THREE.Vector3(0, 0, 0);
-						var rot = new THREE.Vector3(0, 0, 0);
-						pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
-						rot.set(0, 0, 0);
-						loadModelCheck(loader, pos, rot, wall_model_curve_writ) ;
+						//load curved wall with writting
+						var wallWrit = create_game_object();
+						wallWrit.name = "writting";
+						wallWrit.model = wall_model_curve_writ;
+						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						wallWrit.rotation = new THREE.Vector3(0, 0, 0);
+						loadGameObjectCheck(loader, wallWrit) ;
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit; //this will change dynamically from 0 to pointer?
 					}
 					else
 					{
@@ -1051,9 +1053,11 @@ function load_lights()
 	/*var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
 	scene.add( ambientLight );*/
 
-	pointColor=0xffffff;
+	var pointColor=0xffffff;
+	var pointIntensity = 1;
 	if(typeof point_light_color != 'undefined') pointColor = point_light_color;
-	pointLight = new THREE.PointLight(pointColor, 2, 40);
+	if(typeof point_light_intensity != 'undefined') pointIntensity = point_light_intensity;
+	pointLight = new THREE.PointLight(pointColor, pointIntensity, 40);
 	pointLight.position.set( 160, 4, 0 );
 	//pointLight.castShadow = true;
 	scene.add( pointLight );

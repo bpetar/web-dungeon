@@ -246,6 +246,7 @@ function load_monsters () {
 			munster.mood = monster_array[i][19];
 		}
 		
+		//audio
 		var source_monster_wound = document.createElement('source');
 		source_monster_wound.src = monster_array[i][20];
 		munster.audio_monster_wound.appendChild(source_monster_wound);

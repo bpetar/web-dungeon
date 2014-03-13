@@ -108,16 +108,24 @@ var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
 var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 16,16,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
+function showScroll()
+{
+	console.log("Showing scroll content!");
+	audio_scroll.play();
+	show_message(" <br> " + "Section C3" + " <br><br><img src='maps/level3/media/map3.png'><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 700, 700, "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
+}
+
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", 0]];
-var niche_item_offset = new THREE.Vector3(-1, -0.5, 0);
+var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", showScroll]];
+var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[8,8,1,niche_pickables_array1]]; 
+var nicheArr = [[10,10,3,niche_pickables_array1]]; 
 
 
 var teleport_array = [];
 
 var point_light_color = 0xffffaa;
+var point_light_intensity = 0.5;
 fog_color = 0x111100;
 fog_intensity = 0.008525;
 
@@ -132,12 +140,13 @@ function load_level_lights()
 	//pointLight.castShadow = true;
 	//scene.add( spotLight );
 
-	//spotLight = new THREE.SpotLight();
-	//spotLight.position.set( 150, 24, 10 );
-	//spotLight.target.position.set( 150, 0, 120 );
+	var spotLight = new THREE.SpotLight();
+	spotLight.position.set( 150, 24, 0 );
+	spotLight.target.position.set( 150, 0, 0 );
 	//pointLight.castShadow = true;
-	//scene.add( spotLight );
+	scene.add( spotLight );
 
+	console.log("pera spot");
 	//spotLight = new THREE.SpotLight();
 	//spotLight.position.set( 180, 24, 20 );
 	//spotLight.target.position.set( 180, 0, 20 );

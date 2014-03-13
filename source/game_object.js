@@ -113,7 +113,7 @@ function loadObject( gobject ) {
 				//console.log("loadModel waiters are existing " + gobject.name);
 				for (var i=0; i< modelWaiters[gobject.name].length; i++)
 				{
-					//console.log("loadModel waiter cloned: " + gobject.name);
+					console.log("loadModel waiter cloned: " + gobject.name);
 					var clone = gobject.mesh.clone();
 					clone.position = modelWaiters[gobject.name][i][0];
 					clone.rotation = modelWaiters[gobject.name][i][1];
