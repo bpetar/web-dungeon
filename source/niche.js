@@ -34,9 +34,18 @@ function loadNiches() {
 			else if(nicheArr[n][2] == 1)
 			{
 				//right niche
-				picki.position.x = nicheArr[n][0]*SQUARE_SIZE-6;
-				picki.position.z = nicheArr[n][1]*SQUARE_SIZE+mover;
-				picki.position.y = 4.0;
+				if(typeof niche_item_offset != 'undefined')
+				{
+					picki.position.x = nicheArr[n][0]*SQUARE_SIZE-6+niche_item_offset.x;
+					picki.position.z = nicheArr[n][1]*SQUARE_SIZE+mover+niche_item_offset.z;
+					picki.position.y = 4.0+niche_item_offset.y;
+				}
+				else
+				{
+					picki.position.x = nicheArr[n][0]*SQUARE_SIZE-6;
+					picki.position.z = nicheArr[n][1]*SQUARE_SIZE+mover;
+					picki.position.y = 4.0;
+				}
 			}
 			else if(nicheArr[n][2] == 2)
 			{
@@ -95,8 +104,16 @@ function add_to_niche (nicheID, gObject) {
 			else if(nicheArr[nicheID][2] == 1)
 			{
 				//right niche
-				gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE-6;
-				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+mover;
+				if(typeof niche_item_offset != 'undefined')
+				{
+					gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE-6+niche_item_offset.x;
+					gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+mover+niche_item_offset.z;
+				}
+				else
+				{
+					gObject.mesh.position.x = nicheArr[nicheID][0]*SQUARE_SIZE-6;
+					gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE+mover;
+				}
 			}
 			else if(nicheArr[nicheID][2] == 2)
 			{
@@ -105,9 +122,16 @@ function add_to_niche (nicheID, gObject) {
 				gObject.mesh.position.z = nicheArr[nicheID][1]*SQUARE_SIZE-6;
 			}
 			
-	gObject.mesh.position.y = 4.0;
-	gObject.mesh.visible = true;
+	if(typeof niche_item_offset != 'undefined')
+	{
+		gObject.mesh.position.y = 4.0+niche_item_offset.y;
+	}
+	else
+	{
+		gObject.mesh.position.y = 4.0;
+	}
 
+	gObject.mesh.visible = true;
 	//if there is script function for adding item, call it
 	if(nicheArr[nicheID].length>6)
 	{
