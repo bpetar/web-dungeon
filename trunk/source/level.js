@@ -283,16 +283,6 @@ function load_walls(loader)
 	map.anisotropy = 16;
 	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
 	
-	var materialwrit;
-	
-	//writting on the wall texture
-	if(writtingsArr.length>0)
-	{
-		var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
-		mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
-		mapwrit.anisotropy = 16;
-		materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
-	}
 	
 	//secret walls
 	for(var s=0; s<secretWallsArr.length; s++)
@@ -475,8 +465,13 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//TODO: load curved wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						rot.set(0, Math.PI, 0);
+						loadModelCheck(loader, pos, rot, wall_model_curve_writ) ;
+						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+						//writtingsArr[writtingIsOnTheWall][4] = object;
 					}
 					else
 					{
@@ -559,8 +554,11 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//TODO: load curved wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						var pos = new THREE.Vector3(0, 0, 0);
+						var rot = new THREE.Vector3(0, 0, 0);
+						pos.set((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
+						rot.set(0, 0, 0);
+						loadModelCheck(loader, pos, rot, wall_model_curve_writ) ;
 					}
 					else
 					{
@@ -750,6 +748,16 @@ function load_walls(loader)
 	//regular walls
 	else
 	{
+		var materialwrit;
+		
+		//writting on the wall texture
+		if(writtingsArr.length>0)
+		{
+			var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
+			mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
+			mapwrit.anisotropy = 16;
+			materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
+		}
 		console.log("writ retular walls");
 		for(i=0; i < floorsArr2D.length; i++)
 		{

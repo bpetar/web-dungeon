@@ -204,6 +204,8 @@
 			</div>
 		</div>
 		
+		<script src="./source/three.min.js"></script>
+
 <?php
 		
 if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
@@ -243,7 +245,6 @@ else
 		<script src="./source/containers.js"></script>
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
-		<script src="./source/three.min.js"></script>
 		<script src="./source/niche.js"></script>
 		<script src="./source/monster.js"></script>
 		<script src="./source/stats.min.js"></script>
