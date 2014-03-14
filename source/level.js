@@ -277,21 +277,24 @@ function loadLevelTextures()
 
 function load_stairs(loader)
 {
-	for(var s=0; s<stairsArr.length; s++)
+	if(typeof stairsArr != 'undefined')
 	{
-		var stair = create_game_object();
-			stair.name = "stair";
-			stair.model = stairsArr[s][3];
+		for(var s=0; s<stairsArr.length; s++)
+		{
+			var stair = create_game_object();
+				stair.name = "stair";
+				stair.model = stairsArr[s][3];
 
-			stair.position.y = 0;
-			stair.position.x = stairsArr[s][0]*SQUARE_SIZE;
-			stair.position.z = stairsArr[s][1]*SQUARE_SIZE;
-			if(stairsArr[s][2]==1) stair.rotation.set(0,-Math.PI/2,0);
-			if(stairsArr[s][2]==2) stair.rotation.set(0,Math.PI,0);
-			if(stairsArr[s][2]==3) stair.rotation.set(0,Math.PI/2,0);
-			stairsArr[s][4] = stair;
+				stair.position.y = 0;
+				stair.position.x = stairsArr[s][0]*SQUARE_SIZE;
+				stair.position.z = stairsArr[s][1]*SQUARE_SIZE;
+				if(stairsArr[s][2]==1) stair.rotation.set(0,-Math.PI/2,0);
+				if(stairsArr[s][2]==2) stair.rotation.set(0,Math.PI,0);
+				if(stairsArr[s][2]==3) stair.rotation.set(0,Math.PI/2,0);
+				stairsArr[s][4] = stair;
 
-			loadGameObjectCheck(loader, stair);
+				loadGameObjectCheck(loader, stair);
+		}
 	}
 }
 
@@ -429,15 +432,25 @@ function load_walls(loader)
 			}
 			
 			//check stairs
-			for(var s=0; s<stairsArr.length; s++)
+			if(typeof stairsArr != 'undefined')
 			{
-				//front stairs
-				if((stairsArr[s][0] == xTile) && (stairsArr[s][1] == yTile+1))
+				for(var s=0; s<stairsArr.length; s++)
 				{
-					frontWall = false;
+					//front stairs
+					if((stairsArr[s][0] == xTile) && (stairsArr[s][1] == yTile+1))
+					{
+						frontWall = false;
+					}
+					
+					//back stairs
+					if((stairsArr[s][0] == xTile) && (stairsArr[s][1] == yTile-1))
+					{
+						backWall = false;
+					}
+					
 				}
 			}
-					
+			
 			if(leftWall)
 			{
 				//pillars

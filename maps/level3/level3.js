@@ -88,8 +88,17 @@ var buttons_array = [];
 //keyholes
 var keyholes_array = [];
 
+function rootHealingScript()
+{
+	playerHPcurrent += 15;
+	if (playerHPcurrent > playerHPmax)
+	{
+		playerHPcurrent = playerHPmax;
+	}
+}
+
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Root","maps/level3/models/root.js", 16.5,4.5,6, "media/rock.png", "Still not that hungry.."], [3,"Stake","models/stake.js", 15,0,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 20.6,8,7, "media/rock.png", "Still not that hungry.."]];
+var pickables_array = [[2,"Root","maps/level3/models/root.js", 16.5,4.5,6, "media/root.png", "This acctually heals my wounds..", rootHealingScript], [3,"Stake","models/stake.js", 15,0,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 20.6,8,7, "media/root.png", "Hard to chew but pays off..", rootHealingScript]];
 ////////////////////////////////////////////////
 
 var wormPickables = [];
