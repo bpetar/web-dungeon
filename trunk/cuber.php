@@ -224,17 +224,23 @@ if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
 		<script src="./maps/level3/level3.js"></script>
 <?php 
     }
-	else
+	else if (strcmp($lvl,'level1') == 0)
 	{
 ?>
 		<script src="./maps/level1/level1.js"></script>
+<?php 
+	}
+	else
+	{
+?>
+		<script src="./maps/level_temp/level_temp.js"></script>
 <?php 
 	}
 }
 else
 {
 ?>
-		<script src="./maps/level1/level1.js"></script>
+		<script src="./maps/level_temp/level_temp.js"></script>
 <?php 
 }
 ?>
@@ -947,11 +953,14 @@ else
 				}
 				
 				//stairs
-				for(i=0; i < stairsArr.length; i++)
+				if(typeof stairsArr != 'undefined')
 				{
-					if((stairsArr[i][0] == x) && (stairsArr[i][1] == z))
+					for(i=0; i < stairsArr.length; i++)
 					{
-						return true;
+						if((stairsArr[i][0] == x) && (stairsArr[i][1] == z))
+						{
+							return true;
+						}
 					}
 				}
 				
@@ -2594,12 +2603,16 @@ else
 							}
 							
 							//if stepped on stairs..
-							for(i=0; i < stairsArr.length; i++)
+							if(typeof stairsArr != 'undefined')
 							{
-								if((stairsArr[i][0] == current_position.x) && (stairsArr[i][1] == current_position.z))
+								for(i=0; i < stairsArr.length; i++)
 								{
-									//go to next level..
-									console.log("go to next level: " + stairsArr[i][5]);
+									if((stairsArr[i][0] == current_position.x) && (stairsArr[i][1] == current_position.z))
+									{
+										//go to next level..
+										console.log("go to next level: " + stairsArr[i][5]);
+										window.location.href = 'cuber.php?lvl=' + stairsArr[i][5];
+									}
 								}
 							}
 						}
