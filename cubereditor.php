@@ -43,10 +43,19 @@
 	
 <div id='main'>
 	
-	<div id='top_info' style='padding:5px; text-align:left; height:10%; width:50%;'>
-	<br>
-	  Dungeon editor allows you to draw map, then add items, doors, pits, secret walls, niches, monsters, teleports, etc. You can change textures and upload your own. 
-	<br>
+	<div id='top_info' style='padding:5px; text-align:left; height:10%; width:60%;'>
+
+	<div style='float: left;'>
+		<input name="lvlarrtext" type="text" id="lvlarrtext"/>
+		<button onclick="loadLvl()">Load</button>
+		</form>
+	</div>
+	<div>
+		<br>
+		Dungeon editor allows you to draw map, then add items, doors, pits, secret walls, niches, monsters, teleports, etc. You can change textures and upload your own. 
+		<br>
+	</div>
+	
 	</div>
 	
 	<div id='dungeon' style='height:70%; display: inline-block; '>
@@ -91,7 +100,9 @@
 		</div>
 		
 		<div id='texture_elements' style='float: left; '>
-			<div id="tex1" style='float: left;  width:70px; height:80px; '> <br>Wall Textures
+			<div id="tex1" style='float: left;  width:70px; height:80px; '> 
+			
+			<br>Wall Textures
 			</div>
 			<div id="pad" style='float: left;width:5px; height:80px;'></div>
 
@@ -160,6 +171,8 @@
 	var BROWSER_CHROME = 0;
 	var BROWSER_FIREFOX = 1;
 	var browser = BROWSER_CHROME;
+	
+	var fileref = -1;
 	
 	var SQUARE_SIZE = 10;
 	var grid_size = 20;
@@ -429,6 +442,7 @@
 		}
 	}
 	
+	
 	function draw_grid() 
 	{
 		//create divs and initialize them
@@ -612,6 +626,58 @@
 	animate();
 	
 	var imgInput;
+	
+	//load lvl from string
+	function loadLvl()
+	{
+		console.log("load lvl");
+		
+		for(var i=0; i< grid_size; i++)
+		{
+			for(var j=0; j< grid_size; j++)
+			{
+				mapArr[i][j].type = TILE_EMPTY; //floor, door, etc
+				mapArr[i][j].div.style.border = "1px solid transparent";
+			}
+		}
+
+		var str = document.getElementById('lvlarrtext').value;
+		var arr = eval(str);
+		console.log("loaded array: " + arr);
+		floorsArr2D = arr;
+		
+		for (var i=0; i<floorsArr2D.length; i++)
+		{
+			setDivField(mapArr[grid_size-floorsArr2D[i][1]][grid_size-floorsArr2D[i][0]].div, grid_size-floorsArr2D[i][1], grid_size-floorsArr2D[i][0]);
+		}
+		
+		console.log("load lvl");
+		createDungeonFromFloorArr();
+	}
+	
+	//tried this with local js file, but it should be json ..
+	function readLvl() {
+		/*var input = imgInput.files[0];
+		
+		if (input) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+			
+				if(fileref != -1)
+				{
+					//release included js file?
+				}
+				fileref=document.createElement('script')
+				fileref.setAttribute("type","text/javascript")
+				fileref.setAttribute("src", e.target.result)
+				if (typeof fileref!="undefined")
+					document.getElementsByTagName("head")[0].appendChild(fileref);
+					floorsArr2D = floorsArr2DLoad;
+				createDungeonFromFloorArr();
+			}
+			reader.readAsDataURL(input);
+		}*/
+	}
 	
 	function readURL() {
 		var input = imgInput.files[0];
