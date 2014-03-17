@@ -272,6 +272,8 @@ else
 			
 			clickConsumed = false;
 
+			var existingMaps = ['level1', 'level2', 'level3'];
+			
 			var stats = new Stats();
 			stats.setMode(0); // 0: fps, 1: ms
 
@@ -290,6 +292,26 @@ else
 				audio_fanfare.play();
 				
 				show_message("<br><font size='7'>Demo Finished!</font><br><br>Secrets found: 1/1. 				<br><br> This is game demo and you finished it. Congratulations! Thank you for playing! We would very much like to hear your feedback. If you want to receive notification about game updates, please leave your email below and we will contact you. <br><br> 				<font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 				<input type='submit' name='noRegister' value=' No thanks '>				</form>", 900,800, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+			}
+			
+			//display level complete dialog
+			function displayRegisterDialog() {
+				//add registration and feedback options
+				
+				//level_complete_div.style.display = "inline-block";
+				//audio_fanfare.play();
+				console.log("agh?");
+				show_message("<br><font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 	<button type=button id='info_dialog_button' onclick='hide_message();'> No Thanks </button>				</form>", 700,550, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+			}
+			
+			//display level complete dialog
+			function displayLevelInCompleteDialog() {
+				//add registration and feedback options
+				
+				//level_complete_div.style.display = "inline-block";
+				//audio_fanfare.play();
+				
+				show_message("<br><font size='6'>Next level is not published yet.</font><br><br>Secrets found: 0/0. 				<br><br> Levels should come out on weekly basis. You can save game and come back later to continue the game. If you want to receive notification about game updates, please <a id='myLink' title='Click to open registration window' href='#' onclick='displayRegisterDialog();return false;'>register</a>. <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 800,500, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -628,7 +650,9 @@ else
 			}
 			
 			function show_message(message, width, height, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
-				if(info_dialog_div.style.display == "none")
+				
+				//this check prevents us to go from one message to another..
+				//if(info_dialog_div.style.display == "none")
 				{
 					info_dialog_message_div.innerHTML = message;
 					
@@ -2626,7 +2650,25 @@ else
 									{
 										//go to next level..
 										console.log("go to next level: " + stairsArr[i][5]);
-										window.location.href = 'cuber.php?lvl=' + stairsArr[i][5];
+										
+										var mapExists = false;
+										for(var l=0; l<existingMaps.length; l++)
+										{
+											if (existingMaps[l] == stairsArr[i][5])
+											{
+												mapExists = true;
+												break;
+											}
+										}
+										if(mapExists)
+										{
+											window.location.href = 'cuber.php?lvl=' + stairsArr[i][5];
+										}
+										else
+										{
+											//display no more levels info..
+											displayLevelInCompleteDialog();
+										}
 									}
 								}
 							}
