@@ -818,13 +818,7 @@ Monster.prototype.move = function ( delta ) {
 					{
 						console.log("monster hits player: " + playerHPcurrent);
 						//update player health bar
-						var p = playerHPcurrent/playerHPmax*100;
-						player_HP_div.style.width = "" + p + "%";
-						if(p < 50)
-						{
-							//TODO: color green to red gradient can be smarter projection of percent
-							player_HP_div.style.backgroundColor = "#999900";
-						}
+						updatePlayerHealthBar();
 					}
 				}
 				else

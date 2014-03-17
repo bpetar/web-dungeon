@@ -622,7 +622,12 @@ function load_walls(loader)
 							//model should be curved short (durve) to left side
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
-						else
+						else if((typeof wall_model_durve_r != 'undefined')&&(!frontWall)&&(!backRightWall))
+						{
+							//model should be curved short (durve) to right side
+							loadModelCheck(loader, pos, rot, wall_model_durve_r);
+						}
+						else 
 						{
 							loadModelCheck(loader, pos, rot, wall_model);
 						}
@@ -767,7 +772,7 @@ function load_walls(loader)
 
 						if((typeof wall_model_curve_right != 'undefined')&&(!frontWall)&&(leftWall)&&(!rightWall))
 						{
-							//left_wall_curve_down
+							//back wall curve right..
 							loadModelCheck(loader, pos, rot, wall_model_curve_right);
 						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!leftBackWall))
