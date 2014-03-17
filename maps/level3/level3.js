@@ -5,6 +5,8 @@ function onLoad()
 	//loading_div.style.display = "none";
 	
 	show_message(" <br> " + "You wake up." + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+	playerHPcurrent = 10;
+	updatePlayerHealthBar();
 }
 
 var levelNumber = 3;
@@ -95,10 +97,11 @@ function rootHealingScript()
 	{
 		playerHPcurrent = playerHPmax;
 	}
+	updatePlayerHealthBar();
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Root","maps/level3/models/root.js", 16.5,4.5,6, "media/root.png", "This acctually heals my wounds..", rootHealingScript], [3,"Stake","models/stake.js", 15,0,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 20.6,8,7, "media/root.png", "Hard to chew but pays off..", rootHealingScript]];
+var pickables_array = [[2,"Root","maps/level3/models/root.js", 16.5,4.5,6, "media/root.png", "This acctually heals my wounds..", rootHealingScript, 1], [3,"Stake","models/stake.js", 15,0,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 20.5,8,6, "media/root.png", "Hard to chew but pays off..", rootHealingScript, 1]];
 ////////////////////////////////////////////////
 
 var wormPickables = [];

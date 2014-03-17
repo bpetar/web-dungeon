@@ -306,6 +306,21 @@ else
 				console.log("info: " + windowHalfX + ", left: " + left);
 			}
 			
+			function updatePlayerHealthBar()
+			{
+				var p = playerHPcurrent/playerHPmax*100;
+				player_HP_div.style.width = "" + p + "%";
+				if(p < 50)
+				{
+					//TODO: color green to red gradient can be smarter projection of percent
+					player_HP_div.style.backgroundColor = "#999900";
+				}
+				else
+				{
+					player_HP_div.style.backgroundColor = "#009900";
+				}
+			}
+			
 			function DisplayMonsterDmg(dmg) {
 				//show some dmg blood flashy thing over monster
 				monster_wound_div_top = windowHalfY - 100 + Math.random()*200;

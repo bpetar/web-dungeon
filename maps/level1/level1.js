@@ -233,6 +233,7 @@ function healingScript()
 	{
 		playerHPcurrent = playerHPmax;
 	}
+	updatePlayerHealthBar();
 }
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
