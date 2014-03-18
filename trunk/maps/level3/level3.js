@@ -53,6 +53,7 @@ var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 function propOnClick1()
 {
 	DisplayInfoDiv("I was lucky to avoid these spikes!");
+	show_speech_bubble("I was lucky to avoid serious injuries falling on these spikes.. <br><br> &nbsp; .. and Im pretty sure I went unconscious when I hit the ground, but why am I in my underwear? ", 600, 150, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
 }
 
 function propOnClick2()

@@ -48,30 +48,40 @@
 		</div>
 		
 		<div id="gui" style="cursor: pointer; position:absolute; left:70px; top:70px;">
-			<div id="player1" style="border:2px solid;">
+			<div id="player1" style="border:2px solid; float: left;">
 				<div id="player1top" style="border:1px solid red; float: left;">
 					<div id="player1topimg" style="float: left;">
-					<img src="media/profile.png" onClick='inventory_show("Inventory will popup here!")'> 
+						<img src="media/profile.png" onClick='inventory_show("Inventory will popup here!")'> 
 					</div>
-					<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
-					13
+					
+					<div id="player1tophandsy" style="border:2px solid green;float: left;">
+						<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
+						13
+						</div>
+						<div id="hpandweapon" style="border:1px solid green;">
+							<div id="player1HP" style="background-color: #009900; border:1px solid blue; height:20px;">
+							<!-- <img src="media/health.png">  -->
+							</div>
+							<!-- <br> -->
+							<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
+							<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px">
+							</div>
+							<div id="player1rhand" style="border:1px solid blue; opacity:1.0;">
+							<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px"> 
+							</div>
+						</div>
 					</div>
-					<div id="hpandweapon" style="border:1px solid green; margin-left: 110px;">
-						<div id="player1HP" style="background-color: #009900; border:1px solid blue; height:20px;">
-						<!-- <img src="media/health.png">  -->
-						</div>
-						<!-- <br> -->
-						<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
-						<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px">
-						</div>
-						<div id="player1rhand" style="border:1px solid blue; opacity:1.0;">
-						<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px"> 
-						</div>
-					</div>
+					
+					
+
 				</div>
 				<br>
 				Martin
 			</div>
+			<div id="speech_bubble" onClick="hide_bubble();"  style="float:left; display:none; font-size:16px; padding-top:25px; padding-bottom:25px; padding-left:95px; padding-right:25px; text-align:left; width:600px; height:150px; opacity:0.8; background-color: #001100; background:url(media/speech_bubble.png); background-size: 100% 100%;">
+			Im alive!! Hello World!
+			</div>
+			
 			<br><!--
 			<br>
 			<div id="player2" style="border:2px solid; opacity:0.4;">
@@ -538,6 +548,7 @@ else
 
 			var info_tip_div_top_lift = 0;
 			var info_tip_div_top = 0;
+			var speech_bubble_div = 0;
 
 			var mesh, mesh2, mesh3, light;
 
@@ -647,6 +658,54 @@ else
 				info_dialog_div.style.display = "none";
 				//play sound 
 				audio_click.play();
+			}
+			
+			function hide_bubble()
+			{
+				//remove dialog bubble
+				speech_bubble_div.style.display = "none";
+				//play sound 
+				audio_click.play();
+			}
+			
+			function show_speech_bubble(message, width, height, pos, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
+				
+				//this check prevents us to go from one message to another..
+				//if(speech_bubble_div.style.display == "none")
+				{
+					speech_bubble_div.innerHTML = message;
+					
+					if((width != 'undefined') && (width > 0))
+					{
+						speech_bubble_div.style.width = width + "px";
+					}
+					else
+					{
+						speech_bubble_div.style.width = "750px";
+					}
+
+					if ((height != "undefined") && (height > 0))
+					{
+						speech_bubble_div.style.height = height + "px";
+					}
+					else
+					{
+						speech_bubble_div.style.height = "450px";
+					}
+
+					//speech_bubble_div.style.backgroundImage = "url(media/pannel_small.png)";
+					//info_dialog_message_div.style.color = "#ddddd0";
+					//info_dialog_message_div.style.fontFamily = "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville"; 
+					//info_dialog_message_div.style.fontWeight = "400";
+
+					speech_bubble_div.style.backgroundImage = silly_background;
+					speech_bubble_div.style.color = fonty_color;
+					speech_bubble_div.style.fontFamily = fonty_face;
+					speech_bubble_div.style.fontWeight = fonty_weight;
+					speech_bubble_div.style.fontSize = fonty_size;
+					
+					speech_bubble_div.style.display = "inline";
+				}
 			}
 			
 			function show_message(message, width, height, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
@@ -842,6 +901,8 @@ else
 				
 				info_dialog_div = document.getElementById('info_dialog');
 				info_dialog_message_div = document.getElementById('info_message');
+				
+				speech_bubble_div = document.getElementById('speech_bubble');
 
 				player_HP_div = document.getElementById('player1HP');
 				player_HP_div.style.width = "100%";
