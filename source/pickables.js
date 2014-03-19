@@ -37,7 +37,8 @@ function load_pickables () {
 		picki.niched = -1; //flag indicating if pickable is in the niche
 		picki.plated = -1; //flag indicating if pickable is in the niche
 
-		loader.load( picki.model, picki.loadObject(picki) );
+		loadGameObjectCheck(loader, picki);
+		//loader.load( picki.model, picki.loadObject(picki) );
 		
 		array_of_pickables.push(picki);
 	}

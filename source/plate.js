@@ -25,7 +25,8 @@ function load_plates () {
 		platsy.position.x = plates_array[i][2]*SQUARE_SIZE;
 		platsy.position.z = plates_array[i][3]*SQUARE_SIZE;
 
-		loader.load( platsy.model, platsy.loadObject(platsy) );
+		//loader.load( platsy.model, platsy.loadObject(platsy) );
+		loadGameObjectCheck(loader, platsy);
 		
 		array_of_plates.push(platsy);
 	}

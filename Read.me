@@ -94,7 +94,7 @@ todo:
 + registration should be accessible from everywhere - No! If player is in the game, he is logged in.
 
 --- publishing tasks:
-- preview picture on facegroup
++ preview picture on facegroup
 - cuber code on mystic-peanut
 - check in all browsers
 - update MP news section
@@ -102,6 +102,7 @@ todo:
 - reset counters
 - notify registered users
 - publish on facebook group
+- game name?
 
 bugs:
 + item goes to niche instead of hand if standing in front of niche :)
@@ -116,14 +117,17 @@ optimizations:
 - floor plane
 - wall plane
 - ceiling plane
-- game object load
++ game object load
++ monster loading
 + decor pillars
 
 --- third level:
 
 - (D) complete level map
+  - (P) fill holes in corners..
   - (P) add spot lights to level holes.. (where triggereed)
   - (D) make pretty map on scroll 
+  - (D) blood on spikes..
   - (M) make room with table and chairs? niche? cabinet? prison? pile of stuff behind bars?
 - (A) make worm sounds
 - (M) make wooden doors
@@ -156,21 +160,36 @@ optimizations:
 ~ make root/rope pickable item
 ~ boy face
 
+- game functioning
+ - character screen (dressup)
+ - money, experience, leveling, skills
+ - magic
+ - gui redesign
+ - loading screen
+ - php session
+ - php login 
+ - playing unregistered..
+ - save/load game
+ - redesign editor site (combine game and demo?)
+
+
 - make level editor
  - make sqare borders transparent between neighboring squares
+ - 0 index floor is not working in editor.. (20-0 = 20 -> array out of bounds)
  - make texture uploading
  - add dungeon elements
  - save/load dungeon arrays
  - add model uploading
  - move around the dungeon
  - print curent coordinate
+ - use same loading file as game
 
-can not do before
-- add shovel (before making two handed weapons)
-- 
+--- various game features todo: 
 
+- make worm control 
+- make worm dig passage in ground..
 - make player draw map in game??
-- make two handed weapons (shovel), or not??
+- make two handed weapons (add shovel), or not?? 
 - player grunts, golem wound and attack are not sounded, 
 - revise door loading to optimize and support different doors on one level!
 - sound off/on button
@@ -184,7 +203,7 @@ can not do before
 ~ make item combining
 ~ add tips dialog: "press i to open inventory"
 - item info on mouse pause
-- make speech bubbles for boy
++ make speech bubbles for boy
 - close inventory on gui x?
 - make youtube video
 - when item is picked, apropriate hand slots glow

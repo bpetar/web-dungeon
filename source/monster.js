@@ -155,6 +155,49 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 };
 
 
+
+//check if model is already being downloaded, and wait for it to download and clone it...
+function loadMonsterCheck(loader, monster)
+{
+	//console.log("loadMonsterCheck: " + monster.name);
+	var object = modelAlreadyLoaded(monster.name);
+	if(object != -1)
+	{
+		//already put to download
+		//object loading is in progress
+		//wait till object is loaded and link to it
+		if(object == 0)
+		{
+			if(typeof modelWaiters[monster.name] == 'undefined')
+			{
+				modelWaiters[monster.name] = new Array();
+			}
+			modelWaiters[monster.name].push(monster);
+			return;
+		}
+		
+		console.log("loadMonsterCheck, model loaded!: " + monster.name);
+		monster.mesh = object.clone();
+		//monster.mesh.position = monster.position;
+		monster.mesh.position.x = monster.position.x*SQUARE_SIZE;
+		monster.mesh.position.z = monster.position.z*SQUARE_SIZE;
+		monster.mesh.position.y = 0;
+		monster.mesh.rotation = new THREE.Vector3(0, monster.rotation*Math.PI/2, 0);
+		monster.id=monster.mesh.id;
+		monster.mesh.visible = monster.visible;
+		scene.add( monster.mesh );		
+	}
+	else
+	{
+		//download it first time..
+		loaded3Dmodels.push([monster.name,0]);
+		loader.load( monster.model, monster.loadObject(monster) );
+		console.log("loadMonsterCheck loading first time: " + monster.name);
+	}
+	
+}
+
+
 Monster.prototype.loadObject = function ( munster ) {
 
 	return function (geometry, materials ) {
@@ -168,11 +211,20 @@ Monster.prototype.loadObject = function ( munster ) {
 			materials[ 1 ].morphTargets = true;
 		}
 		munster.mesh = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		
+		for(var i=0; i< loaded3Dmodels.length; i++)
+		{
+			if(loaded3Dmodels[i][0] == munster.name)
+			{
+				//set loaded model
+				loaded3Dmodels[i][1] = munster.mesh;
+			}
+		}
+			
 		munster.mesh.position.x = munster.position.x*SQUARE_SIZE;
 		munster.mesh.position.z = munster.position.z*SQUARE_SIZE;
 		munster.mesh.position.y = 0;
-		var rot = new THREE.Vector3(0, munster.rotation*Math.PI/2, 0);
-		munster.mesh.rotation = rot;
+		munster.mesh.rotation = new THREE.Vector3(0, munster.rotation*Math.PI/2, 0);
 		munster.mesh.name = munster.name;
 		munster.id = munster.mesh.id;
 		munster.mesh.visible = munster.visible;
@@ -181,6 +233,30 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		console.log("adding monstere " + munster.mesh.name);
 		scene.add( munster.mesh );
+		
+		if(typeof modelWaiters[munster.name] != 'undefined')
+		{
+			//console.log("loadModel waiters are existing " + munster.name);
+			for (var i=0; i< modelWaiters[munster.name].length; i++)
+			{
+				var monsterWaiter = modelWaiters[munster.name][i];
+				console.log("loadModel waiter cloned: " + munster.name + ", pos:" + monsterWaiter.position.z);
+				var clone = munster.mesh.clone();
+				clone.position.x = monsterWaiter.position.x*SQUARE_SIZE;
+				clone.position.z = monsterWaiter.position.z*SQUARE_SIZE;
+				clone.position.y = 0;
+				clone.rotation = new THREE.Vector3(0, monsterWaiter.rotation*Math.PI/2, 0);
+				
+				clone.visible = munster.visible;
+				clone.duration = IDLE_ANIM_DURATION;
+				clone.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
+				clone.scale.set( 1.2, 1.2, 1.2 );
+
+				monsterWaiter.mesh = clone;
+				
+				scene.add( clone );
+			}
+		}
 
 	}
 
@@ -265,7 +341,9 @@ function load_monsters () {
 
 		
 		console.log("loading monstere " + i);
-		loader.load( munster.model, munster.loadObject(munster) );
+		
+		loadMonsterCheck(loader,munster);
+		//loader.load( munster.model, munster.loadObject(munster) );
 		
 		loader.callbackProgress = callbackProgress;
 		

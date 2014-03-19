@@ -24,7 +24,8 @@ function load_buttons () {
 		butsy.position.set((buttons_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(buttons_array[i][3])*SQUARE_SIZE);
 		butsy.rotation.set(0, Math.PI/2, 0);
 		
-		loader.load( butsy.model, butsy.loadObject(butsy) );
+		//loader.load( butsy.model, butsy.loadObject(butsy) );
+		loadGameObjectCheck(loader, butsy);
 		
 		array_of_buttons.push(butsy);
 	}

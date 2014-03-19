@@ -23,7 +23,8 @@ function load_keyholes () {
 		keyhols.position.set((keyholes_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(keyholes_array[i][3])*SQUARE_SIZE);
 		keyhols.rotation.set(0, Math.PI/2, 0);
 		
-		loader.load( keyhols.model, keyhols.loadObject(keyhols) );
+		//loader.load( keyhols.model, keyhols.loadObject(keyhols) );
+		loadGameObjectCheck(loader, keyhols);
 		
 		array_of_keyholes.push(keyhols);
 	}

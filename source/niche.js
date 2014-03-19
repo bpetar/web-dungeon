@@ -92,7 +92,8 @@ function loadNiches() {
 				picki.useScript = niche_pickables[i][5];
 			}
 			
-			loader.load( picki.model, picki.loadObject(picki) );
+			//loader.load( picki.model, picki.loadObject(picki) );
+			loadGameObjectCheck(loader, picki);
 			
 			//add to array of all pickables on the map
 			array_of_pickables.push(picki);
