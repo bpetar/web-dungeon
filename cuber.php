@@ -922,9 +922,6 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
-				//level specific action on load
-				onLoad();
-				
 				//load level walls and floors etc..
 				load_level();
 
@@ -946,6 +943,9 @@ else
 				//load chests
 				load_containers();
 				
+				//level specific action on load
+				onLoad();
+
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				renderer.shadowMapWidth = 128;;
