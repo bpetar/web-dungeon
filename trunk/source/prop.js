@@ -26,7 +26,8 @@ function load_props() {
 			propsy.position.set((propsArr[i][1])*SQUARE_SIZE,0,(propsArr[i][2])*SQUARE_SIZE);
 			//propsy.rotation.set(0, Math.PI/2, 0);
 			
-			loader.load( propsy.model, propsy.loadObject(propsy) );
+			//loader.load( propsy.model, propsy.loadObject(propsy) );
+			loadGameObjectCheck(loader, propsy);
 			
 			array_of_props.push(propsy);
 		}

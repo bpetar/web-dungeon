@@ -42,7 +42,8 @@ function load_containers () {
 			chest.rotation.y = Math.PI/2;
 		}
 		
-		loader.load( chest.model, chest.loadObject(chest) );
+		//loader.load( chest.model, chest.loadObject(chest) );
+		loadGameObjectCheck(loader, chest);
 		
 		array_of_containers.push(chest);
 	}
@@ -142,7 +143,8 @@ function container_item_clicked(x_pos,y_pos)
 					picki.visible = false;
 					//lets make 3d model here in case player wants to drop it in 3D world.. 
 					var loader = new THREE.JSONLoader();
-					loader.load( picki.model, picki.loadObject(picki) );
+					//loader.load( picki.model, picki.loadObject(picki) );
+					loadGameObjectCheck(loader, picki);
 				}
 				else
 				{

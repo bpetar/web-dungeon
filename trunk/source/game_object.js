@@ -61,7 +61,7 @@ function loadGameObjectCheck(loader, gobject)
 			{
 				modelWaiters[gobject.name] = new Array();
 			}
-			modelWaiters[gobject.name].push([gobject.position,gobject.rotation]);
+			modelWaiters[gobject.name].push(gobject);
 			return;
 		}
 		
@@ -114,9 +114,12 @@ function loadObject( gobject ) {
 				for (var i=0; i< modelWaiters[gobject.name].length; i++)
 				{
 					console.log("loadModel waiter cloned: " + gobject.name);
+					var waitingGobject = modelWaiters[gobject.name][i];
 					var clone = gobject.mesh.clone();
-					clone.position = modelWaiters[gobject.name][i][0];
-					clone.rotation = modelWaiters[gobject.name][i][1];
+					clone.position = waitingGobject.position;
+					clone.rotation = waitingGobject.rotation;
+					waitingGobject.mesh = clone;
+					waitingGobject.id = clone.id;
 					scene.add( clone );
 				}
 			}

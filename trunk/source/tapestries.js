@@ -44,7 +44,8 @@ function load_tapestries () {
 		}
 
 
-		loader.load( tapsy.model, tapsy.loadObject(tapsy) );
+		//loader.load( tapsy.model, tapsy.loadObject(tapsy) );
+		loadGameObjectCheck(loader, tapsy);
 	}
 
 	//alert("pera1");

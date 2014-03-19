@@ -13,7 +13,8 @@ function show_model(loader, model_file, x, z, rot)
 
 		test.rotation.y = rot;
 		
-		loader.load( test.model, test.loadObject(test) );
+		//loader.load( test.model, test.loadObject(test) );
+		loadGameObjectCheck(loader, test);
 }
 
 // Rotate an object around an arbitrary axis in world space       
