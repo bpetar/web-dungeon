@@ -442,6 +442,24 @@
 		}
 	}
 	
+	function setDivFieldMap(divy,i,j)
+	{
+		//called when div is clicked
+		//console.log("inhere.asdasd." + i + " " + j );
+		if(element_at_hand == mapArr[i][j].type)
+		{
+			mapArr[i][j].type = TILE_EMPTY; //floor, door, etc
+			divy.style.border = "1px solid transparent";
+			//createFloorArrFromMap();
+		}
+		else
+		{
+			mapArr[i][j].type = element_at_hand; //floor, door, etc
+			divy.style.border = "1px solid black";
+			//createFloorArrFromMap();
+		}
+	}
+	
 	
 	function draw_grid() 
 	{
@@ -643,15 +661,21 @@
 
 		var str = document.getElementById('lvlarrtext').value;
 		var arr = eval(str);
-		console.log("loaded array: " + arr);
-		floorsArr2D = arr;
+		for (var a=0; a<arr.length; a++)
+		{
+			floorsArr2D[a] = arr[a];
+			console.log("loaded floorsArr2D: " + floorsArr2D[a] + ", arr: " + arr[a]);
+		}
+		console.log("loaded array: " + floorsArr2D.length + ", str: " + str);
+		//floorsArr2D = arr;
 		
 		for (var i=0; i<floorsArr2D.length; i++)
 		{
-			setDivField(mapArr[grid_size-floorsArr2D[i][1]][grid_size-floorsArr2D[i][0]].div, grid_size-floorsArr2D[i][1], grid_size-floorsArr2D[i][0]);
+			console.log("load lvl i:" + i);
+			setDivFieldMap(mapArr[grid_size-floorsArr2D[i][1]][grid_size-floorsArr2D[i][0]].div, grid_size-floorsArr2D[i][1], grid_size-floorsArr2D[i][0]);
 		}
 		
-		console.log("load lvl");
+		console.log("load lvl exit");
 		createDungeonFromFloorArr();
 	}
 	
