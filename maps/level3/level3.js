@@ -17,17 +17,16 @@ function onLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 224;
+var totalModels = 24;
 
 // map arrays..
-//var floorsArr2D = [[16,7], [16,8], [15,8], [14,8], [13,8], [12,8], [11,8], [10,8], [9,8], [8,8], [17,8], [18,8], [19,8], [19,7], [19,6], [18,6], [19,5], [19,4], [18,4], [19,3], [19,2], [18,2], [19,1], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [17,2], [15,4], [15,6], [13,7], [13,6], [12,6], [13,5], [13,4], [12,4], [13,3], [13,2], [12,2], [13,1], [10,7], [10,6], [9,6], [10,5], [10,4], [9,4], [10,3], [10,2], [9,2], [10,1], [19,9], [19,10], [18,10],[19,11], [19,12], [18,12], [19,13], [19,14], [18,14], [19,15], [19,16], [18,16], [16,9], [16,10], [15,10],[16,11], [16,12], [15,12], [16,13], [16,14], [15,14], [16,15], [16,16], [15,16], [13,9], [13,10], [12,10],[13,11], [13,12], [12,12], [13,13], [13,14], [12,14], [13,15], [13,16], [12,16], [10,9], [10,10]];
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
 var holesArr = [];
-var holesAboveArr = [[15,0]];
+var holesAboveArr = [[9,3]];
 var writtingsArr = [[10,10,1,"Punishment for killing a worm is work in the kitchen!",0]];
 var secretWallsArr = []; //x,y,orientation
 var doorsArr3D = [[16,3,0,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
-var stairsArr = [[10,11,0,"maps/level3/models/slope.js",0,"level4"]];
+var stairsArr = [[5,13,0,"maps/level3/models/slope.js",0,"level4"]];
 
 //basic level textures
 var floor_texture_file = 'maps/level3/models/dirtpath.png';
@@ -80,7 +79,7 @@ function propOnClick4()
 }
 
 //props x,z,model,onClick script
-var propsArr = [[111,15,0,"models/spears.js",propOnClick1]];
+var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -128,7 +127,7 @@ function WormOnItemClick1()
 }
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 6,8,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 9,13,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 function showScroll()
 {
@@ -141,13 +140,13 @@ function showScroll()
 var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", showScroll]];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[10,10,3,niche_pickables_array1]]; 
+var nicheArr = [[5,8,1,niche_pickables_array1]]; 
 
 
 var teleport_array = [];
 
 var point_light_color = 0xffffaa;
-var point_light_intensity = 1.5;
+var point_light_intensity = 1.0;
 fog_color = 0x111100;
 fog_intensity = 0.008525;
 
@@ -163,8 +162,8 @@ function load_level_lights()
 	//scene.add( spotLight );
 
 	var spotLight = new THREE.SpotLight();
-	spotLight.position.set( 150, 24, 0 );
-	spotLight.target.position.set( 150, 0, 0 );
+	spotLight.position.set( 90, 54, 30 );
+	spotLight.target.position.set( 90, 0, 30 );
 	//pointLight.castShadow = true;
 	scene.add( spotLight );
 
