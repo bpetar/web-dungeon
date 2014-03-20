@@ -288,33 +288,6 @@ function load_stairs(loader)
 
 function load_walls(loader)
 {
-	//wall texture
-	map = THREE.ImageUtils.loadTexture( wall_texture_file );
-	map.wrapS = map.wrapT = THREE.RepeatWrapping;
-	map.anisotropy = 16;
-	material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-	
-	
-	//secret walls
-	for(var s=0; s<secretWallsArr.length; s++)
-	{
-		//place wall depending on orientation
-		if(secretWallsArr[s][2] == 3)
-		{
-			//left secret wall
-			object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
-			object.rotation.set(0, Math.PI/2, 0);
-			//object.receiveShadow = true;
-			object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
-			object.position.y = 0.4*SQUARE_SIZE; //y
-			object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
-			if(secretWallsArr[s].length > 3)
-			{
-				secretWallsArr[s][3] = object;
-			}
-			scene.add( object );
-		}
-	}
 	
 	//model walls
 	if((typeof curved_walls == 'undefined') && (typeof wall_model != 'undefined'))
@@ -656,8 +629,8 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//TODO: load curved wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+						//writtingsArr[writtingIsOnTheWall][4] = object;
 					}
 					else
 					{
@@ -735,8 +708,8 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//TODO: load curved wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
+						//writtingsArr[writtingIsOnTheWall][4] = object;
 					}
 					else
 					{
@@ -774,19 +747,60 @@ function load_walls(loader)
 	//regular walls
 	else
 	{
-		var materialwrit;
-		
+		var materialWrit;
+		var secretWallObj;
+		var wallWritObject;
+		//wall texture
+		var wall_map = THREE.ImageUtils.loadTexture( wall_texture_file );
+		wall_map.wrapS = wall_map.wrapT = THREE.RepeatWrapping;
+		wall_map.anisotropy = 16;
+		var materialWall = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: wall_map, side: THREE.DoubleSide } );
+		var wallObj = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialWall );
 		//writting on the wall texture
 		if(writtingsArr.length>0)
 		{
 			var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
 			mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
 			mapwrit.anisotropy = 16;
-			materialwrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
+			materialWrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
+			wallWritObject = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialWrit );
 		}
-		console.log("writ retular walls");
+
+		for(var s=0; s<secretWallsArr.length; s++)
+		{
+			
+			//place wall depending on orientation
+			//TODO implement other orientations
+			if(secretWallsArr[s][2] == 3)
+			{
+				var object;
+				//left secret wall
+				if(s==0)
+				{
+					secretWallObj = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialWall );
+					object = secretWallObj;
+				}
+				else
+				{
+					object = secretWallObj.clone();
+				}
+				object.rotation.set(0, Math.PI/2, 0);
+				//object.receiveShadow = true;
+				object.position.x = (secretWallsArr[s][0]+0.5)*SQUARE_SIZE; //x
+				object.position.y = 0.4*SQUARE_SIZE; //y
+				object.position.z = (secretWallsArr[s][1])*SQUARE_SIZE; //z
+				if(secretWallsArr[s].length > 3)
+				{
+					secretWallsArr[s][3] = object;
+				}
+				scene.add( object );
+			}
+		}
+		
+		//console.log("writ regular walls");
 		for(i=0; i < floorsArr2D.length; i++)
 		{
+
 			var leftWall = true;
 			var rightWall = true;
 			var frontWall = true;
@@ -867,13 +881,21 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//load wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						if(writtingIsOnTheWall==0)
+						{
+							writtingsArr[writtingIsOnTheWall][4] = wallWritObject;
+							object = wallWritObject;
+						}
+						else 
+						{
+							object = wallWritObject.clone();
+							writtingsArr[writtingIsOnTheWall][4] = object;
+						}
 					}
 					else
 					{
 						//load regular wall
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						object = wallObj.clone();
 					}
 					object.rotation.set(0, Math.PI/2, 0);
 					//object.receiveShadow = true;
@@ -929,13 +951,23 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//load wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						if(writtingIsOnTheWall==0)
+						{
+							console.log("loading writ................................... " + wallWritObject);
+							writtingsArr[writtingIsOnTheWall][4] = wallWritObject;
+							object = wallWritObject;
+						}
+						else 
+						{
+							object = wallWritObject.clone();
+							writtingsArr[writtingIsOnTheWall][4] = object;
+						}
 					}
 					else
 					{
 						//load regular wall
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						object = wallObj.clone();
 					}
 					object.rotation.set(0, Math.PI/2, 0);
 					//object.receiveShadow = true;
@@ -990,14 +1022,21 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//load wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						console.log("jojo " + n);
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						if(writtingIsOnTheWall==0)
+						{
+							writtingsArr[writtingIsOnTheWall][4] = wallWritObject;
+							object = wallWritObject;
+						}
+						else 
+						{
+							object = wallWritObject.clone();
+							writtingsArr[writtingIsOnTheWall][4] = object;
+						}
 					}
 					else
 					{
 						//load regular wall
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						object = wallObj.clone();
 					}
 					object.rotation.set(0, Math.PI, 0);
 					//object.receiveShadow = true;
@@ -1052,13 +1091,22 @@ function load_walls(loader)
 					if(writtingIsOnTheWall > -1)
 					{
 						//load wall with writting
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						writtingsArr[writtingIsOnTheWall][4] = object;
+						
+						if(writtingIsOnTheWall==0)
+						{
+							writtingsArr[writtingIsOnTheWall][4] = wallWritObject;
+							object = wallWritObject;
+						}
+						else 
+						{
+							object = wallWritObject.clone();
+							writtingsArr[writtingIsOnTheWall][4] = object;
+						}
 					}
 					else
 					{
 						//load regular wall
-						object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), material );
+						object = wallObj.clone();
 					}
 					object.rotation.set(0, Math.PI, 0);
 					//object.receiveShadow = true;
@@ -1146,13 +1194,14 @@ function load_level()
 	}
 	
 	var floor_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );
-	
+	var floorObj = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
 
 	var ceiling_map = THREE.ImageUtils.loadTexture( ceiling_texture_file );
 	ceiling_map.wrapS = ceiling_map.wrapT = THREE.RepeatWrapping;
 	ceiling_map.anisotropy = 16;
 	var ceiling_material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map:ceiling_map, side: THREE.DoubleSide } );
-
+	var ceilingObj = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), ceiling_material );
+	
 	//floors
 	for(var i=0; i < floorsArr2D.length; i++)
 	{
@@ -1288,7 +1337,7 @@ function load_level()
 			}
 			else
 			{
-				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), floor_material );
+				object = floorObj.clone();
 			}
 			object.rotation.set(-Math.PI/2, 0, 0);
 			//object.receiveShadow = true;
@@ -1354,7 +1403,8 @@ function load_level()
 			}
 			else
 			{
-				object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), ceiling_material );
+				//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, SQUARE_SIZE, 1, 1 ), ceiling_material );
+				object = ceilingObj.clone();
 				//object.position.set( 0-i*SQUARE_SIZE, -1, 0 );
 				object.rotation.set(-Math.PI/2, 0, 0);
 				//object.receiveShadow = true;
