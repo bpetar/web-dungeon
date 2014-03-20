@@ -161,11 +161,11 @@ var loaded3Dmodels = [];
 var modelWaiters = {};
 
 //check if model is already loaded
-function modelAlreadyLoaded(name)
+function modelAlreadyLoaded(model)
 {
 	for(var i=0; i< loaded3Dmodels.length; i++)
 	{
-		if(loaded3Dmodels[i][0] == name)
+		if(loaded3Dmodels[i][0] == model)
 		{
 			return loaded3Dmodels[i][1];
 		}
@@ -174,7 +174,7 @@ function modelAlreadyLoaded(name)
 	return -1;
 }
 
-function loadModel(pos, rot, name) {
+function loadModel(pos, rot, model) {
 	return function (geometry, materials ) {
 	
 		materials[ 0 ].shading = THREE.SmoothShading;
@@ -182,7 +182,7 @@ function loadModel(pos, rot, name) {
 		
 		for(var i=0; i< loaded3Dmodels.length; i++)
 		{
-			if(loaded3Dmodels[i][0] == name)
+			if(loaded3Dmodels[i][0] == model)
 			{
 				//set loaded model
 				loaded3Dmodels[i][1] = mesh;
@@ -194,47 +194,47 @@ function loadModel(pos, rot, name) {
 		scene.add( mesh );
 		
 		//clone all waiters
-		//console.log("loadModel checking for waiters: " + name);
-		if(typeof modelWaiters[name] != 'undefined')
+		//console.log("loadModel checking for waiters: " + model);
+		if(typeof modelWaiters[model] != 'undefined')
 		{
-			//console.log("loadModel waiters are existing " + name);
-			for (var i=0; i< modelWaiters[name].length; i++)
+			//console.log("loadModel waiters are existing " + model);
+			for (var i=0; i< modelWaiters[model].length; i++)
 			{
-				//console.log("loadModel waiter cloned: " + name);
+				//console.log("loadModel waiter cloned: " + model);
 				var clone = mesh.clone();
-				clone.position = modelWaiters[name][i][0];
-				clone.rotation = modelWaiters[name][i][1];
+				clone.position = modelWaiters[model][i][0];
+				clone.rotation = modelWaiters[model][i][1];
 				scene.add( clone );
 			}
 		}
 		
 		//progress
-		updateModelLoading(name)
+		updateModelLoading(model)
 		
 	}
 }
 
-function loadModelCheck(loader, pos, rot, name)
+function loadModelCheck(loader, pos, rot, model)
 {
-	//console.log("loadModelCheck: " + name);
-	var object = modelAlreadyLoaded(name);
+	//console.log("loadModelCheck: " + model);
+	var object = modelAlreadyLoaded(model);
 	if(object != -1)
 	{
 		//object loading is in progress
 		//wait till object is loaded and link to it
 		if(object == 0)
 		{
-			//console.log("loadModelCheck queue for waiting: " + name);
-			if(typeof modelWaiters[name] == 'undefined')
+			//console.log("loadModelCheck queue for waiting: " + model);
+			if(typeof modelWaiters[model] == 'undefined')
 			{
-				modelWaiters[name] = new Array();
+				modelWaiters[model] = new Array();
 			}
-			modelWaiters[name].push([pos,rot]);
+			modelWaiters[model].push([pos,rot]);
 
 			return;
 		}
 		
-		//console.log("loadModelCheck, model loaded!: " + name);
+		//console.log("loadModelCheck, model loaded!: " + model);
 		var clony = object.clone();
 		clony.position = pos;
 		clony.rotation = rot;
@@ -243,9 +243,9 @@ function loadModelCheck(loader, pos, rot, name)
 	else
 	{
 		//download it first time..
-		loaded3Dmodels.push([name,0]);
-		loader.load( name, loadModel(pos, rot, name) );
-		//console.log("loadModelCheck loading first time: " + name);
+		loaded3Dmodels.push([model,0]);
+		loader.load( model, loadModel(pos, rot, model) );
+		//console.log("loadModelCheck loading first time: " + model);
 	}
 
 }
