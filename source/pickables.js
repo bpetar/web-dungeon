@@ -20,7 +20,7 @@ function load_pickables () {
 		picki.useHint = pickables_array[i][7];
 		if(pickables_array[i].length>8)
 		{
-			console.log("pickable script function being loaded: " + picki.name);
+			//console.log("pickable script function being loaded: " + picki.name);
 			picki.useScript = pickables_array[i][8];
 		}
 		if(pickables_array[i].length>9)

@@ -17,6 +17,19 @@ function show_model(loader, model_file, x, z, rot)
 		loadGameObjectCheck(loader, test);
 }
 
+function updateModelLoading(name)
+{
+	modelNumber++;
+	console.log("loading model nb: " + modelNumber + ", name: " + name);
+	if(typeof totalModels != 'undefined')
+	{
+		var perc = (modelNumber*100)/totalModels;
+		if(totalModels == modelNumber) remove_loading_screen();
+		console.log("loading percent: " + perc);
+		update_loading_screen(perc);
+	}
+}
+
 // Rotate an object around an arbitrary axis in world space       
 function rotateAroundWorldAxis(object, axis, radians) {
     rotWorldMatrix = new THREE.Matrix4();
