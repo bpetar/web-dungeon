@@ -5,9 +5,10 @@ function onLoad()
 }
 
 var levelNumber = 1;
+var totalModels = 12;
 
 // map arrays..
-var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
+var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [18,9], [18,10], [18,11], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
 var secretWallsArr = [[16,9,3,0,"This wall seems odd"]]; //x,y,orientation,model,hint
 var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,rot,open,mesh,animate flag,openable on click
 var holesArr = [];
@@ -39,7 +40,7 @@ var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry2.js",
 // id, name, model, icon, slot
 var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation, mesh
-var containers_array = [[1,"Chest","maps/level1/models/chest2.js", 17,9,3, container_pickables_array1, 0]];
+var containers_array = [[1,"Chest","maps/level1/models/chest2.js", 18,11,0, container_pickables_array1, 0]];
 
 // id, model, x, z, pressed, script functions..
 var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];

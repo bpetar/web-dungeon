@@ -176,7 +176,7 @@ function loadMonsterCheck(loader, monster)
 			return;
 		}
 		
-		console.log("loadMonsterCheck, model loaded!: " + monster.name);
+		//console.log("loadMonsterCheck, model loaded!: " + monster.name);
 		monster.mesh = object.clone();
 		//monster.mesh.position = monster.position;
 		monster.mesh.position.x = monster.position.x*SQUARE_SIZE;
@@ -192,7 +192,7 @@ function loadMonsterCheck(loader, monster)
 		//download it first time..
 		loaded3Dmodels.push([monster.name,0]);
 		loader.load( monster.model, monster.loadObject(monster) );
-		console.log("loadMonsterCheck loading first time: " + monster.name);
+		//console.log("loadMonsterCheck loading first time: " + monster.name);
 	}
 	
 }
@@ -231,7 +231,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.duration = IDLE_ANIM_DURATION;
 		munster.mesh.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
-		console.log("adding monstere " + munster.mesh.name);
+		//console.log("adding monstere " + munster.mesh.name);
 		scene.add( munster.mesh );
 		
 		if(typeof modelWaiters[munster.name] != 'undefined')
@@ -240,7 +240,7 @@ Monster.prototype.loadObject = function ( munster ) {
 			for (var i=0; i< modelWaiters[munster.name].length; i++)
 			{
 				var monsterWaiter = modelWaiters[munster.name][i];
-				console.log("loadModel waiter cloned: " + munster.name + ", pos:" + monsterWaiter.position.z);
+				//console.log("loadModel waiter cloned: " + munster.name + ", pos:" + monsterWaiter.position.z);
 				var clone = munster.mesh.clone();
 				clone.position.x = monsterWaiter.position.x*SQUARE_SIZE;
 				clone.position.z = monsterWaiter.position.z*SQUARE_SIZE;
@@ -257,6 +257,8 @@ Monster.prototype.loadObject = function ( munster ) {
 				scene.add( clone );
 			}
 		}
+		
+		updateModelLoading(munster.name)
 
 	}
 
@@ -271,7 +273,7 @@ function load_monsters () {
 
 	var callbackProgress = function( progress, result ) {
 
-		console.log("loading monstere kod pere");
+		//console.log("loading monstere kod pere");
 		
 		var bar = 250,
 			total = progress.totalModels + progress.totalTextures,
@@ -280,7 +282,7 @@ function load_monsters () {
 		if ( total )
 			bar = Math.floor( bar * loaded / total );
 
-		console.log("bar: " + bar);//$( "bar" ).style.width = bar + "px";
+		//console.log("bar: " + bar);//$( "bar" ).style.width = bar + "px";
 
 
 	}
@@ -340,7 +342,7 @@ function load_monsters () {
 		munster.audio_monster_click.appendChild(source_monster_click);
 
 		
-		console.log("loading monstere " + i);
+		//console.log("loading monstere " + i);
 		
 		loadMonsterCheck(loader,munster);
 		//loader.load( munster.model, munster.loadObject(munster) );

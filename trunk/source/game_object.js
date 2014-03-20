@@ -65,7 +65,7 @@ function loadGameObjectCheck(loader, gobject)
 			return;
 		}
 		
-		console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
+		//console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
 		gobject.mesh = object.clone();
 		gobject.mesh.position = gobject.position;
 		gobject.mesh.rotation = gobject.rotation;
@@ -78,7 +78,7 @@ function loadGameObjectCheck(loader, gobject)
 		//download it first time..
 		loaded3Dmodels.push([gobject.name,0]);
 		loader.load( gobject.model, gobject.loadObject(gobject) );
-		console.log("loadGameObjectCheck loading first time: " + gobject.name);
+		//console.log("loadGameObjectCheck loading first time: " + gobject.name);
 	}
 	
 }
@@ -87,7 +87,7 @@ function loadGameObjectCheck(loader, gobject)
 function loadObject( gobject ) {
 	return function (geometry, materials ) {
 
-			console.log("loadObject : " + gobject.name);
+			//console.log("loadObject : " + gobject.name);
 			
 			materials[ 0 ].shading = THREE.FlatShading;
 			gobject.mesh = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
@@ -113,7 +113,7 @@ function loadObject( gobject ) {
 				//console.log("loadModel waiters are existing " + gobject.name);
 				for (var i=0; i< modelWaiters[gobject.name].length; i++)
 				{
-					console.log("loadModel waiter cloned: " + gobject.name);
+					//console.log("loadModel waiter cloned: " + gobject.name);
 					var waitingGobject = modelWaiters[gobject.name][i];
 					var clone = gobject.mesh.clone();
 					clone.position = waitingGobject.position;
@@ -123,5 +123,8 @@ function loadObject( gobject ) {
 					scene.add( clone );
 				}
 			}
+			
+			updateModelLoading(gobject.name)
+			
 	}
 }

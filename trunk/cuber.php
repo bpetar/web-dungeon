@@ -209,8 +209,8 @@
 		<div id="loading_progress" style="position:absolute; font-size:28px; width:100%; height:100%; background-color: #000011; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
 
 			<div style="position:absolute; width:300px; height:200px; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
-				<span id="message">Loading ...</span> <br><br><br>
-				<div id="progressbar" style="font-size:12px;">(sorry there is no progress bar implemented, im not there yet, you are downloading about 20MB of models, its shouldn't take long on fast internet connection, you probably won't be able to read all of this and the screen will just be gone and you'll be like what was else written there could it be that it was something important? well no. but its nice to have something to read while you wait isnt it?)</div>
+				<span id="loading_message">Loading 0%</span> <br><br><br>
+				<div id="progressbar" style="font-size:12px; color:#ff0000">o o o o o o o o o o</div>
 			</div>
 		</div>
 		
@@ -634,6 +634,10 @@ else
 			
 			var pointLight;
 			
+			var progressbar_div;
+			var loading_msg_span;
+			var loading_div;
+			
 			var gui_div_left_pos = 70;
 			var gui_div_top_pos = 70;
 
@@ -893,6 +897,8 @@ else
 				container_div.style.top = SLOT_WIDTH +'px';
 				
 				loading_div = document.getElementById('loading_progress');
+				progressbar_div = document.getElementById('progressbar');
+				loading_msg_span = document.getElementById('loading_message');
 				//loading_div.style.display = "none";
 				
 				player1_div = document.getElementById('player1');
@@ -1410,10 +1416,31 @@ else
 			
 			function remove_loading_screen()
 			{
-				console.log("remove loading screen");
+				//console.log("remove loading screen");
 				//remove loading screen
 				loading_div.style.display = "none";
 				document.getElementById( 'info_dialog_button' ).focus();
+			}
+			
+			//there are 10 loading points (squares) each should ligh up when percentage cross it
+			function update_loading_screen(perc)
+			{
+				console.log("update loading screen");
+				//remove loading screen
+				var loadingPoint = Math.round(perc/10); 
+				loading_msg_span.innerHTML = "Loading " + perc + "%";
+				if(loadingPoint==1) progressbar_div.innerHTML = "<span style='color:#22dd33'>O</span> o o o o o o o o o";
+				if(loadingPoint==2) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O</span> o o o o o o o o";
+				if(loadingPoint==3) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O</span> o o o o o o o";
+				if(loadingPoint==4) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O</span> o o o o o o";
+				if(loadingPoint==5) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O</span> o o o o o";
+				if(loadingPoint==6) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O O</span> o o o o";
+				if(loadingPoint==7) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O O O</span> o o o";
+				if(loadingPoint==8) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O O O O</span> o o";
+				if(loadingPoint==9) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O O O O O</span> o";
+				if(loadingPoint==10) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O O O O O O O O</span>";
+				//loading_div.style.display = "none";
+				//document.getElementById( 'info_dialog_button' ).focus();
 			}
 			
 			function setCursor(pointer)

@@ -209,21 +209,8 @@ function loadModel(pos, rot, name) {
 		}
 		
 		//progress
-		modelNumber++;
-		console.log("loading model nb: " + modelNumber + ", name: " + name);
-		if(typeof totalModels != 'undefined')
-		{
-			var perc = (modelNumber*100)/totalModels;
-			console.log("loading percent: " + perc);
-		}
+		updateModelLoading(name)
 		
-		
-		//TODO REMOVE
-		if(lastModelTimer!=0)
-		{
-			clearTimeout(lastModelTimer);
-		}
-		lastModelTimer=setTimeout(remove_loading_screen,1000);
 	}
 }
 
@@ -479,18 +466,7 @@ function load_walls(loader)
 					pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 					rot.set(0, -Math.PI/2, 0);
 					
-					var object = modelAlreadyLoaded(niche_model);
-					if(object != -1)
-					{
-						var clony = object.clone();
-						clony.position = pos;
-						clony.rotation = rot;
-						scene.add( clony );
-					}
-					else
-					{
-						loadModelCheck(loader, pos, rot, niche_model);
-					}
+					loadModelCheck(loader, pos, rot, niche_model);
 				}
 				else
 				{
@@ -1122,7 +1098,7 @@ function load_lights()
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level()
 {
-	console.log("level start time: " + Date.now());
+	//console.log("level start time:::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
 	
 	var loader = new THREE.JSONLoader();
 
@@ -1407,5 +1383,5 @@ function load_level()
 	//stairs
 	load_stairs(loader);
 	
-	console.log("level end time:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
+	//console.log("level end time:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
 }
