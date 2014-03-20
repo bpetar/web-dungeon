@@ -620,6 +620,7 @@ else
 			var mouse_over_button = -1;
 			var mouse_over_prop = -1;
 			var mouse_over_secret_wall = -1;
+			var mouse_over_wall_writting = -1;
 			var mouse_over_keyhole = -1;
 			var item_over_keyhole = -1;
 			var mouse_over_container = -1;
@@ -662,6 +663,7 @@ else
 				info_dialog_div.style.display = "none";
 				//play sound 
 				audio_click.play();
+				console.log("gasimo?");
 			}
 			
 			function hide_bubble()
@@ -1461,6 +1463,7 @@ else
 				mouse_over_button = -1;
 				mouse_over_prop = -1;
 				mouse_over_secret_wall = -1;
+				mouse_over_wall_writting = -1;
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
 				mouse_over_monster = -1;
@@ -1588,22 +1591,23 @@ else
 						{
 							var lookie = new THREE.Vector3(0,0,0).add(looker);
 							lookie.normalize();
-							//console.log("close to writting, lookie.x:" + lookie.x + ", lookie.z:" + lookie.z);
+							
 							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
 							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
 							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
 							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
-								//console.log(writtingsArr[n][4].mesh);
-								if(writtingsArr[n][4].mesh != 0)
+								//console.log("writ " + n + " mesh:" + writtingsArr[n][4]);
+								if(writtingsArr[n][4] != 0)
 								{
-									var intersects = ray.intersectObject( writtingsArr[n][4].mesh );
+									var intersects = ray.intersectObject( writtingsArr[n][4] );
 							
 									//console.log("writtingsArr");
 									// if there is one (or more) intersections
 									if ( intersects.length > 0 )
 									{
 										//console.log("writtingsArr aaa");
+										mouse_over_wall_writting = n;
 										//change mouse pointer to cursor
 										setCursor('pointer');
 										return;
@@ -1867,6 +1871,7 @@ else
 				mouse_over_button = -1;
 				mouse_over_prop = -1;
 				mouse_over_secret_wall = -1;
+				mouse_over_wall_writting = -1;
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
 				mouse_over_monster = -1;
@@ -2449,7 +2454,16 @@ else
 					}
 					
 					//check if player clicked on writting on the wall
-					for (var n=0; n<writtingsArr.length; n++)
+					if((mouse_over_wall_writting > -1)&&(info_dialog_div.style.display == "none"))
+					{
+						audio_click.play();
+						console.log("clicking at writting!");
+						show_message(" <br> " + writtingsArr[mouse_over_wall_writting][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+						//DisplayInfoDiv("Ancient writting deciphered..");
+						mouse_over_wall_writting = -1;
+						return;
+					}
+					/*for (var n=0; n<writtingsArr.length; n++)
 					{
 						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
 						{
@@ -2469,7 +2483,7 @@ else
 								//DisplayInfoDiv("Ancient writting deciphered..");
 							}
 						}
-					}
+					}*/
 
 					// create a Ray with origin at the mouse position
 					//   and direction into the scene (camera direction)

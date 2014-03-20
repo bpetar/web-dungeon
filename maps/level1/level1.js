@@ -265,6 +265,8 @@ function teleportGo()
 var fog_color = 0x000033;
 var fog_intensity = 0.008525;
 var point_light_color = 0xaaaaff;
+var point_light_intensity = 1.6;
+
 function load_level_lights()
 {
 				//light2 = new THREE.DirectionalLight( 0xffffff );
