@@ -160,7 +160,7 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 function loadMonsterCheck(loader, monster)
 {
 	//console.log("loadMonsterCheck: " + monster.name);
-	var object = modelAlreadyLoaded(monster.name);
+	var object = modelAlreadyLoaded(monster.model);
 	if(object != -1)
 	{
 		//already put to download
@@ -168,15 +168,15 @@ function loadMonsterCheck(loader, monster)
 		//wait till object is loaded and link to it
 		if(object == 0)
 		{
-			if(typeof modelWaiters[monster.name] == 'undefined')
+			if(typeof modelWaiters[monster.model] == 'undefined')
 			{
-				modelWaiters[monster.name] = new Array();
+				modelWaiters[monster.model] = new Array();
 			}
-			modelWaiters[monster.name].push(monster);
+			modelWaiters[monster.model].push(monster);
 			return;
 		}
 		
-		//console.log("loadMonsterCheck, model loaded!: " + monster.name);
+		//console.log("loadMonsterCheck, model loaded!: " + monster.model);
 		monster.mesh = object.clone();
 		//monster.mesh.position = monster.position;
 		monster.mesh.position.x = monster.position.x*SQUARE_SIZE;
@@ -190,9 +190,9 @@ function loadMonsterCheck(loader, monster)
 	else
 	{
 		//download it first time..
-		loaded3Dmodels.push([monster.name,0]);
+		loaded3Dmodels.push([monster.model,0]);
 		loader.load( monster.model, monster.loadObject(monster) );
-		//console.log("loadMonsterCheck loading first time: " + monster.name);
+		//console.log("loadMonsterCheck loading first time: " + monster.model);
 	}
 	
 }
@@ -214,7 +214,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		
 		for(var i=0; i< loaded3Dmodels.length; i++)
 		{
-			if(loaded3Dmodels[i][0] == munster.name)
+			if(loaded3Dmodels[i][0] == munster.model)
 			{
 				//set loaded model
 				loaded3Dmodels[i][1] = munster.mesh;
@@ -234,13 +234,13 @@ Monster.prototype.loadObject = function ( munster ) {
 		//console.log("adding monstere " + munster.mesh.name);
 		scene.add( munster.mesh );
 		
-		if(typeof modelWaiters[munster.name] != 'undefined')
+		if(typeof modelWaiters[munster.model] != 'undefined')
 		{
 			//console.log("loadModel waiters are existing " + munster.name);
-			for (var i=0; i< modelWaiters[munster.name].length; i++)
+			for (var i=0; i< modelWaiters[munster.model].length; i++)
 			{
-				var monsterWaiter = modelWaiters[munster.name][i];
-				//console.log("loadModel waiter cloned: " + munster.name + ", pos:" + monsterWaiter.position.z);
+				var monsterWaiter = modelWaiters[munster.model][i];
+				//console.log("loadModel waiter cloned: " + munster.model + ", pos:" + monsterWaiter.position.z);
 				var clone = munster.mesh.clone();
 				clone.position.x = monsterWaiter.position.x*SQUARE_SIZE;
 				clone.position.z = monsterWaiter.position.z*SQUARE_SIZE;

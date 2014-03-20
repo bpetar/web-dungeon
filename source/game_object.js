@@ -49,7 +49,7 @@ function create_game_object () {
 function loadGameObjectCheck(loader, gobject)
 {
 	//console.log("loadGameObjectCheck: " + gobject.name);
-	var object = modelAlreadyLoaded(gobject.name);
+	var object = modelAlreadyLoaded(gobject.model);
 	if(object != -1)
 	{
 		//already put to download
@@ -57,11 +57,11 @@ function loadGameObjectCheck(loader, gobject)
 		//wait till object is loaded and link to it
 		if(object == 0)
 		{
-			if(typeof modelWaiters[gobject.name] == 'undefined')
+			if(typeof modelWaiters[gobject.model] == 'undefined')
 			{
-				modelWaiters[gobject.name] = new Array();
+				modelWaiters[gobject.model] = new Array();
 			}
-			modelWaiters[gobject.name].push(gobject);
+			modelWaiters[gobject.model].push(gobject);
 			return;
 		}
 		
@@ -76,7 +76,7 @@ function loadGameObjectCheck(loader, gobject)
 	else
 	{
 		//download it first time..
-		loaded3Dmodels.push([gobject.name,0]);
+		loaded3Dmodels.push([gobject.model,0]);
 		loader.load( gobject.model, gobject.loadObject(gobject) );
 		//console.log("loadGameObjectCheck loading first time: " + gobject.name);
 	}
@@ -94,7 +94,7 @@ function loadObject( gobject ) {
 			
 			for(var i=0; i< loaded3Dmodels.length; i++)
 			{
-				if(loaded3Dmodels[i][0] == gobject.name)
+				if(loaded3Dmodels[i][0] == gobject.model)
 				{
 					//set loaded model
 					loaded3Dmodels[i][1] = gobject.mesh;
@@ -108,13 +108,13 @@ function loadObject( gobject ) {
 			gobject.mesh.visible = gobject.visible;
 			scene.add( gobject.mesh );
 		
-			if(typeof modelWaiters[gobject.name] != 'undefined')
+			if(typeof modelWaiters[gobject.model] != 'undefined')
 			{
 				//console.log("loadModel waiters are existing " + gobject.name);
-				for (var i=0; i< modelWaiters[gobject.name].length; i++)
+				for (var i=0; i< modelWaiters[gobject.model].length; i++)
 				{
 					//console.log("loadModel waiter cloned: " + gobject.name);
-					var waitingGobject = modelWaiters[gobject.name][i];
+					var waitingGobject = modelWaiters[gobject.model][i];
 					var clone = gobject.mesh.clone();
 					clone.position = waitingGobject.position;
 					clone.rotation = waitingGobject.rotation;
