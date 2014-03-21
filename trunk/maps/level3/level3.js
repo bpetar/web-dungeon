@@ -22,7 +22,7 @@ var totalModels = 15;
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
 var holesArr = [];
-var holesAboveArr = [[9,3], [11,5]];
+var holesAboveArr = [[9,3], [11,5], [14,6], [15,9], [10,10], [8,13], [13,15], [11,14]];
 var writtingsArr = [[10,10,1,"Punishment for killing a worm is work in the kitchen!",0]];
 var secretWallsArr = []; //x,y,orientation
 var doorsArr3D = [[16,3,0,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
@@ -42,6 +42,8 @@ var wall_model_curve_right = 'maps/level3/models/wallcr.js';
 var wall_model_durve_lr = 'maps/level3/models/walldlr.js';
 var wall_model_durve_l = 'maps/level3/models/walldl.js';
 var wall_model_durve_r = 'maps/level3/models/walldr.js';
+var wall_model_curve_durve_right_left = 'maps/level3/models/wallcdrl.js';
+//var wall_model_curve_durve_left_right = 'maps/level3/models/wallcdlr.js';
 var celing_model_fb = 'maps/level3/models/ceiling.js';
 var wall_model_curve_writ = 'maps/level3/models/wallcwrit.js';
 //var decorPillarModel = "maps/level3/models/decorPillar2.js";
@@ -59,18 +61,25 @@ var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 
 function propOnClick1()
 {
-	DisplayInfoDiv("I was lucky to avoid these spikes!");
+	//DisplayInfoDiv("I was lucky to avoid these spikes!");
 	show_speech_bubble("I was lucky to avoid serious injuries falling on these spikes.. <br><br> &nbsp; .. and Im pretty sure I went unconscious when I hit the ground, but why am I in my underwear? ", 600, 150, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
 }
 
 function propOnClick2()
 {
-	DisplayInfoDiv("Many have died on these traps..");
+	if(Math.random()>0.5)DisplayInfoDiv("Many have died on these traps..");
+	else show_speech_bubble("Day light from above and blood on these spikes means someone fell into this trap, but where is the body? I hope he is alive and he found a way out..", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
 }
 
 function propOnClick3()
 {
-	DisplayInfoDiv("I cant climb up there..");
+	if(monsterEncountered)
+	{
+		show_speech_bubble("Its seems like these tunnels are dug out recently by these worms, but.. holes and traps are directly under battlefield, its way too convinient to be accidental.. and why am I in my underwear? ", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	}
+	else
+	{
+		DisplayInfoDiv("I cant climb up there..");
+	}
 }
 
 function propOnClick4()
@@ -79,7 +88,7 @@ function propOnClick4()
 }
 
 //props x,z,model,onClick script
-var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4]];
+var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4], [113,14,6,"models/spears.js",propOnClick4], [113,15,9,"models/spears.js",propOnClick2], [114,10,10,"models/spears.js",propOnClick4], [114,8,13,"models/spears.js",propOnClick2], [114,13,15,"models/spears.js",propOnClick3], [114,11,14,"models/spears.js",propOnClick4]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -112,10 +121,13 @@ function rootHealingScript()
 var pickables_array = [[2,"Root","maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "This acctually heals my wounds..", rootHealingScript, 1], [3,"Stake","models/stake.js", 9,3,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "Hard to chew but pays off..", rootHealingScript, 1]];
 ////////////////////////////////////////////////
 
+var monsterEncountered = false;
+
 var wormPickables = [];
 function WormOnClick1()
 {
 	DisplayInfoDiv("Its squishy and slimy.");
+	monsterEncountered = true;
 	//Play tounchy sound
 	this.audio_monster_click.play();
 }
@@ -146,20 +158,12 @@ var nicheArr = [[5,8,1,niche_pickables_array1]];
 var teleport_array = [];
 
 var point_light_color = 0xffffaa;
-var point_light_intensity = 1.0;
+var point_light_intensity = 0.9;
 fog_color = 0x111100;
 fog_intensity = 0.008525;
 
 function load_level_lights()
 {
-
-	//pointLight.color = 0xffff10; //not working?
-	
-	//spotLight = new THREE.SpotLight();
-	//spotLight.position.set( 150, 24, 0 );
-	//spotLight.target.position.set( 150, 0, 0 );
-	//pointLight.castShadow = true;
-	//scene.add( spotLight );
 
 	var spotLight = new THREE.SpotLight();
 	spotLight.position.set( 90, 54, 30 );
@@ -167,10 +171,16 @@ function load_level_lights()
 	//pointLight.castShadow = true;
 	scene.add( spotLight );
 
-	//console.log("pera spot");
-	//spotLight = new THREE.SpotLight();
-	//spotLight.position.set( 180, 24, 20 );
-	//spotLight.target.position.set( 180, 0, 20 );
+	var spotLight2 = spotLight.clone();
+	spotLight.position.set( 80, 54, 130 );
+	spotLight.target.position.set( 80, 0, 130 );
 	//pointLight.castShadow = true;
-	//scene.add( spotLight );
+	scene.add( spotLight2 );
+
+	var spotLight3 = spotLight.clone();
+	spotLight.position.set( 150, 34, 90 );
+	spotLight.target.position.set( 150, 0, 90 );
+	//pointLight.castShadow = true;
+	scene.add( spotLight3 );
+
 }
