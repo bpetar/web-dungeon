@@ -396,6 +396,7 @@
 		
 	function changeDivBorderColorOver(divy,i,j)
 	{
+		console.log("square: " + (grid_size-j) + "," + (grid_size-i));
 		if(mapArr[i][j].type == 0)
 		{
 			if(mousePressed)

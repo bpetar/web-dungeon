@@ -458,6 +458,8 @@ else
 				var monster = monsterInFrontOfPlayer();
 				if(monster)
 				{
+					if(typeof monsterEncountered != 'undefined') monsterEncountered = true;
+					
 					//swing that weapon
 					var att_roll = 50*Math.random()+PlayerAttack;
 					console.log("player swings whatever he's holding in hand, att_roll: " + att_roll);

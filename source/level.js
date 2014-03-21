@@ -576,6 +576,20 @@ function load_walls(loader)
 							//model should be curved short (durve) to right side
 							loadModelCheck(loader, pos, rot, wall_model_durve_r);
 						}
+						else if((typeof wall_model_curve_durve_left_right != 'undefined')&&(frontWall)&&(!backRightWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right);
+						}
+						else if((typeof wall_model_curve_durve_right_left != 'undefined')&&(!frontRightWall)&&(backWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_right_left);
+						}
+						else if((typeof wall_model_curve_left != 'undefined')&&(frontWall)&&(!backWall))
+						{
+							loadModelCheck(loader, pos, rot, wall_model_curve_left);
+						}
 						else 
 						{
 							loadModelCheck(loader, pos, rot, wall_model);
@@ -642,21 +656,26 @@ function load_walls(loader)
 						
 						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall))
 						{
-							//left_wall_durve_down
+							//front_wall_durve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!rightFrontWall))
 						{
-							//left_wall_durve_down
+							//front_wall_durve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_r);
 						}
 						else if((typeof wall_model_curve_left != 'undefined')&&(leftWall)&&(!rightWall)&&(!backWall))
 						{
-							//left_wall_curve_down
+							//front_wall_curve_down
 							loadModelCheck(loader, pos, rot, wall_model_curve_left);
 						}
+						else if((typeof wall_model_curve_right != 'undefined')&&(!leftWall)&&(rightWall))
+						{
+							//front wall curve right
+							loadModelCheck(loader, pos, rot, wall_model_curve_right);
+						}
 						else
-						{						
+						{
 							loadModelCheck(loader, pos, rot, wall_model);
 						}
 					}
@@ -733,6 +752,11 @@ function load_walls(loader)
 						{
 							//left_wall_curve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
+						}
+						else if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(!leftWall)&&(rightWall))
+						{
+							//left_wall_curve_down
+							loadModelCheck(loader, pos, rot, wall_model_curve_left);
 						}
 						else
 						{
