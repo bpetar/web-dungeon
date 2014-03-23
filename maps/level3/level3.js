@@ -17,7 +17,7 @@ function onLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 15;
+var totalModels = 17;
 
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
@@ -43,7 +43,7 @@ var wall_model_durve_lr = 'maps/level3/models/walldlr.js';
 var wall_model_durve_l = 'maps/level3/models/walldl.js';
 var wall_model_durve_r = 'maps/level3/models/walldr.js';
 var wall_model_curve_durve_right_left = 'maps/level3/models/wallcdrl.js';
-//var wall_model_curve_durve_left_right = 'maps/level3/models/wallcdlr.js';
+var wall_model_curve_durve_left_right = 'maps/level3/models/wallcdlr.js';
 var celing_model_fb = 'maps/level3/models/ceiling.js';
 var wall_model_curve_writ = 'maps/level3/models/wallcwrit.js';
 //var decorPillarModel = "maps/level3/models/decorPillar2.js";

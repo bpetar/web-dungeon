@@ -473,15 +473,25 @@ function load_walls(loader)
 						pos.set((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						rot.set(0, Math.PI, 0);
 						
-						if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
+						if((typeof wall_model_curve_durve_left_right != 'undefined')&&(!frontLeftWall)&&(backWall)&&(!rightWall))
+						{
+							//left wall curve left
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right) ;
+						}
+						else if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
 						{
 							//left wall curve left
 							loadModelCheck(loader, pos, rot, wall_model_curve_left) ;
 						}
-						else if((typeof wall_model_curve_right != 'undefined')&&(frontWall)&&(!backWall))
+						else if((typeof wall_model_curve_right != 'undefined')&&(frontWall)&&(!backWall)&&(!rightWall))
 						{
 							//left wall curve right
 							loadModelCheck(loader, pos, rot, wall_model_curve_right) ;
+						}
+						else if((typeof wall_model_durve_lr != 'undefined')&&(!frontLeftWall)&&(!backLeftWall))
+						{
+							//model should be curved short to both sides
+							loadModelCheck(loader, pos, rot, wall_model_durve_lr);
 						}
 						else if((typeof wall_model_durve_l != 'undefined')&&(!frontWall)&&(!backLeftWall))
 						{
@@ -571,6 +581,11 @@ function load_walls(loader)
 							//model should be curved short (durve) to left side
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
+						else if((typeof wall_model_durve_l != 'undefined')&&(backWall)&&(!frontRightWall)&&(leftWall))
+						{
+							//model should be curved short (durve) to left side
+							loadModelCheck(loader, pos, rot, wall_model_durve_l);
+						}
 						else if((typeof wall_model_durve_r != 'undefined')&&(!frontWall)&&(!backRightWall))
 						{
 							//model should be curved short (durve) to right side
@@ -581,14 +596,18 @@ function load_walls(loader)
 							//model should be curved left and durved to right side
 							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right);
 						}
-						else if((typeof wall_model_curve_durve_right_left != 'undefined')&&(!frontRightWall)&&(backWall))
+						else if((typeof wall_model_curve_durve_right_left != 'undefined')&&(!frontRightWall)&&(backWall)&&(!leftWall))
 						{
 							//model should be curved left and durved to right side
 							loadModelCheck(loader, pos, rot, wall_model_curve_durve_right_left);
 						}
-						else if((typeof wall_model_curve_left != 'undefined')&&(frontWall)&&(!backWall))
+						else if((typeof wall_model_curve_left != 'undefined')&&(frontWall)&&(!backWall)&&(!leftWall))
 						{
 							loadModelCheck(loader, pos, rot, wall_model_curve_left);
+						}
+						else if((typeof wall_model_curve_right != 'undefined')&&(!leftWall)&&(!frontWall)&&(backWall))
+						{
+							loadModelCheck(loader, pos, rot, wall_model_curve_right);
 						}
 						else 
 						{
@@ -654,22 +673,37 @@ function load_walls(loader)
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 						rot.set(0, Math.PI/2, 0);
 						
-						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall))
+						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall)&&(!rightWall))
 						{
 							//front_wall_durve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
 						}
-						else if((typeof wall_model_durve_r != 'undefined')&&(!rightFrontWall))
+						else if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall)&&(rightWall)&&(backWall))
+						{
+							//front_wall_durve_down
+							loadModelCheck(loader, pos, rot, wall_model_durve_l);
+						}
+						else if((typeof wall_model_durve_r != 'undefined')&&(!leftWall)&&(!rightFrontWall))
 						{
 							//front_wall_durve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_r);
+						}
+						else if((typeof wall_model_curve_durve_left_right != 'undefined')&&(leftWall)&&(!rightFrontWall)&&(!backWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right);
+						}
+						else if((typeof wall_model_curve_durve_right_left != 'undefined')&&(rightWall)&&(!leftFrontWall)&&(!backWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_right_left);
 						}
 						else if((typeof wall_model_curve_left != 'undefined')&&(leftWall)&&(!rightWall)&&(!backWall))
 						{
 							//front_wall_curve_down
 							loadModelCheck(loader, pos, rot, wall_model_curve_left);
 						}
-						else if((typeof wall_model_curve_right != 'undefined')&&(!leftWall)&&(rightWall))
+						else if((typeof wall_model_curve_right != 'undefined')&&(!leftWall)&&(rightWall)&&(!backWall))
 						{
 							//front wall curve right
 							loadModelCheck(loader, pos, rot, wall_model_curve_right);
@@ -1201,7 +1235,7 @@ function load_level()
 		}
 	}
 	
-	//show_model(loader, "models/stake.js", 16,0);
+	//show_model(loader, "maps/level3/models/door.js", 10,5);
 	
 	load_props();
 	
