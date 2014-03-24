@@ -90,6 +90,7 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 	if(this.hp < 0)
 	{
 		//Monster is dead!
+		if(typeof monsterPun != 'undefined') setTimeout(monsterPun, 900);
 		
 		//soundy play sound of monstrous death
 		this.audio_monster_dies.play();

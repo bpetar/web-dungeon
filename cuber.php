@@ -1599,16 +1599,16 @@ else
 							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
 							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
 							{
-								//console.log("writ " + n + " mesh:" + writtingsArr[n][4]);
+								console.log("writ " + n + " mesh:" + writtingsArr[n][4]);
 								if(writtingsArr[n][4] != 0)
 								{
-									var intersects = ray.intersectObject( writtingsArr[n][4] );
+									var intersects = ray.intersectObject( writtingsArr[n][4].mesh );
 							
-									//console.log("writtingsArr");
+									console.log("writtingsArr");
 									// if there is one (or more) intersections
 									if ( intersects.length > 0 )
 									{
-										//console.log("writtingsArr aaa");
+										console.log("writtingsArr aaa");
 										mouse_over_wall_writting = n;
 										//change mouse pointer to cursor
 										setCursor('pointer');
