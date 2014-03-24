@@ -144,7 +144,7 @@ function monsterPun()
 {
 	if(!punIntended)
 	{
-		show_speech_bubble("This was nice warm up ..", 300, 60, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
+		show_speech_bubble("This was nice <span style='font-style: italic;'>worm</span> up :)", 300, 60, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
 		punIntended = true;
 	}
 }
@@ -157,7 +157,7 @@ function showScroll()
 {
 	console.log("Showing scroll content!");
 	audio_scroll.play();
-	show_message(" <br> " + "Section C3" + " <br><br><img src='maps/level3/media/map3.png'><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 700, 700, "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
+	show_message(" <br> " + "Section C3" + " <br><br><img src='maps/level3/media/map3.png'><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 700, 700, "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
 }
 
 // id, name, model, icon, useHint, script function onUse
