@@ -17,15 +17,15 @@ function onLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 17;
+var totalModels = 18;
 
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
 var holesArr = [];
 var holesAboveArr = [[9,3], [11,5], [14,6], [15,9], [10,10], [8,13], [13,15], [11,14]];
-var writtingsArr = [[10,10,1,"Punishment for killing a worm is work in the kitchen!",0]];
+var writtingsArr = [[5,12,1,"Punishment for killing a worm is work in the kitchen!",0]];
 var secretWallsArr = []; //x,y,orientation
-var doorsArr3D = [[16,3,0,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
+var doorsArr3D = [[7,8,1,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
 var stairsArr = [[5,13,0,"maps/level3/models/slope.js",0,"level4"]];
 
 //basic level textures
@@ -68,14 +68,15 @@ function propOnClick1()
 function propOnClick2()
 {
 	if(Math.random()>0.5)DisplayInfoDiv("Many have died on these traps..");
-	else show_speech_bubble("Day light from above and blood on these spikes means someone fell into this trap, but where is the body? I hope he is alive and he found a way out..", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
+	else show_speech_bubble("Day light from above and blood on these spikes means someone fell into this trap, but where is the body?", 500, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
 }
 
 function propOnClick3()
 {
 	if(monsterEncountered)
 	{
-		show_speech_bubble("Its seems like these tunnels are dug out recently by these worms, but.. holes and traps are directly under battlefield, its way too convinient to be accidental.. and why am I in my underwear? ", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	}
+		show_speech_bubble("Its seems like these tunnels are dug out recently by these worms, but.. holes and traps are directly under battlefield, its way too convinient to be accidental.. and why am I in my underwear? ", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
+	}
 	else
 	{
 		DisplayInfoDiv("I cant climb up there..");
@@ -88,7 +89,7 @@ function propOnClick4()
 }
 
 //props x,z,model,onClick script
-var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4], [113,14,6,"models/spears.js",propOnClick4], [113,15,9,"models/spears.js",propOnClick2], [114,10,10,"models/spears.js",propOnClick4], [114,8,13,"models/spears.js",propOnClick2], [114,13,15,"models/spears.js",propOnClick3], [114,11,14,"models/spears.js",propOnClick4]];
+var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4], [113,14,6,"models/spears.js",propOnClick4], [113,15,9,"models/spears_blood.js",propOnClick2], [114,10,10,"models/spears.js",propOnClick4], [114,8,13,"models/spears_blood.js",propOnClick2], [114,13,15,"models/spears.js",propOnClick3], [114,11,14,"models/spears.js",propOnClick4]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -137,9 +138,20 @@ function WormOnItemClick1()
 	//Play tounchy sound
 	this.audio_monster_click.play();
 }
+
+var punIntended = false;
+function monsterPun()
+{
+	if(!punIntended)
+	{
+		show_speech_bubble("This was nice warm up ..", 300, 60, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
+		punIntended = true;
+	}
+}
+
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 9,13,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 function showScroll()
 {

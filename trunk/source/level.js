@@ -463,7 +463,7 @@ function load_walls(loader)
 						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						wallWrit.rotation = new THREE.Vector3(0, Math.PI, 0);
 						loadGameObjectCheck(loader, wallWrit) ;
-						writtingsArr[writtingIsOnTheWall][4] = wallWrit; //this will change dynamically from 0 to pointer?
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit;
 					}
 					else
 					{
@@ -477,6 +477,11 @@ function load_walls(loader)
 						{
 							//left wall curve left
 							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right) ;
+						}
+						else if((typeof wall_model_curve_durve_right_left != 'undefined')&&(!backLeftWall)&&(frontWall)&&(!rightWall))
+						{
+							//left wall curve left
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_right_left) ;
 						}
 						else if((typeof wall_model_curve_left != 'undefined')&&(!frontWall)&&(backWall)&&(!rightWall))
 						{
@@ -673,7 +678,12 @@ function load_walls(loader)
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
 						rot.set(0, Math.PI/2, 0);
 						
-						if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall)&&(!rightWall))
+						if((typeof wall_model_durve_lr != 'undefined')&&(!leftFrontWall)&&(!rightFrontWall))
+						{
+							//model should be curved short to both sides
+							loadModelCheck(loader, pos, rot, wall_model_durve_lr);
+						}
+						else if((typeof wall_model_durve_l != 'undefined')&&(!leftFrontWall)&&(!rightWall))
 						{
 							//front_wall_durve_down
 							loadModelCheck(loader, pos, rot, wall_model_durve_l);
@@ -772,7 +782,17 @@ function load_walls(loader)
 						pos.set((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
 						rot.set(0, -Math.PI/2, 0);
 
-						if((typeof wall_model_curve_right != 'undefined')&&(!frontWall)&&(leftWall)&&(!rightWall))
+						if((typeof wall_model_curve_durve_right_left != 'undefined')&&(leftWall)&&(!rightBackWall)&&(!frontWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_right_left);
+						}
+						else if((typeof wall_model_curve_durve_left_right != 'undefined')&&(rightWall)&&(!leftBackWall)&&(!frontWall))
+						{
+							//model should be curved left and durved to right side
+							loadModelCheck(loader, pos, rot, wall_model_curve_durve_left_right);
+						}
+						else if((typeof wall_model_curve_right != 'undefined')&&(!frontWall)&&(leftWall)&&(!rightWall))
 						{
 							//back wall curve right..
 							loadModelCheck(loader, pos, rot, wall_model_curve_right);
@@ -1269,6 +1289,8 @@ function load_level()
 		var south_neighbor= false; //down
 		var east_neighbor= false; //right
 		var west_neighbor= false; //left
+		var north_east_neighbor = false;
+		var south_east_neighbor = false;
 		
 		for(var ff=0; ff < floorsArr2D.length; ff++)
 		{
@@ -1292,6 +1314,16 @@ function load_level()
 			{
 				//this floortile has east neighbor
 				east_neighbor=true;
+			}
+			if((floorsArr2D[ff][0] == fx-1)&&(floorsArr2D[ff][1] == fz+1))
+			{
+				//this floortile has north-west neighbor
+				north_east_neighbor=true;
+			}
+			if((floorsArr2D[ff][0] == fx-1)&&(floorsArr2D[ff][1] == fz-1))
+			{
+				//this floortile has north-west neighbor
+				south_east_neighbor=true;
 			}
 		}
 		
@@ -1342,7 +1374,7 @@ function load_level()
 				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
 				//show_model(loader, suporter_model, fx-0.5,fz,Math.PI/2);
 			}
-			if((south_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(east_neighbor))
+			if((south_neighbor)&&(!north_neighbor)&&(west_neighbor)&&(east_neighbor)&&(!south_east_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
 				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz-0.5)*SQUARE_SIZE);
@@ -1358,7 +1390,7 @@ function load_level()
 				loadModelCheck(loader, suporter_pos, suporter_rot, suporter_model);
 				//show_model(loader, suporter_model, fx+0.5,fz,3*Math.PI/2);
 			}
-			if((north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor))
+			if((north_neighbor)&&(!south_neighbor)&&(west_neighbor)&&(east_neighbor)&&(!north_east_neighbor))
 			{
 				//one supporter on the low to ablige start of corridor
 				var suporter_pos = new THREE.Vector3(fx*SQUARE_SIZE, 0, (fz+0.5)*SQUARE_SIZE);

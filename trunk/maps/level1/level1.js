@@ -258,7 +258,7 @@ function changeLevel()
 function teleportGo()
 {
 	audio_enchant.play();
-	setTimeout(changeLevel, 1000);
+	setTimeout(changeLevel, 300);
 	
 }
 
