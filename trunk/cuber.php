@@ -5,7 +5,40 @@
 	//mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
 	//mysql_select_db("mysticp_comments") or die(mysql_error()); 
     include "cuber_play_counter.php";
+
+	session_start();
+
+	if(isset($_SESSION['views']))
+	$_SESSION['views']=$_SESSION['views']+1;
+	else
+	$_SESSION['views']=1;
+	echo "Views=". $_SESSION['views'];
 	
+	
+	if (isset($_COOKIE["user"]))
+	{
+		//echo "Welcome user number " . $_COOKIE["user"] . "!<br>";
+	}
+	else
+	{
+		$expire=time()+60*60*24*30*3;
+		setcookie("user", rand(1000000000,10000000000), $expire);
+		//echo "User created!<br>";
+	}
+  
+	$_SESSION['inventozy'] = array();
+	
+	if(isset($_POST["inventory"]))
+	{
+		//get items from inventory
+		$iitems = explode("|||", $_POST["inventory"]);
+		foreach($iitems AS $iitem )
+		{
+			$item = explode(",,", $iitem);
+			$_SESSION['inventozy'][]=$item;
+		}
+	}
+
 ?>
 
 <html lang="en">
@@ -271,6 +304,7 @@ else
 		<script src="./source/keyholes.js"></script>
 		<script src="./source/utils.js"></script>
 		<script src="./source/level.js"></script>
+		<script src="./source/scripts.js"></script>
 
 		<script>
 		
@@ -279,6 +313,79 @@ else
 				alert("You have no WebGL on your browser!!");
 				Detector.addGetWebGLMessage();
 			}
+			
+			
+////////////////////////////  LOADING
+
+
+	//echo "Views=". $_SESSION['views'];
+	
+	//if($_SESSION['inventory'] > 2)
+	//{
+	//	echo "pickables_array = [[2,'Root','maps/level3/models/root.js', 10.5,4.5,6, 'media/root.png', 'This acctually heals my wounds..', rootHealingScript, 1]];";
+	//}
+	//else
+	//{
+	//	echo "pera = [];";
+	//}
+
+
+////////////////////////////  LOADING INVENTORY
+
+
+function loadInventory()
+{
+	console.log("loading inengryery");
+	var slot = 1;
+<?php 
+	//for looping inventory items
+	foreach ( $_SESSION['inventozy'] AS $iitem ) 
+	{
+?>
+		slot = <?php echo $iitem[0]?>;
+		console.log("loading inengryery " + slot);
+		var inventory_item = create_game_object();
+		inventory_item.gameID = <?php echo $iitem[1]?>;
+		inventory_item.name = <?php echo " '$iitem[2]' "?>;
+		inventory_item.model = <?php echo "'$iitem[3]'"?>;
+		inventory_item.icon = <?php echo "'$iitem[4]'"?>;
+		inventory_item.useHint = <?php echo "'$iitem[5]'"?>;
+		inventory_item.useScript = <?php echo "'$iitem[6]'"?>;
+		var consum = <?php echo $iitem[7]?>;
+		inventory_item.consumable = (consum == 1)?true:false;
+		//inventory_item.weapon_speed = pickables_array[i][10];
+		//inventory_item.weapon_dmg = pickables_array[i][11];
+		//inventory_item.weapon_dmg_bonus = pickables_array[i][12];
+		//inventory_item.weapon_attack_bonus = pickables_array[i][13];
+		inventory_item.niched = -1; //flag indicating if pickable is in the niche
+		inventory_item.plated = -1; //flag indicating if pickable is in the niche
+		//inventory_item.mesh = 0;
+		//inventory_item.position.x = 0;
+		//inventory_item.position.z = 0;
+		//inventory_item.position.y = 0;
+
+		add_to_inventory(inventory_item, slot);
+		
+		
+<?php 
+	//break;
+	//end of for inventory loop
+	}
+?>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 			
 			clickConsumed = false;
 
@@ -932,6 +1039,9 @@ else
 				lhandDiv = document.getElementById('player1lhand');
 				lhandDiv.style.opacity=1.0;
 				
+				//
+				loadInventory()
+				
 				//load level walls and floors etc..
 				load_level();
 
@@ -1135,6 +1245,8 @@ else
 				//alert(event.keyCode);
 				if (event.keyCode == 73) {
 					//show inventory if hidden, hide elsewhere
+					post_to_url('cuber.php?lvl=level2', {inventory: inventory_to_post()});					
+					
 					if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
 					{
 						inventorySlide = 1;
@@ -2353,7 +2465,7 @@ else
 							//run item usage script function
 							if(mouse_over_item_in_inventory.useScript != 0)
 							{
-								mouse_over_item_in_inventory.useScript();
+								window[mouse_over_item_in_inventory.useScript]();
 							}
 							//consume if expendable
 							if(mouse_over_item_in_inventory.consumable)

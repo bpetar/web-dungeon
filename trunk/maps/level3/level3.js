@@ -17,7 +17,7 @@ function onLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 18;
+var totalModels = 17;
 
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
@@ -108,18 +108,9 @@ var buttons_array = [];
 //keyholes
 var keyholes_array = [];
 
-function rootHealingScript()
-{
-	playerHPcurrent += 15;
-	if (playerHPcurrent > playerHPmax)
-	{
-		playerHPcurrent = playerHPmax;
-	}
-	updatePlayerHealthBar();
-}
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Root","maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "This acctually heals my wounds..", rootHealingScript, 1], [3,"Stake","models/stake.js", 9,3,0, "media/stake.png", "Pointy stick, better then nothing.", 0, 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "Hard to chew but pays off..", rootHealingScript, 1]];
+var pickables_array = [[2,"Root","maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "This acctually heals my wounds..", "script_rootHealingScript", 1], [3,"Stake","models/stake.js", 9,3,0, "media/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "Hard to chew but pays off..", "script_rootHealingScript", 1]];
 ////////////////////////////////////////////////
 
 var monsterEncountered = false;
@@ -153,15 +144,9 @@ var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
 var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
-function showScroll()
-{
-	console.log("Showing scroll content!");
-	audio_scroll.play();
-	show_message(" <br> " + "Section C3" + " <br><br><img src='maps/level3/media/map3.png'><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 700, 700, "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
-}
 
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", showScroll]];
+var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl3_map"]];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5,8,1,niche_pickables_array1]]; 
