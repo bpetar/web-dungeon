@@ -139,15 +139,9 @@ function onUnpressPlate1()
 }
 
 
-function showScroll()
-{
-	console.log("Showing scroll content!");
-	audio_scroll.play();
-	show_message(" <br> " + "Search the walls.." + " <br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
-}
 
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", showScroll]];
+var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl1_msg"]];
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[16,5,3,niche_pickables_array1]]; 
@@ -227,15 +221,6 @@ function niche_onItemAdd (nicheID, itemID)
 
 //this is pickables
 ///////////////////////////////////////////////////
-function healingScript()
-{
-	playerHPcurrent += 15;
-	if (playerHPcurrent > playerHPmax)
-	{
-		playerHPcurrent = playerHPmax;
-	}
-	updatePlayerHealthBar();
-}
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
 var pickables_array = [[2,"Rock","models/rocky.js", 16,0,0, "media/rock.png", "This is too hard to chew.."]];
@@ -252,14 +237,17 @@ var teleport_pos_z = 140; //position on map
 
 function changeLevel()
 {
-	window.location.href = 'cuber.php?lvl=level2';
+	//window.location.href = 'cuber.php?lvl=level2';
+	
+	post_to_url('cuber.php?lvl=level2', {inventory: inventory_to_post()});
 }
 
 function teleportGo()
 {
+	//should we realy make user wait just so he can hear enchanted sound effect? at least add some fade out effect... (fade in black loading screen)
 	audio_enchant.play();
+	//block movement here
 	setTimeout(changeLevel, 300);
-	
 }
 
 var fog_color = 0x000033;

@@ -3,6 +3,30 @@
 // list of items in the bag
 var inventory_array = [];
 
+//inventory to post
+function inventory_to_post()
+{
+	var inventory_post_string = "";
+	for (var i=0; i<inventory_array.length; i++)
+	{
+		inventory_post_string = inventory_post_string + inventory_array[i].slot + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.gameID + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.name + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.model + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.icon + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.useHint + ",,";
+		inventory_post_string = inventory_post_string + inventory_array[i].gObject.useScript + ",,";
+		inventory_post_string = inventory_post_string + (inventory_array[i].gObject.consumable?1:0);
+		
+		if(i < inventory_array.length-1)
+			inventory_post_string = inventory_post_string + "|||";
+	}
+	inventory_post_string = inventory_post_string + "";
+	
+	console.log(inventory_post_string);
+	
+	return inventory_post_string;
+}
 
 //add item to inventory
 function add_to_inventory (gObject, slot) {
@@ -22,6 +46,7 @@ function add_to_inventory (gObject, slot) {
 	var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
 	slot_icon.src = gObject.icon;
 	
+	console.log("pera added inventory item: " + gObject.icon);
 	//TODO: start timer for automatic inventory draw back at later time..
 }
 
