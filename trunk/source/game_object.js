@@ -26,6 +26,7 @@ function create_game_object () {
 	gobject.visible = true;
 	gobject.pressed = false;
 	gobject.mesh = 0;
+	gobject.writtingIsOnTheWall = -1;
 	
 	gobject.useHint = "Nothing seems to happen..";
 	gobject.useScript = 0;
@@ -106,7 +107,9 @@ function loadObject( gobject ) {
 			gobject.mesh.name = gobject.name;
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
+			if(gobject.name == "writting") writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
 			scene.add( gobject.mesh );
+			
 		
 			if(typeof modelWaiters[gobject.model] != 'undefined')
 			{
@@ -120,6 +123,7 @@ function loadObject( gobject ) {
 					clone.rotation = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
+					if(waitingGobject.name == "writting") writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
 					scene.add( clone );
 				}
 			}

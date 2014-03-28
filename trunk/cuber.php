@@ -1714,7 +1714,7 @@ function loadInventory()
 								console.log("writ " + n + " mesh:" + writtingsArr[n][4]);
 								if(writtingsArr[n][4] != 0)
 								{
-									var intersects = ray.intersectObject( writtingsArr[n][4].mesh );
+									var intersects = ray.intersectObject( writtingsArr[n][4] );
 							
 									console.log("writtingsArr");
 									// if there is one (or more) intersections
