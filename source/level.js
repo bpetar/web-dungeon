@@ -462,8 +462,9 @@ function load_walls(loader)
 						wallWrit.model = wall_model_curve_writ;
 						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0]+0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						wallWrit.rotation = new THREE.Vector3(0, Math.PI, 0);
+						wallWrit.writtingIsOnTheWall = writtingIsOnTheWall;
 						loadGameObjectCheck(loader, wallWrit) ;
-						writtingsArr[writtingIsOnTheWall][4] = wallWrit;
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit.mesh; //this will NOT change dynamically from 0 to pointer! we do it manually after model load...
 					}
 					else
 					{
@@ -566,8 +567,9 @@ function load_walls(loader)
 						wallWrit.model = wall_model_curve_writ;
 						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1])*SQUARE_SIZE);
 						wallWrit.rotation = new THREE.Vector3(0, 0, 0);
+						wallWrit.writtingIsOnTheWall = writtingIsOnTheWall;
 						loadGameObjectCheck(loader, wallWrit) ;
-						writtingsArr[writtingIsOnTheWall][4] = wallWrit; //this will change dynamically from 0 to pointer?
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit.mesh; //this will NOT change dynamically from 0 to pointer! we do it manually after model load...
 					}
 					else
 					{
@@ -666,9 +668,15 @@ function load_walls(loader)
 					
 					if(writtingIsOnTheWall > -1)
 					{
-						//TODO: load curved wall with writting
-						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						//writtingsArr[writtingIsOnTheWall][4] = object;
+						//load curved wall with writting
+						var wallWrit = create_game_object();
+						wallWrit.name = "writting";
+						wallWrit.model = wall_model_curve_writ;
+						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]+0.5)*SQUARE_SIZE);
+						wallWrit.rotation = new THREE.Vector3(0, Math.PI/2, 0);
+						wallWrit.writtingIsOnTheWall = writtingIsOnTheWall;
+						loadGameObjectCheck(loader, wallWrit) ;
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit.mesh; //this will NOT change dynamically from 0 to pointer! we do it manually after model load...
 					}
 					else
 					{
@@ -770,9 +778,15 @@ function load_walls(loader)
 					
 					if(writtingIsOnTheWall > -1)
 					{
-						//TODO: load curved wall with writting
-						//object = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 1, 1 ), materialwrit );
-						//writtingsArr[writtingIsOnTheWall][4] = object;
+						//load curved wall with writting
+						var wallWrit = create_game_object();
+						wallWrit.name = "writting";
+						wallWrit.model = wall_model_curve_writ;
+						wallWrit.position = new THREE.Vector3((floorsArr2D[i][0])*SQUARE_SIZE,0.4*SQUARE_SIZE,(floorsArr2D[i][1]-0.5)*SQUARE_SIZE);
+						wallWrit.rotation = new THREE.Vector3(0, -Math.PI/2, 0);
+						wallWrit.writtingIsOnTheWall = writtingIsOnTheWall;
+						loadGameObjectCheck(loader, wallWrit) ;
+						writtingsArr[writtingIsOnTheWall][4] = wallWrit.mesh; //this will NOT change dynamically from 0 to pointer! we do it manually after model load...
 					}
 					else
 					{
@@ -1031,7 +1045,6 @@ function load_walls(loader)
 						//load wall with writting
 						if(writtingIsOnTheWall==0)
 						{
-							console.log("loading writ................................... " + wallWritObject);
 							writtingsArr[writtingIsOnTheWall][4] = wallWritObject;
 							object = wallWritObject;
 						}
