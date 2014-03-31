@@ -28,7 +28,7 @@
   
 	$_SESSION['inventozy'] = array();
 	
-	if(isset($_POST["inventory"]))
+	if((isset($_POST["inventory"])) && (strlen($_POST["inventory"])>1))
 	{
 		//get items from inventory
 		$iitems = explode("|||", $_POST["inventory"]);
@@ -71,7 +71,7 @@
 
 		</style>
 	</head>
-	<body>
+	<body onload="onPageLoad()">
 
 		<div id="container" style="position:absolute;">
 		</div>
@@ -1064,7 +1064,7 @@ function loadInventory()
 				load_containers();
 				
 				//level specific action on load
-				onLoad();
+				levelOnLoad();
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -1245,7 +1245,6 @@ function loadInventory()
 				//alert(event.keyCode);
 				if (event.keyCode == 73) {
 					//show inventory if hidden, hide elsewhere
-					post_to_url('cuber.php?lvl=level2', {inventory: inventory_to_post()});					
 					
 					if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
 					{
@@ -1536,6 +1535,12 @@ function loadInventory()
 				//remove loading screen
 				loading_div.style.display = "none";
 				document.getElementById( 'info_dialog_button' ).focus();
+			}
+			
+			function onPageLoad()
+			{
+				//alert("page loaded!");
+				remove_loading_screen();
 			}
 			
 			//there are 10 loading points (squares) each should ligh up when percentage cross it

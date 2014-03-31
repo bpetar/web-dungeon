@@ -1,5 +1,5 @@
 
-function onLoad()
+function levelOnLoad()
 {
 	//info_dialog_div.style.display = "inline";
 }
