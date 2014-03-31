@@ -48,7 +48,7 @@ function updateModelLoading(name)
 	if(typeof totalModels != 'undefined')
 	{
 		var perc = (modelNumber*100)/totalModels;
-		if(totalModels == modelNumber) remove_loading_screen();
+		//if(totalModels == modelNumber) remove_loading_screen();
 		console.log("loading percent: " + perc);
 		update_loading_screen(perc);
 	}
