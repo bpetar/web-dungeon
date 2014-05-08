@@ -1,10 +1,10 @@
-	<div id="gui" style="min-height:650px; min-width:950px; height:100%; width:100%; display:table;">
+	<div id="gui" style="min-height:650px; min-width:950px; height:100%; width:100%;">
 	
-		<div id="gui_left" style="position:relative; background: url(media/gui/background_up_green.png); display:table-cell; border-spacing:0px; height:100%; width:200px;">
+		<div id="gui_left" style="position:relative; float:left; background: url(media/gui/background_up_green.png);  border-spacing:0px; height:100%; width:200px; border:1px solid black;">
         
             <div id="profiles" style="display:block; width:100%;">
             
-                <div style="width:100%; height:4px">.
+                <div style="width:100%; height:4px">
                 </div>
                 
                 
@@ -69,12 +69,12 @@
             
 		</div>
 
-		<div id="gui_center" style="position:relative; display:table-cell; height:100%;">
+		<div id="gui_center" style="position:relative; float:left; width:500px; height:100%;">
 
-			<div id="container" style="background:url(media/gui/3dview.png); position:absolute; top:0; bottom:0; margin-bottom:64px; width:100%; border:1px solid black;">
+			<div id="container" style="width:500px; height:500px; border:1px solid black;">
 			</div>
 
-            <div id="container" onclick="{console.log('perap'); this.style.marginBottom='354px'; document.getElementById('console').style.height='364px';}" style="background:url(media/gui/console_up.png); cursor:pointer; background-size: 100% 100%; position:absolute; bottom:0px; right:20px; margin-bottom:54px; z-index:2; width:30px; height:30px; border:0px solid yellow;">
+            <div id="console_button" onclick="{console.log('perap'); this.style.marginBottom='354px'; document.getElementById('console').style.height='364px';}" style="background:url(media/gui/console_up.png); cursor:pointer; background-size: 100% 100%; position:absolute; bottom:0px; right:20px; margin-bottom:54px; z-index:2; width:30px; height:30px; border:0px solid yellow;">
 			</div>
             
 			<div id="console" style="background:url(media/gui/background.png); position:absolute; bottom:0px; color:yellow; height:64px; width:100%; overflow-y: scroll;">
@@ -103,12 +103,12 @@
 			</div>
 		</div>
         
-		<div id="gui_right" style="position:relative; display:table-cell; background: url(media/gui/background_up_green.png); border:1px solid black; width:208px; height:100%;">
+		<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:1px solid black; width:200px; height:100%;">
         
-            <div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">.
+            <div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">
 			</div>
             
-            <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:6px;">
+            <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:4px;">
 			</div>
             
             <div style="width:192px; margin-left:6px; height:8px;">
