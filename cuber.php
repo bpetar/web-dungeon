@@ -4,7 +4,7 @@
 	// Connects to Database 
 	//mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
 	//mysql_select_db("mysticp_comments") or die(mysql_error()); 
-    include "cuber_play_counter.php";
+    //include "cuber_play_counter.php";
 
 	session_start();
 
@@ -12,7 +12,7 @@
 	$_SESSION['views']=$_SESSION['views']+1;
 	else
 	$_SESSION['views']=1;
-	echo "Views=". $_SESSION['views'];
+	//echo "Views=". $_SESSION['views'];
 	
 	
 	if (isset($_COOKIE["user"]))
@@ -86,9 +86,9 @@
     
     
     
-    <div id="gui" style="min-height:650px; min-width:950px; height:100%; width:100%; display:table;">
+    <div id="gui" style="min-height:650px; min-width:950px; height:100%; width:100%;">
 	
-		<div id="gui_left" style="position:relative; background: url(media/gui/background_up_green.png); display:table-cell; border-spacing:0px; height:100%; width:200px;">
+		<div id="gui_left" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border-spacing:0px; height:100%; width:200px;">
         
             <div id="profiles" style="display:block; width:100%;">
             
@@ -157,9 +157,9 @@
             
 		</div>
 
-		<div id="gui_center" style="position:relative; display:table-cell; height:100%;">
+		<div id="gui_center" style="position:relative; float:left; width:500px; height:100%;">
 
-			<div id="id-3d-container" style="position:absolute; top:0; bottom:0; margin-bottom:64px; width:100%; border:1px solid black; z-index:3;">
+			<div id="id-3d-container" style="width:500px; height:500px; border:1px solid yellow;">
 			</div>
 
             <div id="id-console-button" onclick="{console.log('perap'); this.style.marginBottom='354px'; document.getElementById('console').style.height='364px';}" style="background:url(media/gui/console_up.png); cursor:pointer; background-size: 100% 100%; position:absolute; bottom:0px; right:20px; margin-bottom:54px; z-index:2; width:30px; height:30px; border:0px solid yellow;">
@@ -191,15 +191,15 @@
 			</div>
 		</div>
         
-		<div id="gui_right" style="position:relative; display:table-cell; background: url(media/gui/background_up_green.png); border:1px solid black; width:208px; height:100%;">
+		<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:1px solid black; width:200px; height:100%;">
         
             <div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">.
 			</div>
             
-            <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:6px;">
+            <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:4px;">
 			</div>
             
-            <div style="width:192px; margin-left:6px; height:8px;">
+            <div style="width:192px; margin-left:4px; height:8px;">
 			</div>
             
             <div id="player2-inventory" style="background: url(media/gui/root.png); border:1px solid yellow; width:192px; height:192px; display:none;">
@@ -209,9 +209,9 @@
 			</div>
                 
 			<div id="map" style="background:url(media/gui/background.png); position:absolute; bottom:0px; height:64px; width:100%;">
-                <div id="special_slot1" style="float:left; margin-right:2px; margin-left:4px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-                <div id="special_slot2" style="float:left; margin-right:2px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-                <div id="special_slot3" style="float:left; margin-right:4px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+                <div id="special_slot1" style="float:left; margin-right:1px; margin-left:4px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+                <div id="special_slot2" style="float:left; margin-right:1px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+                <div id="special_slot3" style="float:left; margin-right:4px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
 			</div>
 		</div>
 	</div>
@@ -256,9 +256,7 @@
 						</div>
 						<div id="hpandweapon" style="border:1px solid green;">
 							<div id="player1HP" style="background-color: #009900; border:1px solid blue; height:20px;">
-							<!-- <img src="media/health.png">  -->
 							</div>
-							<!-- <br> -->
 							<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
 							<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px">
 							</div>
@@ -296,15 +294,6 @@
 			</div>-->
 		</div>
 
-		<div id="gui_bar" style="position:absolute; background: url(media/bar.png) repeat-x; height:50px; width:100%; bottom:-41px;">
-		&nbsp;
-		</div>
-		<div id="gui_left" style="position:absolute; left:-36px; bottom:-40px;">
-			<img src="media/left.png" > 
-		</div>
-		<div id="gui_right" style="position:absolute; right:-36px; bottom:-40px;">
-			<img src="media/right.png" > 
-		</div>
 
 		<div id="gui_slots" style="position:absolute; left:256px; bottom:-170px;">
 			<div id="gui_slot1" style="float:left;">
@@ -1030,6 +1019,7 @@ function loadInventory()
 			function init() {
 
 				container3d = document.getElementById( 'id-3d-container' );
+				middleDiv = document.getElementById( 'gui_center' );
 				
 				menu_div = document.getElementById( 'menu' );
 				
@@ -1229,8 +1219,12 @@ function loadInventory()
 				//level specific action on load
 				levelOnLoad();
 
+				middleDiv.style.width = "" + (window.innerWidth - 404) + "px";
+				container3d.style.width = middleDiv.style.width;
+				container3d.style.height = "" + (middleDiv.offsetHeight - 84) + "px";
+				
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
 				renderer.shadowMapWidth = 128;;
 				renderer.shadowMapHeight = 128;
 				renderer.shadowCameraFov = 50;
@@ -1678,14 +1672,14 @@ function loadInventory()
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
 				
-				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				//inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
-				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				//container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+				//camera.aspect = window.innerWidth / window.innerHeight;
+				//camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				//renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
 
