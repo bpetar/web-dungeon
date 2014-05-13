@@ -102,7 +102,11 @@
                     </div>
                     
                     <div style="width:100%; height:156px; border:0px solid yellow; margin-left:6px;">
-                        <div id="player1-face" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> </div>
+                        <div id="player1-face" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> 
+							<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
+							13
+							</div>
+						</div>
                         <div id="player1-hands" style="float:left; width:92px; height:156px; border:0px solid green;" > 
                             <div id="player1-health" style="width:84px; height:20px; border:1px solid green; margin-left:4px; margin-top:4px; background:rgba(2,139,0,0.4);" > </div>
                             <div id="player1-hand-l" style="width:92px; height:64px; border:0px solid blue;" > 
@@ -243,55 +247,12 @@
     
     
 		
-		<div id="gui" style="cursor: pointer; position:absolute; left:70px; top:70px;">
-			<div id="player1" style="border:2px solid; float: left;">
-				<div id="player1top" style="border:1px solid red; float: left;">
-					<div id="player1topimg" style="float: left;">
-						<img src="media/profile.png" onClick='inventory_show("Inventory will popup here!")'> 
-					</div>
+		<div id="gui" style="cursor: pointer; position:absolute; left:200px; top:70px;">
 					
-					<div id="player1tophandsy" style="border:2px solid green;float: left;">
-						<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
-						13
-						</div>
-						<div id="hpandweapon" style="border:1px solid green;">
-							<div id="player1HP" style="background-color: #009900; border:1px solid blue; height:20px;">
-							</div>
-							<div id="player1lhand" style="border:1px solid blue; opacity:1.0;">
-							<img id="lefthandimg" src="media/lhand.png" style="width: 72px; height: 72px">
-							</div>
-							<div id="player1rhand" style="border:1px solid blue; opacity:1.0;">
-							<img id="righthandimg" src="media/rhand.png" style="width: 72px; height: 72px"> 
-							</div>
-						</div>
-					</div>
-					
-					
-
-				</div>
-				<br>
-				Martin
-			</div>
-			<div id="speech_bubble" onClick="hide_bubble();"  style="float:left; display:none; font-size:16px; padding-top:25px; padding-bottom:25px; padding-left:95px; padding-right:25px; text-align:left; width:600px; height:150px; opacity:0.8; background-color: #001100; background:url(media/speech_bubble.png); background-size: 100% 100%;">
+			<div id="speech_bubble" onClick="hide_bubble();"  style="float:left; display:none; font-size:16px; padding-top:25px; padding-bottom:25px; padding-left:205px; padding-right:25px; text-align:left; width:600px; height:150px; opacity:0.8; background-color: #001100; background:url(media/speech_bubble.png); background-size: 100% 100%;">
 			Im alive!! Hello World!
 			</div>
-			
-			<br><!--
-			<br>
-			<div id="player2" style="border:2px solid; opacity:0.4;">
-				<div id="player2top" style="border:1px solid red; float: left;">
-					<div id="player2topimg" style="float: left;">
-					<img src="media/profile2.jpg" style="opacity:0.4;" onClick='inventory_show("Inventory will popup here!")'> 
-					</div>
-					<div id="player2tophand" style="border:1px solid blue; margin-left: 110px;">
-					<img src="media/health.png" style="opacity:0.4;"> 
-					<br>
-					<img src="media/staff.png" style="opacity:0.4;"> 
-					</div>
-				</div>
-				<br>
-				Mech Cloaker
-			</div>-->
+
 		</div>
 
 
@@ -657,7 +618,7 @@ function loadInventory()
 			}
 			
 			function player_dies() {
-				player1_div.style.opacity = "0.4";
+				player1_face_div.style.opacity = "0.4";
 				if(pickable_at_hand != 0)
 				{
 						pickable_at_hand = 0;
@@ -834,8 +795,8 @@ function loadInventory()
 			var showMonsterDmg = false;
 			var showPlayerDmg = false;
 			var SHOW_DAMAGE_TIME = 1;
-			var lhandDiv = 0; //id=player1lhand
-			var rhandDiv = 0; //id=player1rhand
+			var lhandDiv = 0; //id=player1-hand-l
+			var rhandDiv = 0; //id=player1-hand-r
 			
 			var level_complete_div = 0;
 			
@@ -1165,7 +1126,7 @@ function loadInventory()
 				loading_msg_span = document.getElementById('loading_message');
 				//loading_div.style.display = "none";
 				
-				player1_div = document.getElementById('player1');
+				player1_face_div = document.getElementById('player1-face');
 				
 				level_complete_div = document.getElementById('level_complete_dialog');
 				
@@ -1174,7 +1135,7 @@ function loadInventory()
 				
 				speech_bubble_div = document.getElementById('speech_bubble');
 
-				player_HP_div = document.getElementById('player1HP');
+				player_HP_div = document.getElementById('player1-health');
 				player_HP_div.style.width = "100%";
 				player_HP_div.style.backgroundColor = "#009900";
 				
@@ -1187,9 +1148,9 @@ function loadInventory()
 				info_tip_div = document.getElementById('info_tip');
 				info_tip_div.style.display = 'none';
 
-				rhandDiv = document.getElementById('player1rhand');
+				rhandDiv = document.getElementById('player1-hand-r');
 				rhandDiv.style.opacity=1.0;
-				lhandDiv = document.getElementById('player1lhand');
+				lhandDiv = document.getElementById('player1-hand-l');
 				lhandDiv.style.opacity=1.0;
 				
 				//
@@ -1221,7 +1182,7 @@ function loadInventory()
 
 				middleDiv.style.width = "" + (window.innerWidth - 404) + "px";
 				container3d.style.width = middleDiv.style.width;
-				container3d.style.height = "" + (middleDiv.offsetHeight - 84) + "px";
+				container3d.style.height = "" + (middleDiv.offsetHeight - 74) + "px";
 				
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
@@ -2335,7 +2296,7 @@ function loadInventory()
 							if(left_hand_item != 0)
 							{
 								tmp_hand_item = left_hand_item;
-								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-l-main").src = pickable_at_hand.icon;
 								left_hand_item = pickable_at_hand;
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
@@ -2343,7 +2304,7 @@ function loadInventory()
 							}
 							else
 							{
-								document.getElementById("lefthandimg").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-l-main").src = pickable_at_hand.icon;
 								left_hand_item = pickable_at_hand;
 								//pickable at hand is gone
 								pickable_at_hand_icon.style.left = "-170px";
@@ -2364,7 +2325,7 @@ function loadInventory()
 							if(right_hand_item != 0)
 							{
 								tmp_hand_item = right_hand_item;
-								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-r-main").src = pickable_at_hand.icon;
 								right_hand_item = pickable_at_hand;
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
@@ -2372,7 +2333,7 @@ function loadInventory()
 							}
 							else
 							{
-								document.getElementById("righthandimg").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-r-main").src = pickable_at_hand.icon;
 								right_hand_item = pickable_at_hand;
 								//pickable at hand is gone
 								pickable_at_hand_icon.style.left = "-170px";
@@ -2563,7 +2524,7 @@ function loadInventory()
 							//take item from players hand
 							if(left_hand_item != 0)
 							{
-								document.getElementById("lefthandimg").src = "media/lhand.png";
+								document.getElementById("player1-hand-l-main").src = "media/lhand.png";
 								//pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = left_hand_item.icon;
@@ -2597,7 +2558,7 @@ function loadInventory()
 							//take item from players hand
 							if(right_hand_item != 0)
 							{
-								document.getElementById("righthandimg").src = "media/rhand.png";
+								document.getElementById("player1-hand-r-main").src = "media/rhand.png";
 								//pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = right_hand_item.icon;
