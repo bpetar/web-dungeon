@@ -213,29 +213,12 @@
 			</div>
                 
 			<div id="map" style="background:url(media/gui/background.png); position:absolute; bottom:0px; height:64px; width:100%;">
-                <div id="special_slot1" style="float:left; margin-right:1px; margin-left:4px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+                <div id="special_slot1" style="float:left; margin-right:1px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
                 <div id="special_slot2" style="float:left; margin-right:1px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-                <div id="special_slot3" style="float:left; margin-right:4px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+                <div id="special_slot3" style="float:left; margin-right:2px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
 			</div>
 		</div>
 	</div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -255,41 +238,6 @@
 
 		</div>
 
-
-		<div id="gui_slots" style="position:absolute; left:256px; bottom:-170px;">
-			<div id="gui_slot1" style="float:left;">
-				<div id="gui_slot1_item" style="float:left;">
-					<img id="gui_slot1_item_icon" src="media/none.png"> 
-				</div>
-				<div id="gui_slot1_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div>
-			</div>
-			<div id="gui_slot2" style="float:left;">
-				<div id="gui_slot2_item" style="float:left;">
-					<img id="gui_slot2_item_icon" src="media/none.png"> 
-				</div>
-				<div id="gui_slot2_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
-			</div>
-			<div id="gui_slot3" style="float:left;">
-				<div id="gui_slot3_item" style="float:left;">
-					<img id="gui_slot3_item_icon" src="media/none.png"> 
-				</div>
-				<div id="gui_slot3_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
-			</div>
-			<div id="gui_slot41" style="float:left;">
-				<div id="gui_slot4_item" style="float:left;">
-					<img id="gui_slot4_item_icon" src="media/none.png"> 
-				</div>
-				<div id="gui_slot4_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
-			</div>
-		</div>
 		
 		
 		<div id="container_slots" style="position:absolute; left:256px; top:100px; display: none;">
@@ -504,15 +452,15 @@ function loadInventory()
 
 			var existingMaps = ['level1', 'level2', 'level3'];
 			
-			var stats = new Stats();
-			stats.setMode(0); // 0: fps, 1: ms
+			//var stats = new Stats();
+			//stats.setMode(0); // 0: fps, 1: ms
 
 			// Align top-left
 			//stats.domElement.style.position = 'absolute';
 			//stats.domElement.style.left = '0px';
 			//stats.domElement.style.top = '0px';
 
-			document.body.appendChild( stats.domElement );
+			//document.body.appendChild( stats.domElement );
 
 			//display level complete dialog
 			function displayLevelCompleteDialog() {
@@ -784,7 +732,7 @@ function loadInventory()
 			var NUM_CONTAINER_ROWS = 1;
 			var SLOT_WIDTH = 128;
 			var inventorySlide = 0;
-			var inventory_div;
+			//var inventory_div;
 			var INVENTORY_POS_HIDDEN = -170;
 			var INVENTORY_POS_SHOWN = 8;
 			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
@@ -1114,8 +1062,8 @@ function loadInventory()
 				scene = new THREE.Scene();
 				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
 				
-				inventory_div = document.getElementById('gui_slots');
-				inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
+				//inventory_div = document.getElementById('gui_slots');
+				//inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 				
 				container_div = document.getElementById('container_slots');
 				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
@@ -1687,7 +1635,7 @@ function loadInventory()
 				container3d.style.cursor = pointer;
 				gui_left_div.style.cursor = pointer;
 				gui_right_div.style.cursor = pointer;
-				inventory_div.style.cursor = pointer;
+				//inventory_div.style.cursor = pointer;
 				container_div.style.cursor = pointer;
 			}
 			
@@ -3066,7 +3014,7 @@ function loadInventory()
 					
 					
 					//slide inventory up
-					if(inventorySlide == 1)
+					/*if(inventorySlide == 1)
 					{
 						inventory_div_vertical_pos += elapsed/3;
 						inventory_div.style.bottom = inventory_div_vertical_pos + 'px';
@@ -3091,7 +3039,7 @@ function loadInventory()
 							inventorySlide = 0;
 						}
 						//inventory_div.style.top = '100px';
-					}
+					}*/
 					
 					
 					//animate hole fall
@@ -3140,7 +3088,7 @@ function loadInventory()
 		
 		
 				render();
-				stats.update();
+				//stats.update();
 				
 				
 				
