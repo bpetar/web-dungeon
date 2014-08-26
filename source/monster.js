@@ -871,6 +871,7 @@ Monster.prototype.move = function ( delta ) {
 					playerHPcurrent -= dmg_roll;
 					player_wound_div.style.display = "inline-block";
 					player_wound_div.innerHTML = dmg_roll;
+					addToConsole("Monster hits player: " + dmg_roll + " damage!","red");
 					// soundy Play player wounded ngh sound
 					audio_ngh.play();
 					

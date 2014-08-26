@@ -5,11 +5,9 @@
 	//mysql_connect("www.mystic-peanut.com", "mysticp_mysticp", "superme2") or die(mysql_error()); 
 	//mysql_select_db("mysticp_comments") or die(mysql_error()); 
     //include "cuber_play_counter.php";
-    
-    include "cuber_html.php";
 
 	session_start();
-
+    
 	if(isset($_SESSION['views']))
 	$_SESSION['views']=$_SESSION['views']+1;
 	else
@@ -40,6 +38,8 @@
 			$_SESSION['inventozy'][]=$item;
 		}
 	}
+
+  include "cuber_html.php";
 
 ?>
 
@@ -239,9 +239,11 @@ function loadInventory()
 			}
 			
 			function DisplayInfoDiv(msg) {
-				//show some nice fadeout info test above inventory..
-				var info_tip_div_bottom = INVENTORY_POS_SHOWN + SLOT_WIDTH
-				var left = (windowHalfX - (SLOT_WIDTH*NUM_SLOTS_INVENTORY_ROW/2));
+				//show some nice fadeout info text above inventory..
+				var info_tip_div_bottom = 60;
+				if(consoleOpened)
+					info_tip_div_bottom = 360;
+				var left = 202;
 				//info_tip_div.style.top = info_tip_div_top + "px";
 				info_tip_div.style.bottom = info_tip_div_bottom + "px";
 				info_tip_div.style.left = left + "px";
@@ -249,6 +251,7 @@ function loadInventory()
 				info_tip_div_top_lift = 0;
 				info_tip_div.style.opacity = 1.0;
 				info_tip_div.style.display = "inline-block";
+				addToConsole(msg,"#BBFFBB");
 				console.log("info: " + windowHalfX + ", left: " + left);
 			}
 			
@@ -279,12 +282,15 @@ function loadInventory()
 				if(dmg == "Miss!")
 				{
 					monster_wound_div.style.backgroundImage = "url(media/miss.png)";
+					addToConsole(dmg,"gray");
 				}
 				else
 				{
 					monster_wound_div.style.backgroundImage = "url(media/wound.png)";
+					addToConsole("Player hits monster: " + dmg + " damage!","red");
 				}
 				monster_wound_div.style.display = "inline-block";
+				
 				//console.log("monster takes top: " + top + ", monster_wound_div.style.top: " + monster_wound_div.style.top);
 			}
 			
@@ -581,7 +587,7 @@ function loadInventory()
 				info_dialog_div.style.display = "none";
 				//play sound 
 				audio_click.play();
-				console.log("gasimo?");
+				//console.log("gasimo?");
 			}
 			
 			function hide_bubble()
@@ -876,7 +882,9 @@ function loadInventory()
 				//level specific action on load
 				levelOnLoad();
 
-				middleDiv.style.width = "" + (window.innerWidth - 404) + "px";
+				var middleWidth = window.innerWidth - 404;
+				if(middleWidth<600) middleWidth = 600;
+				middleDiv.style.width = "" + middleWidth + "px";
 				container3d.style.width = middleDiv.style.width;
 				container3d.style.height = "" + (middleDiv.offsetHeight - 74) + "px";
 				
