@@ -18,7 +18,6 @@
 				background-color: #000;
 				margin: 0px;
 				padding: 0px;
-				overflow: hidden;
 			}
 
 			#info {
@@ -35,116 +34,14 @@
 	</head>
 	<body onload="onPageLoad()">
     
-    <div id="gui" style="min-height:650px; min-width:950px; height:100%; width:100%;">
+    <div id="gui" style="min-height:650px; min-width:1020px; height:100%; width:100%;">
 	
-		<div id="gui_left" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border-spacing:0px; height:100%; width:200px;">
+
+		<?php include "cuber_html_left.php"; ?>
+		
+		<?php include "cuber_html_console.php"; ?>
         
-            <div id="profiles" style="display:block; width:100%;">
-            
-                <div style="width:100%; height:4px">.
-                </div>
-                
-                
-                <div id="player1" style="background: url(media/gui/profile.png) no-repeat; width:192px; height:200px; margin-left:4px;">
-                
-                    <div style="width:100%; height:8px; border:0px solid white;">
-                    </div>
-                    
-                    <div style="width:100%; height:156px; border:0px solid yellow; margin-left:6px;">
-                        <div id="player1-face" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> 
-							<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
-							13
-							</div>
-						</div>
-                        <div id="player1-hands" style="float:left; width:92px; height:156px; border:0px solid green;" > 
-                            <div id="player1-health" style="width:84px; height:20px; border:1px solid green; margin-left:4px; margin-top:4px; background:rgba(2,139,0,0.4);" > </div>
-                            <div id="player1-hand-l" style="width:92px; height:64px; border:0px solid blue;" > 
-                                <div id="player1-hand-l-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
-                                <div id="player1-hand-l-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
-                            </div>
-                            <div id="player1-hand-r" style="width:92px; height:64px; border:0px solid red;" > 
-                                <div id="player1-hand-r-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
-                                <div id="player1-hand-r-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div id="name1" style="width:100%; height:29px; border:0px solid red; text-align:center; cursor:pointer; line-height:29px; color:white;">MARTIN</div>
-                    
-                </div>
-                
-                
-                <div style="width:100%; height:8px; ">
-                </div>
-                
-                <div id="player2" style="background: url(media/gui/profile.png) no-repeat; width:192px; height:200px; margin-left:4px; display:none;">
-                
-                    <div style="width:100%; height:8px; border:0px solid white;">
-                    </div>
-                    
-                    <div style="width:100%; height:156px; border:0px solid yellow; margin-left:6px;">
-                        <div id="player2-face" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> </div>
-                        <div id="player2-hands" style="float:left; width:92px; height:156px; border:0px solid green;" > 
-                            <div id="player2-health" style="width:84px; height:20px; border:1px solid green; margin-left:4px; margin-top:4px; background:rgba(2,139,0,0.4);" > </div>
-                            <div id="player2-hand-l" style="width:92px; height:64px; border:0px solid blue;" > 
-                                <div id="player2-hand-l-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
-                                <div id="player2-hand-l-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
-                            </div>
-                            <div id="player2-hand-r" style="width:92px; height:64px; border:0px solid red;" > 
-                                <div id="player2-hand-r-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
-                                <div id="player2-hand-r-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                    <div id="name1" style="width:100%; height:29px; border:0px solid red; text-align:center; cursor:pointer; line-height:29px; color:white;">GRISHNAK</div>
-                    
-                </div>
-                        
-			</div>
-
-			<div id="options" style="background:url(media/gui/buttons.png); background-size: 100% 100%; position:absolute; bottom:0px; cursor:pointer; height:64px; width:100%; text-align:center; line-height:64px;"><b>OPTIONS</b>
-			</div>
-            
-		</div>
-
-		<div id="gui_center" style="position:relative; float:left; width:500px; height:100%;">
-
-			<div id="id-3d-container" style="width:500px; height:500px; border:1px solid yellow;">
-			</div>
-
-            <div id="id-console-button" onclick="{console.log('perap'); this.style.marginBottom='354px'; document.getElementById('console').style.height='364px';}" style="background:url(media/gui/console_up.png); cursor:pointer; background-size: 100% 100%; position:absolute; bottom:0px; right:20px; margin-bottom:54px; z-index:2; width:30px; height:30px; border:0px solid yellow;">
-			</div>
-            
-			<div id="console" style="background:url(media/gui/background.png); position:absolute; bottom:0px; color:yellow; height:64px; width:100%; overflow-y: scroll;">
-            Game Initialized.
-            <br>
-            Martin: I smell something funny in this corner..
-            <br>
-            Root picked up!
-            <br>
-            Root picked up!
-            <br>
-            Martin: I smell something funny in this corner..
-            <br>
-            Root picked up!
-            <br>
-            Game Initialized.
-            <br>
-            Martin: I smell something funny in this corner..
-            <br>
-            Root picked up!
-            <br>
-            Root picked up!
-            <br>
-            Martin: I smell something funny in this corner..
-            <br>
-			</div>
-		</div>
-        
-		<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:1px solid black; width:200px; height:100%;">
+		<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:0px solid black; width:200px; height:100%;">
         
             <div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">.
 			</div>
@@ -179,7 +76,7 @@
     
     
 		
-		<div id="gui" style="cursor: pointer; position:absolute; left:200px; top:70px;">
+		<div id="gui-speech" style="cursor: pointer; position:absolute; left:200px; top:70px;">
 					
 			<div id="speech_bubble" onClick="hide_bubble();"  style="float:left; display:none; font-size:16px; padding-top:25px; padding-bottom:25px; padding-left:205px; padding-right:25px; text-align:left; width:600px; height:150px; opacity:0.8; background-color: #001100; background:url(media/speech_bubble.png); background-size: 100% 100%;">
 			Im alive!! Hello World!
@@ -249,7 +146,7 @@
 			</div>
 		</div>
 
-		<div id="loading_progress" style="position:absolute; font-size:28px; width:100%; height:100%; background-color: #000011; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
+		<div id="loading_progress" style="position:absolute; font-size:28px; width:100%; height:100%; background-color: #000011; top:0; bottom: 0; left: 0; right: 0; margin: auto; z-index:3;">
 
 			<div style="position:absolute; width:300px; height:200px; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
 				<span id="loading_message">Loading 0%</span> <br><br><br>
