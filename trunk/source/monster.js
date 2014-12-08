@@ -634,7 +634,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 		else
 		{
 			//player is too far away to draw attention of monster... so idle around
-			console.log("diagonal, too far away");
+			//console.log("diagonal, too far away");
 			this.mesh.duration = IDLE_ANIM_DURATION;
 			this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		}
@@ -893,7 +893,8 @@ Monster.prototype.move = function ( delta ) {
 						}
 						else
 						{
-							show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 550, 350, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+							//show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <div id='info_dialog_button_container' style='margin:auto; padding-top:9px;> <div id='info_dialog_button' style='cursor: pointer; float:left; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Restart </div>&nbsp;&nbsp; <div id='info_dialog_button2' style='cursor: pointer; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+							show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br> <div id='info_dialog_button_container' style='margin:auto; width:230px;'> <div id='info_dialog_button' style='cursor: pointer; padding-top:9px; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Restart </div> <div id='info_dialog_button2' style='float:left; width:30px; height:25px; '></div> <div id='info_dialog_button3' style='cursor: pointer; float:left; padding-top:9px; right:0px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 						}
 					}
 					else

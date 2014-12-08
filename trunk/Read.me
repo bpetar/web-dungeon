@@ -20,7 +20,7 @@ todo:
 + player death (monster ignoring him, image grayed out)
 + info screen size set in parameters
 + fog
-+ add another tapistry :)
++ add another tapestry :)
 + make guardian standing still until item is given to him. Then he scratches his head and decides wheather to attack or move away.
 + make monster go mad when attacked
 + make monster take item given to him
@@ -103,6 +103,8 @@ todo:
 - notify registered users
 - publish on facebook group
 - game name? kregan krodgan krid krib walker rune heart
+- make youtube video
+
 
 bugs:
 + item goes to niche instead of hand if standing in front of niche :)
@@ -171,24 +173,81 @@ optimizations:
 ~ boy face
 
 - game functioning
- - character screen (dressup)
- - money, experience, leveling, skills
- - magic
- - gui redesign
-   - dialogs redesign
-   - place item in inventory
+ + loading screen
+ + gui redesign
+   + dialog speech redesign to fit
+    + OK button
+   + info text popup move right (and smaller text)
+   + text selection blue screen disable
+   + inventory on laptop goes new line (seems like scroll bar issue)
+   + 3d screen black space above console
+   + center gui in browser window horizontally (100% width is problem, need something like 200px)
+   + scrolling makes things silly. 
+    + pickable at hand is offseted
+   + place item in inventory
+    + drop item not working on lower part of screen
+	+ cursor over item
+	+ pick item from inventory
+	+ right click on item in inventory to consume
    + mouse picking works not
      + cant pick pickable? too far?
    + console.log up/down, add text! fix index of up arrows, align text left
-   - resize screen 3d view
-   - put sword in hand and fight
-   - mouse and key events in separate js file
- + loading screen
+    + console text upside down
+   + put sword in hand and fight
+    + attack!
+	+ pickup item from hand
+	+ play click sound
+	+ fix right hand pickup and placement
+	+ can you put root in weapon hand?
+	+ long press to take item from hand
+   + glow slots when weapon under mouse cursor
+   + resize screen 3d view
+     + console background to resize nicely
+   + remove hint now? :/
+   + full hp green bar goes beyond gui
+   + map open prints empty line?
+   + fix map dialog
+   + fix you wake up dialog
+   + console background image
+   + icons?
+   + tip to right click root!
+   - tip to left click to attack
+   - hand icon is not like inventory icon
+   + dialogs redesign: 
+    + you have been killed
+	+ wall writing
+	+ level finished :)
+	+ registration
+ + hand damage is too big
+ + item description div on hover
+ - icon stack in inventory
+ - all pickable items in separate file (json?), only id to be used in level arrays
+ - options screen 
+  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
+  - pause game loop
+  - gray out inventory and players and don't allow item interaction and clicks
+  - new
+  - load
+  - save
+  - register
+  - donate
+  - settings
+  - credits
+  - help
+ - character screen (dressup)
+  - level, next level, xp, attack, defense, strength, dexterity
+ - money, experience, leveling, skills
+ - magic
+ - mouse and key events in separate js file
  - php session
+ - record player movements (clicks and keypresses) and time, and reproduce gameplay
  - php login 
  - playing unregistered..
  - save/load game
  - redesign editor site (combine game and demo?)
+ - magic atlas book of maps flies to special slot and particles sprinkle
+ - compass flies to its special slot. it turns to show north.
+ - lantern flies to its slot. lantern is refiled with light stones
 
 
 - make level editor
@@ -204,7 +263,7 @@ optimizations:
 
 --- various game features todo: 
 
-- change attack to left click..
++ change attack to left click..
 - make worm control 
 - dust spec particles..
 - make worm dig passage in ground..
@@ -214,16 +273,13 @@ optimizations:
 - revise door loading to optimize and support different doors on one level!
 - sound off/on button
 - fight music
-- add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
 - registration fail: your email was wrong should have printed the wrong mail, and offer re-registration.
 - drink potion sound
 - secrets found checks win array :)
-- make similar items stack
 - add glowing worm harth?
 ~ make item combining
-~ add tips dialog: "press i to open inventory"
-- item info on mouse pause
+/ add tips dialog: "press i to open inventory"
++ item info on mouse pause
 + make speech bubbles for boy
-- close inventory on gui x?
-- make youtube video
-- when item is picked, appropriate hand slots glow
+/ close inventory on gui x?
++ when item is picked, appropriate hand slots glow
