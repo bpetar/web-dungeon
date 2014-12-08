@@ -24,6 +24,55 @@ function post_to_url(path, params, method) {
     form.submit();
 }
 
+function add_element_class(element,classy)
+{
+	var e = document.getElementById(element);
+	if(!(e.classList.contains(classy)))
+	{
+		e.classList.add(classy);
+	}
+}
+
+function remove_element_class(element,classy)
+{
+	var e = document.getElementById(element);
+	if(e.classList.contains(classy))
+	{
+		e.classList.remove(classy);
+	}
+}
+
+function get_element_position_in_viewport(element)
+{
+	var e = document.getElementById(element);
+	var offset = {x:0,y:0};
+	while (e)
+	{
+		offset.x += e.offsetLeft;
+		offset.y += e.offsetTop;
+		e = e.offsetParent;
+	}
+
+	if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft))
+	{
+		offset.x -= document.documentElement.scrollLeft;
+		offset.y -= document.documentElement.scrollTop;
+	}
+	else if (document.body && (document.body.scrollTop || document.body.scrollLeft))
+	{
+		offset.x -= document.body.scrollLeft;
+		offset.y -= document.body.scrollTop;
+	}
+	else if (window.pageXOffset || window.pageYOffset)
+	{
+		offset.x -= window.pageXOffset;
+		offset.y -= window.pageYOffset;
+	}
+
+	return offset;
+}
+
+
 function show_model(loader, model_file, x, z, rot)
 {
 

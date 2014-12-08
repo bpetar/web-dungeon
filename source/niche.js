@@ -13,7 +13,8 @@ function loadNiches() {
 			var picki = create_game_object();
 			picki.gameID = niche_pickables[i][0];
 			picki.name = niche_pickables[i][1];
-			picki.model = niche_pickables[i][2];
+			picki.description = niche_pickables[i][2];
+			picki.model = niche_pickables[i][3];
 			mover = -1+i/2;
 			
 			//check niche position and place pickable in it accordingly
@@ -82,14 +83,15 @@ function loadNiches() {
 				}
 			}
 			
-			picki.icon = niche_pickables[i][3];
+			picki.icon = niche_pickables[i][4];
+			picki.icon2 = niche_pickables[i][5];
 			picki.niched = n; //flag indicating if pickable is in the niche
 			picki.plated = -1; //flag indicating if pickable is on the plate
 			
-			picki.useHint = niche_pickables[i][4];
-			if(niche_pickables[i].length>5)
+			picki.useHint = niche_pickables[i][6];
+			if(niche_pickables[i].length>7)
 			{
-				picki.useScript = niche_pickables[i][5];
+				picki.useScript = niche_pickables[i][7];
 			}
 			
 			//loader.load( picki.model, picki.loadObject(picki) );

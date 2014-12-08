@@ -18,6 +18,13 @@
 				background-color: #000;
 				margin: 0px;
 				padding: 0px;
+				
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
 			}
 
 			#info {
@@ -29,12 +36,26 @@
 			a {
 				color: #0080ff;
 			}
+			
+			.shadow {
+
+			-webkit-filter: drop-shadow(0px 0px 13px rgba(255, 255, 0 , 1));
+
+			filter: url("../img/dialog/dialog-elements/shadow.svg#drop-shadow");
+
+			-ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=0, 
+
+			Color='#FFFFFF')";
+
+			filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=0, Color='#FFFFFF')";
+
+			}
 
 		</style>
 	</head>
 	<body onload="onPageLoad()">
     
-    <div id="gui" style="min-height:650px; min-width:1020px; height:100%; width:100%;">
+    <div id="gui" style="border:0px solid red; min-height:650px; min-width:1120px; height:100%; width:100px; display:block; margin-left: auto; margin-right: auto;">
 	
 
 		<?php include "cuber_html_left.php"; ?>
@@ -47,6 +68,24 @@
 			</div>
             
             <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:4px;">
+				<div id="gui_slot1_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot2_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot3_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot4_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot5_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot6_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot7_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot8_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
+				<div id="gui_slot9_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				</div>
 			</div>
             
             <div style="width:192px; margin-left:4px; height:8px;">
@@ -61,7 +100,7 @@
 			<div id="map" style="background:url(media/gui/background.png); position:absolute; bottom:0px; height:64px; width:100%;">
                 <div id="special_slot1" style="float:left; margin-right:1px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
                 <div id="special_slot2" style="float:left; margin-right:1px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-                <div id="special_slot3" style="float:left; margin-right:2px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+				<div id="special_slot3" style="float:left; margin-right:2px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
 			</div>
 		</div>
 	</div>
@@ -76,13 +115,7 @@
     
     
 		
-		<div id="gui-speech" style="cursor: pointer; position:absolute; left:200px; top:70px;">
-					
-			<div id="speech_bubble" onClick="hide_bubble();"  style="float:left; display:none; font-size:16px; padding-top:25px; padding-bottom:25px; padding-left:205px; padding-right:25px; text-align:left; width:600px; height:150px; opacity:0.8; background-color: #001100; background:url(media/speech_bubble.png); background-size: 100% 100%;">
-			Im alive!! Hello World!
-			</div>
-
-		</div>
+		
 
 		
 		
@@ -125,7 +158,7 @@
 		13
 		</div>
 
-		<div id="info_tip" style="text-align:left; font-size:20px; color: #BBFFBB; position:absolute; height:32px; width:512px;">
+		<div id="info_tip" style="text-align:left; font-size:16px; color: #BBFFBB; position:absolute; height:24px; width:512px;">
 		Game started..
 		</div>
 

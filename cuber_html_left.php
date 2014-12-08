@@ -22,13 +22,13 @@
 							</div>
 						</div>
                         <div id="player1-hands" style="float:left; width:92px; height:156px; border:0px solid green;" > 
-                            <div id="player1-health" style="width:84px; height:20px; border:1px solid green; margin-left:4px; margin-top:4px; background:rgba(2,139,0,0.4);" > </div>
+                            <div id="player1-health" style="width:83px; height:16px; border:1px solid green; margin-left:4px; margin-top:6px; background:rgba(2,139,0,0.4);" > </div>
                             <div id="player1-hand-l" style="width:92px; height:64px; border:0px solid blue;" > 
-                                <div id="player1-hand-l-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
+                                <div id="player1-hand-l-main" style="float:left; width:72px; height:64px; border:0px solid yellow; background: url(media/lhand.png) no-repeat; background-size: 100% 100%;" > </div>
                                 <div id="player1-hand-l-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
                             </div>
                             <div id="player1-hand-r" style="width:92px; height:64px; border:0px solid red;" > 
-                                <div id="player1-hand-r-main" style="float:left; width:72px; height:64px; border:0px solid yellow;" > </div>
+                                <div id="player1-hand-r-main" style="float:left; width:72px; height:64px; border:0px solid yellow; background: url(media/rhand.png) no-repeat; background-size: 100% 100%;" > </div>
                                 <div id="player1-hand-r-ext" style="float:left; width:20px; height:64px; border:0px solid red;" > </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                         
 			</div>
 
-			<div id="options" style="background:url(media/gui/buttons.png); background-size: 100% 100%; position:absolute; bottom:0px; cursor:pointer; height:64px; width:100%; text-align:center; line-height:64px;"><b>OPTIONS</b>
+			<div id="options" onclick="toggleOptions()" style="background:url(media/gui/buttons.png); background-size: 100% 100%; position:absolute; bottom:0px; cursor:pointer; height:64px; width:100%; text-align:center; line-height:64px;"><b>OPTIONS</b>
 			</div>
             
 		</div>
@@ -78,7 +78,23 @@
 		
 		<script>
 		
+		var optionsOpened = false;
 		
+		function toggleOptions()
+		{
+			if(optionsOpened)
+			{
+				document.getElementById( 'id-options-container' ).style.display='none';
+				
+				optionsOpened = false;
+			}
+			else
+			{
+				document.getElementById( 'id-options-container' ).style.display='block';
+				optionsOpened = true;
+			}
+		}
+
 		
 		</script>
 		

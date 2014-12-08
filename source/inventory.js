@@ -1,4 +1,5 @@
 
+var NEW_SLOT_WIDTH = 64;
 
 // list of items in the bag
 var inventory_array = [];
@@ -44,17 +45,26 @@ function add_to_inventory (gObject, slot) {
 	inventory_array.push(inventory_array_item);
 	
 	var slot_icon = document.getElementById("gui_slot" + slot + "_item_icon");
-	slot_icon.src = gObject.icon;
+	slot_icon.style.backgroundImage = "url("+gObject.icon2+")";
+	slot_icon.style.backgroundSize = "100% 100%";
 	
 	console.log("pera added inventory item: " + gObject.icon);
 	//TODO: start timer for automatic inventory draw back at later time..
 }
 
+document.getElementById("player1-inventory").onmousedown = function () {
+    console.log("User clicked inventory");
+    //return true; // Not needed, as long as you don't return false
+};
+
 function inventory_clicked_in_slot(x_pos,y_pos) {
-	var left = windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
-	var right = windowHalfX + (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
-	var bottom = window.innerHeight - 20;
-	var top = window.innerHeight - 130;
+	var pos = get_element_position_in_viewport("player1-inventory");
+	var left = pos.x;
+	var right = pos.x + 192;
+	var bottom = pos.y + 192;
+	var top = pos.y;
+	
+	//console.log("ev gi inventori: " + pos);
 	
 	if((x_pos > left)&&(x_pos < right))
 	{
@@ -62,20 +72,20 @@ function inventory_clicked_in_slot(x_pos,y_pos) {
 		if((y_pos > top) && (y_pos < bottom))
 		{
 			//clicked in the inventory.. 
-			
-			//alert("x_pos: " + x_pos + ", left: " + left + ", SLOT_WIDTH: " + SLOT_WIDTH);
-			
-			if(x_pos < left+SLOT_WIDTH)
-			{
-				//alert("x_peos: " + x_pos + ", left: " + left + ", SLOT_WIDTH: " + SLOT_WIDTH);
-				return 1;
-			}
-			if(x_pos < left+2*SLOT_WIDTH)
-				return 2;
-			if(x_pos < left+3*SLOT_WIDTH)
-				return 3;
-			if(x_pos < left+4*SLOT_WIDTH)
-				return 4;
+			var row = 0;
+			if(y_pos < top+NEW_SLOT_WIDTH)
+				row = 0;
+			else if(y_pos < top+2*NEW_SLOT_WIDTH)
+				row = 1;
+			else if(y_pos < top+3*NEW_SLOT_WIDTH)
+				row = 2;
+				
+			if(x_pos < left+NEW_SLOT_WIDTH)
+				return 1+row*3;
+			if(x_pos < left+2*NEW_SLOT_WIDTH)
+				return 2+row*3;
+			if(x_pos < left+3*NEW_SLOT_WIDTH)
+				return 3+row*3;
 		}
 	}
 	
@@ -110,7 +120,8 @@ function inventory_item_remove(item)
 		if(inventory_array[i].gObject == item)
 		{
 			var slot_icon = document.getElementById("gui_slot" + inventory_array[i].slot + "_item_icon");
-			slot_icon.src = "media/none.png";
+			//slot_icon.src = "media/none.png";
+			slot_icon.style.backgroundImage = "";
 			inventory_array.splice(i,1);
 		}
 	}

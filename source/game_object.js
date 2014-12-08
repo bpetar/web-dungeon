@@ -18,6 +18,7 @@ function create_game_object () {
 	gobject.description = "unnamed";
 	gobject.model = "unnamed";
 	gobject.icon = "unnamed";
+	gobject.icon2 = "unnamed";
 	gobject.slot = -1;
 	gobject.id = 0;
 	gobject.niched = -1;
@@ -34,7 +35,7 @@ function create_game_object () {
 
 	//empty hand values
 	gobject.weapon_speed = 3;
-	gobject.weapon_dmg = 1;
+	gobject.weapon_dmg = 'undefined';
 	gobject.weapon_dmg_bonus = 0;
 	gobject.weapon_attack_bonus = 0;
 				

@@ -4,7 +4,7 @@ function levelOnLoad()
 	//info_dialog_div.style.display = "inline";
 	//loading_div.style.display = "none";
 	
-	show_message(" <br> " + "You wake up." + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 	playerHPcurrent = 10;
 	updatePlayerHealthBar();
 	current_position = new THREE.Vector3(10,0,3); //16,0,12
@@ -62,20 +62,20 @@ var ambient_music_file = 'maps/level3/media/wormhole.mp3';
 function propOnClick1()
 {
 	//DisplayInfoDiv("I was lucky to avoid these spikes!");
-	show_speech_bubble("I was lucky to avoid serious injuries falling on these spikes.. <br><br> &nbsp; .. and Im pretty sure I went unconscious when I hit the ground, but why am I in my underwear? ", 600, 150, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
+	show_speech_bubble("&nbsp;I was lucky to stay alive after falling on these spikes from above! <br><br> &nbsp;Few bruises and scratches.. that's all.", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
 }
 
 function propOnClick2()
 {
 	if(Math.random()>0.5)DisplayInfoDiv("Many have died on these traps..");
-	else show_speech_bubble("Day light from above and blood on these spikes means someone fell into this trap, but where is the body?", 500, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");
+	else show_speech_bubble("&nbsp;Day light from above and blood on these spikes means someone fell into this trap, but where is the body?", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
 }
 
 function propOnClick3()
 {
 	if(monsterEncountered)
 	{
-		show_speech_bubble("Its seems like these tunnels are dug out recently by these worms, but.. holes and traps are directly under battlefield, its way too convinient to be accidental.. and why am I in my underwear? ", 600, 100, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
+		show_speech_bubble("&nbsp;Its seems like these tunnels are dug out recently by these worms, but.. holes and traps are directly under battlefield, its way too convenient to be accidental.. and why am I in my underwear? ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
 	}
 	else
 	{
@@ -110,7 +110,7 @@ var keyholes_array = [];
 
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Root","maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "This acctually heals my wounds..", "script_rootHealingScript", 1], [3,"Stake","models/stake.js", 9,3,0, "media/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 0], [4,"Root","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "Hard to chew but pays off..", "script_rootHealingScript", 1]];
+var pickables_array = [[2,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], [3,"Stake","Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9,3,0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], [4,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1]];
 ////////////////////////////////////////////////
 
 var monsterEncountered = false;
@@ -135,7 +135,7 @@ function monsterPun()
 {
 	if(!punIntended)
 	{
-		show_speech_bubble("This was nice <span style='font-style: italic;'>worm</span> up :)", 300, 60, 0, "url(media/speech_bubble.png)", "Garamond, Baskerville", "#dddd70", "400", "22px");	
+		show_speech_bubble("&nbsp;This was nice <span style='font-style: italic;'>worm</span> up :)", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");	
 		punIntended = true;
 	}
 }
@@ -146,7 +146,7 @@ var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 
 
 
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl3_map"]];
+var niche_pickables_array1 = [[3,"Scroll","Desc", "models/scroll.js", "media/scrolly.png", "media/gui/scroll.png", "A map! Oh now I see.. wait where am I?", "script_showScroll_lvl3_map"]];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5,8,1,niche_pickables_array1]]; 

@@ -225,7 +225,7 @@ function loadInventory()
 				//level_complete_div.style.display = "inline-block";
 				//audio_fanfare.play();
 				console.log("agh?");
-				show_message("<br><font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				feedback<br> &nbsp;<textarea name='feedback' cols='22' rows='5'></textarea> <br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 	<button type=button id='info_dialog_button' onclick='hide_message();'> No Thanks </button>				</form>", 700,550, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+				show_message("<br><font size='7'>Registration </font><br><br> 				<form name='cuberRegisterForm' action='<?=$DIR?>/templates/level.php' method='post'>				name<br><input type='text' name='name'><br> 				email<br><input type='text' name='email'><br> 				<input type='submit' name='yesRegister' value='Register'>  &nbsp;&nbsp; 	<button type=button id='info_dialog_button' onclick='hide_message();'> No Thanks </button>				</form>", 600,400, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			//display level complete dialog
@@ -235,30 +235,32 @@ function loadInventory()
 				//level_complete_div.style.display = "inline-block";
 				//audio_fanfare.play();
 				
-				show_message("<br><font size='6'>Next level is not published yet.</font><br><br>Secrets found: 0/0. 				<br><br> Levels should come out on weekly basis. You can save game and come back later to continue the game. If you want to receive notification about game updates, please <a id='myLink' title='Click to open registration window' href='#' onclick='displayRegisterDialog();return false;'>register</a>. <br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 800,500, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+				show_message("<br><font size='6'>Next level is not published yet.</font><br><br>Secrets found: 0/0. 				<br><br> Levels should come out on weekly basis. You can save game and come back later to continue the game. If you want to receive notification about game updates, please <a id='myLink' title='Click to open registration window' href='#' onclick='displayRegisterDialog();return false;'>register</a>. <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 700,400, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			function DisplayInfoDiv(msg) {
 				//show some nice fadeout info text above inventory..
-				var info_tip_div_bottom = 60;
-				if(consoleOpened)
-					info_tip_div_bottom = 360;
-				var left = 202;
-				//info_tip_div.style.top = info_tip_div_top + "px";
-				info_tip_div.style.bottom = info_tip_div_bottom + "px";
-				info_tip_div.style.left = left + "px";
-				info_tip_div.innerHTML = msg;
-				info_tip_div_top_lift = 0;
-				info_tip_div.style.opacity = 1.0;
-				info_tip_div.style.display = "inline-block";
+				//var info_tip_div_bottom = 60;
+				//if(consoleOpened)
+				//	info_tip_div_bottom = 360;
+				//var consoleViewPos = get_element_position_in_viewport("id-console-text");
+				//var left = consoleViewPos.x+6;
+				////info_tip_div.style.top = info_tip_div_top + "px";
+				//info_tip_div.style.bottom = info_tip_div_bottom + "px";
+				//info_tip_div.style.left = left + "px";
+				//info_tip_div.innerHTML = msg;
+				//info_tip_div_top_lift = 0;
+				//info_tip_div.style.opacity = 1.0;
+				//info_tip_div.style.display = "inline-block";
 				addToConsole(msg,"#BBFFBB");
-				console.log("info: " + windowHalfX + ", left: " + left);
+				//console.log("info: " + windowHalfX + ", left: " + left);
 			}
 			
 			function updatePlayerHealthBar()
 			{
 				var p = playerHPcurrent/playerHPmax*100;
-				player_HP_div.style.width = "" + p + "%";
+				var wdth = p*83/100;
+				player_HP_div.style.width = "" + wdth + "px";
 				if(p < 50)
 				{
 					//TODO: color green to red gradient can be smarter projection of percent
@@ -287,7 +289,7 @@ function loadInventory()
 				else
 				{
 					monster_wound_div.style.backgroundImage = "url(media/wound.png)";
-					addToConsole("Player hits monster: " + dmg + " damage!","red");
+					addToConsole("Player hits monster: " + dmg + " damage!","yellow");
 				}
 				monster_wound_div.style.display = "inline-block";
 				
@@ -346,6 +348,7 @@ function loadInventory()
 					{
 						w_speed = left_hand_item.weapon_speed;
 						w_dmg = left_hand_item.weapon_dmg;
+						if (w_dmg=='undefined') w_dmg = 1;
 						w_dmg_bonus = left_hand_item.weapon_dmg_bonus;
 						w_attack_bonus = left_hand_item.weapon_attack_bonus;
 					}
@@ -360,6 +363,7 @@ function loadInventory()
 					{
 						w_speed = right_hand_item.weapon_speed;
 						w_dmg = right_hand_item.weapon_dmg;
+						if (w_dmg=='undefined') w_dmg = 1;
 						w_dmg_bonus = right_hand_item.weapon_dmg_bonus;
 						w_attack_bonus = right_hand_item.weapon_attack_bonus;
 					}
@@ -381,12 +385,12 @@ function loadInventory()
 					if(typeof monsterEncountered != 'undefined') monsterEncountered = true;
 					
 					//swing that weapon
-					var att_roll = 50*Math.random()+PlayerAttack;
+					var att_roll = 50*Math.random()+PlayerAttack+w_attack_bonus;
 					console.log("player swings whatever he's holding in hand, att_roll: " + att_roll);
 					if(att_roll > monster.defense)
 					{
 						//Hit!
-						var dmg_roll = Math.round(WEAPON_DMG * Math.random()) + 1;
+						var dmg_roll = Math.round(w_dmg * Math.random()) + 1 + w_dmg_bonus;
 						
 						//Damage monster
 						monster.deal_damage(dmg_roll);
@@ -414,18 +418,6 @@ function loadInventory()
 				}
 			}
 			
-			function inventory_show(param) {
-				//show inventory if hidden, hide elsewhere
-				if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
-				{
-					inventorySlide = 1;
-				}
-				else
-				{
-					inventorySlide = -1;
-				}
-			}
-			
 			function hide(param) {
 				alert(param);
 			}
@@ -435,6 +427,7 @@ function loadInventory()
             var GUI_LEFT_WIDTH = 200;
 
 			var inventory_tip_shown = false;
+			var weapon_tip_shown = false;
 			
 			var holeFallen = false;
 			var cameraMove = false;
@@ -447,7 +440,7 @@ function loadInventory()
 			var cameraOriginalLook = new THREE.Vector3(0,0,0);
 			var cameraDelta = 0;
 			var cameraDeltaRotate = 0;
-			
+			var container3d = 0;
 			var alerted = false;
 			
 			var container;
@@ -491,6 +484,7 @@ function loadInventory()
 			var INVENTORY_POS_SHOWN = 8;
 			var inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
 			var clock = new THREE.Clock();
+			var itemInfoShown = false;
 			
 			var WEAPON_SPEED = 3; //should be taken from real item
 			var WEAPON_DMG = 10;
@@ -593,7 +587,8 @@ function loadInventory()
 			function hide_bubble()
 			{
 				//remove dialog bubble
-				speech_bubble_div.style.display = "none";
+				document.getElementById( "gui-speech" ).style.display = "none";
+				//document.getElementById( "gui-speech" ).style.display = "none";
 				//play sound 
 				audio_click.play();
 			}
@@ -611,7 +606,7 @@ function loadInventory()
 					}
 					else
 					{
-						speech_bubble_div.style.width = "750px";
+						speech_bubble_div.style.width = "600px";
 					}
 
 					if ((height != "undefined") && (height > 0))
@@ -620,7 +615,7 @@ function loadInventory()
 					}
 					else
 					{
-						speech_bubble_div.style.height = "450px";
+						speech_bubble_div.style.height = "300px";
 					}
 
 					//speech_bubble_div.style.backgroundImage = "url(media/pannel_small.png)";
@@ -634,7 +629,7 @@ function loadInventory()
 					speech_bubble_div.style.fontWeight = fonty_weight;
 					speech_bubble_div.style.fontSize = fonty_size;
 					
-					speech_bubble_div.style.display = "inline";
+					document.getElementById( "gui-speech" ).style.display = "block";
 				}
 			}
 			
@@ -642,10 +637,17 @@ function loadInventory()
 				
 				//this check prevents us to go from one message to another..
 				//if(info_dialog_div.style.display == "none")
+				var dialogSize = container3d.offsetHeight;
+				if (container3d.offsetWidth<container3d.offsetHeight) dialogSize = container3d.offsetWidth;
+				console.log("container3d.offsetWidth="+container3d.offsetWidth+",container3d.offsetHeight="+container3d.offsetHeight);
 				{
 					info_dialog_message_div.innerHTML = message;
 					
-					if((width != 'undefined') && (width > 0))
+					if((width != 'undefined') && (width == 'fit3d'))
+					{
+						info_dialog_div.style.width = dialogSize + "px";
+					}
+					else if((width != 'undefined') && (width > 0))
 					{
 						info_dialog_div.style.width = width + "px";
 					}
@@ -654,7 +656,11 @@ function loadInventory()
 						info_dialog_div.style.width = "750px";
 					}
 
-					if ((height != "undefined") && (height > 0))
+					if ((height != "undefined") && (height == 'fit3d'))
+					{
+					    info_dialog_div.style.height = (dialogSize-100) + "px";
+					}
+					else if ((height != "undefined") && (height > 0))
 					{
 						info_dialog_div.style.height = height + "px";
 					}
@@ -685,7 +691,7 @@ function loadInventory()
 				middleDiv = document.getElementById( 'gui_center' );
 				
 				menu_div = document.getElementById( 'menu' );
-				
+				gui_container_div = document.getElementById( 'gui' );
 				gui_left_div = document.getElementById( 'gui_left' );
 				gui_right_div = document.getElementById( 'gui_right' );
 				
@@ -803,13 +809,6 @@ function loadInventory()
 				
 				audio_ambient.volume = 0.4;
 				audio_ambient.play();
-
-				camera = new THREE.PerspectiveCamera( 47, window.innerWidth / window.innerHeight, 2, 10000 );
-				camera.position.x = 160;
-				camera.position.y = 4;
-				camera.position.z = -5; //115
-				camera.look = new THREE.Vector3(160,4,5); //160,4,125
-				camera.lookAt(camera.look);
 				
 				current_position = new THREE.Vector3(16,0,0); //16,0,12
 
@@ -838,7 +837,7 @@ function loadInventory()
 				speech_bubble_div = document.getElementById('speech_bubble');
 
 				player_HP_div = document.getElementById('player1-health');
-				player_HP_div.style.width = "100%";
+				//player_HP_div.style.width = "100%";
 				player_HP_div.style.backgroundColor = "#009900";
 				
 				player_wound_div = document.getElementById('player_wound');
@@ -854,6 +853,40 @@ function loadInventory()
 				rhandDiv.style.opacity=1.0;
 				lhandDiv = document.getElementById('player1-hand-l');
 				lhandDiv.style.opacity=1.0;
+				
+				//calculate screen size. 
+				//min-height:650px; min-width: (1050 + 64) px;
+				var root= document.compatMode=='BackCompat'? document.body : document.documentElement;
+				var isVerticalScrollbar= root.scrollHeight>root.clientHeight;
+				var isHorizontalScrollbar= root.scrollWidth>root.clientWidth;
+
+				var windowHeight = window.innerHeight;
+				if(window.innerHeight < 650) windowHeight = 650;
+				var gui_container_div_width = window.innerWidth;
+				if(window.innerWidth < 1120) gui_container_div_width = 1120;
+				
+				if(gui_container_div_width > windowHeight + 500)
+				{
+					//more width then height
+					//alert("gui_container_div_width " +  gui_container_div_width + ", windowHeight " + windowHeight);//1140, 615 (1115)
+					gui_container_div_width = windowHeight + 500;
+				}
+				gui_container_div.style.width = "" + (gui_container_div_width) + "px";
+				var middleWidth = gui_container_div_width - 400;
+				//if(middleWidth<600) middleWidth = 600;
+				//alert("middleWidth " +  middleWidth + ", gui_container_div_width " + gui_container_div_width);
+				middleDiv.style.width = "" + middleWidth + "px";
+				
+				container3d.style.width = middleDiv.style.width;
+				container3d.style.height = "" + (middleDiv.offsetHeight - 64) + "px";
+				
+				camera = new THREE.PerspectiveCamera( 47, middleWidth / (windowHeight-64), 2, 10000 );
+				camera.position.x = 160;
+				camera.position.y = 4;
+				camera.position.z = -5; //115
+				camera.look = new THREE.Vector3(160,4,5); //160,4,125
+				camera.lookAt(camera.look);
+					
 				
 				//
 				loadInventory()
@@ -882,14 +915,16 @@ function loadInventory()
 				//level specific action on load
 				levelOnLoad();
 
-				var middleWidth = window.innerWidth - 404;
-				if(middleWidth<600) middleWidth = 600;
-				middleDiv.style.width = "" + middleWidth + "px";
-				container3d.style.width = middleDiv.style.width;
-				container3d.style.height = "" + (middleDiv.offsetHeight - 74) + "px";
+				// var middleWidth = window.innerWidth - 744;
+				// if(middleWidth<600) middleWidth = 600;
+				// middleDiv.style.width = "" + middleWidth + "px";
+				// gui_container_div.style.width = "" + (window.innerWidth-340) + "px";
+				// container3d.style.width = middleDiv.style.width;
+				// container3d.style.height = "" + (middleDiv.offsetHeight - 74) + "px";
 				
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
+				//alert("container3d.offsetWidth: " +  container3d.offsetWidth + ", container3d.offsetHeight: " + container3d.offsetHeight + ", container3d.style.height: " + container3d.style.height);
 				renderer.shadowMapWidth = 128;;
 				renderer.shadowMapHeight = 128;
 				renderer.shadowCameraFov = 50;
@@ -897,7 +932,8 @@ function loadInventory()
 				container3d.appendChild( renderer.domElement );
 
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				document.addEventListener( 'mousedown', onMouseClick, false );
+				document.addEventListener( 'mousedown', onMouseDown, false );
+				document.addEventListener( 'mouseup', onMouseUp, false );
 				
 				//loading_div.style.display = "none";
 				
@@ -907,9 +943,22 @@ function loadInventory()
 				window.addEventListener( 'resize', onWindowResize, false );
 
 				load_monsters();
+				loadCharacter();
   
 				renderer.shadowMapEnabled = true;
 
+			}
+			
+			function loadCharacter()
+			{
+				if(left_hand_item != 0)
+				{
+					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url("+left_hand_item.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url(media/lhand.png)";
+				}
 			}
 
 			function morphColorsToFaceColors( geometry ) {
@@ -1223,7 +1272,6 @@ function loadInventory()
 					else
 					{
 						console.log("move audio w");
-						//audio.pause();
 						audio.play();
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
@@ -1337,6 +1385,28 @@ function loadInventory()
 				windowHalfX = window.innerWidth / 2;
 				windowHalfY = window.innerHeight / 2;
 				
+				var windowHeight = window.innerHeight;
+				if(window.innerHeight < 650) windowHeight = 650;
+				var gui_container_div_width = window.innerWidth;
+				if(window.innerWidth < 1120) gui_container_div_width = 1120;
+				
+				if(gui_container_div_width > windowHeight + 500)
+				{
+					//more width then height
+					//alert("gui_container_div_width " +  gui_container_div_width + ", windowHeight " + windowHeight);//1140, 615 (1115)
+					gui_container_div_width = windowHeight + 500;
+				}
+				gui_container_div.style.width = "" + (gui_container_div_width) + "px";
+				var middleWidth = gui_container_div_width - 400;
+				//if(middleWidth<600) middleWidth = 600;
+				//alert("middleWidth " +  middleWidth + ", gui_container_div_width " + gui_container_div_width);
+				middleDiv.style.width = "" + middleWidth + "px";
+				
+				container3d.style.width = middleDiv.style.width;
+				
+				container3d.style.height = "" + (middleDiv.offsetHeight - 64) + "px";
+				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
+				
 				//inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
 				//container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
@@ -1397,6 +1467,20 @@ function loadInventory()
 			
 			function drawItemInfo(xpos, ypos, item)
 			{
+				itemInfoShown = true;
+				document.getElementById("id-item-info-container").style.display = "inline-block";
+				document.getElementById("id-item-info-icon").style.backgroundImage = "url("+item.icon2+")";
+				document.getElementById("id-item-info-name").innerHTML = item.name;
+				document.getElementById("id-item-info-desc").innerHTML = item.description;
+				if(item.weapon_dmg != 'undefined')
+				{
+					//also show weapon in hand info for comparison :)
+					var dmg_bonus = "";
+					if(item.weapon_dmg_bonus>0) dmg_bonus = "+"+item.weapon_dmg_bonus;
+					document.getElementById("id-item-info-speed").innerHTML = item.weapon_speed;
+					document.getElementById("id-item-info-dmg").innerHTML = "d"+item.weapon_dmg+dmg_bonus;
+					document.getElementById("id-item-info-attack-bonus").innerHTML = item.weapon_attack_bonus;
+				}
 			}
 			
 			function resetCursor()
@@ -1425,11 +1509,32 @@ function loadInventory()
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
-                //console.log(container3d.offsetWidth)
+ 				item_over_left_hand = -1;
+				item_over_right_hand = -1;
+				mouse_over_button = -1;
+				mouse_over_prop = -1;
+				mouse_over_secret_wall = -1;
+				mouse_over_wall_writting = -1;
+				mouse_over_keyhole = -1;
+				mouse_over_container = -1;
+				mouse_over_monster = -1;
+				mouse_over_item_in_inventory = -1;
+				mouse_over_item_in_container = -1;
+				item_over_keyhole = -1;
+				item_over_monster = -1
+				mouse_over_left_hand = -1;
+				mouse_over_right_hand = -1;
+
+				//console.log(container3d.offsetWidth)
                 //console.log(window.innerWidth)
                 //console.log(event.clientX)
-				mouse.x = ( (event.clientX - GUI_LEFT_WIDTH) / container3d.offsetWidth ) * 2 - 1;
-				mouse.y = - ( (event.clientY)/ container3d.offsetHeight ) * 2 + 1;
+				var top  = window.pageYOffset || document.documentElement.scrollTop;
+				//console.log(top); //, y = container3d.offsetTop;
+				var	left = window.pageXOffset || document.documentElement.scrollLeft;
+				//console.log(left); 
+				
+				mouse.x = ( (event.clientX - middleDiv.offsetLeft + 2 + left) / container3d.offsetWidth ) * 2 - 1;
+				mouse.y = - ( (event.clientY + top)/ container3d.offsetHeight ) * 2 + 1;
 				
 				// create a Ray with origin at the mouse position
 				//   and direction into the scene (camera direction)
@@ -1449,12 +1554,12 @@ function loadInventory()
 				if(!pickable_at_hand)
 				{
 					//mouse over inventory stuff
-					if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
+					//if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
 					{
 						var item = inventory_item_clicked(x_pos,y_pos);
 						if(item != 0)
 						{
-							//console.log("asdasdasdas");
+							console.log("asdasdasdas");
 							mouse_over_item_in_inventory = item;
 							setCursor('pointer');
 							drawItemInfo(x_pos,y_pos,item);
@@ -1462,6 +1567,10 @@ function loadInventory()
 						}
 					}
 					mouse_over_item_in_inventory = -1;
+					if(itemInfoShown == true)
+					{
+						document.getElementById("id-item-info-container").style.display = "none";
+					}
 					
 					//mouse over container item
 					if(container_div.style.display == "inline-block")
@@ -1479,17 +1588,19 @@ function loadInventory()
 					mouse_over_item_in_container = -1;
 					
 					//mouse over players hand
-					if((x_pos > lhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < lhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < lhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > lhandDiv.offsetTop+gui_div_top_pos))
+					var lhandPos = get_element_position_in_viewport("player1-hand-l-main");
+					if((x_pos > lhandPos.x)&&(x_pos < lhandPos.x+72)&&(y_pos < lhandPos.y+72)&&(y_pos > lhandPos.y))
 					{
-						console.log("leeeeeeeeeft");
+						//console.log("leeeeeeeeeft");
 						setCursor('pointer');
 						mouse_over_left_hand = 1;
 						mouse_over_right_hand = -1;
 						return;
 					}
-					if((x_pos > rhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < rhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < rhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > rhandDiv.offsetTop+gui_div_top_pos))
+					var rhandPos = get_element_position_in_viewport("player1-hand-r-main");
+					if((x_pos > rhandPos.x)&&(x_pos < rhandPos.x+72)&&(y_pos < rhandPos.y+72)&&(y_pos > rhandPos.y))
 					{
-						console.log("riiiiiiight");
+						//console.log("riiiiiiight");
 						setCursor('pointer');
 						mouse_over_left_hand = -1;
 						mouse_over_right_hand = 1;
@@ -1730,12 +1841,15 @@ function loadInventory()
 				{
 				
 					//pickable over players hand
-					if((x_pos > lhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < lhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < lhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > lhandDiv.offsetTop+gui_div_top_pos))
+					var lhandPos = get_element_position_in_viewport("player1-hand-l-main");
+					if((x_pos > lhandPos.x)&&(x_pos < lhandPos.x+72)&&(y_pos < lhandPos.y+72)&&(y_pos > lhandPos.y))
 					{
+						console.log("gllllll");
 						item_over_left_hand = 1;
 						return;
 					}
-					if((x_pos > rhandDiv.offsetLeft+gui_div_left_pos)&&(x_pos < rhandDiv.offsetLeft+72+gui_div_left_pos)&&(y_pos < rhandDiv.offsetTop+72+gui_div_top_pos)&&(y_pos > rhandDiv.offsetTop+gui_div_top_pos))
+					var rhandPos = get_element_position_in_viewport("player1-hand-r-main");
+					if((x_pos > rhandPos.x)&&(x_pos < rhandPos.x+72)&&(y_pos < rhandPos.y+72)&&(y_pos > rhandPos.y))
 					{
 						console.log("grrrrrr");
 						item_over_right_hand = 1;
@@ -1814,21 +1928,6 @@ function loadInventory()
 					}
 				}
 				
-				item_over_left_hand = -1;
-				item_over_right_hand = -1;
-				mouse_over_button = -1;
-				mouse_over_prop = -1;
-				mouse_over_secret_wall = -1;
-				mouse_over_wall_writting = -1;
-				mouse_over_keyhole = -1;
-				mouse_over_container = -1;
-				mouse_over_monster = -1;
-				mouse_over_item_in_inventory = -1;
-				mouse_over_item_in_container = -1;
-				item_over_keyhole = -1;
-				item_over_monster = -1
-				mouse_over_left_hand = -1;
-				mouse_over_right_hand = -1;
 				setCursor('auto');
 			}
 
@@ -1890,9 +1989,51 @@ function loadInventory()
 				}
 			}
 
-			function onMouseClick(event) {
+			var attackClickTimer;
+			
+			function onMouseUp(event) {
+				console.log("onMouseUp");
+				clearInterval(attackClickTimer);
+			}
+			
+			function removeWeaponFromHand(left) {
+			
+				//take item from players hand
+				if (left)
+				{
+					if(left_hand_item != 0)
+					{
+						document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+						// pickable at hand becomes hand item
+						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+						pickable_at_hand_icon.src = left_hand_item.icon;
+						pickable_at_hand = left_hand_item;
+						left_hand_item = 0;
+						audio_click.currentTime = 0;
+						audio_click.play();
+					}
+				}
+				else
+				{
+					if(right_hand_item != 0)
+					{
+						document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+						// pickable at hand becomes hand item
+						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+						pickable_at_hand_icon.src = right_hand_item.icon;
+						pickable_at_hand = right_hand_item;
+						right_hand_item = 0;
+						audio_click.currentTime = 0;
+						audio_click.play();
+					}
+				}
+			}
+			
+			function onMouseDown(event) {
 
-				//console.log("onMouseClick");
+				//console.log("onMouseDown");
 
 				var isRightMB;
 				var e = event || window.event;
@@ -1911,22 +2052,41 @@ function loadInventory()
 				look_pos.add(look_offset);
 				
 				// update the mouse variable
-				mouse.x = ( (event.clientX - GUI_LEFT_WIDTH) / container3d.offsetWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / container3d.offsetHeight ) * 2 + 1;
+				var top  = window.pageYOffset || document.documentElement.scrollTop;
+				var	left = window.pageXOffset || document.documentElement.scrollLeft;
+				//console.log(left); 
+				
+				mouse.x = ( (event.clientX - middleDiv.offsetLeft + 2 - left) / container3d.offsetWidth ) * 2 - 1;
+				mouse.y = - ( (event.clientY + top)/ container3d.offsetHeight ) * 2 + 1;
+				
+				//mouse.x = ( (event.clientX - GUI_LEFT_WIDTH) / container3d.offsetWidth ) * 2 - 1;
+				//mouse.y = - ( event.clientY / container3d.offsetHeight ) * 2 + 1;
 				
 				if(mouse_click())
 				{
 					//play click sound
-					audio_click2.play();
+					//audio_click2.play();
 				}
 				
 				//if player is holding some item in hand (under mouse pointer)
 				if(pickable_at_hand)
 				{
+					//check the areas of gui where item is dropped
+					// if right area is clicked it could be inventory
+					// if left area is clicked then it could be player profile
+					// finally we check for 3d game area
+					
 					//check if item is placed in inventory
 					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
 					if(slot_index > 0)
 					{
+						if(!inventory_tip_shown)
+						{
+							remove_element_class("player1-inventory","shadow");
+							inventory_tip_shown = true;
+						}
+
+									
 						//get item from inventory (if any)
 						var slot_item = inventory_item_clicked(x_pos,y_pos);
 						if(slot_item != 0)
@@ -1943,6 +2103,7 @@ function loadInventory()
 							}
 							
 							//replace is in order..
+							audio_click.currentTime = 0;
 							audio_click.play();
 
 							//remove picked from inventory
@@ -1957,8 +2118,21 @@ function loadInventory()
 						}
 						else
 						{
+						    if(isRightMB)
+							{
+								//we can put item in inventory with right click why not
+								m_RMBEventWasUsed = true;
+							}
 							//put item to inventory
 							var item_name = pickable_at_hand.name;
+							// if (audio_click.paused) {
+								// audio_click.play();
+							// }else{
+								// audio_click.currentTime = 0
+							// }
+							
+							
+							audio_click.currentTime = 0;
 							audio_click.play();
 							add_to_inventory(pickable_at_hand, slot_index);
 							pickable_at_hand_icon.style.left = "-170px";
@@ -1966,17 +2140,17 @@ function loadInventory()
 							pickable_at_hand = 0;
 							
 							//onetime inventory tip..
-							if((levelNumber == 1)&&(inventory_tip_shown == false))
-							{
-								DisplayInfoDiv("Press 'i' to close inventory..");
-								inventory_tip_shown = true;
-							}
+							//if((levelNumber == 1)&&(inventory_tip_shown == false))
+							//{
+							//	DisplayInfoDiv("Press 'i' to close inventory..");
+							//	inventory_tip_shown = true;
+							//}
 
-							if((levelNumber == 1)&&(item_name == "Scroll"))
-							{
-								DisplayInfoDiv("Right click to read scroll..");
-								inventory_tip_shown = true;
-							}
+							//if((levelNumber == 1)&&(item_name == "Scroll"))
+							//{
+							//	DisplayInfoDiv("Right click to read scroll..");
+							//	inventory_tip_shown = true;
+							//}
 						}
 						
 						return;
@@ -1993,6 +2167,7 @@ function loadInventory()
 							pickable_at_hand_icon.style.left = "-170px";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
+							audio_click.currentTime = 0;
 							audio_click.play();
 							return;
 						}
@@ -2000,24 +2175,42 @@ function loadInventory()
 
 					if(item_over_left_hand != -1)
 					{
-						//if(item_can_be_placed_in_hand)
+						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+						{
+							remove_element_class("player1-hand-r","shadow");
+							remove_element_class("player1-hand-l","shadow");
+							weapon_tip_shown=true;
+						}
+						
+						//
 						{
 							var tmp_hand_item = 0;
 							//add item to players hand
+							if(isRightMB)
+							{
+								//we can put item in hand with right click why not
+								m_RMBEventWasUsed = true;
+							}
 							if(left_hand_item != 0)
 							{
 								tmp_hand_item = left_hand_item;
-								document.getElementById("player1-hand-l-main").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
+								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								left_hand_item = pickable_at_hand;
+								audio_click.currentTime = 0;
+								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
 							}
 							else
 							{
-								document.getElementById("player1-hand-l-main").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
+								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								left_hand_item = pickable_at_hand;
 								//pickable at hand is gone
+								audio_click.currentTime = 0;
+								audio_click.play();
 								pickable_at_hand_icon.style.left = "-170px";
 								pickable_at_hand_icon = 0;
 								pickable_at_hand = 0;
@@ -2029,23 +2222,41 @@ function loadInventory()
 
 					if(item_over_right_hand != -1)
 					{
+						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+						{
+							remove_element_class("player1-hand-r","shadow");
+							remove_element_class("player1-hand-l","shadow");
+							weapon_tip_shown=true;
+						}
+						
 						//if(item_can_be_placed_in_hand)
 						{
 							var tmp_hand_item = 0;
 							//add item to players hand
+							if(isRightMB)
+							{
+								//we can put item in hand with right click why not
+								m_RMBEventWasUsed = true;
+							}
 							if(right_hand_item != 0)
 							{
 								tmp_hand_item = right_hand_item;
-								document.getElementById("player1-hand-r-main").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
+								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								right_hand_item = pickable_at_hand;
+								audio_click.currentTime = 0;
+								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
 							}
 							else
 							{
-								document.getElementById("player1-hand-r-main").src = pickable_at_hand.icon;
+								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
+								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								right_hand_item = pickable_at_hand;
+								audio_click.currentTime = 0;
+								audio_click.play();
 								//pickable at hand is gone
 								pickable_at_hand_icon.style.left = "-170px";
 								pickable_at_hand_icon = 0;
@@ -2226,29 +2437,27 @@ function loadInventory()
 						
 						if(isRightMB)
 						{
-							//attack!
-							player_attack(true);
 							m_RMBEventWasUsed = true;
-						}
-						else
-						{
 							//take item from players hand
 							if(left_hand_item != 0)
 							{
-								document.getElementById("player1-hand-l-main").src = "media/lhand.png";
-								//pickable at hand becomes hand item
+								document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = left_hand_item.icon;
 								pickable_at_hand = left_hand_item;
 								left_hand_item = 0;
-								console.log("pickable at hand should be something");
+								audio_click.currentTime = 0;
+								audio_click.play();
+								//console.log("pickable at hand should be something");
 							}
-							else
-							{
-								//no item in hand, hint:use right click to attack
-								console.log("use right click to attack!");
-								DisplayInfoDiv("Right click to attack, left to place item..");
-							}
+						}
+						else
+						{
+							//attack!
+							player_attack(true);
+							attackClickTimer = setInterval(function(){removeWeaponFromHand(true)}, 1000);
 						}
 						
 						mouse_over_left_hand = -1;
@@ -2260,29 +2469,26 @@ function loadInventory()
 						console.log("righteeeee");
 						if(isRightMB)
 						{
-							//attack!
-							player_attack(false);
 							m_RMBEventWasUsed = true;
-						}
-						else
-						{
 							//take item from players hand
 							if(right_hand_item != 0)
 							{
-								document.getElementById("player1-hand-r-main").src = "media/rhand.png";
-								//pickable at hand becomes hand item
+								document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = right_hand_item.icon;
 								pickable_at_hand = right_hand_item;
 								right_hand_item = 0;
-								console.log("pickable at hand should be something right");
+								audio_click.currentTime = 0;
+								audio_click.play();
 							}
-							else
-							{
-								//no item in hand, use right click to attack
-								console.log("use right click to attack!");
-								DisplayInfoDiv("Right click to attack, left to place item..");
-							}
+						}
+						else
+						{
+							//attack!
+							player_attack(false);
+							attackClickTimer = setInterval(function(){removeWeaponFromHand(false)}, 1000);
 						}
 						mouse_over_right_hand = -1;
 						return;
@@ -2312,7 +2518,13 @@ function loadInventory()
 						{
 							//remove picked from inventory
 							inventory_item_remove(mouse_over_item_in_inventory);
-							
+							audio_click.currentTime = 0;
+							audio_click.play();
+							// if (audio_click.paused) {
+								// audio_click.play();
+							// }else{
+								// audio_click.currentTime = 0
+							// }
 							//place inventory item at hand
 							pickable_at_hand = mouse_over_item_in_inventory;
 							pickable_at_hand.mesh.visible = false; //TODO remove this line?
@@ -2405,8 +2617,8 @@ function loadInventory()
 					if((mouse_over_wall_writting > -1)&&(info_dialog_div.style.display == "none"))
 					{
 						audio_click.play();
-						console.log("clicking at writting!");
-						show_message(" <br> " + writtingsArr[mouse_over_wall_writting][3] + " <br><br><br><br> <button id='info_dialog_button' style='cursor: pointer; width:134px; height: 34px; background: #00c url(media/button_light.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", 600, 300, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+						//console.log("clicking at writting!");
+						show_message(" <br> " + writtingsArr[mouse_over_wall_writting][3] + " <br><br><br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 300, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 						//DisplayInfoDiv("Ancient writting deciphered..");
 						mouse_over_wall_writting = -1;
 						return;
@@ -2441,7 +2653,7 @@ function loadInventory()
 
 					for (var i=0; i< array_of_pickables.length; i++)
 					{
-                        console.log("for 2:" + array_of_pickables[i].name)
+                        //console.log("for 2:" + array_of_pickables[i].name)
 						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
 						if(array_of_pickables[i].mesh.visible == false)
 							continue;
@@ -2449,12 +2661,12 @@ function loadInventory()
 						//check if player is close to pickable
 						if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
 						{
-                            console.log ("asd = " + camera.position.distanceTo(array_of_pickables[i].mesh.position));
-							console.log("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
+                            //console.log ("asd = " + camera.position.distanceTo(array_of_pickables[i].mesh.position));
+							//console.log("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
 							continue;
 						}
 						
-                        console.log ("close!" + array_of_pickables[i].name);
+                        //console.log ("close!" + array_of_pickables[i].name);
                         
 						//check if pickable is clicked on
 						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
@@ -2481,7 +2693,7 @@ function loadInventory()
 									//TODO: check if more items remain on the plate
 									gWeightOnThePlate = false;
 									array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
-									console.log("lifting item off the plate!");
+									//console.log("lifting item off the plate!");
 									plate_unclick_audio.play();
 									var onUnpress = plates_array[pickable_at_hand.plated][6];
 									if(onUnpress !=0 )
@@ -2490,6 +2702,21 @@ function loadInventory()
 									}
 									pickable_at_hand.plated = -1;
 								}
+								
+								
+								{
+									//glow inventory and hands
+									if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+									{
+										add_element_class("player1-hand-r","shadow");
+										add_element_class("player1-hand-l","shadow");
+									}
+									else if(!inventory_tip_shown)
+									{
+										add_element_class("player1-inventory","shadow");
+									}
+								}
+								
 								audio_click2.play();
 								inventorySlide = 1;
 								break;
@@ -2847,10 +3074,13 @@ function loadInventory()
 					//alert("pickable_at_hand oooo" + pickable_at_hand);	
 				}*/
 				
+				var top  = window.pageYOffset || document.documentElement.scrollTop;
+				var	left = window.pageXOffset || document.documentElement.scrollLeft;
+				
 				if(pickable_at_hand_icon)
 				{
-					pickable_at_hand_icon.style.left = (x_pos - 64) + 'px';
-					pickable_at_hand_icon.style.top = (y_pos - 64) + 'px';
+					pickable_at_hand_icon.style.left = (x_pos - 64 + left) + 'px';
+					pickable_at_hand_icon.style.top = (y_pos - 64 + top) + 'px';
 				}
 		
 		
