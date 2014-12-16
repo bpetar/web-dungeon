@@ -31,12 +31,40 @@
 
 			</div>
 			
-			<div id="id-character-screen-container" style="position:absolute; display:block; background:url(media/gui/itemInfo.png); background-size: 100% 100%; top:6px; width:540px; height:540px;">
-					
-				<div id="id-character-screen-weapon-l-icon" style="position:absolute; font-size:14px; text-align:center; left:364px; top:126px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
+			<div id="id-character-screen-container" style="position:absolute; display:none; background:url(media/gui/char_screen_hud.png); background-size: 100% 100%; top:6px; width:540px; height:540px;">
+
+				<div id="id-character-screen-helmet-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:4px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
 				</div>
 				
-				<div id="id-character-screen-weapon-r-icon" style="position:absolute; font-size:14px; text-align:center; left:64px; top:126px; height:64px; width:64px; background:url(media/rhand.png); background-size: 100% 100%; border:0px solid yellow;">
+				<div id="id-character-screen-necklace-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:4px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-armour-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:70px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-bracers-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:70px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
+				</div>
+			
+				<div id="id-character-screen-weapon-l-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:140px; height:64px; width:64px; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-weapon-r-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:140px; height:64px; width:64px; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-pants-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:250px; height:64px; width:64px; background:url(media/rhand.png); background-size: 100% 100%; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-boots-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:250px; height:64px; width:64px; background:url(media/rhand.png); background-size: 100% 100%; border:0px solid yellow;">
+				</div>
+				
+				<div id="id-character-screen-stats" style="position:absolute; font-size:14px; text-align:left; left:24px; top:86px; height:164px; width:164px; border:1px solid yellow;">
+					<span > Level:</span> <span id="id-character-screen-stats-level">0</span><br>
+					<span > Next Level:</span> <span id="id-character-screen-stats-level">1000</span><br>
+					<span > Experience:</span> <span id="id-character-screen-stats-experience">0</span><br><br>
+					<span > Strentgh:</span> <span id="id-character-screen-stats-strength">0</span><br>
+					<span > Dexterity:</span> <span id="id-character-screen-stats-dexterity">0</span><br><br>
+					<span > Attack:</span> <span id="id-character-screen-stats-attack">0</span><br>
+					<span > Defence:</span> <span id="id-character-screen-stats-defence">0</span><br>
 				</div>
 
 			</div>
@@ -50,7 +78,7 @@
 					</div>
 					<div id="id-options-load" onmouseover="optionsMouseOverLoad()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Load</b>
 					</div>
-					<div id="id-options-save" onmouseover="optionsMouseOverSave()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Save</b>
+					<div id="id-options-save" onmouseout="optionsMouseOutSave()" onmouseover="optionsMouseOverSave()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Save</b>
 					</div>
 					<div id="id-options-settings" onmouseover="optionsMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Settings</b>
 					</div>
@@ -123,6 +151,8 @@
 		
 		<script>
 		
+		var mouseOverOptionSave = false;
+		
 		function hideAllOptionsContent()
 		{
 			document.getElementById('id-options-content-new').style.display='none';
@@ -150,6 +180,11 @@
 		{
 			hideAllOptionsContent();
 			document.getElementById('id-options-content-save').style.display='block';
+			mouseOverOptionSave = true;
+		}
+		function optionsMouseOutSave()
+		{
+			mouseOverOptionSave = false;
 		}
 		function optionsMouseOverSettings()
 		{

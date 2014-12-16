@@ -16,7 +16,7 @@
                     </div>
                     
                     <div style="width:100%; height:156px; border:0px solid yellow; margin-left:6px;">
-                        <div id="player1-face" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> 
+                        <div id="player1-face" onclick="toggleCharHud()" style="float:left; width:84px; height:156px; border:0px solid blue; cursor:pointer; background:rgba(211,139,0,0.2);"> 
 							<div id="player_wound" style="font-size:20px; font-weight:bold; color: #001100; padding-top:18px; padding-left:8px; position:absolute; left:5px; top:5px;  height:40px; width:80px; background: url(media/wound.png); background-size: 100% 100%;">
 							13
 							</div>
@@ -79,6 +79,21 @@
 		<script>
 		
 		var optionsOpened = false;
+		var characterHudOpened = false;
+		
+		function toggleCharHud()
+		{
+			if(characterHudOpened)
+			{
+				document.getElementById('id-character-screen-container').style.display='none';
+				characterHudOpened = false;
+			}
+			else
+			{
+				document.getElementById('id-character-screen-container').style.display='block';
+				characterHudOpened = true;
+			}
+		}
 		
 		function toggleOptions()
 		{

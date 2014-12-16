@@ -109,21 +109,22 @@ function loadDoors( geometry, materials )
 	{
 		doorsArr3D[0][4].rotation.set(0,0,0);
 	}
-	else if(doorsArr3D[0][2] == 1) 
+	else if(doorsArr3D[0][2] == 1)
 	{
 		doorsArr3D[0][4].rotation.set(0,Math.PI*3/2,0);
 	}
-	else if(doorsArr3D[0][2] == 2) 
+	else if(doorsArr3D[0][2] == 2)
 	{
 		doorsArr3D[0][4].rotation.set(0,Math.PI,0);
 	}
-	else if(doorsArr3D[0][2] == 3) 
+	else if(doorsArr3D[0][2] == 3)
 	{
 		doorsArr3D[0][4].rotation.set(0,Math.PI/2,0);
 	}
 	
 	//doorsArr3D[0][4].castShadow = true;
 	doorsArr3D[0][4].scale.x = doorsArr3D[0][4].scale.y = doorsArr3D[0][4].scale.z = 1;
+	if(doorsArr3D[0][3]==1) setDoorOpened(doorsArr3D[0]);
 	scene.add( doorsArr3D[0][4] );
 		
 	for(var i=1; i<doorsArr3D.length; i++)
@@ -151,6 +152,7 @@ function loadDoors( geometry, materials )
 		
 		//doorsArr3D[i][4].castShadow = true;
 		doorsArr3D[i][4].scale.x = doorsArr3D[i][4].scale.y = doorsArr3D[i][4].scale.z = 1;
+		if(doorsArr3D[i][3]==1) setDoorOpened(doorsArr3D[i]);
 		scene.add( doorsArr3D[i][4] );
 	}
 }
