@@ -24,6 +24,29 @@ function post_to_url(path, params, method) {
     form.submit();
 }
 
+function ajaxGet(url,cfunc)
+{
+	if (window.XMLHttpRequest)
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=cfunc;
+		xmlhttp.open("GET",url,true);
+		xmlhttp.send();
+	}
+}
+
+function ajaxPost(url,cfunc,data)
+{
+	if (window.XMLHttpRequest)
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=cfunc;
+		xmlhttp.open("POST",url,true);
+		xmlhttp.setRequestHeader("Content-type","application/json");
+		xmlhttp.send(data);
+	}
+}
+
 function add_element_class(element,classy)
 {
 	var e = document.getElementById(element);
@@ -138,6 +161,57 @@ var angle = -1;
 var dongle = 4.2;
 var z_initial = -1;
 var x_initial = -1;
+
+function setDoorOpened(door)
+{
+	if(door.length > 7)
+	{
+		open_style = door[7];
+		
+		switch(open_style)
+		{
+			case DOOR_ANIMATE_SLIDE_DOWN_UP:
+			{
+				door[4].position.y = 7.5;
+			}
+			break;
+			case DOOR_ANIMATE_SLIDE_RIGHT_LEFT:
+			{
+			}
+			break;
+			case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
+			{
+				//opening door to the left, depends on initial door rotation
+				orientation = door[2];
+				if(orientation == 0)
+				{
+					door[4].rotation.y = Math.PI/2;
+				}
+				else if(orientation == 1)
+				{
+					door[4].rotation.y = Math.PI*2;
+				}
+				else if(orientation == 2)
+				{
+					door[4].rotation.y = Math.PI*3/2;
+				}
+				else if(orientation == 3)
+				{
+					door[4].rotation.y = Math.PI;
+				}
+
+			}
+			break;
+			case DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT:
+			{
+			}
+			break;
+			default:
+			{
+			}
+		}
+	}
+}
 
 function animateDoor(door, elapsed)
 {

@@ -112,6 +112,7 @@ else
 		<script src="./source/utils.js"></script>
 		<script src="./source/level.js"></script>
 		<script src="./source/scripts.js"></script>
+		<script src="./source/saveload.js"></script>
 
 		<script>
 		
@@ -344,13 +345,13 @@ function loadInventory()
 
 				if(left && playerCanHitLeft)
 				{
-					if(left_hand_item != 0)
+					if(martin_equipment.left_hand_item != 0)
 					{
-						w_speed = left_hand_item.weapon_speed;
-						w_dmg = left_hand_item.weapon_dmg;
+						w_speed = martin_equipment.left_hand_item.weapon_speed;
+						w_dmg = martin_equipment.left_hand_item.weapon_dmg;
 						if (w_dmg=='undefined') w_dmg = 1;
-						w_dmg_bonus = left_hand_item.weapon_dmg_bonus;
-						w_attack_bonus = left_hand_item.weapon_attack_bonus;
+						w_dmg_bonus = martin_equipment.left_hand_item.weapon_dmg_bonus;
+						w_attack_bonus = martin_equipment.left_hand_item.weapon_attack_bonus;
 					}
 					console.log("left weapon dmg: " + w_dmg);
 					playerCanHitLeft = false;
@@ -359,13 +360,13 @@ function loadInventory()
 				}
 				else if(!left && playerCanHitRight)
 				{
-					if(right_hand_item != 0)
+					if(martin_equipment.right_hand_item != 0)
 					{
-						w_speed = right_hand_item.weapon_speed;
-						w_dmg = right_hand_item.weapon_dmg;
+						w_speed = martin_equipment.right_hand_item.weapon_speed;
+						w_dmg = martin_equipment.right_hand_item.weapon_dmg;
 						if (w_dmg=='undefined') w_dmg = 1;
-						w_dmg_bonus = right_hand_item.weapon_dmg_bonus;
-						w_attack_bonus = right_hand_item.weapon_attack_bonus;
+						w_dmg_bonus = martin_equipment.right_hand_item.weapon_dmg_bonus;
+						w_attack_bonus = martin_equipment.right_hand_item.weapon_attack_bonus;
 					}
 					console.log("right weapon dmg: " + w_dmg);
 					playerCanHitRight = false;
@@ -449,8 +450,24 @@ function loadInventory()
 			var pickable_at_hand = 0;
 			var pickable_at_hand_icon = 0;
 			
-			var left_hand_item = 0;
-			var right_hand_item = 0;
+			var martin_equipment = new Object();
+			martin_equipment.helmet = 0;
+			martin_equipment.boots = 0;
+			martin_equipment.pants = 0;
+			martin_equipment.armour = 0;
+			martin_equipment.necklace = 0;
+			martin_equipment.bracers = 0;
+			martin_equipment.ring_left = 0;
+			martin_equipment.ring_right = 0;
+			martin_equipment.left_hand_item = 0;
+			martin_equipment.right_hand_item = 0;
+			var martin_level = 1;
+			var martin_experience = 1;
+			var martin_attack = 10;
+			var martin_defence = 10;
+			var martin_strength = 10;
+			var martin_dexterity = 10;
+			
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
@@ -550,6 +567,9 @@ function loadInventory()
 			var item_over_right_hand = -1;
 			var mouse_over_left_hand = -1;
 			var mouse_over_right_hand = -1;
+			var mouse_over_char_hud_left_hand_slot = -1;
+			var mouse_over_char_hud_right_hand_slot = -1;
+			var mouse_over_char_hud = -1;
 			
 			var pointLight;
 			
@@ -951,14 +971,88 @@ function loadInventory()
 			
 			function loadCharacter()
 			{
-				if(left_hand_item != 0)
+				//left hand
+				if(martin_equipment.left_hand_item != 0)
 				{
-					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url("+left_hand_item.icon2+")";
+					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon2+")";
 				}
 				else
 				{
-					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url(media/lhand.png)";
+					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url(media/gui/slot2.png)";
 				}
+				//right hand
+				if(martin_equipment.right_hand_item != 0)
+				{
+					document.getElementById("id-character-screen-weapon-r-icon").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-weapon-r-icon").style.backgroundImage = "url(media/gui/slot2.png)";
+				}
+				//helmet
+				if(martin_equipment.helmet != 0)
+				{
+					document.getElementById("id-character-screen-helmet-icon").style.backgroundImage = "url("+martin_equipment.helmet.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-helmet-icon").style.backgroundImage = "url(media/gui/helmet_empty.png)";
+				}
+				//boots
+				if(martin_equipment.boots != 0)
+				{
+					document.getElementById("id-character-screen-boots-icon").style.backgroundImage = "url("+martin_equipment.boots.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-boots-icon").style.backgroundImage = "url(media/gui/boots_empty.png)";
+				}
+				//pants
+				if(martin_equipment.pants != 0)
+				{
+					document.getElementById("id-character-screen-pants-icon").style.backgroundImage = "url("+martin_equipment.pants.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-pants-icon").style.backgroundImage = "url(media/gui/pants_empty.png)";
+				}
+				//armour
+				if(martin_equipment.armour != 0)
+				{
+					document.getElementById("id-character-screen-armour-icon").style.backgroundImage = "url("+martin_equipment.armour.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-armour-icon").style.backgroundImage = "url(media/gui/armour_empty.png)";
+				}
+				//necklace
+				if(martin_equipment.necklace != 0)
+				{
+					document.getElementById("id-character-screen-necklace-icon").style.backgroundImage = "url("+martin_equipment.necklace.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-necklace-icon").style.backgroundImage = "url(media/gui/necklace_empty.png)";
+				}
+				//bracers
+				if(martin_equipment.bracers != 0)
+				{
+					document.getElementById("id-character-screen-bracers-icon").style.backgroundImage = "url("+martin_equipment.bracers.icon2+")";
+				}
+				else
+				{
+					document.getElementById("id-character-screen-bracers-icon").style.backgroundImage = "url(media/gui/bracers_empty.png)";
+				}
+				/*
+				martin_equipment.ring_left = 0;
+				martin_equipment.ring_right = 0;
+				*/
+				
+				document.getElementById("id-character-screen-stats-level").innerHTML = martin_level;
+				document.getElementById("id-character-screen-stats-experience").innerHTML = martin_experience;
+				
+				document.getElementById("id-character-screen-stats-strength").innerHTML = martin_strength;
+				document.getElementById("id-character-screen-stats-dexterity").innerHTML = martin_dexterity;
 			}
 
 			function morphColorsToFaceColors( geometry ) {
@@ -1461,8 +1555,8 @@ function loadInventory()
 				container3d.style.cursor = pointer;
 				gui_left_div.style.cursor = pointer;
 				gui_right_div.style.cursor = pointer;
-				//inventory_div.style.cursor = pointer;
 				container_div.style.cursor = pointer;
+				if(characterHudOpened) document.getElementById('id-character-screen-container').style.cursor = pointer;
 			}
 			
 			function drawItemInfo(xpos, ypos, item)
@@ -1500,6 +1594,9 @@ function loadInventory()
 				mouse_over_right_hand = -1;
 				item_over_left_hand = -1;
 				item_over_right_hand = -1;
+				mouse_over_char_hud_left_hand_slot = -1;
+				mouse_over_char_hud_right_hand_slot = -1;
+				mouse_over_char_hud = -1;
 				setCursor('auto');
 			}
 			
@@ -1524,6 +1621,9 @@ function loadInventory()
 				item_over_monster = -1
 				mouse_over_left_hand = -1;
 				mouse_over_right_hand = -1;
+				mouse_over_char_hud_left_hand_slot = -1;
+				mouse_over_char_hud_right_hand_slot = -1;
+				mouse_over_char_hud = -1;
 
 				//console.log(container3d.offsetWidth)
                 //console.log(window.innerWidth)
@@ -1553,6 +1653,36 @@ function loadInventory()
 				
 				if(!pickable_at_hand)
 				{
+					//character hud
+					if(characterHudOpened)
+					{
+						var charhud = get_element_position_in_viewport("id-character-screen-container");
+						
+						if((x_pos > charhud.x)&&(x_pos < charhud.x+540)&&(y_pos < charhud.y+540)&&(y_pos > charhud.y))
+						{
+							var lefthandslot = get_element_position_in_viewport("id-character-screen-weapon-l-icon");
+							if((x_pos > lefthandslot.x)&&(x_pos < lefthandslot.x+64)&&(y_pos < lefthandslot.y+64)&&(y_pos > lefthandslot.y))
+							{
+								mouse_over_char_hud_left_hand_slot = 1;
+								console.log('wtf?');
+								setCursor('pointer');
+								return;
+							}
+							var righthandslot = get_element_position_in_viewport("id-character-screen-weapon-r-icon");
+							if((x_pos > righthandslot.x)&&(x_pos < righthandslot.x+64)&&(y_pos < righthandslot.y+64)&&(y_pos > righthandslot.y))
+							{
+								mouse_over_char_hud_right_hand_slot = 1;
+								setCursor('pointer');
+								return;
+							}
+							
+							//player moves inside char dialog, but not on any slot so do nothing
+							mouse_over_char_hud = 1;
+							setCursor('auto');
+							return;
+						}
+					}
+					
 					//mouse over inventory stuff
 					//if(inventory_div_vertical_pos == INVENTORY_POS_SHOWN)
 					{
@@ -1839,7 +1969,32 @@ function loadInventory()
 				}
 				else //pickable is at hand
 				{
-				
+					//character hud
+					if(characterHudOpened)
+					{
+						var charhud = get_element_position_in_viewport("id-character-screen-container");
+						
+						if((x_pos > charhud.x)&&(x_pos < charhud.x+540)&&(y_pos < charhud.y+540)&&(y_pos > charhud.y))
+						{
+							var lefthandslot = get_element_position_in_viewport("id-character-screen-weapon-l-icon");
+							if((x_pos > lefthandslot.x)&&(x_pos < lefthandslot.x+64)&&(y_pos < lefthandslot.y+64)&&(y_pos > lefthandslot.y))
+							{
+								mouse_over_char_hud_left_hand_slot = 1;
+								return;
+							}
+							var righthandslot = get_element_position_in_viewport("id-character-screen-weapon-r-icon");
+							if((x_pos > righthandslot.x)&&(x_pos < righthandslot.x+64)&&(y_pos < righthandslot.y+64)&&(y_pos > righthandslot.y))
+							{
+								mouse_over_char_hud_right_hand_slot = 1;
+								return;
+							}
+							
+							//player moves inside char dialog, but not on any slot so do nothing
+							mouse_over_char_hud = 1;
+							return;
+						}
+					}
+					
 					//pickable over players hand
 					var lhandPos = get_element_position_in_viewport("player1-hand-l-main");
 					if((x_pos > lhandPos.x)&&(x_pos < lhandPos.x+72)&&(y_pos < lhandPos.y+72)&&(y_pos > lhandPos.y))
@@ -2001,32 +2156,36 @@ function loadInventory()
 				//take item from players hand
 				if (left)
 				{
-					if(left_hand_item != 0)
+					if(martin_equipment.left_hand_item != 0)
 					{
 						document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
 						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-						pickable_at_hand_icon.src = left_hand_item.icon;
-						pickable_at_hand = left_hand_item;
-						left_hand_item = 0;
+						pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
+						pickable_at_hand = martin_equipment.left_hand_item;
+						martin_equipment.left_hand_item = 0;
 						audio_click.currentTime = 0;
 						audio_click.play();
+						//update options screen
+						loadCharacter();
 					}
 				}
 				else
 				{
-					if(right_hand_item != 0)
+					if(martin_equipment.right_hand_item != 0)
 					{
 						document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
 						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-						pickable_at_hand_icon.src = right_hand_item.icon;
-						pickable_at_hand = right_hand_item;
-						right_hand_item = 0;
+						pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
+						pickable_at_hand = martin_equipment.right_hand_item;
+						martin_equipment.right_hand_item = 0;
 						audio_click.currentTime = 0;
 						audio_click.play();
+						//update options screen
+						loadCharacter();
 					}
 				}
 			}
@@ -2173,7 +2332,12 @@ function loadInventory()
 						}
 					}
 
-					if(item_over_left_hand != -1)
+					//char hud
+					if(mouse_over_char_hud_left_hand_slot!=-1)
+					{
+					}
+					
+					if((item_over_left_hand != -1)||(mouse_over_char_hud_left_hand_slot!=-1))
 					{
 						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
 						{
@@ -2191,12 +2355,12 @@ function loadInventory()
 								//we can put item in hand with right click why not
 								m_RMBEventWasUsed = true;
 							}
-							if(left_hand_item != 0)
+							if(martin_equipment.left_hand_item != 0)
 							{
-								tmp_hand_item = left_hand_item;
+								tmp_hand_item = martin_equipment.left_hand_item;
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
-								left_hand_item = pickable_at_hand;
+								martin_equipment.left_hand_item = pickable_at_hand;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
@@ -2207,7 +2371,7 @@ function loadInventory()
 							{
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
-								left_hand_item = pickable_at_hand;
+								martin_equipment.left_hand_item = pickable_at_hand;
 								//pickable at hand is gone
 								audio_click.currentTime = 0;
 								audio_click.play();
@@ -2217,15 +2381,19 @@ function loadInventory()
 							}
 						}
 						
+						//update options screen
+						loadCharacter();
+						
 						return;
 					}
 
-					if(item_over_right_hand != -1)
+					if((item_over_right_hand != -1)||(mouse_over_char_hud_right_hand_slot!=-1))
 					{
 						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
 						{
 							remove_element_class("player1-hand-r","shadow");
 							remove_element_class("player1-hand-l","shadow");
+							remove_element_class("id-character-screen-weapon-r-icon","shadow");
 							weapon_tip_shown=true;
 						}
 						
@@ -2238,12 +2406,12 @@ function loadInventory()
 								//we can put item in hand with right click why not
 								m_RMBEventWasUsed = true;
 							}
-							if(right_hand_item != 0)
+							if(martin_equipment.right_hand_item != 0)
 							{
-								tmp_hand_item = right_hand_item;
+								tmp_hand_item = martin_equipment.right_hand_item;
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
-								right_hand_item = pickable_at_hand;
+								martin_equipment.right_hand_item = pickable_at_hand;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
@@ -2254,7 +2422,7 @@ function loadInventory()
 							{
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
-								right_hand_item = pickable_at_hand;
+								martin_equipment.right_hand_item = pickable_at_hand;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is gone
@@ -2264,6 +2432,15 @@ function loadInventory()
 							}
 						}
 						
+						//update options screen
+						loadCharacter();
+						
+						return;
+					}
+					
+					if(mouse_over_char_hud != -1)
+					{
+						//do nothing
 						return;
 					}
 					
@@ -2423,6 +2600,10 @@ function loadInventory()
 				}
 				else //regular mouse click on screen, pickable is not at hand
 				{
+					if(mouseOverOptionSave)
+					{
+						save_position();
+					}
 				
 					//click on monster
 					if(mouse_over_monster > -1)
@@ -2431,26 +2612,28 @@ function loadInventory()
 						monster.OnClick();
 					}
 					
-					if(mouse_over_left_hand != -1)
+					if((mouse_over_left_hand != -1)||(mouse_over_char_hud_left_hand_slot != -1))
 					{
 						console.log("lefteeeee");
 						
-						if(isRightMB)
+						if((isRightMB)||(mouse_over_char_hud_left_hand_slot != -1))
 						{
 							m_RMBEventWasUsed = true;
 							//take item from players hand
-							if(left_hand_item != 0)
+							if(martin_equipment.left_hand_item != 0)
 							{
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-								pickable_at_hand_icon.src = left_hand_item.icon;
-								pickable_at_hand = left_hand_item;
-								left_hand_item = 0;
+								pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
+								pickable_at_hand = martin_equipment.left_hand_item;
+								martin_equipment.left_hand_item = 0;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//console.log("pickable at hand should be something");
+								//update options screen
+								loadCharacter();
 							}
 						}
 						else
@@ -2464,24 +2647,26 @@ function loadInventory()
 						return;
 					}
 
-					if(mouse_over_right_hand != -1)
+					if((mouse_over_right_hand != -1)||(mouse_over_char_hud_right_hand_slot != -1))
 					{
 						console.log("righteeeee");
-						if(isRightMB)
+						if((isRightMB)||(mouse_over_char_hud_right_hand_slot != -1))
 						{
 							m_RMBEventWasUsed = true;
 							//take item from players hand
-							if(right_hand_item != 0)
+							if(martin_equipment.right_hand_item != 0)
 							{
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-								pickable_at_hand_icon.src = right_hand_item.icon;
-								pickable_at_hand = right_hand_item;
-								right_hand_item = 0;
+								pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
+								pickable_at_hand = martin_equipment.right_hand_item;
+								martin_equipment.right_hand_item = 0;
 								audio_click.currentTime = 0;
 								audio_click.play();
+								//update options screen
+								loadCharacter();
 							}
 						}
 						else
@@ -2710,6 +2895,7 @@ function loadInventory()
 									{
 										add_element_class("player1-hand-r","shadow");
 										add_element_class("player1-hand-l","shadow");
+										add_element_class("id-character-screen-weapon-r-icon","shadow");
 									}
 									else if(!inventory_tip_shown)
 									{

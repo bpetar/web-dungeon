@@ -1,0 +1,6 @@
+//all items go here
+{ "all_items" : [
+	{"id":1,"name":"Ring of Truth"},
+	{"id":2,"name":"Shoes of Dancing"}
+]
+}
