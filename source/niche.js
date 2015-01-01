@@ -113,8 +113,10 @@ function add_to_niche (nicheID, gObject) {
 	
 	niche_pickables[index][0] = gObject.gameID;
 	niche_pickables[index][1] = gObject.name;
-	niche_pickables[index][2] = gObject.model;
-	niche_pickables[index][3] = gObject.icon;
+	niche_pickables[index][2] = gObject.description;
+	niche_pickables[index][3] = gObject.model;
+	niche_pickables[index][4] = gObject.icon;
+	niche_pickables[index][5] = gObject.icon2;
 	
 	var mover = -1+index/2;
 	//draw model in niche here
@@ -162,6 +164,7 @@ function add_to_niche (nicheID, gObject) {
 	}
 
 	gObject.mesh.visible = true;
+	gObject.niched = nicheID;
 	//if there is script function for adding item, call it
 	if(nicheArr[nicheID].length>6)
 	{
@@ -180,6 +183,7 @@ function remove_from_niche (gObject) {
 		if(niche_pickables[i][0] == gObject.gameID)
 		{
 			niche_pickables.splice(i,1);
+			gObject.niched = -1;
 			return;
 		}
 	}

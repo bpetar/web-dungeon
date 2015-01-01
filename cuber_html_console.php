@@ -78,7 +78,7 @@
 					</div>
 					<div id="id-options-load" onmouseover="optionsMouseOverLoad()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Load</b>
 					</div>
-					<div id="id-options-save" onmouseout="optionsMouseOutSave()" onmouseover="optionsMouseOverSave()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Save</b>
+					<div id="id-options-save" onclick="optionsMouseSave()" onmouseover="optionsMouseOverSave()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Save</b>
 					</div>
 					<div id="id-options-settings" onmouseover="optionsMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Settings</b>
 					</div>
@@ -151,7 +151,6 @@
 		
 		<script>
 		
-		var mouseOverOptionSave = false;
 		
 		function hideAllOptionsContent()
 		{
@@ -180,11 +179,11 @@
 		{
 			hideAllOptionsContent();
 			document.getElementById('id-options-content-save').style.display='block';
-			mouseOverOptionSave = true;
 		}
-		function optionsMouseOutSave()
+		function optionsMouseSave()
 		{
-			mouseOverOptionSave = false;
+			save_position();
+			toggleOptions();
 		}
 		function optionsMouseOverSettings()
 		{
