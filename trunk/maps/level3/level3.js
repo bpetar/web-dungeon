@@ -7,13 +7,13 @@ function levelOnLoad()
 	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 	playerHPcurrent = 10;
 	updatePlayerHealthBar();
-	current_position = new THREE.Vector3(10,0,3); //16,0,12
-	camera.position.x = 100;
-	camera.position.y = 4;
-	camera.position.z = 25; //115
-	camera.look = new THREE.Vector3(100,4,35); //160,4,125
-	camera.lookAt(camera.look);
-	pointLight.position.set( 100, 4, 30 );
+	//current_position = new THREE.Vector3(10,0,3); //16,0,12
+	//camera.position.x = current_position.x*10;
+	//camera.position.y = 4;
+	//camera.position.z = current_position.z*10-5; //115
+	//camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
+	//camera.lookAt(camera.look);
+	pointLight.position.set( current_position.x*10, 4, current_position.z*10 );
 }
 
 var levelNumber = 3;

@@ -14,16 +14,25 @@
 	$_SESSION['views']=1;
 	//echo "Views=". $_SESSION['views'];
 	
+	echo "<script src='./source/three.min.js'></script>";
 	
-	if (isset($_COOKIE["user"]))
+	if (isset($_COOKIE["cubish_user"]))
 	{
-		//echo "Welcome user number " . $_COOKIE["user"] . "!<br>";
+		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
+		//get last saved game of this user
+		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"level":1,"experience":1,"HPmax":30,"HPcurrent":11,"strength":11,"dexterity":10,"attack":10,"defence":10,"current_level":3,"inventory":["1,2","2,4","4,3"],"left_hand_item":337,"doors":[0],"pickables":[],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
+		echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
+		
+		$last_saved_data = json_decode($json_save_data, true) ? : [];
+		echo "<script src='./maps/level" . $last_saved_data["current_level"] . "/level" . $last_saved_data["current_level"] . ".js'></script>";
 	}
 	else
 	{
+		
 		$expire=time()+60*60*24*30*3;
-		setcookie("user", rand(1000000000,10000000000), $expire);
-		//echo "User created!<br>";
+		$useridvalue = rand(1000000000,10000000000);
+		setcookie("cubish_user", $useridvalue, $expire);
+		echo "<script>var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
 	}
   
 	$_SESSION['inventozy'] = array();
@@ -44,56 +53,6 @@
 ?>
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-		
-		<script src="./source/three.min.js"></script>
-
-<?php
-		
-if (isset($_GET['lvl']) && ($_GET['lvl']!=""))
-{
-	$lvl = $_GET['lvl'];
-	//check valid email format
-	if (strcmp($lvl,'level2') == 0)
-	{
-?>
-		<script src="./maps/level2/level2.js"></script>
-<?php 
-    }
-	else if (strcmp($lvl,'level3') == 0)
-	{
-?>
-		<script src="./maps/level3/level3.js"></script>
-<?php 
-    }
-	else if (strcmp($lvl,'level1') == 0)
-	{
-?>
-		<script src="./maps/level1/level1.js"></script>
-<?php 
-	}
-	else
-	{
-?>
-		<script src="./maps/level_temp/level_temp.js"></script>
-<?php 
-	}
-}
-else
-{
-?>
-		<script src="./maps/level_temp/level_temp.js"></script>
-<?php 
-}
-?>
 	
 		<script src="./source/pickables.js"></script>
 		<script src="./source/tapestries.js"></script>
@@ -102,6 +61,7 @@ else
 		<script src="./source/game_object.js"></script>
 		<script src="./source/inventory.js"></script>
 		<script src="./source/niche.js"></script>
+		<script src="./source/audio.js"></script>
 		<script src="./source/monster.js"></script>
 		<script src="./source/stats.min.js"></script>
 		<script src="./source/particles.js"></script>
@@ -492,6 +452,7 @@ function loadInventory()
 			var windowHalfY = window.innerHeight / 2;
 
 			var current_position;
+			var current_rotation = 0;
 			var NUM_SLOTS_INVENTORY_ROW = 4;
 			var NUM_CONTAINER_ROWS = 1;
 			var SLOT_WIDTH = 128;
@@ -707,184 +668,100 @@ function loadInventory()
 			
 			function init() {
 
+				document.onkeydown = handleKeyDown;
+
 				container3d = document.getElementById( 'id-3d-container' );
 				middleDiv = document.getElementById( 'gui_center' );
-				
 				menu_div = document.getElementById( 'menu' );
 				gui_container_div = document.getElementById( 'gui' );
 				gui_left_div = document.getElementById( 'gui_left' );
 				gui_right_div = document.getElementById( 'gui_right' );
-				
 				document.getElementById( 'info_dialog_button' ).focus();
-				
-				document.onkeydown = handleKeyDown;
-
-				//audio!
-				audio = document.createElement('audio');
-				var source = document.createElement('source');
-				source.src = 'media/thud.mp3';
-				audio.appendChild(source);
-				
-				plate_click_audio = document.createElement('audio');
-				var sourcep = document.createElement('source');
-				sourcep.src = 'media/plate.mp3';
-				plate_click_audio.appendChild(sourcep);
-				
-				plate_unclick_audio = document.createElement('audio');
-				var sourcep = document.createElement('source');
-				sourcep.src = 'media/plate_reverse.mp3';
-				plate_unclick_audio.appendChild(sourcep);
-				
-				button_click_audio = document.createElement('audio');
-				var sourceb = document.createElement('source');
-				sourceb.src = 'media/button.mp3';
-				button_click_audio.appendChild(sourceb);
-				
-				audio_lock_unlock = document.createElement('audio');
-				var sourcel = document.createElement('source');
-				sourcel.src = 'media/lock.mp3';
-				audio_lock_unlock.appendChild(sourcel);
-				
-				audio_chest_open = document.createElement('audio');
-				var sourcec = document.createElement('source');
-				sourcec.src = 'media/chest.mp3';
-				audio_chest_open.appendChild(sourcec);
-				
-				audio_player_death = document.createElement('audio');
-				var source_apd = document.createElement('source');
-				source_apd.src = 'media/death.mp3';
-				audio_player_death.appendChild(source_apd);
-				
-				audio_miss = document.createElement('audio');
-				var source_miss = document.createElement('source');
-				source_miss.src = 'media/miss.mp3';
-				audio_miss.appendChild(source_miss);
-
-				audio_ngh = document.createElement('audio');
-				var source_ngh = document.createElement('source');
-				source_ngh.src = 'media/ngh.mp3';
-				audio_ngh.appendChild(source_ngh);
-
-				audio_cling = document.createElement('audio');
-				var source_cling = document.createElement('source');
-				source_cling.src = 'media/cling.mp3';
-				audio_cling.appendChild(source_cling);
-
-				audio_click = document.createElement('audio');
-				var source_click = document.createElement('source');
-				source_click.src = 'media/click.mp3';
-				audio_click.appendChild(source_click);
-
-				audio_click2 = document.createElement('audio');
-				var source_click2 = document.createElement('source');
-				source_click2.src = 'media/click2.mp3';
-				audio_click2.appendChild(source_click2);
-
-				audio_drop = document.createElement('audio');
-				var source_drop = document.createElement('source');
-				source_drop.src = 'media/drop.mp3';
-				audio_drop.appendChild(source_drop);
-
-				audio_drop_rock = document.createElement('audio');
-				var source_drop_rock = document.createElement('source');
-				source_drop_rock.src = 'media/drop_rock.mp3';
-				audio_drop_rock.appendChild(source_drop_rock);
-
-				
-				audio_door = document.createElement('audio');
-				var source_door = document.createElement('source');
-				source_door.src = 'media/door.mp3';
-				if(typeof door_audio != 'undefined') source_door.src = door_audio;
-				audio_door.appendChild(source_door);
-				
-				audio_scroll = document.createElement('audio');
-				var source_scroll = document.createElement('source');
-				source_scroll.src = 'media/scroll.mp3';
-				audio_scroll.appendChild(source_scroll);
-				
-				audio_win1 = document.createElement('audio');
-				var source_win1 = document.createElement('source');
-				source_win1.src = 'media/win1.mp3';
-				audio_win1.appendChild(source_win1);
-				
-				audio_win2 = document.createElement('audio');
-				var source_win2 = document.createElement('source');
-				source_win2.src = 'media/win2.mp3';
-				audio_win2.appendChild(source_win2);
-
-				audio_enchant = document.createElement('audio');
-				var source_enchant = document.createElement('source');
-				source_enchant.src = 'media/enchant.mp3';
-				audio_enchant.appendChild(source_enchant);
-
-				audio_fanfare = document.createElement('audio');
-				var source_fanfare = document.createElement('source');
-				source_fanfare.src = 'media/victory_fanfare.mp3';
-				audio_fanfare.appendChild(source_fanfare);
-				
-				audio_ambient = document.createElement('audio');
-				var source_ambient = document.createElement('source');
-				source_ambient.src = ambient_music_file;
-				audio_ambient.appendChild(source_ambient);
-				
-				audio_ambient.volume = 0.4;
-				audio_ambient.play();
-				
-				current_position = new THREE.Vector3(16,0,0); //16,0,12
-
-				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
-				
-				//inventory_div = document.getElementById('gui_slots');
-				//inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
-				
 				container_div = document.getElementById('container_slots');
 				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 				container_div.style.top = SLOT_WIDTH +'px';
-				
 				loading_div = document.getElementById('loading_progress');
 				progressbar_div = document.getElementById('progressbar');
 				loading_msg_span = document.getElementById('loading_message');
-				//loading_div.style.display = "none";
-				
 				player1_face_div = document.getElementById('player1-face');
-				
 				level_complete_div = document.getElementById('level_complete_dialog');
-				
 				info_dialog_div = document.getElementById('info_dialog');
 				info_dialog_message_div = document.getElementById('info_message');
-				
 				speech_bubble_div = document.getElementById('speech_bubble');
-
 				player_HP_div = document.getElementById('player1-health');
-				//player_HP_div.style.width = "100%";
 				player_HP_div.style.backgroundColor = "#009900";
-				
 				player_wound_div = document.getElementById('player_wound');
 				player_wound_div.style.display = 'none';
-				
 				monster_wound_div = document.getElementById('monster_wound');
 				monster_wound_div.style.display = 'none';
-				
 				info_tip_div = document.getElementById('info_tip');
 				info_tip_div.style.display = 'none';
-
 				rhandDiv = document.getElementById('player1-hand-r');
 				rhandDiv.style.opacity=1.0;
 				lhandDiv = document.getElementById('player1-hand-l');
 				lhandDiv.style.opacity=1.0;
+				
+
+				//audio!
+				init_audio();
+				
+				//current_position = new THREE.Vector3(16,0,0); //16,0,12
+				current_position = new THREE.Vector3(10,0,3); //16,0,12
+
+				//check user cookie
+				if(!first_time_user)
+				{
+					console.log("returning customer cubish_user_id: " + cubish_user_id);
+					//get user last saved node data
+					if(saved_game)
+					{
+						//load game
+						console.log(last_saved_data);
+						current_position = new THREE.Vector3(last_saved_data.position.x,0,last_saved_data.position.z);
+						current_rotation = last_saved_data.rotation;
+						
+						//player data
+						martin_level = last_saved_data.level;
+						//experience
+						martin_experience = last_saved_data.experience;
+						//playerHPmax
+						playerHPmax = last_saved_data.HPmax;
+						//playerHPcurrent;
+						playerHPcurrent = last_saved_data.HPcurrent;
+						//strength
+						martin_strength = last_saved_data.strength;
+						//dexterity
+						martin_dexterity = last_saved_data.dexterity;
+						//attack
+						martin_attack = last_saved_data.attack;
+						//defence
+						martin_defence = last_saved_data.defence;
+						
+						//level
+						current_level = last_saved_data.current_level;
+					}
+					else
+					{
+						//you been here already but didn't save game, so you start from beginning again
+					}
+				}
+				console.log("first time cubish_user_id: " + cubish_user_id);
+
+
+				scene = new THREE.Scene();
+				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
+
 				
 				//calculate screen size. 
 				//min-height:650px; min-width: (1050 + 64) px;
 				var root= document.compatMode=='BackCompat'? document.body : document.documentElement;
 				var isVerticalScrollbar= root.scrollHeight>root.clientHeight;
 				var isHorizontalScrollbar= root.scrollWidth>root.clientWidth;
-
 				var windowHeight = window.innerHeight;
 				if(window.innerHeight < 650) windowHeight = 650;
 				var gui_container_div_width = window.innerWidth;
 				if(window.innerWidth < 1120) gui_container_div_width = 1120;
-				
+			
 				if(gui_container_div_width > windowHeight + 500)
 				{
 					//more width then height
@@ -901,14 +778,25 @@ function loadInventory()
 				container3d.style.height = "" + (middleDiv.offsetHeight - 64) + "px";
 				
 				camera = new THREE.PerspectiveCamera( 47, middleWidth / (windowHeight-64), 2, 10000 );
-				camera.position.x = 160;
+				
+				if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
+				else if(current_rotation==1) camera.position.x = current_position.x*10-5;
+				else camera.position.x = current_position.x*10+5;
+				
 				camera.position.y = 4;
-				camera.position.z = -5; //115
-				camera.look = new THREE.Vector3(160,4,5); //160,4,125
+				
+				if((current_rotation==1)||(current_rotation==3)) camera.position.z = current_position.z*10;
+				else if(current_rotation==0) camera.position.z = current_position.z*10-5; //115
+				else camera.position.z = current_position.z*10+5;
+				
+				if(current_rotation==0) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
+				else if(current_rotation==1) camera.look = new THREE.Vector3(current_position.x*10+5,4,current_position.z*10); //160,4,125
+				else if(current_rotation==2) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10-5); //160,4,125
+				else camera.look = new THREE.Vector3(current_position.x*10-5,4,current_position.z*10); //160,4,125
 				camera.lookAt(camera.look);
 					
 				
-				//
+				//inventory
 				loadInventory()
 				
 				//load level walls and floors etc..
@@ -935,13 +823,6 @@ function loadInventory()
 				//level specific action on load
 				levelOnLoad();
 
-				// var middleWidth = window.innerWidth - 744;
-				// if(middleWidth<600) middleWidth = 600;
-				// middleDiv.style.width = "" + middleWidth + "px";
-				// gui_container_div.style.width = "" + (window.innerWidth-340) + "px";
-				// container3d.style.width = middleDiv.style.width;
-				// container3d.style.height = "" + (middleDiv.offsetHeight - 74) + "px";
-				
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
 				//alert("container3d.offsetWidth: " +  container3d.offsetWidth + ", container3d.offsetHeight: " + container3d.offsetHeight + ", container3d.style.height: " + container3d.style.height);
@@ -1231,6 +1112,8 @@ function loadInventory()
 					if(holeFallen||playerDead)
 						return;
 					
+					current_rotation++; if(current_rotation == 4) current_rotation=0;
+					
 					//back tile position modification requires to move front and to the right by half step, then rotate
 					var mover = new THREE.Vector3( 0, 0, 0 );
 					var turner = new THREE.Vector3( 0, 0, 0 );
@@ -1293,6 +1176,8 @@ function loadInventory()
 					//if player is in the hole atm, he can not turn around because he is dead.
 					if(holeFallen||playerDead)
 						return;
+					
+					current_rotation--; if(current_rotation == -1) current_rotation= 3;
 					
 					//back tile position modification requires to move front and to the left by half step, then rotate right
 					var mover = new THREE.Vector3( 0, 0, 0 );
@@ -2600,11 +2485,6 @@ function loadInventory()
 				}
 				else //regular mouse click on screen, pickable is not at hand
 				{
-					if(mouseOverOptionSave)
-					{
-						save_position();
-					}
-				
 					//click on monster
 					if(mouse_over_monster > -1)
 					{

@@ -1,6 +1,23 @@
 //all items go here
+
+// id, name, desc, model, x, y, z, icon, icon1, useage hint, use script, consumable
+
 { "all_items" : [
 	{"id":1,"name":"Ring of Truth"},
-	{"id":2,"name":"Shoes of Dancing"}
+	{"id":2,"name":"Shoes of Dancing"},
+	{
+		"id":2,
+		"name":"Root",
+		"desc":"Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", 
+		"model":"maps/level3/models/root.js", 
+		"x":10.5,
+		"y":4.5,
+		"z":6, 
+		"icon":"media/root.png", 
+		"icon1":"media/gui/root.png", 
+		"usage":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..", 
+		"script":"script_rootHealingScript", 
+		"consumable":1
+	}
 ]
 }
