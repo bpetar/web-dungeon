@@ -151,7 +151,7 @@ var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5, 8, 1, niche_pickables_array1]];
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var picables_array = [[2, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 10, 0, 0, "media/root.png", "media/gui/root.png", "<span style='color:green;'> Nothing to do with this </span>", 0, 1]];
+var picables_array = [[2, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 1, 0, 0, "media/root.png", "media/gui/root.png", "<span style='color:green;'> Nothing to do with this </span>", 0, 1]];
 
 
 
