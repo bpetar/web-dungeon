@@ -110,7 +110,8 @@ var keyholes_array = [];
 
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], [3,"Stake","Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9,3,0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], [4,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1]];
+var pickables_array = [[2,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5,4.5,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], [3,"Stake","Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9,3,0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], [4,"Root","Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>","maps/level3/models/root.js", 10.5,6,6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],[5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 10, 6, 0, "media/root.png", "media/gui/root.png", "<span style='color:green;'> Nothing to do with this </span>", 0, 1]];
+
 ////////////////////////////////////////////////
 
 var monsterEncountered = false;
@@ -150,9 +151,8 @@ var niche_pickables_array1 = [[3,"Scroll","Desc", "models/scroll.js", "media/scr
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5, 8, 1, niche_pickables_array1]];
-// id, name, model, x, z, icon, useage hint, use script, consumable
-//var pickables_array = [[2, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 10, 6, 0, "media/root.png", "media/gui/root.png", "<span style='color:green;'> Nothing to do with this </span>", 0, 1]];
 
+ 
 
 
 
