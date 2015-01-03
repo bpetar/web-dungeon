@@ -16,7 +16,7 @@
 	
 	echo "<script src='./source/three.min.js'></script>";
 	
-	if (isset($_COOKIE["cubish_user"]))
+	if (isset($_COOKIE["cubish_userw"]))
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
@@ -33,6 +33,7 @@
 		$useridvalue = rand(1000000000,10000000000);
 		setcookie("cubish_user", $useridvalue, $expire);
 		echo "<script>var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
+		echo "<script src='./maps/level3/level3.js'></script>";
 	}
   
 	$_SESSION['inventozy'] = array();
