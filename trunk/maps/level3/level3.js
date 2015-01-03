@@ -149,7 +149,12 @@ var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 
 var niche_pickables_array1 = [[3,"Scroll","Desc", "models/scroll.js", "media/scrolly.png", "media/gui/scroll.png", "A map! Oh now I see.. wait where am I?", "script_showScroll_lvl3_map"]];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[5,8,1,niche_pickables_array1]]; 
+var nicheArr = [[5, 8, 1, niche_pickables_array1]];
+// id, name, model, x, z, icon, useage hint, use script, consumable
+var picables_array = [[2, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 10, 6, 0, "media/root.png", "media/gui/root.png", "<span style='color:green;'> Nothing to do with this </span>", 0, 1]];
+
+
+
 
 
 var teleport_array = [];
