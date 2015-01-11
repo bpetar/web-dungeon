@@ -19,5 +19,19 @@
 		"script":"script_rootHealingScript", 
 		"consumable":1
 	}
+	{
+		"id":3,
+		"name":"Stake",
+		"desc":"Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", 
+		"model":"maps/level3/models/root.js", 
+		"x":10.5,
+		"y":4.5,
+		"z":6, 
+		"icon":"media/root.png", 
+		"icon1":"media/gui/root.png", 
+		"usage":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..", 
+		"script":"script_rootHealingScript", 
+		"consumable":1
+	}
 ]
 }
