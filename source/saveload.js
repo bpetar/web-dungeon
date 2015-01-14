@@ -56,32 +56,34 @@ function save_position()
 	
 	//else use some cookie identification
 	
-	var save_data = {"data_type":"save", "position":"12,12","desc":"data to be saved"};
+	var save_data = {"data_type":"save", "desc":"data to be saved"};
 	
 	//player stats:
 	
 	//user_id
 	save_data["user_id"] = 123;
 	//level
-	save_data["level"] = martin_level;
+	save_data["martin_level"] = martin_level;
 	//experience
-	save_data["experience"] = martin_experience;
+	save_data["martin_experience"] = martin_experience;
 	//playerHPmax
-	save_data["HPmax"] = playerHPmax;
+	save_data["martin_HPmax"] = playerHPmax;
 	//playerHPcurrent;
-	save_data["HPcurrent"] = playerHPcurrent;
+	save_data["martin_HPcurrent"] = playerHPcurrent;
 	//strength
-	save_data["strength"] = martin_strength;
+	save_data["martin_strength"] = martin_strength;
 	//dexterity
-	save_data["dexterity"] = martin_dexterity;
+	save_data["martin_dexterity"] = martin_dexterity;
 	//attack
-	save_data["attack"] = martin_attack;
+	save_data["martin_attack"] = martin_attack;
 	//defence
-	save_data["defence"] = martin_defence;
+	save_data["martin_defence"] = martin_defence;
 	//position
-	save_data["position"] = "" + current_position.x + "," + current_position.z;
+	save_data["position"] = {};
+	save_data["position"]["x"] = current_position.x
+	save_data["position"]["z"] = current_position.z;
 	//rotation
-	save_data["rotation"] = 0; // ???
+	save_data["rotation"] = current_rotation;
 	//level
 	save_data["current_level"] = 3;
 
@@ -89,7 +91,9 @@ function save_position()
 	save_data["inventory"] = [];
 	for (var i=0; i<inventory_array.length; i++)
 	{
-		save_data["inventory"][i] = inventory_array[i].slot + "," + inventory_array[i].gObject.gameID;
+		save_data["inventory"][i] = {};
+		save_data["inventory"][i]["slot"] = inventory_array[i].slot;
+		save_data["inventory"][i]["gameID"] = inventory_array[i].gObject.gameID;
 	}
 	
 	//equipped items 
@@ -140,7 +144,13 @@ function save_position()
 		if(array_of_pickables[i].mesh.visible)
 		{
 			//save item id, position, niched
-			save_data["pickables"][j] = "" + array_of_pickables[i].gameID + "," + array_of_pickables[i].mesh.position.x + "," + array_of_pickables[i].mesh.position.y + "," + array_of_pickables[i].mesh.position.z + "," + array_of_pickables[i].niched;
+			save_data["pickables"][j] = {};
+			save_data["pickables"][j]["gameID"] = array_of_pickables[i].gameID;
+			save_data["pickables"][j]["x"] = array_of_pickables[i].mesh.position.x;
+			save_data["pickables"][j]["y"] = array_of_pickables[i].mesh.position.y;
+			save_data["pickables"][j]["z"] = array_of_pickables[i].mesh.position.z;
+			save_data["pickables"][j]["niched"] = array_of_pickables[i].niched;
+			save_data["pickables"][j]["plated"] = array_of_pickables[i].plated;
 			j++;
 		}
 	}

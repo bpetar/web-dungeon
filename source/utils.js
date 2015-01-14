@@ -1,5 +1,30 @@
 //various utility functions..
 
+
+//get items from json by id
+function get_item_by_id(id)
+{
+
+	//if(all_items != 0)
+	console.log("returning item: " + all_items[""+id+""]["name"]);
+	return all_items[""+id+""];
+}
+
+function get_items_cb()
+{
+	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	{
+		// Javascript function JSON.parse to parse JSON data
+        all_items = JSON.parse(xmlhttp.responseText);
+		console.log("get_items_cb: items acquired.." + all_items["2"]["name"]);
+	}
+	else
+	{
+		console.log("get_items_cb: " + xmlhttp.readyState);
+	}
+	
+}
+
 function post_to_url(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
 
@@ -24,13 +49,13 @@ function post_to_url(path, params, method) {
     form.submit();
 }
 
-function ajaxGet(url,cfunc)
+function ajaxGet(url,cfunc,async)
 {
 	if (window.XMLHttpRequest)
 	{// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp=new XMLHttpRequest();
 		xmlhttp.onreadystatechange=cfunc;
-		xmlhttp.open("GET",url,true);
+		xmlhttp.open("GET",url,async);
 		xmlhttp.send();
 	}
 }
