@@ -16,7 +16,7 @@
 	
 	echo "<script src='./source/three.min.js'></script>";
 	
-	if (isset($_COOKIE["cubish_userw"]))
+	if (isset($_COOKIE["cubish_user"]))
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
@@ -98,59 +98,6 @@
 	//{
 	//	echo "pera = [];";
 	//}
-
-
-////////////////////////////  LOADING INVENTORY
-
-
-function loadInventory()
-{
-	console.log("loading inengryery");
-	var slot = 1;
-<?php 
-	//for looping inventory items
-	foreach ( $_SESSION['inventozy'] AS $iitem ) 
-	{
-?>
-		slot = <?php echo $iitem[0]?>;
-		console.log("loading inengryery " + slot);
-		var inventory_item = create_game_object();
-		inventory_item.gameID = <?php echo $iitem[1]?>;
-		inventory_item.name = <?php echo " '$iitem[2]' "?>;
-		inventory_item.model = <?php echo "'$iitem[3]'"?>;
-		inventory_item.icon = <?php echo "'$iitem[4]'"?>;
-		inventory_item.useHint = <?php echo "'$iitem[5]'"?>;
-		inventory_item.useScript = <?php echo "'$iitem[6]'"?>;
-		var consum = <?php echo $iitem[7]?>;
-		inventory_item.consumable = (consum == 1)?true:false;
-		//inventory_item.weapon_speed = pickables_array[i][10];
-		//inventory_item.weapon_dmg = pickables_array[i][11];
-		//inventory_item.weapon_dmg_bonus = pickables_array[i][12];
-		//inventory_item.weapon_attack_bonus = pickables_array[i][13];
-		inventory_item.niched = -1; //flag indicating if pickable is in the niche
-		inventory_item.plated = -1; //flag indicating if pickable is in the niche
-		//inventory_item.mesh = 0;
-		//inventory_item.position.x = 0;
-		//inventory_item.position.z = 0;
-		//inventory_item.position.y = 0;
-
-		add_to_inventory(inventory_item, slot);
-		
-		
-<?php 
-	//break;
-	//end of for inventory loop
-	}
-?>
-}
-
-
-
-
-
-
-
-
 
 
 
@@ -748,6 +695,7 @@ function loadInventory()
 						current_level = last_saved_data.current_level;
 						
 						//inventory
+						loadInventory(last_saved_data.inventory)
 						
 						//equipment
 						
@@ -825,8 +773,6 @@ function loadInventory()
 				camera.lookAt(camera.look);
 					
 				
-				//inventory
-				loadInventory()
 				
 				//load level walls and floors etc..
 				load_level();

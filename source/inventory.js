@@ -4,6 +4,50 @@ var NEW_SLOT_WIDTH = 64;
 // list of items in the bag
 var inventory_array = [];
 
+//
+function loadInventory(inventoryArr)
+{
+	var loader = new THREE.JSONLoader();
+	console.log("loading inventory");
+	for (i=0; i< inventoryArr.length; i++)
+	{
+		var inventory_item = create_game_object();
+		var item = get_item_by_id(inventoryArr[i].gameID);
+		inventory_item.gameID = inventoryArr[i].gameID;
+		inventory_item.name = item.name;
+		inventory_item.description = item.desc;
+		inventory_item.model = item.model;
+		inventory_item.icon = item.icon;
+		inventory_item.icon2 = item.icon2;
+		inventory_item.useHint = item.useHint;
+		inventory_item.useScript = item.useScript;
+		inventory_item.consumable = (item.type == "consumable")?true:false;
+		if(item.type == "weapon")
+		{
+			inventory_item.weapon_speed = item.weapon_prop.speed;
+			inventory_item.weapon_dmg = item.weapon_prop.damage;
+			inventory_item.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
+			inventory_item.weapon_attack_bonus = item.weapon_prop.attack_bonus;
+			//TODO:
+			//"type":"melee", "hand":"one", "damage_type":"piercing",
+		}
+		inventory_item.niched = -1; //flag indicating if pickable is in the niche
+		inventory_item.plated = -1; //flag indicating if pickable is in the niche
+		//inventory_item.mesh = 0;
+		//inventory_item.position.x = 0;
+		//inventory_item.position.z = 0;
+		//inventory_item.position.y = 0;
+		
+		loadGameObjectCheck(loader, inventory_item);
+
+		add_to_inventory(inventory_item, inventoryArr[i].slot);
+		
+		//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
+		array_of_pickables.push(inventory_item);
+	}
+}
+
+//TODO: remove this function
 //inventory to post
 function inventory_to_post()
 {
