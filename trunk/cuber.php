@@ -20,7 +20,7 @@
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
-		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"level":1,"experience":1,"HPmax":30,"HPcurrent":11,"strength":11,"dexterity":10,"attack":10,"defence":10,"current_level":3,"inventory":["1,2","2,4","4,3"],"left_hand_item":337,"doors":[0],"pickables":[],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
+		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
 		echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
 		
 		$last_saved_data = json_decode($json_save_data, true) ? : [];
@@ -74,6 +74,7 @@
 		<script src="./source/level.js"></script>
 		<script src="./source/scripts.js"></script>
 		<script src="./source/saveload.js"></script>
+		<script src="./source/items.js"></script>
 
 		<script>
 		
@@ -475,6 +476,8 @@ function loadInventory()
 			
 			var level_complete_div = 0;
 			
+			var all_items = 0;
+			
 			//player stats
 			var player_HP_div = 0;
 			var playerHPmax = 30;
@@ -703,6 +706,9 @@ function loadInventory()
 				lhandDiv.style.opacity=1.0;
 				
 
+				//get items json sync
+				ajaxGet("source/items.json",get_items_cb,false);
+				
 				//audio!
 				init_audio();
 				
@@ -740,13 +746,35 @@ function loadInventory()
 						
 						//level
 						current_level = last_saved_data.current_level;
+						
+						//inventory
+						
+						//equipment
+						
+						//pickables
+						load_saved_pickables(last_saved_data.pickables);
+						
 					}
 					else
 					{
 						//you been here already but didn't save game, so you start from beginning again
+
+						//load pickables
+						load_pickables();
+						//load niches
+						loadNiches();
+						
 					}
 				}
-				console.log("first time cubish_user_id: " + cubish_user_id);
+				else
+				{
+					console.log("first time cubish_user_id: " + cubish_user_id);
+
+					//load pickables
+					load_pickables();
+					//load niches
+					loadNiches();
+				}
 
 
 				scene = new THREE.Scene();
@@ -762,7 +790,7 @@ function loadInventory()
 				if(window.innerHeight < 650) windowHeight = 650;
 				var gui_container_div_width = window.innerWidth;
 				if(window.innerWidth < 1120) gui_container_div_width = 1120;
-			
+				
 				if(gui_container_div_width > windowHeight + 500)
 				{
 					//more width then height
@@ -806,11 +834,6 @@ function loadInventory()
 				//load lights
 				load_lights();
 				
-				//load pickables
-				load_pickables();
-				
-				//load niches
-				loadNiches();
 				
 				//load tapestries
 				load_tapestries();

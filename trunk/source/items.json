@@ -1,37 +1,51 @@
-//all items go here
-
-// id, name, desc, model, x, y, z, icon, icon1, useage hint, use script, consumable
-
-{ "all_items" : [
-	{"id":1,"name":"Ring of Truth"},
-	{"id":2,"name":"Shoes of Dancing"},
-	{
+{
+	"2":{
 		"id":2,
 		"name":"Root",
-		"desc":"Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", 
-		"model":"maps/level3/models/root.js", 
-		"x":10.5,
-		"y":4.5,
-		"z":6, 
-		"icon":"media/root.png", 
-		"icon1":"media/gui/root.png", 
-		"usage":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..", 
-		"script":"script_rootHealingScript", 
-		"consumable":1
-	}
-	{
+		"desc":"Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>",
+		"model":"maps/level3/models/root.js",
+		"icon":"media/root.png",
+		"icon2":"media/gui/root.png",
+		"useHint":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..",
+		"useScript":"script_rootHealingScript",
+		"type":"consumable"
+	},
+	"3":{
 		"id":3,
 		"name":"Stake",
-		"desc":"Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", 
-		"model":"maps/level3/models/root.js", 
-		"x":10.5,
-		"y":4.5,
-		"z":6, 
-		"icon":"media/root.png", 
-		"icon1":"media/gui/root.png", 
-		"usage":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..", 
-		"script":"script_rootHealingScript", 
-		"consumable":1
+		"desc":"Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>",
+		"model":"models/stake.js",
+		"icon":"media/stake.png",
+		"icon2":"media/gui/stake.png",
+		"useHint":"Pointy stick, better then nothing.",
+		"useScript":"0",
+		"type":"weapon",
+		"weapon_prop":{"type":"melee", "hand":"one", "damage_type":"piercing", "speed":4, "damage":4, "damage_bonus":0, "attack_bonus":1}
+	},
+	"4":{
+		"id":4,
+		"name":"Scroll",
+		"desc":"Type: <span style='color:yellow;'>Rolled parchment.</span><br> (right click to read)",
+		"model":"models/scroll.js",
+		"icon":"media/scrolly.png",
+		"icon2":"media/gui/scroll.png",
+		"useHint":"A map! Oh now I see.. wait where am I?",
+		"useScript":"script_showScroll_lvl3_map",
+		"type":"reusable"
+	},
+	"5":{
+		"id":5,
+		"name":"Ground Rock",
+		"desc":"Type: <span style='color:yellow;'>dead weight</span>",
+		"model":"maps/level3/models/dirt_rock.js",
+		"icon":"media/ground_rock.png",
+		"icon2":"media/gui/ground_rock_icon.png",
+		"useHint":"<span style='color:green;'> Nothing to do with this </span>",
+		"useScript":"0",
+		"type":"weapon throwing onehanded bludgeoning",
+		"speed":0,
+		"damage":0,
+		"damage_bonus":0,
+		"attack_bonus":0
 	}
-]
 }
