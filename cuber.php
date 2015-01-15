@@ -16,11 +16,11 @@
 	
 	echo "<script src='./source/three.min.js'></script>";
 	
-	if (isset($_COOKIE["cubish_user"]))
+	if (isset($_COOKIE["cubish_userw"]))
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
-		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
+		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"right_hand_item":5,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
 		echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
 		
 		$last_saved_data = json_decode($json_save_data, true) ? : [];
@@ -698,6 +698,27 @@
 						loadInventory(last_saved_data.inventory)
 						
 						//equipment
+						//equipped items 
+						martin_equipment.left_hand_item = load_item_by_id(last_saved_data.left_hand_item);
+						document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
+						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+						// right_hand_item
+						martin_equipment.right_hand_item = load_item_by_id(last_saved_data.right_hand_item);
+						document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
+						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+						// helmet
+						//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
+						// necklace
+						//if(martin_equipment.necklace != 0) save_data["necklace"] = martin_equipment.necklace.id;
+						// armour
+						//if(martin_equipment.armour != 0) save_data["armour"] = martin_equipment.armour.id;
+						// bracers
+						//if(martin_equipment.bracers != 0) save_data["bracers"] = martin_equipment.bracers.id;
+						// boots
+						//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
+						// pants
+						//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
+	
 						
 						//pickables
 						load_saved_pickables(last_saved_data.pickables);
