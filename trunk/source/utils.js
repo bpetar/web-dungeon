@@ -10,6 +10,45 @@ function get_item_by_id(id)
 	return all_items[""+id+""];
 }
 
+//loads item in game with 3d model and everything
+function load_item_by_id(id)
+{
+	var loader = new THREE.JSONLoader();
+	var game_item = create_game_object();
+	var item = get_item_by_id(id);
+	game_item.gameID = id;
+	game_item.name = item.name;
+	game_item.description = item.desc;
+	game_item.model = item.model;
+	game_item.icon = item.icon;
+	game_item.icon2 = item.icon2;
+	game_item.useHint = item.useHint;
+	game_item.useScript = item.useScript;
+	game_item.consumable = (item.type == "consumable")?true:false;
+	if(item.type == "weapon")
+	{
+		game_item.weapon_speed = item.weapon_prop.speed;
+		game_item.weapon_dmg = item.weapon_prop.damage;
+		game_item.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
+		game_item.weapon_attack_bonus = item.weapon_prop.attack_bonus;
+		//TODO:
+		//"type":"melee", "hand":"one", "damage_type":"piercing",
+	}
+	game_item.niched = -1; //flag indicating if pickable is in the niche
+	game_item.plated = -1; //flag indicating if pickable is in the niche
+	//game_item.mesh = 0;
+	//game_item.position.x = 0;
+	//game_item.position.z = 0;
+	//game_item.position.y = 0;
+	
+	loadGameObjectCheck(loader, game_item);
+
+	//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
+	array_of_pickables.push(game_item);
+	
+	return game_item;
+}
+
 function get_items_cb()
 {
 	if (xmlhttp.readyState==4 && xmlhttp.status==200)
