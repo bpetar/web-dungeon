@@ -88,8 +88,15 @@ function propOnClick4()
 	DisplayInfoDiv("Sharp sticks..");
 }
 
+
+function propOnClick5()
+ {
+  show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
+}
+
+
 //props x,z,model,onClick script
-var propsArr = [[111,9,3,"models/spears.js",propOnClick1], [112,11,5,"models/spears.js",propOnClick4], [113,14,6,"models/spears.js",propOnClick4], [113,15,9,"models/spears_blood.js",propOnClick2], [114,10,10,"models/spears.js",propOnClick4], [114,8,13,"models/spears_blood.js",propOnClick2], [114,13,15,"models/spears.js",propOnClick3], [114,11,14,"models/spears.js",propOnClick4]];
+var propsArr = [[111, 9, 3, "models/spears.js", propOnClick1], [112, 11, 5, "models/spears.js", propOnClick4], [113, 14, 6, "models/spears.js", propOnClick4], [113, 15, 9, "models/spears_blood.js", propOnClick2], [114, 10, 10, "models/spears.js", propOnClick4], [114, 8, 13, "models/spears_blood.js", propOnClick2], [114, 13, 15, "models/spears.js", propOnClick3], [114, 11, 14, "models/spears.js", propOnClick4] ,[13,3, 0, "models/boulder.js", propOnClick5]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
