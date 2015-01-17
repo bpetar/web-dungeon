@@ -20,7 +20,7 @@ var levelNumber = 3;
 var totalModels = 19;
 
 // map arrays..
-var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [10,4], [10,3], [9,3]];
+var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [13,3], [14,3], [10,4], [10,3], [9,3]];
 var holesArr = [];
 var holesAboveArr = [[9,3], [11,5], [14,6], [15,9], [10,10], [8,13], [13,15], [11,14]];
 var writtingsArr = [[5,12,1,"Punishment for killing a worm is work in the kitchen!",0]];
@@ -96,7 +96,7 @@ function propOnClick5()
 
 
 //props x,z,model,onClick script
-var propsArr = [[111, 9, 3, "models/spears.js", propOnClick1], [112, 11, 5, "models/spears.js", propOnClick4], [113, 14, 6, "models/spears.js", propOnClick4], [113, 15, 9, "models/spears_blood.js", propOnClick2], [114, 10, 10, "models/spears.js", propOnClick4], [114, 8, 13, "models/spears_blood.js", propOnClick2], [114, 13, 15, "models/spears.js", propOnClick3], [114, 11, 14, "models/spears.js", propOnClick4], [115, 10, 4, "maps/level3/models/boulder.json", propOnClick5]];
+var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 14, 6, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 4, -1, "maps/level3/models/boulder.json", propOnClick5]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -121,7 +121,7 @@ var pickables_array = [
 [2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
 [3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
 [4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
-[5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 10, 6, 0, "media/ground_rock.png", "media/gui/ground_rock_icon.png", "<span style='color:green;'> Nothing to do with this </span>", "0", 1]];
+[5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 13.3, 4.8, 0, "media/ground_rock.png", "media/gui/ground_rock_icon.png", "<span style='color:green;'> Nothing to do with this </span>", "0", 1]];
 ////////////////////////////////////////////////
 
 var monsterEncountered = false;
