@@ -20,7 +20,7 @@
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
-		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"right_hand_item":5,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20},{"gameID":12,"position":{"x":110,"z":140},"mood":1,"hp":20}]}';
+		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"right_hand_item":5,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":15,"z":18},"rotation":0,"mood":1,"hp":1},{"gameID":12,"position":{"x":14,"z":17},"rotation":0,"mood":1,"hp":1}]}';
 		echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
 		
 		$last_saved_data = json_decode($json_save_data, true) ? : [];
@@ -723,6 +723,10 @@
 						//pickables
 						load_saved_pickables(last_saved_data.pickables);
 						
+						//monsters
+						//"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20}
+						load_saved_monsters(last_saved_data.monsters);
+						
 					}
 					else
 					{
@@ -732,7 +736,6 @@
 						load_pickables();
 						//load niches
 						loadNiches();
-						
 					}
 				}
 				else
@@ -743,6 +746,8 @@
 					load_pickables();
 					//load niches
 					loadNiches();
+					//load monsters
+					load_monsters();
 				}
 
 
@@ -834,7 +839,6 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				load_monsters();
 				loadCharacter();
   
 				renderer.shadowMapEnabled = true;

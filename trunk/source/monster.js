@@ -265,7 +265,92 @@ Monster.prototype.loadObject = function ( munster ) {
 
 };
 
+function getMonsterFromLevelArrayByID(id) {
+	for(var i=0; i<monster_array.length; i++) {
+		if (monster_array[i][0] == id)
+			return monster_array[i];
+	}
+	return 0;
+}
 
+function loadMonsterDataFromLevelArray(monsterObj, monsterArr) {
+	monsterObj.gameID = monsterArr[0];
+	monsterObj.name = monsterArr[1];
+	monsterObj.model = monsterArr[2];
+	monsterObj.position.x = monsterArr[3];
+	monsterObj.position.z = monsterArr[4];
+	monsterObj.position.y = 0;
+	monsterObj.target.x = monsterObj.position.x;
+	monsterObj.target.z = monsterObj.position.z;
+	monsterObj.target.y = monsterObj.position.y;
+	monsterObj.rotation = monsterArr[5];
+	monsterObj.hp = monsterArr[6];
+	monsterObj.ac = monsterArr[7];
+	monsterObj.attack = monsterArr[8];
+	monsterObj.dmg = monsterArr[9];
+	monsterObj.pickables = monsterArr[10];
+	monsterObj.OnClick = monsterArr[11];
+	monsterObj.OnItemClick = monsterArr[12];
+	
+	//animation keyframes
+	if(monsterArr.length > 18)
+	{
+		monsterObj.idle_startKeyframe = monsterArr[13];
+		monsterObj.idle_endKeyframe = monsterArr[14];
+		monsterObj.attack_startKeyframe = monsterArr[15];
+		monsterObj.attack_endKeyframe = monsterArr[16];
+		monsterObj.walk_startKeyframe = monsterArr[17];
+		monsterObj.walk_endKeyframe = monsterArr[18];
+	}
+
+	if(monsterArr.length > 19)
+	{
+		monsterObj.mood = monsterArr[19];
+	}
+	
+	//audio
+	var source_monster_wound = document.createElement('source');
+	source_monster_wound.src = monsterArr[20];
+	monsterObj.audio_monster_wound.appendChild(source_monster_wound);
+	var source_monster_dies = document.createElement('source');
+	source_monster_dies.src = monsterArr[21];
+	monsterObj.audio_monster_dies.appendChild(source_monster_dies);
+	var source_monster_roar = document.createElement('source');
+	source_monster_roar.src = monsterArr[22];
+	monsterObj.audio_monster_roar.appendChild(source_monster_roar);
+	var source_monster_attack = document.createElement('source');
+	source_monster_attack.src = monsterArr[23];
+	monsterObj.audio_monster_attack.appendChild(source_monster_attack);
+	var source_monster_click = document.createElement('source');
+	source_monster_click.src = monsterArr[24];
+	monsterObj.audio_monster_click.appendChild(source_monster_click);
+
+	
+	//console.log("loading monstere " + i);
+	
+}
+
+function load_saved_monsters (saved_monsters_arr) {
+	var loader = new THREE.JSONLoader();
+	for (i=0; i<saved_monsters_arr.length; i++)
+	{
+		level_monster = getMonsterFromLevelArrayByID(saved_monsters_arr[i].gameID);
+		var munster = new Monster();
+		loadMonsterDataFromLevelArray(munster,level_monster);
+		munster.position.x = saved_monsters_arr[i].position.x;
+		munster.position.z = saved_monsters_arr[i].position.z;
+		munster.position.y = 0;
+		munster.target.x = munster.position.x;
+		munster.target.z = munster.position.z;
+		munster.target.y = munster.position.y;
+		munster.rotation = saved_monsters_arr[i].rotation;
+		munster.hp = saved_monsters_arr[i].hp;
+		munster.mood = saved_monsters_arr[i].mood;
+		loadMonsterCheck(loader,munster);
+		//loader.callbackProgress = callbackProgress;
+		array_of_monsters.push(munster);
+	}
+}
 				
 //load monsters on the map
 function load_monsters () {
@@ -299,7 +384,7 @@ function load_monsters () {
 		munster.position.y = 0;
 		munster.target.x = munster.position.x;
 		munster.target.z = munster.position.z;
-		munster.target.z = munster.position.z;
+		munster.target.y = munster.position.y;
 		munster.rotation = monster_array[i][5];
 		munster.hp = monster_array[i][6];
 		munster.ac = monster_array[i][7];
