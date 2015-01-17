@@ -170,8 +170,10 @@ function save_position()
 		save_data["monsters"][m]["gameID"] = array_of_monsters[m].gameID;
 		//position
 		save_data["monsters"][m]["position"] = {};
-		save_data["monsters"][m]["position"]["x"] = array_of_monsters[m].mesh.position.x;
-		save_data["monsters"][m]["position"]["z"] = array_of_monsters[m].mesh.position.z;
+		save_data["monsters"][m]["position"]["x"] = array_of_monsters[m].position.x;
+		save_data["monsters"][m]["position"]["z"] = array_of_monsters[m].position.z;
+		//rotation
+		save_data["monsters"][m]["rotation"] = array_of_monsters[m].rotation;
 		//mood
 		save_data["monsters"][m]["mood"] = array_of_monsters[m].mood;
 		//hp
