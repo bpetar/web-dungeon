@@ -96,7 +96,7 @@ function propOnClick5()
 
 
 //props x,z,model,onClick script
-var propsArr = [[111, 9, 3, "models/spears.js", propOnClick1], [112, 11, 5, "models/spears.js", propOnClick4], [113, 14, 6, "models/spears.js", propOnClick4], [113, 15, 9, "models/spears_blood.js", propOnClick2], [114, 10, 10, "models/spears.js", propOnClick4], [114, 8, 13, "models/spears_blood.js", propOnClick2], [114, 13, 15, "models/spears.js", propOnClick3], [114, 11, 14, "models/spears.js", propOnClick4] ,[13,3, 0, "models/boulder.js", propOnClick5]];
+var propsArr = [[111, 9, 3, "models/spears.js", propOnClick1], [112, 11, 5, "models/spears.js", propOnClick4], [113, 14, 6, "models/spears.js", propOnClick4], [113, 15, 9, "models/spears_blood.js", propOnClick2], [114, 10, 10, "models/spears.js", propOnClick4], [114, 8, 13, "models/spears_blood.js", propOnClick2], [114, 13, 15, "models/spears.js", propOnClick3], [114, 11, 14, "models/spears.js", propOnClick4], [115, 10, 4, "maps/level3/models/boulder.json", propOnClick5]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
