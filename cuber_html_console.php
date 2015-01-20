@@ -45,10 +45,10 @@
 				<div id="id-character-screen-bracers-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:70px; height:64px; width:64px; background:url(media/gui/root.png); background-size: 100% 100%; border:0px solid yellow;">
 				</div>
 			
-				<div id="id-character-screen-weapon-l-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:140px; height:64px; width:64px; border:0px solid yellow;">
+				<div id="id-character-screen-weapon-l-icon" style="position:absolute; font-size:14px; text-align:center; left:455px; top:300px; height:64px; width:64px; border:0px solid yellow; background-size: 100% 100%;">
 				</div>
 				
-				<div id="id-character-screen-weapon-r-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:140px; height:64px; width:64px; border:0px solid yellow;">
+				<div id="id-character-screen-weapon-r-icon" style="position:absolute; font-size:14px; text-align:center; left:240px; top:300px; height:64px; width:64px; border:0px solid yellow; background-size: 100% 100%;">
 				</div>
 				
 				<div id="id-character-screen-pants-icon" style="position:absolute; font-size:14px; text-align:center; left:206px; top:250px; height:64px; width:64px; background:url(media/rhand.png); background-size: 100% 100%; border:0px solid yellow;">
@@ -57,7 +57,7 @@
 				<div id="id-character-screen-boots-icon" style="position:absolute; font-size:14px; text-align:center; left:464px; top:250px; height:64px; width:64px; background:url(media/rhand.png); background-size: 100% 100%; border:0px solid yellow;">
 				</div>
 				
-				<div id="id-character-screen-stats" style="position:absolute; font-size:14px; text-align:left; left:24px; top:86px; height:164px; width:164px; border:1px solid yellow;">
+				<div id="id-character-screen-stats" style="position:absolute; font-size:14px; text-align:left; left:24px; top:200px; height:164px; width:164px; border:0px solid yellow;">
 					<span > Level:</span> <span id="id-character-screen-stats-level">0</span><br>
 					<span > Next Level:</span> <span id="id-character-screen-stats-level">1000</span><br>
 					<span > Experience:</span> <span id="id-character-screen-stats-experience">0</span><br><br>

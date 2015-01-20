@@ -727,6 +727,10 @@
 						//"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20}
 						load_saved_monsters(last_saved_data.monsters);
 						
+						//doors
+						//this must be called before load_level();
+						load_saved_doors(last_saved_data.doors);
+						
 					}
 					else
 					{
@@ -801,6 +805,7 @@
 				
 				
 				//load level walls and floors etc..
+				//should be called after load_saved_doors because it will set the doors opened for saved position
 				load_level();
 
 				//load lights
