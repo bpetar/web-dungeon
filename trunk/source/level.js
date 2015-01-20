@@ -93,7 +93,18 @@ function loadDoorways( geometry, materials )
 		scene.add( mesh );
 	}
 }
-			
+
+//savedDoorsArr is just array of indexes of opened doors..
+//set opened door flag to 1, then setDoorOpened will be called
+function load_saved_doors( savedDoorsArr )
+{
+	for (i=0; i<savedDoorsArr.length; i++)
+	{
+		doorsArr3D[savedDoorsArr[i]][3] = 1;
+	}
+}
+
+
 function loadDoors( geometry, materials )
 {
 

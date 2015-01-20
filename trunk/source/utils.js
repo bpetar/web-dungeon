@@ -247,6 +247,7 @@ function setDoorOpened(door)
 			{
 				//opening door to the left, depends on initial door rotation
 				orientation = door[2];
+					
 				if(orientation == 0)
 				{
 					door[4].rotation.y = Math.PI/2;
@@ -254,6 +255,8 @@ function setDoorOpened(door)
 				else if(orientation == 1)
 				{
 					door[4].rotation.y = Math.PI*2;
+					door[4].position.x -=4.0;
+					door[4].position.z +=4.0;
 				}
 				else if(orientation == 2)
 				{
