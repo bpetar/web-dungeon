@@ -6,7 +6,7 @@ var array_of_pickables = [];
 function load_saved_pickables(saved_pickables) {
 
 	var loader = new THREE.JSONLoader();
-	//{"gameID":2,"x":103,"y":6,"z":41,"niched":-1}
+	//{"gameID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1}
 	for(var i=0; i<saved_pickables.length; i++) {
 		var picki = create_game_object();
 		var item = get_item_by_id(saved_pickables[i].gameID);
@@ -54,9 +54,12 @@ function load_saved_pickables(saved_pickables) {
 //load pickable 3d models on the map
 function load_pickables () {
 
-	var loader = new THREE.JSONLoader();
+	//var loader = new THREE.JSONLoader();
 	
-	for(var i=0; i<pickables_array.length; i++) {
+	//pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1}
+	load_saved_pickables(pickables_array);
+	
+	/*for(var i=0; i<pickables_array.length; i++) {
 		var picki = create_game_object();
 		picki.gameID = pickables_array[i][0];
 		picki.name = pickables_array[i][1];
@@ -91,6 +94,6 @@ function load_pickables () {
 		//loader.load( picki.model, picki.loadObject(picki) );
 		
 		array_of_pickables.push(picki);
-	}
+	}*/
 
 }

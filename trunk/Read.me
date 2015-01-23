@@ -126,7 +126,6 @@ optimizations:
 + game object load
 + monster loading
 + decor pillars
-- preloading images
 - app cache models http://www.html5rocks.com/en/tutorials/appcache/beginner/
 
 --- third level:
@@ -140,13 +139,8 @@ optimizations:
   + (P) make room pillars gone!
   - (M) hard texture line on egdes
   - (M) pixel align on edges
-  - (M) pile of dirt rocks blocking the passage
-- (A) make worm sounds
-- (M) make wooden doors
-~ (M) make smaller worms give soft hearth
-~ (M) make big worm give hard hearth
-~ (P) make hard heart glow when rubbed
-~ (M) make wall torches with hard worm earth hearts - glow when rubbed
+  + (M) pile of dirt rocks blocking the passage
++ (M) make wooden doors
 + (D) make player dialog speech bubble!
 + (P) make notification: next level is not finished
 + (P) smaller health at start!
@@ -169,10 +163,8 @@ optimizations:
 + make wooden beam pillars
 + make curved walls
 + fill some open corners
-~ make root/rope pickable item
-~ boy face
 
-- game functioning
++ game functioning
  + loading screen
  + gui redesign
    + dialog speech redesign to fit
@@ -211,8 +203,8 @@ optimizations:
    + console background image
    + icons?
    + tip to right click root!
-   - tip to left click to attack
-   - hand icon is not like inventory icon
+   ~ tip to left click to attack
+   + hand icon is not like inventory icon
    + dialogs redesign: 
     + you have been killed
 	+ wall writing
@@ -220,21 +212,7 @@ optimizations:
 	+ registration
  + hand damage is too big
  + item description div on hover
- - icon stack in inventory
- - scroll desc
  + all pickable items in separate file (json?), only id to be used in level arrays
- - options screen 
-  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
-  - pause game loop
-  - gray out inventory and players and don't allow item interaction and clicks
-  - new
-  - load
-  + save
-  - register
-  - donate
-  - settings
-  - credits
-  - help
  + character screen (dressup)
   + level, next level, xp, attack, defence, strength, dexterity, equipment
   + put stake in empty hand (reflect on the left slot as well)
@@ -242,22 +220,6 @@ optimizations:
   + replace one weapon with another (reflect on the left slot as well)
   + highlight weapon hand when pickable at hand
   + bug in: drop on the ground not working
-  - replace hud with nice birdao picture
- - money, experience, leveling, skills
- - magic
- - mouse and key events in separate js file
- - php session
- - record player movements (clicks and keypresses) and time, and reproduce gameplay
- - php login 
- - cookies: playing unregistered..
- - make dirt rock throwing weapon
-  + bug: right click consumes the rock?
-  - light hands when rock is picked
-  - add damage to rock
-  - attack with rock throws 3d model
-  - thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
-  - thrown item falls on the ground
-  - thrown item is automatically picked up??? (animation of picking)
  + add ajax
  + save
  - load game
@@ -267,19 +229,51 @@ optimizations:
   + pickables on the floor
   + niches
   + monsters
-  - doors
-  - 
- - save game in cookie for unregistered users
- - save game in mysql for registered - they can login to play from another computer
- - after loading health bar is not dropping while fighting monster (and suddenly you die)
+  + doors
+  - plates
+  - chest (container) content
+
+ 
+ finish first level:
+ - (A) make worm sounds
+ - (A) add root munching sound
+ - dust spec particles..
  - when you die, restart should start new game, and load should load saved game
- - close character hud on gui x
- - add root munching sound
- - change pickables array in map file to hold only id and position of items
- - redesign editor site (combine game and demo?)
- - magic atlas book of maps flies to special slot and particles sprinkle
- - compass flies to its special slot. it turns to show north.
- - lantern flies to its slot. lantern is refiled with light stones
+ - save game in cookie for unregistered users
+ + change pickables array in map file to hold only id and position of items
+ + scroll desc
+ - replace all icons with brown background
+ - after loading health bar is not dropping while fighting monster (and suddenly you die)
+ - icon stack in inventory
+ - add animated chain model that swings when clicked.
+ - character hud
+	  - close character hud on gui x
+	  - add slot icons
+	  - change text "inventory"
+	  - replace image with new Birdao pic
+ - options screen 
+	  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
+	  - pause game loop
+	  - gray out inventory and players and don't allow item interaction and clicks
+	  - new
+	  - load
+	  + save
+	  - register (uh oh)
+	  - donate (link to some cancer charity)
+	  - settings (TODO, maybe just sound)
+	  - credits should link to peoples pages
+	  - help should link to facebook page and email
+ - make dirt rock throwing weapon
+	  + bug: right click consumes the rock?
+	  - light hands when rock is picked
+	  - add damage to rock
+	  - attack with rock throws 3d model
+	  - thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
+	  - thrown item falls on the ground
+	  - thrown item is automatically picked up??? (animation of picking)
+ - boy face
+ - preloading images
+
 
 
 - make level editor
@@ -292,24 +286,39 @@ optimizations:
  - move around the dungeon
  + print curent coordinate
  - use same loading file as game
+ - redesign editor site (combine game and demo?)
 
 --- various game features todo: 
 
 + change attack to left click..
 - make worm control 
-- dust spec particles..
 - make worm dig passage in ground..
 - make player draw map in game??
+~ make rope pickable item
 - make two handed weapons (add shovel), or not?? 
 - player grunts, golem wound and attack are not sounded, 
 - revise door loading to optimize and support different doors on one level!
 - sound off/on button
+- money, experience, leveling, skills
+- magic
+- mouse and key events in separate js file
 - fight music
+- php session
+- php login 
+- save game in mysql for registered - they can login to play from another computer
+- record player movements (clicks and keypresses) and time, and reproduce gameplay
 - registration fail: your email was wrong should have printed the wrong mail, and offer re-registration.
 - drink potion sound
 - secrets found checks win array :)
 - add glowing worm harth?
+- magic atlas book of maps flies to special slot and particles sprinkle
+- compass flies to its special slot. it turns to show north.
+- lantern flies to its slot. lantern is refiled with light stones
 ~ make item combining
+~ (M) make smaller worms give soft hearth
+~ (M) make big worm give hard hearth
+~ (P) make hard heart glow when rubbed
+~ (M) make wall torches with hard worm earth hearts - glow when rubbed
 / add tips dialog: "press i to open inventory"
 + item info on mouse pause
 + make speech bubbles for boy

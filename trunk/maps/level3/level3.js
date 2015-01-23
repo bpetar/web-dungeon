@@ -17,7 +17,7 @@ function levelOnLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 19;
+var totalModels = 21;
 
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [13,3], [14,3], [10,4], [10,3], [9,3]];
@@ -115,13 +115,12 @@ var buttons_array = [];
 //keyholes
 var keyholes_array = [];
 
-
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [
-[2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
-[3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
-[4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
-[5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 13.3, 4.8, 0, "media/ground_rock.png", "media/gui/ground_rock_icon.png", "<span style='color:green;'> Nothing to do with this </span>", "0", 1]];
+var pickables_array = [{"gameID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":131,"y":0,"z":44,"niched":-1,"plated":-1}];
+// [2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
+// [3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
+// [4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
+// [5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 13.3, 4.8, 0, "media/ground_rock.png", "media/gui/ground_rock_icon.png", "<span style='color:green;'> Nothing to do with this </span>", "0", 1]];
 ////////////////////////////////////////////////
 
 var monsterEncountered = false;
@@ -156,8 +155,8 @@ var MONSTER_ATTACK_FRAME = 40;
 var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 
-// id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","Desc", "models/scroll.js", "media/scrolly.png", "media/gui/scroll.png", "A map! Oh now I see.. wait where am I?", "script_showScroll_lvl3_map"]];
+// niche_pickables_array just contains id of items
+var niche_pickables_array1 = [4];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5, 8, 1, niche_pickables_array1]];
