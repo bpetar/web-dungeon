@@ -10,11 +10,35 @@ function loadNiches() {
 		var loader = new THREE.JSONLoader();
 		var niche_pickables = nicheArr[n][3];
 		for(var i=0; i<niche_pickables.length; i++) {
+			
 			var picki = create_game_object();
-			picki.gameID = niche_pickables[i][0];
-			picki.name = niche_pickables[i][1];
-			picki.description = niche_pickables[i][2];
-			picki.model = niche_pickables[i][3];
+			var item = get_item_by_id(niche_pickables[i]);
+			console.log(item);
+								
+			picki.gameID = niche_pickables[i];
+			
+			picki.name = item.name;
+			picki.description = item.desc;
+			picki.model = item.model;
+			
+			picki.icon = item.icon;
+			picki.icon2 = item.icon2;
+			picki.useHint = item.useHint;
+			
+			picki.useScript = item.useScript;
+			
+			picki.consumable = (item.type == "consumable")?true:false;
+			
+			if(item.type == "weapon")
+			{
+				picki.weapon_speed = item.weapon_prop.speed;
+				picki.weapon_dmg = item.weapon_prop.damage;
+				picki.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
+				picki.weapon_attack_bonus = item.weapon_prop.attack_bonus;
+				//TODO:
+				//"type":"melee", "hand":"one", "damage_type":"piercing",
+			}
+			
 			mover = -1+i/2;
 			
 			//check niche position and place pickable in it accordingly
@@ -83,16 +107,9 @@ function loadNiches() {
 				}
 			}
 			
-			picki.icon = niche_pickables[i][4];
-			picki.icon2 = niche_pickables[i][5];
 			picki.niched = n; //flag indicating if pickable is in the niche
 			picki.plated = -1; //flag indicating if pickable is on the plate
 			
-			picki.useHint = niche_pickables[i][6];
-			if(niche_pickables[i].length>7)
-			{
-				picki.useScript = niche_pickables[i][7];
-			}
 			
 			//loader.load( picki.model, picki.loadObject(picki) );
 			loadGameObjectCheck(loader, picki);
