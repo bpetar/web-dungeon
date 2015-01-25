@@ -83,6 +83,8 @@
 		
 		function toggleCharHud()
 		{
+			audio_click.currentTime = 0;
+			audio_click.play();
 			if(characterHudOpened)
 			{
 				document.getElementById('id-character-screen-container').style.display='none';
