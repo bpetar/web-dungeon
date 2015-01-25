@@ -859,7 +859,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url(media/gui/slot2.png)";
+					document.getElementById("id-character-screen-weapon-l-icon").style.backgroundImage = "url(media/gui/shield_slot.png)";
 				}
 				//right hand
 				if(martin_equipment.right_hand_item != 0)
@@ -868,7 +868,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-weapon-r-icon").style.backgroundImage = "url(media/gui/slot2.png)";
+					document.getElementById("id-character-screen-weapon-r-icon").style.backgroundImage = "url(media/gui/sword_slot.png)";
 				}
 				//helmet
 				if(martin_equipment.helmet != 0)
@@ -877,7 +877,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-helmet-icon").style.backgroundImage = "url(media/gui/helmet_empty.png)";
+					document.getElementById("id-character-screen-helmet-icon").style.backgroundImage = "url(media/gui/helmet_slot.png)";
 				}
 				//boots
 				if(martin_equipment.boots != 0)
@@ -886,7 +886,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-boots-icon").style.backgroundImage = "url(media/gui/boots_empty.png)";
+					document.getElementById("id-character-screen-boots-icon").style.backgroundImage = "url(media/gui/boots_slot.png)";
 				}
 				//pants
 				if(martin_equipment.pants != 0)
@@ -895,7 +895,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-pants-icon").style.backgroundImage = "url(media/gui/pants_empty.png)";
+					document.getElementById("id-character-screen-pants-icon").style.backgroundImage = "url(media/gui/pants_slot.png)";
 				}
 				//armour
 				if(martin_equipment.armour != 0)
@@ -904,7 +904,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-armour-icon").style.backgroundImage = "url(media/gui/armour_empty.png)";
+					document.getElementById("id-character-screen-armour-icon").style.backgroundImage = "url(media/gui/armour_slot.png)";
 				}
 				//necklace
 				if(martin_equipment.necklace != 0)
@@ -913,7 +913,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-necklace-icon").style.backgroundImage = "url(media/gui/necklace_empty.png)";
+					document.getElementById("id-character-screen-necklace-icon").style.backgroundImage = "url(media/gui/necklace_slot.png)";
 				}
 				//bracers
 				if(martin_equipment.bracers != 0)
@@ -922,7 +922,7 @@
 				}
 				else
 				{
-					document.getElementById("id-character-screen-bracers-icon").style.backgroundImage = "url(media/gui/bracers_empty.png)";
+					document.getElementById("id-character-screen-bracers-icon").style.backgroundImage = "url(media/gui/bracers_slot.png)";
 				}
 				/*
 				martin_equipment.ring_left = 0;
@@ -1549,7 +1549,6 @@
 							if((x_pos > lefthandslot.x)&&(x_pos < lefthandslot.x+64)&&(y_pos < lefthandslot.y+64)&&(y_pos > lefthandslot.y))
 							{
 								mouse_over_char_hud_left_hand_slot = 1;
-								console.log('wtf?');
 								setCursor('pointer');
 								return;
 							}
