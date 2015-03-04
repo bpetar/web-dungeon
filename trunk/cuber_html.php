@@ -186,3 +186,74 @@
 				<div id="progressbar" style="font-size:12px; color:#ff0000">o o o o o o o o o o</div>
 			</div>
 		</div>
+		
+		<div id="id-main-menu" style="position:absolute; width:100%; height:100%; top:0; margin: auto; background-color: #000000; z-index:4;">
+
+			<div id="id-main-menu-sub" style="position:absolute; width:400px; height:600px; background: #00c url(media/dragon.png); background-size: 100% 100%; left:0; right:0; top:0; bottom:0; margin: auto;">
+				<span id="main_menu_message" style="font-size:14px;">Great earthquake awoke the dragon. Or was it the other way around? It was not the mindless beast, the dragon, but ancient malice with wit and wisdom that no man could match.</span> <br>
+				<br><br><br><br><br><br><br><br><br><br><br>
+				
+				<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
+				</div>
+				<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
+				</div>
+				<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
+				</div>
+				<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
+				</div>
+				<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
+				</div>
+				
+			</div>
+		</div>
+		
+		<script>
+		
+		function mainMenuMouseOut()
+		{
+			remove_element_class("id-main-menu-new","shadow");
+			remove_element_class("id-main-menu-load","shadow");
+			remove_element_class("id-main-menu-settings","shadow");
+			remove_element_class("id-main-menu-register","shadow");
+			remove_element_class("id-main-menu-credits","shadow");
+		}
+		
+		function mainMenuMouseOverNew()
+		{
+			add_element_class("id-main-menu-new","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverLoad()
+		{
+			if(saved_game)
+			{
+				add_element_class("id-main-menu-load","shadow");
+				audio_click.currentTime = 0;
+				audio_click.play();
+			}
+		}
+		
+		function mainMenuMouseOverSettings()
+		{
+			add_element_class("id-main-menu-settings","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverRegister()
+		{
+			add_element_class("id-main-menu-register","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverCredits()
+		{
+			add_element_class("id-main-menu-credits","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		</script>

@@ -235,28 +235,59 @@ optimizations:
 
  
  finish first level:
- - (A) make worm sounds
- - (A) add root munching sound
- - dust spec particles..
- - when you die, restart should start new game, and load should load saved game
- - save game in cookie for unregistered users
  + change pickables array in map file to hold only id and position of items
  + scroll desc
  + replace all icons with brown background
- - after loading health bar is not dropping while fighting monster (and suddenly you die)
- - icon stack in inventory
- - add animated chain model that swings when clicked.
+ + when you die, restart should start new game
+	+ doors
+	+ remove position saved in php
+	+ highlight hand on stake pick for new game
+	+ dehighlight highlighted hands (also for load)
+	+ show dialog "you wake up"
+	+ rock is not returned back in place (also stake) ((also root))
+	+ inventory stays highlighted
+	+ niched item does not reappear
+	+ dead monster blocks the passage
  + character hud
 	  + close character hud on gui x
 	  + add slot icons
 	  + change text "inventory"
 	  + replace image with new Birdao pic
+ + save/load game in cookie for unregistered users
+	 - BUG: you wake up pops up after loading
+	 - BUG: nice worm up pops up after loading
+	 - BUG: save game increases array_of_pickables each time
+	 - BUG: after loading health bar is not dropping while fighting monster (and suddenly you die)
+	 - BUG: game loaded with stake equipped doesnt seems to place it in pickables array, after loading again it disappears.
+	 - BUG: load button should be grayed out if no saved game on death screen
+	 - BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
+ - game starts with main menu: new load options register credits
+	  + add text that writes beginning of the story and setup
+	  + dont load first level in main menu if load is available
+	  - link buttons to functionality
+	    + new
+		+ load
+		- settings
+		- register
+		- credits
+	  + load is grayed out if not available
+	  + load is white if available
+	  + on hover change light and sound
+	  - music plays in main menu
+	  + impressive picture with dragon in main menu
+	  - images are preloading while in main menu..
+ - boy face
+ - preloading images
+ - (B) put stake in hand, then open char hud - it glows green
+ - (B) doors are opened wherever you click schtuck
+ - (B) console log opened shows wrong background
+ - icon stack in inventory
  - options screen 
 	  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
 	  - pause game loop
 	  - gray out inventory and players and don't allow item interaction and clicks
-	  - new
-	  - load
+	  + new
+	  + load
 	  + save
 	  - register (uh oh)
 	  - donate (link to some cancer charity)
@@ -271,11 +302,14 @@ optimizations:
 	  - thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
 	  - thrown item falls on the ground
 	  - thrown item is automatically picked up??? (animation of picking)
- - boy face
- - preloading images
-
-
-
+ - dust spec particles..
+ - add animated chain model that swings when clicked.
+ - (A) First Level Music 
+ - (A) Main Menu Music
+ - (A) make worm sounds
+ - (A) add root munching sound
+ - (O) merge static geometries, increase in performance! http://learningthreejs.com/blog/2011/10/05/performance-merging-geometry/
+ 
 - make level editor
  - make sqare borders transparent between neighboring squares
  - 0 index floor is not working in editor.. (20-0 = 20 -> array out of bounds)
@@ -327,9 +361,6 @@ optimizations:
  - functionality for other slots
  - character name
  - more tabs
-- game starts with main menu: new load options register credits
- - music plays in main menu
- - impressive picture with dragon in main menu
- - images are preloading while in main menu..
+- rss feed
 
-- add new team membersinstructions
+- add new team members instructions

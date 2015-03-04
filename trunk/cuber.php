@@ -16,15 +16,25 @@
 	
 	echo "<script src='./source/three.min.js'></script>";
 	
-	if (isset($_COOKIE["cubish_userw"]))
+	if (isset($_COOKIE["cubish_user"]))
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
 		//get last saved game of this user
-		$json_save_data = '{"data_type":"save","position":{"x":5,"z":12},"rotation":3,"desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":11,"martin_strength":11,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"current_level":3,"inventory":[{"slot":1,"gameID":2},{"slot":2,"gameID":4},{"slot":4,"gameID":5}],"left_hand_item":3,"right_hand_item":5,"doors":[0],"pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":103,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":98,"y":0,"z":56,"niched":-1,"plated":-1},{"gameID":4,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":2,"position":{"x":15,"z":18},"rotation":0,"mood":1,"hp":1},{"gameID":12,"position":{"x":14,"z":17},"rotation":0,"mood":1,"hp":1}]}';
-		echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
+		//$json_save_data = '{"data_type":"save","desc":"data to be saved","user_id":123,"martin_level":1,"martin_experience":1,"martin_HPmax":30,"martin_HPcurrent":10,"martin_strength":10,"martin_dexterity":10,"martin_attack":10,"martin_defence":10,"position":{"x":13,"z":5},"rotation":2,"current_level":3,"inventory":[{"slot":1,"gameID":2}],"left_hand_item":3,"doors":[],"pickables":[{"gameID":4,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":131,"y":0,"z":44,"niched":-1,"plated":-1},{"gameID":6,"x":43,"y":3.5,"z":79,"niched":0,"plated":-1}],"monsters":[{"gameID":121,"position":{"x":15,"z":18},"rotation":2,"mood":1,"hp":20},{"gameID":122,"position":{"x":11,"z":14},"rotation":2,"mood":1,"hp":20}]}';
 		
-		$last_saved_data = json_decode($json_save_data, true) ? : [];
-		echo "<script src='./maps/level" . $last_saved_data["current_level"] . "/level" . $last_saved_data["current_level"] . ".js'></script>";
+		//get last saved game from cookie
+		if (isset($_COOKIE["saved_game"]))
+		{
+			$json_save_data = $_COOKIE["saved_game"];
+			echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
+			$last_saved_data = json_decode($json_save_data, true) ? : [];
+			echo "<script src='./maps/level" . $last_saved_data["current_level"] . "/level" . $last_saved_data["current_level"] . ".js'></script>";
+		}
+		else
+		{
+			echo "<script>var saved_game = false;</script> ";
+			echo "<script src='./maps/level3/level3.js'></script>";
+		}
 	}
 	else
 	{
@@ -32,7 +42,7 @@
 		$expire=time()+60*60*24*30*3;
 		$useridvalue = rand(1000000000,10000000000);
 		setcookie("cubish_user", $useridvalue, $expire);
-		echo "<script>var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
+		echo "<script>var saved_game = false; var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
 		echo "<script src='./maps/level3/level3.js'></script>";
 	}
   
@@ -74,7 +84,6 @@
 		<script src="./source/level.js"></script>
 		<script src="./source/scripts.js"></script>
 		<script src="./source/saveload.js"></script>
-		<script src="./source/items.js"></script>
 
 		<script>
 		
@@ -376,7 +385,7 @@
 			var martin_defence = 10;
 			var martin_strength = 10;
 			var martin_dexterity = 10;
-			
+			var current_level = 3;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
@@ -488,6 +497,8 @@
 			var progressbar_div;
 			var loading_msg_span;
 			var loading_div;
+			var main_menu_div;
+			var main_menu_sub_div;
 			
 			var gui_div_left_pos = 70;
 			var gui_div_top_pos = 70;
@@ -632,6 +643,8 @@
 				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 				container_div.style.top = SLOT_WIDTH +'px';
 				loading_div = document.getElementById('loading_progress');
+				main_menu_div = document.getElementById('id-main-menu');
+				main_menu_sub_div = document.getElementById('id-main-menu-sub');
 				progressbar_div = document.getElementById('progressbar');
 				loading_msg_span = document.getElementById('loading_message');
 				player1_face_div = document.getElementById('player1-face');
@@ -669,89 +682,26 @@
 					//get user last saved node data
 					if(saved_game)
 					{
-						//load game
-						console.log(last_saved_data);
-						current_position = new THREE.Vector3(last_saved_data.position.x,0,last_saved_data.position.z);
-						current_rotation = last_saved_data.rotation;
-						
-						//player data
-						martin_level = last_saved_data.level;
-						//experience
-						martin_experience = last_saved_data.experience;
-						//playerHPmax
-						playerHPmax = last_saved_data.HPmax;
-						//playerHPcurrent;
-						playerHPcurrent = last_saved_data.HPcurrent;
-						//strength
-						martin_strength = last_saved_data.strength;
-						//dexterity
-						martin_dexterity = last_saved_data.dexterity;
-						//attack
-						martin_attack = last_saved_data.attack;
-						//defence
-						martin_defence = last_saved_data.defence;
-						
-						//level
-						current_level = last_saved_data.current_level;
-						
-						//inventory
-						loadInventory(last_saved_data.inventory)
-						
-						//equipment
-						//equipped items 
-						martin_equipment.left_hand_item = load_item_by_id(last_saved_data.left_hand_item);
-						document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
-						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
-						// right_hand_item
-						martin_equipment.right_hand_item = load_item_by_id(last_saved_data.right_hand_item);
-						document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
-						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
-						// helmet
-						//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
-						// necklace
-						//if(martin_equipment.necklace != 0) save_data["necklace"] = martin_equipment.necklace.id;
-						// armour
-						//if(martin_equipment.armour != 0) save_data["armour"] = martin_equipment.armour.id;
-						// bracers
-						//if(martin_equipment.bracers != 0) save_data["bracers"] = martin_equipment.bracers.id;
-						// boots
-						//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
-						// pants
-						//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
-	
-						
-						//pickables
-						load_saved_pickables(last_saved_data.pickables);
-						
-						//monsters
-						//"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20}
-						load_saved_monsters(last_saved_data.monsters);
-						
-						//doors
-						//this must be called before load_level();
-						load_saved_doors(last_saved_data.doors);
-						
+						//enable load game button
+						document.getElementById("id-main-menu-load").style.color="#ffffff";
 					}
 					else
 					{
 						//you been here already but didn't save game, so you start from beginning again
-
+						//disable load button
+						
 						//load pickables
-						load_pickables();
+						//load_pickables();
 						//load niches
-						loadNiches();
+						//loadNiches();
+						//load monsters
+						//load_monsters();
 					}
 				}
 				else
 				{
 					console.log("first time cubish_user_id: " + cubish_user_id);
-
-					//load pickables
-					load_pickables();
-					//load niches
-					loadNiches();
-					//load monsters
-					load_monsters();
+					//enable register button
 				}
 
 
@@ -784,8 +734,52 @@
 				container3d.style.width = middleDiv.style.width;
 				container3d.style.height = "" + (middleDiv.offsetHeight - 64) + "px";
 				
+				//adjust height and width of covering divs (main menu and loading) to port view 
+				//(fixing scroll bug where 100% height only applies to visible window viewport, while scrolling shows uncovered game)
+				if(window.innerHeight < 650)
+				{
+					main_menu_div.style.height = "650px";
+					main_menu_div.style.height = "650px";
+					loading_div.style.height = "650px";
+				}
+				if(window.innerWidth < 1120)
+				{
+					main_menu_div.style.width = "1120px";
+					main_menu_div.style.width = "1120px";
+					loading_div.style.width = "1120px";
+				}
+				
 				camera = new THREE.PerspectiveCamera( 47, middleWidth / (windowHeight-64), 2, 10000 );
 				
+				setCameraPosition();
+					
+				
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
+				//alert("container3d.offsetWidth: " +  container3d.offsetWidth + ", container3d.offsetHeight: " + container3d.offsetHeight + ", container3d.style.height: " + container3d.style.height);
+				renderer.shadowMapWidth = 128;
+				renderer.shadowMapHeight = 128;
+				renderer.shadowCameraFov = 50;
+
+				container3d.appendChild( renderer.domElement );
+
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'mousedown', onMouseDown, false );
+				document.addEventListener( 'mouseup', onMouseUp, false );
+				
+				//loading_div.style.display = "none";
+				
+				// initialize object to perform world/screen calculations
+				projector = new THREE.Projector();
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				renderer.shadowMapEnabled = true;
+
+			}
+
+			function setCameraPosition()
+			{
 				if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
 				else if(current_rotation==1) camera.position.x = current_position.x*10-5;
 				else camera.position.x = current_position.x*10+5;
@@ -801,9 +795,114 @@
 				else if(current_rotation==2) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10-5); //160,4,125
 				else camera.look = new THREE.Vector3(current_position.x*10-5,4,current_position.z*10); //160,4,125
 				camera.lookAt(camera.look);
-					
+			}
+			
+			function mainMenuLoadGame()
+			{
+				main_menu_div.style.display = "none";
 				
+				console.log(last_saved_data);
+				current_position = new THREE.Vector3(last_saved_data.position.x,0,last_saved_data.position.z);
+				current_rotation = last_saved_data.rotation;
 				
+				//player data
+				martin_level = last_saved_data.level;
+				//experience
+				martin_experience = last_saved_data.experience;
+				//playerHPmax
+				playerHPmax = last_saved_data.HPmax;
+				//playerHPcurrent;
+				playerHPcurrent = last_saved_data.HPcurrent;
+				//strength
+				martin_strength = last_saved_data.strength;
+				//dexterity
+				martin_dexterity = last_saved_data.dexterity;
+				//attack
+				martin_attack = last_saved_data.attack;
+				//defence
+				martin_defence = last_saved_data.defence;
+				
+				//level
+				current_level = last_saved_data.current_level;
+				
+				//inventory
+				loadInventory(last_saved_data.inventory)
+				
+				//equipment
+				//equipped items 
+				if(last_saved_data.left_hand_item)
+				{
+					martin_equipment.left_hand_item = load_item_by_id(last_saved_data.left_hand_item);
+					document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
+					document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+				}
+				// right_hand_item
+				if(last_saved_data.right_hand_item)
+				{
+					martin_equipment.right_hand_item = load_item_by_id(last_saved_data.right_hand_item);
+					document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
+					document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+				}
+				// helmet
+				//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
+				// necklace
+				//if(martin_equipment.necklace != 0) save_data["necklace"] = martin_equipment.necklace.id;
+				// armour
+				//if(martin_equipment.armour != 0) save_data["armour"] = martin_equipment.armour.id;
+				// bracers
+				//if(martin_equipment.bracers != 0) save_data["bracers"] = martin_equipment.bracers.id;
+				// boots
+				//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
+				// pants
+				//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
+
+				//pickables
+				load_saved_pickables(last_saved_data.pickables);
+				
+				//monsters
+				//"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20}
+				load_saved_monsters(last_saved_data.monsters);
+				
+				//doors
+				//this must be called before load_level();
+				load_saved_doors(last_saved_data.doors);
+
+				//load level walls and floors etc..
+				//should be called after load_saved_doors because it will set the doors opened for saved position
+				load_level();
+
+				//load lights
+				load_lights();
+				
+				//load tapestries
+				load_tapestries();
+				
+				//load pressure plates (plynths)
+				load_plates ();
+				
+				//load chests
+				load_containers();
+				
+				//level specific action on load
+				levelOnLoad();
+
+				loadCharacter();
+				
+				setCameraPosition();
+			}
+			
+			
+			function mainMenuNewGame()
+			{
+				main_menu_div.style.display = "none";
+				
+				//load pickables
+				load_pickables();
+				//load niches
+				loadNiches();
+				//load monsters
+				load_monsters();
+
 				//load level walls and floors etc..
 				//should be called after load_saved_doors because it will set the doors opened for saved position
 				load_level();
@@ -824,30 +923,7 @@
 				//level specific action on load
 				levelOnLoad();
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
-				//alert("container3d.offsetWidth: " +  container3d.offsetWidth + ", container3d.offsetHeight: " + container3d.offsetHeight + ", container3d.style.height: " + container3d.style.height);
-				renderer.shadowMapWidth = 128;;
-				renderer.shadowMapHeight = 128;
-				renderer.shadowCameraFov = 50;
-
-				container3d.appendChild( renderer.domElement );
-
-				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				document.addEventListener( 'mousedown', onMouseDown, false );
-				document.addEventListener( 'mouseup', onMouseUp, false );
-				
-				//loading_div.style.display = "none";
-				
-				// initialize object to perform world/screen calculations
-				projector = new THREE.Projector();
-
-				window.addEventListener( 'resize', onWindowResize, false );
-
 				loadCharacter();
-  
-				renderer.shadowMapEnabled = true;
-
 			}
 			
 			function loadCharacter()
@@ -1007,9 +1083,12 @@
 						{
 							if(array_of_monsters[i].gameID != id)
 							{
-								if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
+								if(array_of_monsters[i].alive)
 								{
-									return false;
+									if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
+									{
+										return false;
+									}
 								}
 							}
 						}
@@ -1385,6 +1464,32 @@
 				
 				container3d.style.height = "" + (middleDiv.offsetHeight - 64) + "px";
 				renderer.setSize( container3d.offsetWidth, container3d.offsetHeight );
+
+				
+				if(window.innerHeight < 650)
+				{
+					main_menu_div.style.height = "650px";
+					main_menu_div.style.height = "650px";
+					loading_div.style.height = "650px";
+				}
+				else
+				{
+					main_menu_div.style.height = "100%";
+					main_menu_div.style.height = "100%";
+					loading_div.style.height = "100%";
+				}
+				if(window.innerWidth < 1120)
+				{
+					main_menu_div.style.width = "1120px";
+					main_menu_div.style.width = "1120px";
+					loading_div.style.width = "1120px";
+				}
+				else
+				{
+					main_menu_div.style.width = "100%";
+					main_menu_div.style.width = "100%";
+					loading_div.style.width = "100%";
+				}
 				
 				//inventory_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
 
@@ -1411,7 +1516,7 @@
 			function onPageLoad()
 			{
 				//alert("page loaded!");
-				remove_loading_screen();
+				//remove_loading_screen();
 			}
 			
 			//there are 10 loading points (squares) each should ligh up when percentage cross it
@@ -1419,6 +1524,9 @@
 			{
 				console.log("update loading screen");
 				//remove loading screen
+				if(perc==100)
+					setInterval(function(){remove_loading_screen()}, 1000);
+				
 				var loadingPoint = Math.round(perc/10); 
 				loading_msg_span.innerHTML = "Loading " + perc + "%";
 				if(loadingPoint==1) progressbar_div.innerHTML = "<span style='color:#22dd33'>O</span> o o o o o o o o o";
@@ -1456,9 +1564,9 @@
 					//also show weapon in hand info for comparison :)
 					var dmg_bonus = "";
 					if(item.weapon_dmg_bonus>0) dmg_bonus = "+"+item.weapon_dmg_bonus;
-					document.getElementById("id-item-info-speed").innerHTML = item.weapon_speed;
-					document.getElementById("id-item-info-dmg").innerHTML = "d"+item.weapon_dmg+dmg_bonus;
-					document.getElementById("id-item-info-attack-bonus").innerHTML = item.weapon_attack_bonus;
+					//document.getElementById("id-item-info-speed").innerHTML = item.weapon_speed;
+					//document.getElementById("id-item-info-dmg").innerHTML = "d"+item.weapon_dmg+dmg_bonus;
+					//document.getElementById("id-item-info-attack-bonus").innerHTML = item.weapon_attack_bonus;
 				}
 			}
 			

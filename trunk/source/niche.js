@@ -12,11 +12,10 @@ function loadNiches() {
 		for(var i=0; i<niche_pickables.length; i++) {
 			
 			var picki = create_game_object();
-			var item = get_item_by_id(niche_pickables[i]);
-			console.log(item);
-								
 			picki.gameID = niche_pickables[i];
-			
+			picki.itemID =all_items_array[niche_pickables[i]];
+
+			var item = get_item_by_id(picki.itemID);
 			picki.name = item.name;
 			picki.description = item.desc;
 			picki.model = item.model;
