@@ -10,13 +10,47 @@ function get_item_by_id(id)
 	return all_items[""+id+""];
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+//look up pickable in saved array
+function isPickableSaved(pickable, saved_pickables)
+{
+	for(var i=0;i<saved_pickables.length;i++)
+	{
+		if(saved_pickables[i].gameID==pickable.gameID)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 //loads item in game with 3d model and everything
-function load_item_by_id(id)
+function load_item_by_id(gameID)
 {
 	var loader = new THREE.JSONLoader();
+	
 	var game_item = create_game_object();
-	var item = get_item_by_id(id);
-	game_item.gameID = id;
+	game_item.gameID = gameID;
+	game_item.itemID = all_items_array[gameID];
+	
+	var item = get_item_by_id(game_item.itemID);
 	game_item.name = item.name;
 	game_item.description = item.desc;
 	game_item.model = item.model;
@@ -265,6 +299,61 @@ function setDoorOpened(door)
 				else if(orientation == 3)
 				{
 					door[4].rotation.y = Math.PI;
+				}
+
+			}
+			break;
+			case DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT:
+			{
+			}
+			break;
+			default:
+			{
+			}
+		}
+	}
+}
+
+
+function setDoorClosed(door)
+{
+	if(door.length > 7)
+	{
+		open_style = door[7];
+		
+		switch(open_style)
+		{
+			case DOOR_ANIMATE_SLIDE_DOWN_UP:
+			{
+				door[4].position.y = 0;
+			}
+			break;
+			case DOOR_ANIMATE_SLIDE_RIGHT_LEFT:
+			{
+			}
+			break;
+			case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
+			{
+				//opening door to the left, depends on initial door rotation
+				orientation = door[2];
+					
+				if(orientation == 0)
+				{
+					door[4].rotation.y = 0;
+				}
+				else if(orientation == 1)
+				{
+					door[4].rotation.y = 3*Math.PI/2;
+					door[4].position.x +=4.0;
+					door[4].position.z -=4.0;
+				}
+				else if(orientation == 2)
+				{
+					door[4].rotation.y = Math.PI;
+				}
+				else if(orientation == 3)
+				{
+					door[4].rotation.y = Math.PI/2;
 				}
 
 			}

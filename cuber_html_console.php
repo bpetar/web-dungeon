@@ -77,9 +77,9 @@
 			
 				<div id="id-options-container2" style="position:absolute; background:url(media/gui/background_up_green.png) repeat; bottom:1px; left:10px; width:210px; border:1px solid #003300;">
 				
-					<div id="id-options-new" onmouseover="optionsMouseOverNew()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>New</b>
+					<div id="id-options-new" onclick="optionsMouseNew()" onmouseover="optionsMouseOverNew()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>New</b>
 					</div>
-					<div id="id-options-load" onmouseover="optionsMouseOverLoad()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Load</b>
+					<div id="id-options-load" onclick="optionsMouseLoad()" onmouseover="optionsMouseOverLoad()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Load</b>
 					</div>
 					<div id="id-options-save" onclick="optionsMouseSave()" onmouseover="optionsMouseOverSave()" style="margin: auto; margin-top:6px; background:url(media/gui/buttons.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; line-height:64px;"><b>Save</b>
 					</div>
@@ -186,6 +186,18 @@
 		function optionsMouseSave()
 		{
 			save_position();
+			toggleOptions();
+		}
+		function optionsMouseLoad()
+		{
+			//ask are you sure?
+			loadGame();
+			toggleOptions();
+		}
+		function optionsMouseNew()
+		{
+			//are you sure? your progress will be lost.
+			newGame();
 			toggleOptions();
 		}
 		function optionsMouseOverSettings()

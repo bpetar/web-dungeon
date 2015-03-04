@@ -23,6 +23,7 @@ function create_game_object () {
 	gobject.id = 0;
 	gobject.niched = -1;
 	gobject.gameID = 0;
+	gobject.itemID = 0;
 	gobject.orientation = 0;
 	gobject.visible = true;
 	gobject.pressed = false;

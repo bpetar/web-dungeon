@@ -1,4 +1,9 @@
 
+//all items array. im so smart :)
+//index of item is his gameID, and value is itemID from items.json
+//every time you add pickable to the game, it must be added to this array
+//if you have gameID of item and you need itemID you just type all_items_array[gameID]
+all_items_array = [0,0,2,3,2,5,4];
 
 //this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
 var array_of_pickables = [];
@@ -9,11 +14,10 @@ function load_saved_pickables(saved_pickables) {
 	//{"gameID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1}
 	for(var i=0; i<saved_pickables.length; i++) {
 		var picki = create_game_object();
-		var item = get_item_by_id(saved_pickables[i].gameID);
-		console.log(item);
-							
 		picki.gameID = saved_pickables[i].gameID;
-		
+		picki.itemID = all_items_array[saved_pickables[i].gameID];
+
+		var item = get_item_by_id(picki.itemID);
 		picki.name = item.name;
 		picki.description = item.desc;
 		picki.model = item.model;
@@ -96,4 +100,17 @@ function load_pickables () {
 		array_of_pickables.push(picki);
 	}*/
 
+}
+
+function get_pickabe_item_by_id(id)
+{
+	for(var i=0; i< array_of_pickables; i++)
+	{
+		if(array_of_pickables[i].gameID == id)
+		{
+			return array_of_pickables[i];
+		}
+	}
+	
+	return 0;
 }

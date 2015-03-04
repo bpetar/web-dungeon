@@ -116,7 +116,7 @@ var buttons_array = [];
 var keyholes_array = [];
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [{"gameID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"x":131,"y":0,"z":44,"niched":-1,"plated":-1}];
+var pickables_array = [{"gameID":2,"itemID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"itemID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":4,"itemID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"itemID":5,"x":131,"y":0,"z":44,"niched":-1,"plated":-1}];
 // [2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
 // [3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
 // [4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
@@ -152,11 +152,11 @@ function monsterPun()
 
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[2,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [12,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[121,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [122,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
 
 
-// niche_pickables_array just contains id of items
-var niche_pickables_array1 = [4];
+// niche_pickables_array just contains gameID of items
+var niche_pickables_array1 = [6];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
 var nicheArr = [[5, 8, 1, niche_pickables_array1]];

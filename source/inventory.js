@@ -12,8 +12,10 @@ function loadInventory(inventoryArr)
 	for (i=0; i< inventoryArr.length; i++)
 	{
 		var inventory_item = create_game_object();
-		var item = get_item_by_id(inventoryArr[i].gameID);
 		inventory_item.gameID = inventoryArr[i].gameID;
+		inventory_item.itemID = all_items_array[inventoryArr[i].gameID];
+
+		var item = get_item_by_id(inventory_item.itemID);
 		inventory_item.name = item.name;
 		inventory_item.description = item.desc;
 		inventory_item.model = item.model;
@@ -46,6 +48,28 @@ function loadInventory(inventoryArr)
 		array_of_pickables.push(inventory_item);
 	}
 }
+
+//load inventory items without reloading of models and objects (only used when loading game saved on same level)
+function loadInventoryNoReloading(inventoryArr)
+{
+	//var loader = new THREE.JSONLoader();
+	console.log("loading inventory no reload");
+	for (i=0; i< inventoryArr.length; i++)
+	{
+		for(j=0; j< array_of_pickables.length; j++)
+		{
+			if(inventoryArr[i].gameID == array_of_pickables[j].gameID)
+			{
+				var inventory_item = array_of_pickables[j];
+				inventory_item.niched = -1; //flag indicating if pickable is in the niche
+				inventory_item.plated = -1; //flag indicating if pickable is in the niche
+				add_to_inventory(inventory_item, inventoryArr[i].slot);
+				break;
+			}
+		}
+	}
+}
+
 
 //TODO: remove this function
 //inventory to post
@@ -167,8 +191,24 @@ function inventory_item_remove(item)
 			//slot_icon.src = "media/none.png";
 			slot_icon.style.backgroundImage = "";
 			inventory_array.splice(i,1);
+			break;
 		}
 	}
 }
 
+
+function clear_inventory()
+{
+	for (var i=0; i<inventory_array.length; i++)
+	{
+		var slot_icon = document.getElementById("gui_slot" + inventory_array[i].slot + "_item_icon");
+		//slot_icon.src = "media/none.png";
+		slot_icon.style.backgroundImage = "";
+	}
+	
+	//they say this is fastest solution for clearing an array :)
+	while(inventory_array.length > 0) {
+		inventory_array.pop();
+	}
+}
 
