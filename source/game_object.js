@@ -34,11 +34,13 @@ function create_game_object () {
 	gobject.useScript = 0;
 	gobject.consumable = false;
 
-	//empty hand values
+	//weapon values
+	gobject.type = "none";
 	gobject.weapon_speed = 3;
-	gobject.weapon_dmg = 'undefined';
+	gobject.weapon_dmg = "undefined";
 	gobject.weapon_dmg_bonus = 0;
 	gobject.weapon_attack_bonus = 0;
+	gobject.weapon_type = "undefined";
 				
 	gobject.name_id = 0;
 	gobject.description_id = 0;

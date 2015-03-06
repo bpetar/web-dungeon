@@ -59,14 +59,16 @@ function load_item_by_id(gameID)
 	game_item.useHint = item.useHint;
 	game_item.useScript = item.useScript;
 	game_item.consumable = (item.type == "consumable")?true:false;
+	game_item.type = item.type;
 	if(item.type == "weapon")
 	{
+		game_item.weapon_type = item.weapon_prop.type;
 		game_item.weapon_speed = item.weapon_prop.speed;
 		game_item.weapon_dmg = item.weapon_prop.damage;
 		game_item.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
 		game_item.weapon_attack_bonus = item.weapon_prop.attack_bonus;
 		//TODO:
-		//"type":"melee", "hand":"one", "damage_type":"piercing",
+		//"hand":"one", "damage_type":"piercing",
 	}
 	game_item.niched = -1; //flag indicating if pickable is in the niche
 	game_item.plated = -1; //flag indicating if pickable is in the niche

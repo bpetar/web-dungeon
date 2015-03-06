@@ -28,14 +28,17 @@ function loadNiches() {
 			
 			picki.consumable = (item.type == "consumable")?true:false;
 			
+			picki.type = item.type;
+			
 			if(item.type == "weapon")
 			{
+				picki.weapon_type = item.weapon_prop.type;
 				picki.weapon_speed = item.weapon_prop.speed;
 				picki.weapon_dmg = item.weapon_prop.damage;
 				picki.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
 				picki.weapon_attack_bonus = item.weapon_prop.attack_bonus;
 				//TODO:
-				//"type":"melee", "hand":"one", "damage_type":"piercing",
+				//"hand":"one", "damage_type":"piercing",
 			}
 			
 			mover = -1+i/2;

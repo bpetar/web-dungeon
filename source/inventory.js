@@ -24,14 +24,16 @@ function loadInventory(inventoryArr)
 		inventory_item.useHint = item.useHint;
 		inventory_item.useScript = item.useScript;
 		inventory_item.consumable = (item.type == "consumable")?true:false;
+		inventory_item.type = item.type;
 		if(item.type == "weapon")
 		{
+			inventory_item.weapon_type = item.weapon_prop.type;
 			inventory_item.weapon_speed = item.weapon_prop.speed;
 			inventory_item.weapon_dmg = item.weapon_prop.damage;
 			inventory_item.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
 			inventory_item.weapon_attack_bonus = item.weapon_prop.attack_bonus;
 			//TODO:
-			//"type":"melee", "hand":"one", "damage_type":"piercing",
+			//"hand":"one", "damage_type":"piercing",
 		}
 		inventory_item.niched = -1; //flag indicating if pickable is in the niche
 		inventory_item.plated = -1; //flag indicating if pickable is in the niche

@@ -265,11 +265,19 @@
 				{
 					if(martin_equipment.left_hand_item != 0)
 					{
-						w_speed = martin_equipment.left_hand_item.weapon_speed;
-						w_dmg = martin_equipment.left_hand_item.weapon_dmg;
-						if (w_dmg=='undefined') w_dmg = 1;
-						w_dmg_bonus = martin_equipment.left_hand_item.weapon_dmg_bonus;
-						w_attack_bonus = martin_equipment.left_hand_item.weapon_attack_bonus;
+						if (martin_equipment.left_hand_item.type=="weapon") 
+						{
+							if (martin_equipment.left_hand_item.weapon_type=="throwing") 
+							{
+								throwWeapon(true);
+								return;
+							}
+							//this is weapon in hand... use stats from game object
+							w_speed = martin_equipment.left_hand_item.weapon_speed;
+							w_dmg = martin_equipment.left_hand_item.weapon_dmg;
+							w_dmg_bonus = martin_equipment.left_hand_item.weapon_dmg_bonus;
+							w_attack_bonus = martin_equipment.left_hand_item.weapon_attack_bonus;
+						}
 					}
 					console.log("left weapon dmg: " + w_dmg);
 					playerCanHitLeft = false;
@@ -280,11 +288,19 @@
 				{
 					if(martin_equipment.right_hand_item != 0)
 					{
-						w_speed = martin_equipment.right_hand_item.weapon_speed;
-						w_dmg = martin_equipment.right_hand_item.weapon_dmg;
-						if (w_dmg=='undefined') w_dmg = 1;
-						w_dmg_bonus = martin_equipment.right_hand_item.weapon_dmg_bonus;
-						w_attack_bonus = martin_equipment.right_hand_item.weapon_attack_bonus;
+						if (martin_equipment.right_hand_item.type=="weapon") 
+						{
+							if (martin_equipment.right_hand_item.weapon_type=="throwing") 
+							{
+								throwWeapon(false);
+								return;
+							}
+							//this is weapon in hand... use stats from game object
+							w_speed = martin_equipment.right_hand_item.weapon_speed;
+							w_dmg = martin_equipment.right_hand_item.weapon_dmg;
+							w_dmg_bonus = martin_equipment.right_hand_item.weapon_dmg_bonus;
+							w_attack_bonus = martin_equipment.right_hand_item.weapon_attack_bonus;
+						}
 					}
 					console.log("right weapon dmg: " + w_dmg);
 					playerCanHitRight = false;
@@ -293,7 +309,7 @@
 				}
 				else
 				{
-					//hands are bussy
+					//hands are busy
 					return;
 				}
 
@@ -336,6 +352,33 @@
 					audio_miss.play();
 				}
 			}
+			
+			function throwWeapon(isLeft)
+			{
+				
+				if(isLeft)
+				{
+					console.log("throwing left weapon..");
+					thrownWeapon = martin_equipment.left_hand_item;
+					playerCanHitLeft = false;
+					playerHitTimeoutLeft = thrownWeapon.weapon_speed*1000;
+					lhandDiv.style.opacity=0.5;
+					
+					//todo: 
+					//replace item icon with hand icon
+					//martin_equipment.left_hand_item should be set to 0
+					//show 3d mesh in front of players face
+				}
+				else
+				{
+					console.log("throwing right weapon..");
+					//todo:
+					//add code for right hand same as for left
+				}
+				
+				thrownWeaponIsFlying = true;
+			}
+			
 			
 			function hide(param) {
 				alert(param);
@@ -386,6 +429,10 @@
 			var martin_strength = 10;
 			var martin_dexterity = 10;
 			var current_level = 3;
+			
+			//throwing weapon that is sent flying
+			var thrownWeapon;
+			var thrownWeaponIsFlying = false;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
@@ -3261,6 +3308,11 @@
 						}
 					}
 					
+					//animate throwing weapon
+					if(thrownWeaponIsFlying)
+					{
+						//move item forward
+					}
 				}
 				lastTime = timeNow;
 		
