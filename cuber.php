@@ -926,6 +926,36 @@
 				loadCharacter();
 			}
 			
+			function mainMenuCredits()
+			{
+				document.getElementById("id-main-menu-buttons-container").style.display="none";
+				document.getElementById("id-main-menu-credits-container").style.display="block";
+			}
+			 
+			function mainMenuSettings()
+			{
+				document.getElementById("id-main-menu-buttons-container").style.display="none";
+				document.getElementById("id-main-menu-todo-container").style.display="block";
+			}
+			
+			function mainMenuRegister()
+			{
+				document.getElementById("id-main-menu-buttons-container").style.display="none";
+				document.getElementById("id-main-menu-todo-container").style.display="block";
+			}
+			
+			function mainMenuTodoBack()
+			{
+				document.getElementById("id-main-menu-todo-container").style.display="none";
+				document.getElementById("id-main-menu-buttons-container").style.display="block";
+			}
+			
+			function mainMenuCreditsBack()
+			{
+				document.getElementById("id-main-menu-credits-container").style.display="none";
+				document.getElementById("id-main-menu-buttons-container").style.display="block";
+			}
+			
 			function loadCharacter()
 			{
 				//left hand
@@ -1527,8 +1557,9 @@
 				if(perc==100)
 					setInterval(function(){remove_loading_screen()}, 1000);
 				
+				var roundPercentage = Math.round(perc);
 				var loadingPoint = Math.round(perc/10); 
-				loading_msg_span.innerHTML = "Loading " + perc + "%";
+				loading_msg_span.innerHTML = "Loading " + roundPercentage + "%";
 				if(loadingPoint==1) progressbar_div.innerHTML = "<span style='color:#22dd33'>O</span> o o o o o o o o o";
 				if(loadingPoint==2) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O</span> o o o o o o o o";
 				if(loadingPoint==3) progressbar_div.innerHTML = "<span style='color:#22dd33'>O O O</span> o o o o o o o";
