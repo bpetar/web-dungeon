@@ -1243,6 +1243,8 @@ function load_lights()
 	{
 		load_level_lights();
 	}
+	
+	pointLight.position.set( current_position.x*10, 4, current_position.z*10 );
 }
 
 
