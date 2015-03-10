@@ -437,21 +437,21 @@ function loadGame()
 	hide_message();
 	
 	//player data
-	martin_level = last_saved_data.level;
+	martin_level = last_saved_data.martin_level;
 	//experience
-	martin_experience = last_saved_data.experience;
+	martin_experience = last_saved_data.martin_experience;
 	//playerHPmax
-	playerHPmax = last_saved_data.HPmax;
+	playerHPmax = last_saved_data.martin_HPmax;
 	//playerHPcurrent;
-	playerHPcurrent = last_saved_data.HPcurrent;
+	playerHPcurrent = last_saved_data.martin_HPcurrent;
 	//strength
-	martin_strength = last_saved_data.strength;
+	martin_strength = last_saved_data.martin_strength;
 	//dexterity
-	martin_dexterity = last_saved_data.dexterity;
+	martin_dexterity = last_saved_data.martin_dexterity;
 	//attack
-	martin_attack = last_saved_data.attack;
+	martin_attack = last_saved_data.martin_attack;
 	//defence
-	martin_defence = last_saved_data.defence;
+	martin_defence = last_saved_data.martin_defence;
 	
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;

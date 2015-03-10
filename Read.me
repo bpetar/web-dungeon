@@ -254,13 +254,20 @@ optimizations:
 	  + change text "inventory"
 	  + replace image with new Birdao pic
  + save/load game in cookie for unregistered users
-	 - BUG: you wake up pops up after loading
-	 - BUG: nice worm up pops up after loading
-	 - BUG: save game increases array_of_pickables each time
-	 - BUG: after loading health bar is not dropping while fighting monster (and suddenly you die)
-	 - BUG: game loaded with stake equipped doesnt seems to place it in pickables array, after loading again it disappears.
-	 - BUG: load button should be grayed out if no saved game on death screen
-	 - BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
+ + BUG: you wake up pops up after loading
+ - BUG: nice worm up pops up after loading - save level specific quirks in one general purpose array of bools: quirk1_bool = true
+ - BUG: save game increases array_of_pickables each time
+ + BUG: after loading health bar is not dropping while fighting monster (and suddenly you die)
+ - BUG: game loaded with stake equipped doesnt seems to place it in pickables array, after loading again it disappears.
+ - BUG: load button should be grayed out if no saved game on death screen
+ - BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
+ - BUG: load klikce cak i kad nema snimljena igra
+ - BUG: no hp stat in char gui
+ - BUG: put stake in hand, then open char hud - it glows green
+ - BUG: doors are opened wherever you click schtuck
+ - BUG: console log opened shows wrong background
+ - BUG: new game (after dying) should clear console
+ - BUG: two new game functions are two much
  + game starts with main menu: new load options register credits
 	  + add text that writes beginning of the story and setup
 	  + dont load first level in main menu if load is available
@@ -275,9 +282,6 @@ optimizations:
 	  + on hover change light and sound
 	  + impressive picture with dragon in main menu
  - boy face
- - (BUG) put stake in hand, then open char hud - it glows green
- - (BUG) doors are opened wherever you click schtuck
- - (BUG) console log opened shows wrong background
  - icon stack in inventory
  - options screen 
 	  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!

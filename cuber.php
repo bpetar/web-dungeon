@@ -364,10 +364,31 @@
 					playerHitTimeoutLeft = thrownWeapon.weapon_speed*1000;
 					lhandDiv.style.opacity=0.5;
 					
+					//var looker = camera.look.clone().sub(camera.position);
+					//thrownWeapon.mesh.position = camera.position.clone().add(looker);
+					//thrownWeapon.mesh.position.y = 4.3;
+					//thrownWeapon.mesh.visible = true;
 					//todo: 
 					//replace item icon with hand icon
-					//martin_equipment.left_hand_item should be set to 0
+					document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+					document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+					martin_equipment.left_hand_item = 0; //should be set to 0
+
 					//show 3d mesh in front of players face
+					thrownWeaponDirection = camera.look.clone().sub(camera.position);
+					console.log(thrownWeaponDirection);
+					var throwBackMover = thrownWeaponDirection.clone(); //move throwable a bit back
+					throwBackMover.multiplyScalar(-0.1);
+					thrownWeapon.mesh.position = camera.look.clone();
+					thrownWeapon.mesh.position.add(throwBackMover);
+					thrownWeapon.mesh.position.y = 4.3;
+					thrownWeapon.mesh.visible = true;
+					
+					thrownWeaponPosition = current_position.clone();
+					thrownWeaponCubePath = 0.8;
+					
+					//thrownWeapon.mesh.position = thrownWeaponDirection.clone().add(thrownWeapon.mesh.position);
+					console.log(thrownWeapon.mesh.position);
 				}
 				else
 				{
@@ -433,6 +454,9 @@
 			//throwing weapon that is sent flying
 			var thrownWeapon;
 			var thrownWeaponIsFlying = false;
+			var thrownWeaponDirection;
+			var thrownWeaponCubePath = 0;
+			var thrownWeaponPosition;
 			
 			var projector, mouse = { x: 0, y: 0 }, INTERSECTED;
 			///var x_pos = 0;
@@ -484,7 +508,7 @@
 			//player stats
 			var player_HP_div = 0;
 			var playerHPmax = 30;
-			var playerHPcurrent = 30;
+			var playerHPcurrent = 10;
 			var playerDead = false;
 			var playerCanHitLeft = true;
 			var playerCanHitRight = true;
@@ -853,21 +877,21 @@
 				current_rotation = last_saved_data.rotation;
 				
 				//player data
-				martin_level = last_saved_data.level;
+				martin_level = last_saved_data.martin_level;
 				//experience
-				martin_experience = last_saved_data.experience;
+				martin_experience = last_saved_data.martin_experience;
 				//playerHPmax
-				playerHPmax = last_saved_data.HPmax;
+				playerHPmax = last_saved_data.martin_HPmax;
 				//playerHPcurrent;
-				playerHPcurrent = last_saved_data.HPcurrent;
+				playerHPcurrent = last_saved_data.martin_HPcurrent;
 				//strength
-				martin_strength = last_saved_data.strength;
+				martin_strength = last_saved_data.martin_strength;
 				//dexterity
-				martin_dexterity = last_saved_data.dexterity;
+				martin_dexterity = last_saved_data.martin_dexterity;
 				//attack
-				martin_attack = last_saved_data.attack;
+				martin_attack = last_saved_data.martin_attack;
 				//defence
-				martin_defence = last_saved_data.defence;
+				martin_defence = last_saved_data.martin_defence;
 				
 				//level
 				current_level = last_saved_data.current_level;
@@ -935,6 +959,8 @@
 
 				loadCharacter();
 				
+				updatePlayerHealthBar();
+
 				setCameraPosition();
 			}
 			
@@ -943,6 +969,24 @@
 			{
 				main_menu_div.style.display = "none";
 				
+
+				//player data
+				martin_level = 1;
+				//experience
+				martin_experience = 1;
+				//playerHPmax
+				playerHPmax = 30;
+				//playerHPcurrent;
+				playerHPcurrent = 10;
+				//strength
+				martin_strength = 10;
+				//dexterity
+				martin_dexterity = 10;
+				//attack
+				martin_attack = 10;
+				//defence
+				martin_defence = 10;
+
 				//load pickables
 				load_pickables();
 				//load niches
@@ -971,6 +1015,10 @@
 				levelOnLoad();
 
 				loadCharacter();
+				
+				updatePlayerHealthBar();
+
+				show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			function mainMenuCredits()
@@ -3312,8 +3360,44 @@
 					if(thrownWeaponIsFlying)
 					{
 						//move item forward
+						//thrownWeapon.mesh.position += thrownWeaponDirection/100;
+						var deltaThrowMove = elapsed/200;
+						var oldThrownWeaponCubePath = thrownWeaponCubePath;
+						thrownWeaponCubePath += deltaThrowMove;
+						if(thrownWeaponCubePath > 0.99)
+						{
+							deltaThrowMove = 0.99 - oldThrownWeaponCubePath;
+							thrownWeaponCubePath = 0;
+							var thrownWeaponNewPosition = thrownWeaponDirection.clone().normalize();
+							thrownWeaponNewPosition.add(thrownWeaponPosition);
+							//moving to next cube if its possible
+							if(canMoveTo(0, thrownWeaponNewPosition.x, thrownWeaponNewPosition.z))
+							{
+								//keep moving
+								console.log("flying one more step");
+								var deltaThrowMoveVector = thrownWeaponDirection.clone();
+								deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
+								thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
+								thrownWeaponPosition = thrownWeaponNewPosition.clone();
+							}
+							else
+							{
+								console.log("no more flying");
+								thrownWeaponIsFlying = false;
+								//drop item on the ground
+								thrownWeapon.mesh.position.y = 0;
+							}
+						}
+						else
+						{
+							var deltaThrowMoveVector = thrownWeaponDirection.clone();
+							deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
+							thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
+						}
 					}
+					
 				}
+				
 				lastTime = timeNow;
 		
 		
