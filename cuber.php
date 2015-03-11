@@ -395,6 +395,33 @@
 					console.log("throwing right weapon..");
 					//todo:
 					//add code for right hand same as for left
+          thrownWeapon = martin_equipment.right_hand_item;
+					playerCanHitRight = false;
+					playerHitTimeoutRight = thrownWeapon.weapon_speed*1000;
+					rhandDiv.style.opacity=0.5;
+					
+					
+					//todo: 
+					//replace item icon with hand icon
+					document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+					document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+					martin_equipment.right_hand_item = 0; //should be set to 0
+
+					//show 3d mesh in front of players face
+					thrownWeaponDirection = camera.look.clone().sub(camera.position);
+					console.log(thrownWeaponDirection);
+					var throwBackMover = thrownWeaponDirection.clone(); //move throwable a bit back
+					throwBackMover.multiplyScalar(-0.1);
+					thrownWeapon.mesh.position = camera.look.clone();
+					thrownWeapon.mesh.position.add(throwBackMover);
+					thrownWeapon.mesh.position.y = 4.3;
+					thrownWeapon.mesh.visible = true;
+					
+					thrownWeaponPosition = current_position.clone();
+					thrownWeaponCubePath = 0.8;
+					
+					//thrownWeapon.mesh.position = thrownWeaponDirection.clone().add(thrownWeapon.mesh.position);
+					console.log(thrownWeapon.mesh.position);
 				}
 				
 				thrownWeaponIsFlying = true;
