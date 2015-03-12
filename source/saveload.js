@@ -395,14 +395,14 @@ function loadGameOnSameLevel()
 	//equipped items 
 	if(last_saved_data.left_hand_item)
 	{
-		martin_equipment.left_hand_item = get_pickabe_item_by_id(last_saved_data.left_hand_item);
+		martin_equipment.left_hand_item = get_pickable_item_by_id(last_saved_data.left_hand_item);
 		document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
 		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 	}
 	// right_hand_item
 	if(last_saved_data.right_hand_item)
 	{
-		martin_equipment.right_hand_item = get_pickabe_item_by_id(last_saved_data.right_hand_item);
+		martin_equipment.right_hand_item = get_pickable_item_by_id(last_saved_data.right_hand_item);
 		document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
 		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 	}
