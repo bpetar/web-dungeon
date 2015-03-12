@@ -258,7 +258,8 @@ optimizations:
  - BUG: nice worm up pops up after loading - save level specific quirks in one general purpose array of bools: quirk1_bool = true
  - BUG: save game increases array_of_pickables each time
  + BUG: after loading health bar is not dropping while fighting monster (and suddenly you die)
- - BUG: game loaded with stake equipped doesnt seems to place it in pickables array, after loading again it disappears.
+ + BUG: game loaded with stake equipped doesnt seems to place it in pickables array, after loading again it disappears.
+ - BUG: press save game, then try to load that game in same session - it loads old saved game, need to update last_saved_data var
  - BUG: load button should be grayed out if no saved game on death screen
  - BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
  - BUG: load klikce cak i kad nema snimljena igra
@@ -268,6 +269,7 @@ optimizations:
  - BUG: console log opened shows wrong background
  - BUG: new game (after dying) should clear console
  - BUG: two new game functions are two much
+ - BUG: weapon and inventory hint keeps glowing (rock makes it odd)
  + game starts with main menu: new load options register credits
 	  + add text that writes beginning of the story and setup
 	  + dont load first level in main menu if load is available

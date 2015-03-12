@@ -68,9 +68,9 @@ function load_pickables () {
 
 }
 
-function get_pickabe_item_by_id(id)
+function get_pickable_item_by_id(id)
 {
-	for(var i=0; i< array_of_pickables; i++)
+	for(var i=0; i< array_of_pickables.length; i++)
 	{
 		if(array_of_pickables[i].gameID == id)
 		{
