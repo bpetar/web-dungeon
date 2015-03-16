@@ -92,6 +92,9 @@ function save_position()
 	save_data["rotation"] = current_rotation;
 	//level
 	save_data["current_level"] = 3;
+	
+	//game global quirks
+	save_data["quirks"] = game_quirks;
 
 	//inventory items and slots:
 	save_data["inventory"] = [];
@@ -169,23 +172,26 @@ function save_position()
 	
 	//monsters:
 	save_data["monsters"] = [];
+	var mindex = 0;
 	for(var m=0; m<array_of_monsters.length; m++)
 	{
 		if(array_of_monsters[m].alive)
 		{
-			save_data["monsters"][m] = {};
+			save_data["monsters"][mindex] = {};
 			//id
-			save_data["monsters"][m]["gameID"] = array_of_monsters[m].gameID;
+			save_data["monsters"][mindex]["gameID"] = array_of_monsters[m].gameID;
 			//position
-			save_data["monsters"][m]["position"] = {};
-			save_data["monsters"][m]["position"]["x"] = array_of_monsters[m].position.x;
-			save_data["monsters"][m]["position"]["z"] = array_of_monsters[m].position.z;
+			save_data["monsters"][mindex]["position"] = {};
+			save_data["monsters"][mindex]["position"]["x"] = array_of_monsters[m].position.x;
+			save_data["monsters"][mindex]["position"]["z"] = array_of_monsters[m].position.z;
 			//rotation
-			save_data["monsters"][m]["rotation"] = array_of_monsters[m].rotation;
+			save_data["monsters"][mindex]["rotation"] = array_of_monsters[m].rotation;
 			//mood
-			save_data["monsters"][m]["mood"] = array_of_monsters[m].mood;
+			save_data["monsters"][mindex]["mood"] = array_of_monsters[m].mood;
 			//hp
-			save_data["monsters"][m]["hp"] = array_of_monsters[m].hp;
+			save_data["monsters"][mindex]["hp"] = array_of_monsters[m].hp;
+			
+			mindex++;
 		}
 	}
 
@@ -198,6 +204,9 @@ function save_position()
 	console.log(save_data_json_str);
 	
 	setCookie("saved_game", save_data_json_str, 90);
+	
+	last_saved_data = save_data;
+	saved_game = true;
 	
 	ajaxPost("save.php",save_cb,save_data_json_str);
 }
@@ -452,6 +461,9 @@ function loadGame()
 	martin_attack = last_saved_data.martin_attack;
 	//defence
 	martin_defence = last_saved_data.martin_defence;
+	
+	//quirks
+	game_quirks = last_saved_data.quirks;
 	
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;

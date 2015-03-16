@@ -1286,6 +1286,7 @@ function load_level()
 	//show_model(loader, "maps/level3/models/door.js", 10,5);
 	
 	load_props();
+	load_animated_props();
 	
 	var map = THREE.ImageUtils.loadTexture( floor_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;

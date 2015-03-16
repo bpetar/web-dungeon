@@ -32,7 +32,7 @@
 		}
 		else
 		{
-			echo "<script>var saved_game = false;</script> ";
+			echo "<script>var saved_game = false; var last_saved_data = {};</script> ";
 			echo "<script src='./maps/level3/level3.js'></script>";
 		}
 	}
@@ -42,7 +42,7 @@
 		$expire=time()+60*60*24*30*3;
 		$useridvalue = rand(1000000000,10000000000);
 		setcookie("cubish_user", $useridvalue, $expire);
-		echo "<script>var saved_game = false; var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
+		echo "<script>var saved_game = false; var last_saved_data = {}; var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
 		echo "<script src='./maps/level3/level3.js'></script>";
 	}
   
@@ -573,6 +573,7 @@
 			var audio;
 			var mouse_over_button = -1;
 			var mouse_over_prop = -1;
+			var mouse_over_animated_prop = -1;
 			var mouse_over_secret_wall = -1;
 			var mouse_over_wall_writting = -1;
 			var mouse_over_keyhole = -1;
@@ -609,7 +610,7 @@
 
 			function mouse_click()
 			{
-				if((mouse_over_prop != -1)||(mouse_over_item_in_inventory != -1)||(mouse_over_item_in_container != -1))
+				if((mouse_over_prop != -1)||(mouse_over_animated_prop != -1)||(mouse_over_item_in_inventory != -1)||(mouse_over_item_in_container != -1))
 				{
 					return true;
 				}
@@ -897,6 +898,9 @@
 			
 			function mainMenuLoadGame()
 			{
+				if(!saved_game)
+					return;				
+				
 				main_menu_div.style.display = "none";
 				
 				console.log(last_saved_data);
@@ -920,6 +924,9 @@
 				//defence
 				martin_defence = last_saved_data.martin_defence;
 				
+				//quirks
+				game_quirks = last_saved_data.quirks;
+
 				//level
 				current_level = last_saved_data.current_level;
 				
@@ -1727,6 +1734,7 @@
 			{
 				mouse_over_button = -1;
 				mouse_over_prop = -1;
+				mouse_over_animated_prop = -1;
 				mouse_over_secret_wall = -1;
 				mouse_over_wall_writting = -1;
 				mouse_over_keyhole = -1;
@@ -1756,6 +1764,7 @@
 				item_over_right_hand = -1;
 				mouse_over_button = -1;
 				mouse_over_prop = -1;
+				mouse_over_animated_prop = -1;
 				mouse_over_secret_wall = -1;
 				mouse_over_wall_writting = -1;
 				mouse_over_keyhole = -1;
@@ -2024,7 +2033,7 @@
 						{
 							if((propsArr[p][1] == look_pos.x)&&(propsArr[p][2] == look_pos.z))
 							{
-								console.log("prrrooopaaaaaaa");
+								//console.log("prrrooopaaaaaaa");
 								if(propsArr[p].mesh != 0)
 								{
 									var intersects = ray.intersectObject( array_of_props[p].mesh );
@@ -2036,6 +2045,32 @@
 										//change mouse pointer to cursor
 										setCursor('pointer');
 										mouse_over_prop = p;
+										return;
+									}
+								}
+							}
+						}
+					}
+					
+					//mouse over animated props
+					if(typeof array_of_animated_props != 'undefined')
+					{
+						for (var p=0; p<array_of_animated_props.length; p++)
+						{
+							if(((animatedPropsArr[p][1] == look_pos.x)&&(animatedPropsArr[p][2] == look_pos.z))||((animatedPropsArr[p][1] == current_position.x)&&(animatedPropsArr[p][2] == current_position.z)))
+							{
+								console.log("anim prrrooopaaaaaaa");
+								if(array_of_animated_props[p].mesh != 0)
+								{
+									var intersects = ray.intersectObject( array_of_animated_props[p].mesh );
+									
+									// if there is one (or more) intersections
+									if ( intersects.length > 0 )
+									{
+										//console.log("prrrt");
+										//change mouse pointer to cursor
+										setCursor('pointer');
+										mouse_over_animated_prop = p;
 										return;
 									}
 								}
@@ -2902,6 +2937,12 @@
 						//do prop click action
 						array_of_props[mouse_over_prop].onPressFunc();
 					}
+					if(mouse_over_animated_prop > -1)
+					{
+						//do prop click action
+						array_of_animated_props[mouse_over_animated_prop].onPressFunc();
+					}
+					
 					
 					//secret wall
 					if(mouse_over_secret_wall > -1)
@@ -3500,6 +3541,17 @@
 					{
 						monster.mesh.updateAnimation( 1000 * delta );
 						monster.move(round_time*SQUARE_SIZE/ROUND_DURATION);
+					}
+					//console.log(" " + i)
+				}
+				
+				for ( var i = 0; i < array_of_animated_props.length; i ++ ) {
+
+					var animProp = array_of_animated_props[ i ];
+					if(animProp.mesh != 0)
+					{
+						animProp.mesh.updateAnimation( 1000 * delta );
+						//monster.move(round_time*SQUARE_SIZE/ROUND_DURATION);
 					}
 					//console.log(" " + i)
 				}

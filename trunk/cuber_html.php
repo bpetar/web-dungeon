@@ -212,13 +212,13 @@
 				<div id="id-main-menu-buttons-container" style="border: solid red 0px;">
 					<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
 					</div>
-					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
+					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
 					</div>
-					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
+					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
 					</div>
-					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
+					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
 					</div>
-					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
+					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
 					</div>
 				</div>
 				<div id="id-main-menu-credits-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
@@ -279,6 +279,8 @@
 				add_element_class("id-main-menu-load","shadow");
 				audio_click.currentTime = 0;
 				audio_click.play();
+				//cursor pointer
+				document.getElementById("id-main-menu-load").style.cursor = "pointer";
 			}
 		}
 		

@@ -17,7 +17,7 @@ function levelOnLoad()
 }
 
 var levelNumber = 3;
-var totalModels = 21;
+var totalModels = 22;
 
 // map arrays..
 var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [13,3], [14,3], [10,4], [10,3], [9,3]];
@@ -90,13 +90,20 @@ function propOnClick4()
 
 
 function propOnClick5()
- {
-  show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
+{
+	show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
 }
 
+function propOnClick6()
+{
+	console.log("swing a chain");
+	array_of_animated_props[0].mesh.duration = 4000;
+	array_of_animated_props[0].mesh.setFrameRange(1,30);
+}
 
 //props x,z,model,onClick script
 var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 14, 6, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 4, -1, "maps/level3/models/boulder.json", propOnClick5]];
+var animatedPropsArr = [[136, 13, 5, 0, "maps/level3/models/chains.json", propOnClick6,1,0,1]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
@@ -140,13 +147,12 @@ function WormOnItemClick1()
 	this.audio_monster_click.play();
 }
 
-var punIntended = false;
 function monsterPun()
 {
-	if(!punIntended)
+	if(game_quirks.q1 == 0)
 	{
 		show_speech_bubble("&nbsp;This was nice <span style='font-style: italic;'>worm</span> up :)", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");	
-		punIntended = true;
+		game_quirks.q1 = 1;
 	}
 }
 
