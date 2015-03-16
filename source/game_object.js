@@ -45,6 +45,7 @@ function create_game_object () {
 	gobject.name_id = 0;
 	gobject.description_id = 0;
 	gobject.loadObject = loadObject;
+	gobject.loadAnimatedObject = loadAnimatedObject;
 	
 	return gobject;
 }
@@ -88,6 +89,45 @@ function loadGameObjectCheck(loader, gobject)
 	
 }
 
+
+//check if model is already being downloaded, and wait for it to download and clone it...
+function loadAnimatedGameObjectCheck(loader, gobject)
+{
+	//console.log("loadGameObjectCheck: " + gobject.name);
+	var object = modelAlreadyLoaded(gobject.model);
+	if(object != -1)
+	{
+		//already put to download
+		//object loading is in progress
+		//wait till object is loaded and link to it
+		if(object == 0)
+		{
+			if(typeof modelWaiters[gobject.model] == 'undefined')
+			{
+				modelWaiters[gobject.model] = new Array();
+			}
+			modelWaiters[gobject.model].push(gobject);
+			return;
+		}
+		
+		//console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
+		gobject.mesh = object.clone();
+		gobject.mesh.position = gobject.position;
+		gobject.mesh.rotation = gobject.rotation;
+		gobject.id=gobject.mesh.id;
+		gobject.mesh.visible = gobject.visible;
+		scene.add( gobject.mesh );		
+	}
+	else
+	{
+		//download it first time..
+		loaded3Dmodels.push([gobject.model,0]);
+		loader.load( gobject.model, gobject.loadAnimatedObject(gobject) );
+		//console.log("loadGameObjectCheck loading first time: " + gobject.name);
+	}
+	
+}
+
 //load 3d mesh callback function
 function loadObject( gobject ) {
 	return function (geometry, materials ) {
@@ -112,6 +152,60 @@ function loadObject( gobject ) {
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
 			if(gobject.name == "writting") writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
+			scene.add( gobject.mesh );
+			
+		
+			if(typeof modelWaiters[gobject.model] != 'undefined')
+			{
+				//console.log("loadModel waiters are existing " + gobject.name);
+				for (var i=0; i< modelWaiters[gobject.model].length; i++)
+				{
+					//console.log("loadModel waiter cloned: " + gobject.name);
+					var waitingGobject = modelWaiters[gobject.model][i];
+					var clone = gobject.mesh.clone();
+					clone.position = waitingGobject.position;
+					clone.rotation = waitingGobject.rotation;
+					waitingGobject.mesh = clone;
+					waitingGobject.id = clone.id;
+					if(waitingGobject.name == "writting") writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
+					scene.add( clone );
+				}
+			}
+			
+			updateModelLoading(gobject.name)
+			
+	}
+}
+
+//load animated 3d mesh callback function
+function loadAnimatedObject( gobject ) {
+	return function (geometry, materials ) {
+
+			console.log("loadAnimatedObject : " + gobject.name);
+			morphColorsToFaceColors( geometry );
+			geometry.computeMorphNormals();
+			materials[ 0 ].morphTargets = true;
+			materials[ 0 ].morphNormals = true;
+			if(materials.length > 1)
+			{
+				materials[ 1 ].morphTargets = true;
+			}
+			gobject.mesh = new THREE.MorphAnimMesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		
+			for(var i=0; i< loaded3Dmodels.length; i++)
+			{
+				if(loaded3Dmodels[i][0] == gobject.model)
+				{
+					//set loaded model
+					loaded3Dmodels[i][1] = gobject.mesh;
+				}
+			}
+			
+			gobject.mesh.position = gobject.position;
+			gobject.mesh.rotation = gobject.rotation;
+			gobject.mesh.name = gobject.name;
+			gobject.id = gobject.mesh.id;
+			gobject.mesh.visible = gobject.visible;
 			scene.add( gobject.mesh );
 			
 		

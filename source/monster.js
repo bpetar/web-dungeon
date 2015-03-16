@@ -267,7 +267,7 @@ Monster.prototype.loadObject = function ( munster ) {
 			}
 		}
 		
-		updateModelLoading(munster.name)
+		updateModelLoading(munster.name);
 
 	}
 
@@ -995,7 +995,10 @@ Monster.prototype.move = function ( delta ) {
 						else
 						{
 							//show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br>  <div id='info_dialog_button_container' style='margin:auto; padding-top:9px;> <div id='info_dialog_button' style='cursor: pointer; float:left; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Restart </div>&nbsp;&nbsp; <div id='info_dialog_button2' style='cursor: pointer; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='location.reload();'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
-							show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br> <div id='info_dialog_button_container' style='margin:auto; width:230px;'> <div id='info_dialog_button' style='cursor: pointer; padding-top:9px; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='newGame();'> Restart </div> <div id='info_dialog_button2' style='float:left; width:30px; height:25px; '></div> <div id='info_dialog_button3' style='cursor: pointer; float:left; padding-top:9px; right:0px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='loadGame();'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+							if(saved_game)
+								show_message("<br><br>You have been killed! <br><br>You can Load saved game or Restart! <br><br><br> <div id='info_dialog_button_container' style='margin:auto; width:230px;'> <div id='info_dialog_button' style='cursor: pointer; padding-top:9px; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='newGame();'> Restart </div> <div id='info_dialog_button2' style='float:left; width:30px; height:25px; '></div> <div id='info_dialog_button3' style='cursor: pointer; float:left; padding-top:9px; right:0px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='loadGame();'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+							else
+								show_message("<br><br>You have been killed! <br><br>All you can do now is restart! <br><br><br> <div id='info_dialog_button_container' style='margin:auto; width:230px;'> <div id='info_dialog_button' style='cursor: pointer; padding-top:9px; float:left; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='newGame();'> Restart </div> <div id='info_dialog_button2' style='float:left; width:30px; height:25px; '></div> <div id='info_dialog_button3' style='float:left; padding-top:9px; right:0px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); opacity:0.3; -moz-opacity: 0.3; background-size: 100% 100%;'> Load </div> </div>", 550, 350, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 						}
 					}
 					else

@@ -1,4 +1,15 @@
 //pickable (and other?) scripts
+var game_quirks = {};
+game_quirks.q1 = 0;
+game_quirks.q2 = 0;
+game_quirks.q3 = 0;
+game_quirks.q4 = 0;
+game_quirks.q5 = 0;
+game_quirks.q6 = 0;
+game_quirks.q7 = 0;
+game_quirks.q8 = 0;
+game_quirks.q9 = 0;
+game_quirks.q10 = 0;
 
 function script_showScroll_lvl3_map()
 {
