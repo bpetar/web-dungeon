@@ -3550,8 +3550,18 @@
 					var animProp = array_of_animated_props[ i ];
 					if(animProp.mesh != 0)
 					{
+												
+						if(animate_chain)
+						{
+							if(animProp.mesh.currentKeyframe == 50)
+							{
+								array_of_animated_props[0].mesh.setFrameRange(0,1);
+								array_of_animated_props[0].mesh.duration = 40000;
+								animate_chain = false;
+							}
+						}
+
 						animProp.mesh.updateAnimation( 1000 * delta );
-						//monster.move(round_time*SQUARE_SIZE/ROUND_DURATION);
 					}
 					//console.log(" " + i)
 				}

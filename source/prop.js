@@ -70,6 +70,8 @@ function load_animated_props()
 				propsy.position.z += animatedPropsArr[i][8];
 			}
 			
+			animate_chain = true;
+			
 			//loader.load( propsy.model, propsy.loadObject(propsy) );
 			loadAnimatedGameObjectCheck(loader, propsy);
 			
