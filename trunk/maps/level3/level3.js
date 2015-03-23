@@ -97,13 +97,14 @@ function propOnClick5()
 function propOnClick6()
 {
 	console.log("swing a chain");
+	animate_chain = true;
 	array_of_animated_props[0].mesh.duration = 4000;
-	array_of_animated_props[0].mesh.setFrameRange(1,30);
+	array_of_animated_props[0].mesh.setFrameRange(0,50);
 }
 
 //props x,z,model,onClick script
 var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 14, 6, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 4, -1, "maps/level3/models/boulder.json", propOnClick5]];
-var animatedPropsArr = [[136, 13, 5, 0, "maps/level3/models/chains.json", propOnClick6,1,0,1]];
+var animatedPropsArr = [[136, 1, 10, 1, "maps/level3/models/chains.json", propOnClick6,4.1,-0.1,-1]];
 
 // id, name, model, x, z, orientation, mesh
 var containers_array = [];
