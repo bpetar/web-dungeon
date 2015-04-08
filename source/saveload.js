@@ -397,6 +397,7 @@ function loadGameOnSameLevel()
 	}
 	
 	//inventory
+	clear_inventory();
 	loadInventoryNoReloading(last_saved_data.inventory)
 	
 	
@@ -453,6 +454,7 @@ function loadGame()
 	playerHPmax = last_saved_data.martin_HPmax;
 	//playerHPcurrent;
 	playerHPcurrent = last_saved_data.martin_HPcurrent;
+	updatePlayerHealthBar();
 	//strength
 	martin_strength = last_saved_data.martin_strength;
 	//dexterity
@@ -521,12 +523,22 @@ function newGame()
 	hide_message();
 	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 
+	game_quirks.q1 = 0;
+	game_quirks.q2 = 0;
+	game_quirks.q3 = 0;
+	game_quirks.q4 = 0;
+	game_quirks.q5 = 0;
+	game_quirks.q6 = 0;
+	game_quirks.q7 = 0;
+	game_quirks.q8 = 0;
+	game_quirks.q9 = 0;
+	game_quirks.q10 = 0;
 	remove_element_class("player1-hand-r","shadow");
 	remove_element_class("player1-hand-l","shadow");
-	weapon_tip_shown=false;
-	inventory_tip_shown=false;
 	remove_element_class("player1-inventory","shadow");
-	
+	document.getElementById('id-character-screen-container').style.display='none';
+	characterHudOpened = false;
+
 	//player data
 	martin_level = 1;
 	//experience

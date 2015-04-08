@@ -64,6 +64,7 @@
 					<span > Level:</span> <span id="id-character-screen-stats-level">0</span><br>
 					<span > Next Level:</span> <span id="id-character-screen-stats-level">1000</span><br>
 					<span > Experience:</span> <span id="id-character-screen-stats-experience">0</span><br><br>
+					<span > Health:</span> <span id="id-character-screen-stats-health">10/30</span><br><br>
 					<span > Strentgh:</span> <span id="id-character-screen-stats-strength">0</span><br>
 					<span > Dexterity:</span> <span id="id-character-screen-stats-dexterity">0</span><br><br>
 					<span > Attack:</span> <span id="id-character-screen-stats-attack">0</span><br>
@@ -134,12 +135,12 @@
 			<div id="id-console-scroll" style="background:url(media/gui/scroll1.png); cursor:pointer; pointer-events: none; background-size: 100% 100%; position:absolute; bottom:0px; right:0px; width:20px; height:64px; z-index:2; border:0px solid yellow;">
 			</div>
             
-			<div id="id-console-text" style="background:url(media/gui/console2.png); background-size: 100% 100%; position:absolute; bottom:0px; height:64px; width:100%; text-align:left;">
-				<div id="id-console-text-b-left" style=" background:url(media/gui/console-b-left.png); background-size: 100% 100%; margin-top: 0px; margin-bottom: 0px;height:64px; width:100; position:absolute; border:0px solid yellow;">
+			<div id="id-console-text" style="position:absolute; bottom:0px; height:64px; width:100%; text-align:left;">
+				<div id="id-console-text-b-left" style=" background:url(media/gui/console-left.png); background-size: 100% 100%; margin-top: 0px; margin-bottom: 0px;height:64px; width:100; position:absolute; border:0px solid yellow;">
 				</div>
-				<div id="id-console-text-b-left" style=" background:url(media/gui/console-b-middle.png); background-size: 100% 100%; margin-left: 100px; margin-top: 0px; margin-bottom: 0px; height:64px; width:100%; position:absolute; border:0px solid red;">
+				<div id="id-console-text-b-center" style=" background:url(media/gui/console-middle.png) repeat; background-size: 100% 100%; margin-left: 100px; width:100%; margin-top: 0px; margin-bottom: 0px; height:64px; position:absolute; border:0px solid red;">
 				</div>
-				<div id="id-console-text-b-left" style=" background:url(media/gui/console-b-right.png); background-size: 100% 100%; margin-top: 0px; margin-bottom: 0px;height:64px; width:100; position:absolute; right:0px; border:0px solid red;">
+				<div id="id-console-text-b-right" style=" background:url(media/gui/console-right.png); background-size: 100% 100%; margin-top: 0px; margin-bottom: 0px;height:64px; width:100; position:absolute; right:0px; border:0px solid red;">
 				</div>
 				<div id="id-console-text-in" style=" margin-top: 10px; margin-bottom: 10px;height:44px; width:100%; position:absolute; color:yellow; overflow-y: scroll; text-align:left; border:0px solid yellow;">
 					<span style="color:yellow; padding-left: 15px;">Game Initialized.</span>
@@ -198,6 +199,7 @@
 		{
 			//are you sure? your progress will be lost.
 			newGame();
+			clearConsole();
 			toggleOptions();
 		}
 		function optionsMouseOverSettings()
@@ -238,6 +240,13 @@
 			consoleDiv.scrollTop = consoleDiv.scrollHeight;
 		}
 		
+		function clearConsole()
+		{
+			var consoleDiv = document.getElementById( 'id-console-text-in' );
+			consoleDiv.innerHTML = "<span style='  padding-left: 15px; color:yellow'>"+ "Game Initialized" +"</span>";
+			consoleDiv.scrollTop = consoleDiv.scrollHeight;
+		}
+		
 		var consoleOpened = false;
 		
 		function toggleConsole()
@@ -250,7 +259,12 @@
 				document.getElementById( 'id-console-scroll' ).style.height='64px';
 				document.getElementById( 'id-console-text-in' ).style.height='44px';
 				document.getElementById( 'id-console-scroll' ).style.backgroundImage = "url(media/gui/scroll1.png)";
-				document.getElementById( 'id-console-text' ).style.backgroundImage = "url(media/gui/console2.png)";
+				document.getElementById( 'id-console-text-b-left' ).style.height='64px';
+				document.getElementById( 'id-console-text-b-left' ).style.backgroundImage = "url(media/gui/console-left.png)";
+				document.getElementById( 'id-console-text-b-center' ).style.height='64px';
+				document.getElementById( 'id-console-text-b-center' ).style.backgroundImage = "url(media/gui/console-middle.png)";
+				document.getElementById( 'id-console-text-b-right' ).style.height='64px';
+				document.getElementById( 'id-console-text-b-right' ).style.backgroundImage = "url(media/gui/console-right.png)";
 				consoleOpened = false;
 			}
 			else
@@ -261,7 +275,12 @@
 				document.getElementById( 'id-console-text-in' ).style.height='344px';
 				document.getElementById( 'id-console-scroll' ).style.height='364px';
 				document.getElementById( 'id-console-scroll' ).style.backgroundImage = "url(media/gui/scroll1-big.png)";
-				document.getElementById( 'id-console-text' ).style.backgroundImage = "url(media/gui/console-big.png)";
+				document.getElementById( 'id-console-text-b-left' ).style.height='364px';
+				document.getElementById( 'id-console-text-b-left' ).style.backgroundImage = "url(media/gui/console-big-left.png)";
+				document.getElementById( 'id-console-text-b-center' ).style.height='364px';
+				document.getElementById( 'id-console-text-b-center' ).style.backgroundImage = "url(media/gui/console-big-middle.png)";
+				document.getElementById( 'id-console-text-b-right' ).style.height='364px';
+				document.getElementById( 'id-console-text-b-right' ).style.backgroundImage = "url(media/gui/console-big-right.png)";
 				consoleOpened = true;
 			}
 		}

@@ -1,8 +1,10 @@
 //pickable (and other?) scripts
+
+//game quirks
 var game_quirks = {};
-game_quirks.q1 = 0;
-game_quirks.q2 = 0;
-game_quirks.q3 = 0;
+game_quirks.q1 = 0; // monster pun: worm up
+game_quirks.q2 = 0; // inventory glow
+game_quirks.q3 = 0; // weapon hands glow
 game_quirks.q4 = 0;
 game_quirks.q5 = 0;
 game_quirks.q6 = 0;

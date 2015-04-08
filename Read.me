@@ -262,14 +262,15 @@ optimizations:
  + BUG: press save game, then try to load that game in same session - it loads old saved game, need to update last_saved_data var
  + BUG: load button should be grayed out if no saved game on death screen
  + BUG: load klikce cak i kad nema snimljena igra
- - BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
- - BUG: no hp stat in char gui
- - BUG: put stake in hand, then open char hud - it glows green
- - BUG: doors are opened wherever you click schtuck
- - BUG: console log opened shows wrong background
- - BUG: new game (after dying) should clear console?
+ + BUG: after loading, inventory shows one item but item info shows another item (one that was in inventory before loading)
+ + BUG: hp bar not updated after loading
+ + BUG: no hp stat in char gui
+ + BUG: put stake in hand, then open char hud - it glows green
+ + BUG: weapon and inventory hint keeps glowing (rock makes it odd) use quirks to remember it glew
+ + BUG: doors are opened wherever you click schtuck
+ + BUG: console log opened shows wrong background
+ + BUG: new game (after dying) should clear console?
  - BUG: two "new game" functions are two much
- - BUG: weapon and inventory hint keeps glowing (rock makes it odd) use quirks to remember it glew
  - BUG: save game in front of monster, when loaded later monster rotates for no reason
  + game starts with main menu: new load options register credits
 	  + add text that writes beginning of the story and setup
@@ -307,7 +308,7 @@ optimizations:
 	  - thrown item falls on the ground
 	  - thrown item is automatically picked up??? (animation of picking)
  - dust spec particles..
- - add animated chain model that swings when clicked.
+ + add animated chain model that swings when clicked.
  - (A) First Level Music 
  - (A) Main Menu Music
  - (A) make worm sounds

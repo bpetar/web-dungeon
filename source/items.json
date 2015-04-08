@@ -6,7 +6,7 @@
 		"model":"maps/level3/models/root.js",
 		"icon":"media/root.png",
 		"icon2":"media/gui/root.png",
-		"useHint":"<span style='color:green;'> HP +5. </span> This actually heals my wounds..",
+		"useHint":"<span style='color:#5BE44C;'> HP +5. </span> This actually heals my wounds..",
 		"useScript":"script_rootHealingScript",
 		"type":"consumable"
 	},

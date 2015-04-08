@@ -436,9 +436,6 @@
             
             var GUI_LEFT_WIDTH = 200;
 
-			var inventory_tip_shown = false;
-			var weapon_tip_shown = false;
-			
 			var holeFallen = false;
 			var cameraMove = false;
 			var cameraRotate = false;
@@ -931,6 +928,7 @@
 				current_level = last_saved_data.current_level;
 				
 				//inventory
+				clear_inventory();
 				loadInventory(last_saved_data.inventory)
 				
 				//equipment
@@ -1166,6 +1164,8 @@
 				
 				document.getElementById("id-character-screen-stats-level").innerHTML = martin_level;
 				document.getElementById("id-character-screen-stats-experience").innerHTML = martin_experience;
+				
+				document.getElementById("id-character-screen-stats-health").innerHTML = "" + playerHPcurrent + "/" + playerHPmax;
 				
 				document.getElementById("id-character-screen-stats-strength").innerHTML = martin_strength;
 				document.getElementById("id-character-screen-stats-dexterity").innerHTML = martin_dexterity;
@@ -2268,46 +2268,64 @@
 
 			function handleMouseClick(x,y) {
 		
-				//is player standing in front of door?
-				//currentPos.x, currentPos.z
-				var xDoor = 0;
-				var zDoor = 0;
-				
-				//alert("ima1!");
-				
-				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
-				looker.sub(camera.position);
-				looker.normalize();
-				var look_pos =new THREE.Vector3(0,0,0).add(current_position);
-				look_pos.add(looker);
-				
+				//this is only for doors i think
+				var isRightMB;
+				var e = event || window.event;
+				if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+					isRightMB = e.which == 3; 
+				else if ("button" in e)  // IE, Opera 
+					isRightMB = e.button == 2; 
 					
-				/*if(yaw == 0) {xDoor = currentPos.x; zDoor = currentPos.z-1;}
-				if((yaw == 90)||(yaw == -270)) {xDoor = currentPos.x-1; zDoor = currentPos.z}
-				if((yaw == 180)||(yaw == -180)) {xDoor = currentPos.x; zDoor = currentPos.z+1;}
-				if((yaw == 270)||(yaw == -90)) {xDoor = currentPos.x+1; zDoor = currentPos.z}*/
-
-				for(i=0; i < doorsArr3D.length; i++)
+				if(isRightMB)
+					return;
+				
+				
+				var view3DPos = get_element_position_in_viewport("id-3d-container");
+				
+				if((x > view3DPos.x)&&(x < view3DPos.x+middleDiv.offsetWidth)&&(y < view3DPos.y+middleDiv.offsetHeight)&&(y > view3DPos.y))
 				{
-					//if there are doors in that position
-					if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
+					
+					//is player standing in front of door?
+					//currentPos.x, currentPos.z
+					var xDoor = 0;
+					var zDoor = 0;
+					
+					//alert("ima1!");
+					
+					var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
+					looker.sub(camera.position);
+					looker.normalize();
+					var look_pos =new THREE.Vector3(0,0,0).add(current_position);
+					look_pos.add(looker);
+					
+						
+					/*if(yaw == 0) {xDoor = currentPos.x; zDoor = currentPos.z-1;}
+					if((yaw == 90)||(yaw == -270)) {xDoor = currentPos.x-1; zDoor = currentPos.z}
+					if((yaw == 180)||(yaw == -180)) {xDoor = currentPos.x; zDoor = currentPos.z+1;}
+					if((yaw == 270)||(yaw == -90)) {xDoor = currentPos.x+1; zDoor = currentPos.z}*/
+
+					for(i=0; i < doorsArr3D.length; i++)
 					{
-						// and door are unlocked..
-						if(doorsArr3D[i][6] == 1)
+						//if there are doors in that position
+						if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
 						{
-							/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
-							doorsArr3D[i][5] = 1; //animate flag
-							//alert("ima!");
-							audio_door.load();
-							audio_door.play();
-							if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
-							else doorsArr3D[i][3] = 0;
-						}
-						else
-						{
-							if(doorsArr3D[i][3] == 0)
+							// and door are unlocked..
+							if(doorsArr3D[i][6] == 1)
 							{
-								DisplayInfoDiv("These doors are opened elsewhere..");
+								/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
+								doorsArr3D[i][5] = 1; //animate flag
+								//alert("ima!");
+								audio_door.load();
+								audio_door.play();
+								if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
+								else doorsArr3D[i][3] = 0;
+							}
+							else
+							{
+								if(doorsArr3D[i][3] == 0)
+								{
+									DisplayInfoDiv("These doors are opened elsewhere..");
+								}
 							}
 						}
 					}
@@ -2419,10 +2437,10 @@
 					var slot_index = inventory_clicked_in_slot(x_pos,y_pos);
 					if(slot_index > 0)
 					{
-						if(!inventory_tip_shown)
+						if(game_quirks.q2 == 0)
 						{
 							remove_element_class("player1-inventory","shadow");
-							inventory_tip_shown = true;
+							game_quirks.q2 = 1;
 						}
 
 									
@@ -2464,11 +2482,6 @@
 							}
 							//put item to inventory
 							var item_name = pickable_at_hand.name;
-							// if (audio_click.paused) {
-								// audio_click.play();
-							// }else{
-								// audio_click.currentTime = 0
-							// }
 							
 							
 							audio_click.currentTime = 0;
@@ -2478,18 +2491,6 @@
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
 							
-							//onetime inventory tip..
-							//if((levelNumber == 1)&&(inventory_tip_shown == false))
-							//{
-							//	DisplayInfoDiv("Press 'i' to close inventory..");
-							//	inventory_tip_shown = true;
-							//}
-
-							//if((levelNumber == 1)&&(item_name == "Scroll"))
-							//{
-							//	DisplayInfoDiv("Right click to read scroll..");
-							//	inventory_tip_shown = true;
-							//}
 						}
 						
 						return;
@@ -2519,11 +2520,13 @@
 					
 					if((item_over_left_hand != -1)||(mouse_over_char_hud_left_hand_slot!=-1))
 					{
-						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+						if((game_quirks.q3 == 0)&&(pickable_at_hand.weapon_dmg != 'undefined'))
 						{
 							remove_element_class("player1-hand-r","shadow");
 							remove_element_class("player1-hand-l","shadow");
-							weapon_tip_shown=true;
+							remove_element_class("id-character-screen-weapon-r-icon","shadow");
+							remove_element_class("id-character-screen-weapon-l-icon","shadow");
+							game_quirks.q3 = 1;
 						}
 						
 						//
@@ -2569,12 +2572,13 @@
 
 					if((item_over_right_hand != -1)||(mouse_over_char_hud_right_hand_slot!=-1))
 					{
-						if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+						if((game_quirks.q3 == 0)&&(pickable_at_hand.weapon_dmg != 'undefined'))
 						{
 							remove_element_class("player1-hand-r","shadow");
 							remove_element_class("player1-hand-l","shadow");
 							remove_element_class("id-character-screen-weapon-r-icon","shadow");
-							weapon_tip_shown=true;
+							remove_element_class("id-character-screen-weapon-l-icon","shadow");
+							game_quirks.q3 = 1;
 						}
 						
 						//if(item_can_be_placed_in_hand)
@@ -3072,13 +3076,14 @@
 								
 								{
 									//glow inventory and hands
-									if((!weapon_tip_shown)&&(pickable_at_hand.weapon_dmg != 'undefined'))
+									if((game_quirks.q3 == 0)&&(pickable_at_hand.weapon_dmg != 'undefined'))
 									{
 										add_element_class("player1-hand-r","shadow");
 										add_element_class("player1-hand-l","shadow");
 										add_element_class("id-character-screen-weapon-r-icon","shadow");
+										add_element_class("id-character-screen-weapon-l-icon","shadow");
 									}
-									else if(!inventory_tip_shown)
+									else if(game_quirks.q2 == 0)
 									{
 										add_element_class("player1-inventory","shadow");
 									}

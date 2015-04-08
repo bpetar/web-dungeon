@@ -92,6 +92,7 @@
 			}
 			else
 			{
+				loadCharacter();
 				document.getElementById('id-character-screen-container').style.display='block';
 				characterHudOpened = true;
 			}
@@ -102,7 +103,6 @@
 			if(optionsOpened)
 			{
 				document.getElementById( 'id-options-container' ).style.display='none';
-				
 				optionsOpened = false;
 			}
 			else
