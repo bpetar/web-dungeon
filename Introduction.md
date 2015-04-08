@@ -1,0 +1,10 @@
+# Introduction #
+
+WebDungeon is browser 3D game that uses three.js and WebGL. Game is inspired by old style dungeon crawlers like Eye Of the Beholder, where first person view is moving through squarey dungeons killing monsters and solving puzzles.
+
+
+# Details #
+
+In the first phase of the project, game will offer single player experience to all who register for free. Number of levels, monsters and puzzles as well as the story behind your endless wandering will be introduced at later stage.
+
+Second phase of the project will allow users to create content and interact with other players in mmo like world.
