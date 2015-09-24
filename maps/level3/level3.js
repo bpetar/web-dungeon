@@ -14,6 +14,10 @@ function levelOnLoad()
 	//camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
 	//camera.lookAt(camera.look);
 	
+	audio_ambient.volume = 0.4;
+	audio_ambient.loop = true;
+	audio_ambient.play();
+	
 }
 
 var levelNumber = 3;
@@ -96,14 +100,15 @@ function propOnClick5()
 
 function propOnClick6()
 {
-	console.log("swing a chain");
+	//console.log("swing a chain");
+	addToConsole("Nothing happens..","gray");
 	animate_chain = true;
 	array_of_animated_props[0].mesh.duration = 4000;
 	array_of_animated_props[0].mesh.setFrameRange(0,50);
 }
 
 //props x,z,model,onClick script
-var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 14, 6, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 4, -1, "maps/level3/models/boulder.json", propOnClick5]];
+var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 5, -1, "maps/level3/models/boulder.json", propOnClick5]];
 var animatedPropsArr = [[136, 1, 10, 1, "maps/level3/models/chains.json", propOnClick6,4.1,-0.1,-1]];
 
 // id, name, model, x, z, orientation, mesh
@@ -124,7 +129,7 @@ var buttons_array = [];
 var keyholes_array = [];
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [{"gameID":2,"itemID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"itemID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":4,"itemID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"itemID":5,"x":131,"y":0,"z":44,"niched":-1,"plated":-1}];
+var pickables_array = [{"gameID":2,"itemID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"itemID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":4,"itemID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"itemID":5,"x":131,"y":0,"z":54,"niched":-1,"plated":-1}];
 // [2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
 // [3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
 // [4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
@@ -159,7 +164,7 @@ function monsterPun()
 
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[121,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"], [122,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"maps/level3/media/worm_wound.mp3","maps/level3/media/worm_death.mp3","maps/level3/media/worm_roar.mp3","maps/level3/media/worm_attack.mp3","maps/level3/media/worm_click.mp3"]];
+var monster_array = [[121,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"media/monsters/worm_wound.mp3","media/monsters/worm_death.mp3","media/monsters/worm_roar.mp3","media/monsters/worm_attack.mp3","media/monsters/worm_click.mp3"], [122,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"media/monsters/worm_wound.mp3","media/monsters/worm_death.mp3","media/monsters/worm_roar.mp3","media/monsters/worm_attack.mp3","media/monsters/worm_click.mp3"]];
 
 
 // niche_pickables_array just contains gameID of items

@@ -270,8 +270,6 @@ optimizations:
  + BUG: doors are opened wherever you click schtuck
  + BUG: console log opened shows wrong background
  + BUG: new game (after dying) should clear console?
- - BUG: two "new game" functions are two much
- - BUG: save game in front of monster, when loaded later monster rotates for no reason
  + game starts with main menu: new load options register credits
 	  + add text that writes beginning of the story and setup
 	  + dont load first level in main menu if load is available
@@ -285,8 +283,6 @@ optimizations:
 	  + load is white if available
 	  + on hover change light and sound
 	  + impressive picture with dragon in main menu
- - boy face
- - icon stack in inventory
  - options screen 
 	  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
 	  - pause game loop
@@ -307,14 +303,19 @@ optimizations:
 	  - thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
 	  - thrown item falls on the ground
 	  - thrown item is automatically picked up??? (animation of picking)
- - dust spec particles..
+
  + add animated chain model that swings when clicked.
- - (A) First Level Music 
- - (A) Main Menu Music
- - (A) make worm sounds
- - (A) add root munching sound
+ + (A) First Level Music 
+ + (A) Main Menu Music
+ + (A) make worm sounds
+ + (A) add root munching sound
+ - boy face
  - (O) merge static geometries, increase in performance! http://learningthreejs.com/blog/2011/10/05/performance-merging-geometry/
  - (O) images are preloading while in main menu..
+ - (O) two "new game" functions are two much
+ - (O) sounds reorganize
+ - BUG: save game in front of monster, when loaded later monster rotates for no reason
+ - BUG: after killed monster area is clickable and we hear sound and mouse arrow is pointer
 
 - make level editor
  - make sqare borders transparent between neighboring squares
@@ -331,7 +332,9 @@ optimizations:
 --- various game features todo: 
 
 + change attack to left click..
+- icon stack in inventory
 - make worm control 
+- dust spec particles..
 - make worm dig passage in ground..
 - make player draw map in game??
 ~ make rope pickable item

@@ -37,6 +37,8 @@ function script_showScroll_lvl1_msg()
 function script_rootHealingScript()
 {
 	playerHPcurrent += 5;
+	audio_root.play();
+	audio_win2.play();
 	if (playerHPcurrent > playerHPmax)
 	{
 		playerHPcurrent = playerHPmax;

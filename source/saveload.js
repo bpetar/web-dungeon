@@ -331,7 +331,7 @@ function newGameOnSameLevel()
 	//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
 	// pants
 	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
-
+	
 }
 
 //load game without models reloading
@@ -504,6 +504,9 @@ function loadGame()
 	//this must be called before load_level();
 	load_saved_doors(last_saved_data.doors);
 
+	//level specific action on load
+	levelOnLoad();
+	
 }
 
 function newGame()
@@ -598,6 +601,9 @@ function newGame()
 	}
 
 	addToConsole("New Game started..","#BBFFBB");
+
+	//level specific action on load
+	levelOnLoad();
 	
 }
 

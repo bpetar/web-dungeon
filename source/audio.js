@@ -85,6 +85,11 @@ function init_audio()
 	source_scroll.src = 'media/scroll.mp3';
 	audio_scroll.appendChild(source_scroll);
 	
+	audio_root = document.createElement('audio');
+	var source_root = document.createElement('source');
+	source_root.src = 'media/root_munch.mp3';
+	audio_root.appendChild(source_root);
+	
 	audio_win1 = document.createElement('audio');
 	var source_win1 = document.createElement('source');
 	source_win1.src = 'media/win1.mp3';
@@ -110,6 +115,14 @@ function init_audio()
 	source_ambient.src = ambient_music_file;
 	audio_ambient.appendChild(source_ambient);
 	
-	audio_ambient.volume = 0.4;
-	audio_ambient.play();
+	// audio_ambient.volume = 0.4;
+	// audio_ambient.play();
+	
+	audio_maintheme = document.createElement('audio');
+	var source_maintheme = document.createElement('source');
+	source_maintheme.src = "media/main_theme.mp3";
+	audio_maintheme.appendChild(source_maintheme);
+	
+	audio_maintheme.volume = 0.2;
+	audio_maintheme.play();
 }

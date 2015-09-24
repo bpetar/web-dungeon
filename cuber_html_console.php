@@ -68,7 +68,7 @@
 					<span > Strentgh:</span> <span id="id-character-screen-stats-strength">0</span><br>
 					<span > Dexterity:</span> <span id="id-character-screen-stats-dexterity">0</span><br><br>
 					<span > Attack:</span> <span id="id-character-screen-stats-attack">0</span><br>
-					<span > Defence:</span> <span id="id-character-screen-stats-defence">0</span><br>
+					<span > Defense:</span> <span id="id-character-screen-stats-defence">0</span><br>
 				</div>
 
 			</div>
@@ -199,7 +199,6 @@
 		{
 			//are you sure? your progress will be lost.
 			newGame();
-			clearConsole();
 			toggleOptions();
 		}
 		function optionsMouseOverSettings()
@@ -240,10 +239,10 @@
 			consoleDiv.scrollTop = consoleDiv.scrollHeight;
 		}
 		
-		function clearConsole()
+		function clearConsole(text)
 		{
 			var consoleDiv = document.getElementById( 'id-console-text-in' );
-			consoleDiv.innerHTML = "<span style='  padding-left: 15px; color:yellow'>"+ "Game Initialized" +"</span>";
+			consoleDiv.innerHTML = "<span style='  padding-left: 15px; color:yellow'>"+ text +"</span>";
 			consoleDiv.scrollTop = consoleDiv.scrollHeight;
 		}
 		

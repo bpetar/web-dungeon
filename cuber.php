@@ -243,7 +243,7 @@
 				if(pickable_at_hand != 0)
 				{
 						pickable_at_hand = 0;
-						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
 				}
 				playerDead = true;
@@ -562,6 +562,7 @@
 			var audio_drop_rock;
 			var audio_door;
 			var audio_scroll;
+			var audio_root;
 			var audio_ambient;
 			var audio_fanfare;
 			var audio_win1;
@@ -1000,7 +1001,8 @@
 			function mainMenuNewGame()
 			{
 				main_menu_div.style.display = "none";
-				
+				//audio_maintheme.pause();
+				audio_change_volume(audio_maintheme,0);
 
 				//player data
 				martin_level = 1;
@@ -1305,7 +1307,7 @@
 				if(pickable_at_hand != 0)
 				{
 						pickable_at_hand = 0;
-						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
 				}
 			}
@@ -1854,6 +1856,7 @@
 					if(itemInfoShown == true)
 					{
 						document.getElementById("id-item-info-container").style.display = "none";
+						itemInfoShown = false;
 					}
 					
 					//mouse over container item
@@ -2266,7 +2269,7 @@
 				setCursor('auto');
 			}
 
-			function handleMouseClick(x,y) {
+			function handleMouseClick(event, x,y) {
 		
 				//this is only for doors i think
 				var isRightMB;
@@ -2487,7 +2490,7 @@
 							audio_click.currentTime = 0;
 							audio_click.play();
 							add_to_inventory(pickable_at_hand, slot_index);
-							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
 							
@@ -2504,7 +2507,7 @@
 						{
 							//alert("yo yo " + pickable_at_hand);
 							add_to_container(pickable_at_hand, slot_index);
-							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
 							audio_click.currentTime = 0;
@@ -2558,7 +2561,7 @@
 								//pickable at hand is gone
 								audio_click.currentTime = 0;
 								audio_click.play();
-								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon.style.display = "none";
 								pickable_at_hand_icon = 0;
 								pickable_at_hand = 0;
 							}
@@ -2610,7 +2613,7 @@
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is gone
-								pickable_at_hand_icon.style.left = "-170px";
+								pickable_at_hand_icon.style.display = "none";
 								pickable_at_hand_icon = 0;
 								pickable_at_hand = 0;
 							}
@@ -2635,7 +2638,7 @@
 						//add pickable at hand to niche
 						add_to_niche(nicheID,pickable_at_hand);
 						pickable_at_hand = 0;
-						pickable_at_hand_icon.style.left = "-170px";
+						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
 						
 						audio_drop.play();
@@ -2654,7 +2657,7 @@
 						//if monster took the pickable - make it dissapear
 						if(taken)
 						{
-							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand.mesh.visible = false;
 							pickable_at_hand = 0;
@@ -2676,7 +2679,7 @@
 							array_of_keyholes[item_over_keyhole].onPressFunc();
 							array_of_keyholes[item_over_keyhole].locked = false;
 							//drop the key icon
-							pickable_at_hand_icon.style.left = "-170px";
+							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
 							//key is spent so just dissapears
 							pickable_at_hand = 0;
@@ -2774,7 +2777,7 @@
 					pickable_at_hand.mesh.visible = true;
 					pickable_at_hand = 0;
 
-					pickable_at_hand_icon.style.left = "-170px";
+					pickable_at_hand_icon.style.display = "none";
 					pickable_at_hand_icon = 0;
 					
 					inventorySlide = -1;
@@ -2875,6 +2878,9 @@
 							if(mouse_over_item_in_inventory.consumable)
 							{
 								inventory_item_remove(mouse_over_item_in_inventory);
+								//hide item info dialog
+								document.getElementById("id-item-info-container").style.display = "none";
+								itemInfoShown = false;
 							}
 							m_RMBEventWasUsed = true;
 						}
@@ -2882,6 +2888,10 @@
 						{
 							//remove picked from inventory
 							inventory_item_remove(mouse_over_item_in_inventory);
+							//hide item info dialog
+							document.getElementById("id-item-info-container").style.display = "none";
+							itemInfoShown = false;
+							//play click
 							audio_click.currentTime = 0;
 							audio_click.play();
 							// if (audio_click.paused) {
@@ -3102,7 +3112,7 @@
 					
 				}
 
-				handleMouseClick(x_pos, y_pos);
+				handleMouseClick(event, x_pos, y_pos);
 				
 			}
 	
@@ -3492,6 +3502,7 @@
 				
 				if(pickable_at_hand_icon)
 				{
+					pickable_at_hand_icon.style.display = "block";
 					pickable_at_hand_icon.style.left = (x_pos - 64 + left) + 'px';
 					pickable_at_hand_icon.style.top = (y_pos - 64 + top) + 'px';
 				}
@@ -3577,8 +3588,6 @@
 			
 
 		</script>
-
-		<img id="pickable_at_hand_id" src="media/none.png" style="position:absolute; left:-170px;" />
 		
 	</body>
 </html>

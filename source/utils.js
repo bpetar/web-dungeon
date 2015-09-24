@@ -1,5 +1,31 @@
 //various utility functions..
 
+//function audio_change_volume
+function audio_change_volume(audio_element, desired_volume)
+{
+	var increment_direction = 1;
+	if(desired_volume<audio_element.volume)
+		increment_direction = -1;
+	
+	var increment = 0.1*increment_direction;
+	
+	audio_element.volume+=increment;
+	
+	if((increment_direction>0)&&(audio_element.volume < desired_volume))
+	{
+		setTimeout(audio_change_volume, 100, audio_element, desired_volume);
+	}
+	if((increment_direction<0)&&(audio_element.volume > desired_volume))
+	{
+		setTimeout(audio_change_volume, 100, audio_element, desired_volume);
+	}
+	
+	if (desired_volume==0)
+	{
+		//we reached volume 0, this is the time to stop the playing
+		audio_element.pause();
+	}
+}
 
 //get items from json by id
 function get_item_by_id(id)

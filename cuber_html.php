@@ -41,7 +41,7 @@
 
 			-webkit-filter: drop-shadow(0px 0px 13px rgba(255, 255, 0 , 1));
 
-			filter: url("../img/dialog/dialog-elements/shadow.svg#drop-shadow");
+			filter: drop-shadow(0px 0px 13px rgba(255,255,0,0.9));
 
 			-ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=0, 
 
@@ -71,6 +71,8 @@
 	</head>
 	<body onload="onPageLoad()">
     
+	<img id="pickable_at_hand_id" src="media/none.png" style="display:none; position:absolute; left:-170px; z-index:4;" />
+	
     <div id="gui" style="border:0px solid red; min-height:650px; min-width:1120px; height:100%; width:100px; display:block; margin-left: auto; margin-right: auto;">
 	
 
@@ -210,15 +212,15 @@
 				<span id="main_menu_message" style="font-size:14px; color:#988455;">Great earthquake awoke the dragon. Or was it the other way around? It was not the mindless beast, the dragon, but ancient malice with wit and wisdom that no man could match.</span> <br>
 				<br><br><br><br><br><br><br><br><br><br><br>
 				<div id="id-main-menu-buttons-container" style="border: solid red 0px;">
-					<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%;  cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
+					<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
 					</div>
-					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
+					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
 					</div>
-					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
+					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
 					</div>
-					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
+					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
 					</div>
-					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; background:url(media/gui/buttonser.png); background-size: 100% 100%; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
+					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
 					</div>
 				</div>
 				<div id="id-main-menu-credits-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
@@ -263,6 +265,7 @@
 			remove_element_class("id-main-menu-credits","shadow");
 			remove_element_class("id-main-menu-credits-back","shadow");
 			remove_element_class("id-main-menu-todo-back","shadow");
+			audio_maintheme.volume = 0.2;
 		}
 		
 		function mainMenuMouseOverNew()
@@ -270,6 +273,7 @@
 			add_element_class("id-main-menu-new","shadow");
 			audio_click.currentTime = 0;
 			audio_click.play();
+			audio_change_volume(audio_maintheme,0.7);
 		}
 		
 		function mainMenuMouseOverLoad()
