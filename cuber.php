@@ -7,7 +7,7 @@
     //include "cuber_play_counter.php";
 
 	session_start();
-    
+
 	if(isset($_SESSION['views']))
 	$_SESSION['views']=$_SESSION['views']+1;
 	else
@@ -26,14 +26,12 @@
 		if (isset($_COOKIE["saved_game"]))
 		{
 			$json_save_data = $_COOKIE["saved_game"];
-			echo "<script>var saved_game = true; var last_saved_data = " . $json_save_data . "; </script> ";
-			$last_saved_data = json_decode($json_save_data, true) ? : [];
-			echo "<script src='./maps/level" . $last_saved_data["current_level"] . "/level" . $last_saved_data["current_level"] . ".js'></script>";
+			echo "<script>var saved_game = true; var arrayOfGameStories = []; var last_saved_data = " . $json_save_data . "; </script> ";
+			//$last_saved_data = json_decode($json_save_data, true) ? : [];
 		}
 		else
 		{
-			echo "<script>var saved_game = false; var last_saved_data = {};</script> ";
-			echo "<script src='./maps/level3/level3.js'></script>";
+			echo "<script>var saved_game = false; var arrayOfGameStories = []; var last_saved_data = {'levels':{}};</script> ";
 		}
 	}
 	else
@@ -42,8 +40,8 @@
 		$expire=time()+60*60*24*30*3;
 		$useridvalue = rand(1000000000,10000000000);
 		setcookie("cubish_user", $useridvalue, $expire);
-		echo "<script>var saved_game = false; var last_saved_data = {}; var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
-		echo "<script src='./maps/level3/level3.js'></script>";
+		echo "<script>var saved_game = false; var arrayOfGameStories = []; var last_saved_data = {'levels':{}}; var first_time_user = true; var cubish_user_id = " . $useridvalue . "; </script> ";
+		//echo "<script src='./maps/level3/level3.js'></script>";
 	}
   
 	$_SESSION['inventozy'] = array();
@@ -84,6 +82,9 @@
 		<script src="./source/level.js"></script>
 		<script src="./source/scripts.js"></script>
 		<script src="./source/saveload.js"></script>
+		<script src="./source/doors.js"></script>
+		<script src="./source/lights.js"></script>
+		<script src="./source/main_game_loop.js"></script>
 
 		<script>
 		
@@ -92,30 +93,11 @@
 				alert("You have no WebGL on your browser!!");
 				Detector.addGetWebGLMessage();
 			}
-			
-			
-////////////////////////////  LOADING
 
-
-	//echo "Views=". $_SESSION['views'];
-	
-	//if($_SESSION['inventory'] > 2)
-	//{
-	//	echo "pickables_array = [[2,'Root','maps/level3/models/root.js', 10.5,4.5,6, 'media/root.png', 'This acctually heals my wounds..', rootHealingScript, 1]];";
-	//}
-	//else
-	//{
-	//	echo "pera = [];";
-	//}
-
-
-
-
-
-			
 			clickConsumed = false;
 
-			var existingMaps = ['level1', 'level2', 'level3'];
+			//TODO load from json!
+			var existingMaps = ['level1', 'level2', 'level3', 'level4'];
 			
 			//var stats = new Stats();
 			//stats.setMode(0); // 0: fps, 1: ms
@@ -154,7 +136,7 @@
 				//level_complete_div.style.display = "inline-block";
 				//audio_fanfare.play();
 				
-				show_message("<br><font size='6'>Next level is not published yet.</font><br><br>Secrets found: 0/0. 				<br><br> Levels should come out on weekly basis. You can save game and come back later to continue the game. If you want to receive notification about game updates, please <a id='myLink' title='Click to open registration window' href='#' onclick='displayRegisterDialog();return false;'>register</a>. <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 700,400, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
+				show_message("<br><font size='6'>That level is not published yet.</font><br><br> Levels should come out on weekly basis. You can save game and come back later to continue the game. If you want to receive notification about game updates, please <a id='myLink' title='Click to open registration window' href='#' onclick='displayRegisterDialog();return false;'>register</a>. <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 700,400, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 			}
 			
 			function DisplayInfoDiv(msg) {
@@ -225,12 +207,12 @@
 				new_pos.add(current_position);
 				console.log("player looks at x: " + new_pos.x + ", and z: " + new_pos.z);
 				//check if monster is in that position
-				for(i=0; i < array_of_monsters.length; i++)
+				for(i=0; i < currentlevelObj.array_of_monsters.length; i++)
 				{
 					//not precise calculation for monster position
-					if((array_of_monsters[i].position.x == new_pos.x) && (array_of_monsters[i].position.z == new_pos.z))
+					if((currentlevelObj.array_of_monsters[i].position.x == new_pos.x) && (currentlevelObj.array_of_monsters[i].position.z == new_pos.z))
 					{
-						return array_of_monsters[i];
+						return currentlevelObj.array_of_monsters[i];
 					}
 				}
 				
@@ -453,6 +435,10 @@
 			var container;
 			var menu_div;
 			
+			var lastModelTimer = 0;
+			var modelNumber = 0;
+			var relativeLevelModelCount = 0;
+			
 			var pickable_at_hand = 0;
 			var pickable_at_hand_icon = 0;
 			
@@ -473,7 +459,7 @@
 			var martin_defence = 10;
 			var martin_strength = 10;
 			var martin_dexterity = 10;
-			var current_level = 3;
+			var current_level = 0;
 			
 			//throwing weapon that is sent flying
 			var thrownWeapon;
@@ -525,8 +511,15 @@
 			var lhandDiv = 0; //id=player1-hand-l
 			var rhandDiv = 0; //id=player1-hand-r
 			
-			var level_complete_div = 0;
+			//game state
+			var GAME_STATE_MAIN_MENU = 0;
+			var GAME_STATE_IN_GAME = 1;
+			var GAME_STATE_LOADING = 2;
+			var gameState = GAME_STATE_MAIN_MENU;
+
 			
+			var level_complete_div = 0;
+			var currentStory = 0;
 			var all_items = 0;
 			
 			//player stats
@@ -560,7 +553,6 @@
 			var audio_click2;
 			var audio_drop;
 			var audio_drop_rock;
-			var audio_door;
 			var audio_scroll;
 			var audio_root;
 			var audio_ambient;
@@ -569,6 +561,8 @@
 			var audio_win2;
 			var audio_enchant;
 			var audio;
+			var foot_turn;
+			var bare_foot_audio;
 			var mouse_over_button = -1;
 			var mouse_over_prop = -1;
 			var mouse_over_animated_prop = -1;
@@ -590,9 +584,12 @@
 			var mouse_over_char_hud = -1;
 			
 			var pointLight;
+			var fog_color = 0x111100;
+			var fog_density = 0.008525;
 			
 			var progressbar_div;
 			var loading_msg_span;
+			var loading_msg_text_span;
 			var loading_div;
 			var main_menu_div;
 			var main_menu_sub_div;
@@ -637,6 +634,9 @@
 				
 				//this check prevents us to go from one message to another..
 				//if(speech_bubble_div.style.display == "none")
+				audio_click.currentTime = 0;
+				audio_click.play();
+							
 				{
 					speech_bubble_div.innerHTML = message;
 					
@@ -744,6 +744,7 @@
 				main_menu_sub_div = document.getElementById('id-main-menu-sub');
 				progressbar_div = document.getElementById('progressbar');
 				loading_msg_span = document.getElementById('loading_message');
+				loading_msg_text_span = document.getElementById('loading_message_text');
 				player1_face_div = document.getElementById('player1-face');
 				level_complete_div = document.getElementById('level_complete_dialog');
 				info_dialog_div = document.getElementById('info_dialog');
@@ -781,6 +782,10 @@
 					{
 						//enable load game button
 						document.getElementById("id-main-menu-load").style.color="#ffffff";
+						
+						var story = [];
+						arrayOfGameStories.push(story);
+						arrayOfGameStories[0].push(last_saved_data);
 					}
 					else
 					{
@@ -803,7 +808,7 @@
 
 
 				scene = new THREE.Scene();
-				scene.fog = new THREE.FogExp2( fog_color, fog_intensity );
+				scene.fog = new THREE.FogExp2( fog_color, fog_density );
 
 				
 				//calculate screen size. 
@@ -901,52 +906,46 @@
 				
 				main_menu_div.style.display = "none";
 				
-				console.log(last_saved_data);
-				current_position = new THREE.Vector3(last_saved_data.position.x,0,last_saved_data.position.z);
-				current_rotation = last_saved_data.rotation;
+				console.log(arrayOfGameStories[0][0]);
+				current_position = new THREE.Vector3(arrayOfGameStories[0][0].position.x,0,arrayOfGameStories[0][0].position.z);
+				current_rotation = arrayOfGameStories[0][0].rotation;
 				
 				//player data
-				martin_level = last_saved_data.martin_level;
+				martin_level = arrayOfGameStories[0][0].martin_level;
 				//experience
-				martin_experience = last_saved_data.martin_experience;
+				martin_experience = arrayOfGameStories[0][0].martin_experience;
 				//playerHPmax
-				playerHPmax = last_saved_data.martin_HPmax;
+				playerHPmax = arrayOfGameStories[0][0].martin_HPmax;
 				//playerHPcurrent;
-				playerHPcurrent = last_saved_data.martin_HPcurrent;
+				playerHPcurrent = arrayOfGameStories[0][0].martin_HPcurrent;
 				//strength
-				martin_strength = last_saved_data.martin_strength;
+				martin_strength = arrayOfGameStories[0][0].martin_strength;
 				//dexterity
-				martin_dexterity = last_saved_data.martin_dexterity;
+				martin_dexterity = arrayOfGameStories[0][0].martin_dexterity;
 				//attack
-				martin_attack = last_saved_data.martin_attack;
+				martin_attack = arrayOfGameStories[0][0].martin_attack;
 				//defence
-				martin_defence = last_saved_data.martin_defence;
+				martin_defence = arrayOfGameStories[0][0].martin_defence;
 				
 				//quirks
-				game_quirks = last_saved_data.quirks;
-
-				//level
-				current_level = last_saved_data.current_level;
-				
-				//inventory
-				clear_inventory();
-				loadInventory(last_saved_data.inventory)
+				game_quirks = arrayOfGameStories[0][0].quirks;
 				
 				//equipment
-				//equipped items 
-				if(last_saved_data.left_hand_item)
+				//equipped items moved to after level is loaded (it is async so we cant call it here)
+                //its moved to saveload.js: load_level_obj_MainGame...
+				/*if(arrayOfGameStories[0][0].left_hand_item)
 				{
-					martin_equipment.left_hand_item = load_item_by_id(last_saved_data.left_hand_item);
+					martin_equipment.left_hand_item = load_item_by_id(arrayOfGameStories[0][0].left_hand_item);
 					document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
 					document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 				}
 				// right_hand_item
-				if(last_saved_data.right_hand_item)
+				if(arrayOfGameStories[0][0].right_hand_item)
 				{
-					martin_equipment.right_hand_item = load_item_by_id(last_saved_data.right_hand_item);
+					martin_equipment.right_hand_item = load_item_by_id(arrayOfGameStories[0][0].right_hand_item);
 					document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
 					document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
-				}
+				}*/
 				// helmet
 				//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
 				// necklace
@@ -960,35 +959,14 @@
 				// pants
 				//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
 
-				//pickables
-				load_saved_pickables(last_saved_data.pickables);
-				
-				//monsters
-				//"monsters":[{"gameID":2,"position":{"x":150,"z":180},"mood":1,"hp":20}
-				load_saved_monsters(last_saved_data.monsters);
-				
-				//doors
-				//this must be called before load_level();
-				load_saved_doors(last_saved_data.doors);
-
-				//load level walls and floors etc..
-				//should be called after load_saved_doors because it will set the doors opened for saved position
-				load_level();
-
 				//load lights
 				load_lights();
-				
-				//load tapestries
-				load_tapestries();
-				
-				//load pressure plates (plynths)
-				load_plates ();
-				
-				//load chests
-				load_containers();
-				
-				//level specific action on load
-				levelOnLoad();
+
+                load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
+                
+				//load inventory moved to after level is loaded (it is async so we cant call it here)
+                //its moved to saveload.js: load_level_obj_MainGame...
+				clear_inventory();
 
 				loadCharacter();
 				
@@ -1000,59 +978,29 @@
 			
 			function mainMenuNewGame()
 			{
-				main_menu_div.style.display = "none";
-				//audio_maintheme.pause();
-				audio_change_volume(audio_maintheme,0);
-
-				//player data
-				martin_level = 1;
-				//experience
-				martin_experience = 1;
-				//playerHPmax
-				playerHPmax = 30;
-				//playerHPcurrent;
-				playerHPcurrent = 10;
-				//strength
-				martin_strength = 10;
-				//dexterity
-				martin_dexterity = 10;
-				//attack
-				martin_attack = 10;
-				//defence
-				martin_defence = 10;
-
-				//load pickables
-				load_pickables();
-				//load niches
-				loadNiches();
-				//load monsters
-				load_monsters();
-
-				//load level walls and floors etc..
-				//should be called after load_saved_doors because it will set the doors opened for saved position
-				load_level();
-
-				//load lights
-				load_lights();
+				//new game starts new story
 				
+				var story = [];
+				arrayOfGameStories.push(story);
+				currentStory = arrayOfGameStories.length-1;
+				arrayOfGameStories[currentStory].push({'levels':{}});
+				newGameMainMenu();
 				
-				//load tapestries
-				load_tapestries();
-				
-				//load pressure plates (plynths)
-				load_plates ();
-				
-				//load chests
-				load_containers();
-				
-				//level specific action on load
-				levelOnLoad();
+				/*if(saved_game)
+				{
+					if (confirm("WAIT! Are you sure you want to start new game? Your saved game will be lost forever!") == true) {
+						console.log("He is sure...");
 
-				loadCharacter();
-				
-				updatePlayerHealthBar();
-
-				show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
+						newGameMainMenu();
+						
+					} else {
+						console.log("We saved a life today.");
+					}
+				}
+				else
+				{
+					newGameMainMenu();
+				}*/
 			}
 			
 			function mainMenuCredits()
@@ -1204,35 +1152,37 @@
 				
 				
 				
-				for(i=0; i < floorsArr2D.length; i++)
+				for(i=0; i < currentlevelObj.floorsArr2D.length; i++)
 				{
-					if((floorsArr2D[i][0] == x) && (floorsArr2D[i][1] == z))
+					if((currentlevelObj.floorsArr2D[i][0] == x) && (currentlevelObj.floorsArr2D[i][1] == z))
 					{
 						//check if doors are in that position
-						for(j=0; j < doorsArr3D.length; j++)
+						for(j=0; j < currentlevelObj.array_of_doors.length; j++)
 						{
 							//if there are closed doors in that position..
-							if((doorsArr3D[j][0] == x) && (doorsArr3D[j][1] == z)) 
+							if((currentlevelObj.array_of_doors[j].map_position.x == x) && (currentlevelObj.array_of_doors[j].map_position.z == z)) 
 							{
-								if(doorsArr3D[j][3] == 0) return false;
+								if(currentlevelObj.array_of_doors[j].open == 0) return false;
 							}
 						}
 
 						//check if pillar is in that position
-						for(i=0; i < pillar_array.length; i++)
+						for(i=0; i < currentlevelObj.array_of_pillars.length; i++)
 						{
-							if((pillar_array[i][2] == x) && (pillar_array[i][3] == z))
+							if((currentlevelObj.array_of_pillars[i].map_position.x == x) && (currentlevelObj.array_of_pillars[i].map_position.z == z))
 							{
 								return false;
 							}
 						}
 						
 						//check if prop is in that position
-						if(typeof propsArr != 'undefined')
+						if(typeof currentlevelObj.array_of_props != 'undefined')
 						{
-							for(i=0; i < propsArr.length; i++)
+							for(i=0; i < currentlevelObj.array_of_props.length; i++)
 							{
-								if((propsArr[i][1] == x) && (propsArr[i][2] == z))
+								var propX = currentlevelObj.array_of_props[i].map_position.x;
+								var propZ = currentlevelObj.array_of_props[i].map_position.z;
+								if((propX == x) && (propZ == z))
 								{
 									return false;
 								}
@@ -1240,13 +1190,13 @@
 						}
 						
 						//check if monster is in that position
-						for(i=0; i < array_of_monsters.length; i++)
+						for(i=0; i < currentlevelObj.array_of_monsters.length; i++)
 						{
-							if(array_of_monsters[i].gameID != id)
+							if(currentlevelObj.array_of_monsters[i].gameID != id)
 							{
-								if(array_of_monsters[i].alive)
+								if(currentlevelObj.array_of_monsters[i].alive)
 								{
-									if(((array_of_monsters[i].position.x == x) && (array_of_monsters[i].position.z == z))||((array_of_monsters[i].target.x == x) && (array_of_monsters[i].target.z == z)))
+									if(((currentlevelObj.array_of_monsters[i].position.x == x) && (currentlevelObj.array_of_monsters[i].position.z == z))||((currentlevelObj.array_of_monsters[i].target.x == x) && (currentlevelObj.array_of_monsters[i].target.z == z)))
 									{
 										return false;
 									}
@@ -1259,11 +1209,11 @@
 				}
 				
 				//stairs
-				if(typeof stairsArr != 'undefined')
+				if(typeof currentlevelObj.stairsArr != 'undefined')
 				{
-					for(i=0; i < stairsArr.length; i++)
+					for(i=0; i < currentlevelObj.stairsArr.length; i++)
 					{
-						if((stairsArr[i][0] == x) && (stairsArr[i][1] == z))
+						if((currentlevelObj.stairsArr[i][0] == x) && (currentlevelObj.stairsArr[i][1] == z))
 						{
 							return true;
 						}
@@ -1277,9 +1227,9 @@
 			function positionIsHole(x,z) {
 				
 				//loop through holes array
-				for(i=0;i<holesArr.length;i++)
+				for(i=0;i<currentlevelObj.holesArr.length;i++)
 				{
-					if((holesArr[i][0] == x)&&(holesArr[i][1] == z))
+					if((currentlevelObj.holesArr[i][0] == x)&&(currentlevelObj.holesArr[i][1] == z))
 					{
 						return true;
 					}
@@ -1316,8 +1266,10 @@
 			//
 			function handleKeyDown(event) {
 				//console.log(event.keyCode);
-				//if (event.keyCode == 88) {animateDoor = true;}
 				
+				if(gameState != GAME_STATE_IN_GAME)
+					return;
+
 				if(cameraMove || cameraRotate || m_GamePaused)
 					return;
 					
@@ -1406,6 +1358,8 @@
 					cameraOriginalPosition.add(camera.position);
 					cameraOriginalLook.add(camera.look);
 					cameraRotate = true;
+					foot_turn.currentTime = 0;
+					foot_turn.play();
 				
 				} else if ((event.keyCode == 39) || (event.keyCode == 69)) {
 					// Turne Right E
@@ -1463,12 +1417,16 @@
 					cameraOriginalPosition.add(camera.position);
 					cameraOriginalLook.add(camera.look);
 					cameraRotate = true;
+					foot_turn.currentTime = 0;
+					foot_turn.play();
 					
 				} else if ((event.keyCode == 38) || (event.keyCode == 87)) {
 					// Up cursor key or W
 
 					//reset mouse
 					resetCursor();
+					
+					console.log(current_position);
 
 					var lookie = new THREE.Vector3(0,0,0).add(looker);
 					lookie.normalize();
@@ -1485,12 +1443,13 @@
 						cameraOriginalPosition.add(camera.position);
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
-						
-						console.log("start move z: " + cameraLooker.z);
+						bare_foot_audio.currentTime = 0;
+						bare_foot_audio.play();
+						//console.log("start move z: " + cameraLooker.z);
 					}
 					else
 					{
-						console.log("move audio w");
+						//console.log("move audio w");
 						audio.play();
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
@@ -1517,7 +1476,8 @@
 						cameraOriginalPosition.add(camera.position);
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
-
+						bare_foot_audio.currentTime = 0;
+						bare_foot_audio.play();
 					}
 					else
 					{
@@ -1553,7 +1513,8 @@
 						cameraOriginalPosition.add(camera.position);
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
-						
+						bare_foot_audio.currentTime = 0;
+						bare_foot_audio.play();
 					}
 					else
 					{
@@ -1589,12 +1550,18 @@
 						cameraOriginalPosition.add(camera.position);
 						cameraOriginalLook.add(camera.look);
 						cameraMove = true;
-						
+						bare_foot_audio.currentTime = 0;
+						bare_foot_audio.play();
 					}
 					else
 					{
 						audio.play();
 					}
+				}
+				else if (event.keyCode == 78)
+				{
+					console.log("new level test");
+					loadLevel(3,1);
 				}
 			}
 	
@@ -1662,16 +1629,14 @@
 				//renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
-
-			var lastModelTimer = 0;
-			var modelNumber = 0;
 			
 			function remove_loading_screen()
 			{
 				//console.log("remove loading screen");
 				//remove loading screen
 				loading_div.style.display = "none";
-				document.getElementById( 'info_dialog_button' ).focus();
+				//document.getElementById( 'info_dialog_button' ).focus();
+				gameState = GAME_STATE_IN_GAME;
 			}
 			
 			function onPageLoad()
@@ -1686,7 +1651,7 @@
 				console.log("update loading screen");
 				//remove loading screen
 				if(perc==100)
-					setInterval(function(){remove_loading_screen()}, 1000);
+					setTimeout(function(){remove_loading_screen()}, 400);
 				
 				var roundPercentage = Math.round(perc);
 				var loadingPoint = Math.round(perc/10); 
@@ -1759,6 +1724,9 @@
 			function onDocumentMouseMove( event )
 			{
 
+				if(gameState != GAME_STATE_IN_GAME)
+					return;
+			
 				x_pos = event.clientX;
 				y_pos = event.clientY;
 				
@@ -1895,32 +1863,32 @@
 					}
 					
 					//mouse over pickables
-					for (var i=0; i< array_of_pickables.length; i++)
+					for (var i=0; i< currentlevelObj.array_of_pickables.length; i++)
 					{
-						if(array_of_pickables[i].mesh !=0)
+						if(currentlevelObj.array_of_pickables[i].mesh !=0)
 						{
-                            //console.log("for 1:" + array_of_pickables[i].name);
-                            //console.log("camera: " + camera.position + ", array_of_pickables[i].mesh.position:" + array_of_pickables[i].mesh.position);
+                            //console.log("for 1:" + currentlevelObj.array_of_pickables[i].name);
+                            //console.log("camera: " + camera.position + ", currentlevelObj.array_of_pickables[i].mesh.position:" + currentlevelObj.array_of_pickables[i].mesh.position);
 							//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
-							if(array_of_pickables[i].mesh.visible == false)
+							if(currentlevelObj.array_of_pickables[i].mesh.visible == false)
 								continue;
 							
 							//check if player is close to pickable
-							if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
+							if(camera.position.distanceTo(currentlevelObj.array_of_pickables[i].mesh.position)>18)
 							{
-                                //console.log(array_of_pickables[i].name + " is too far away..");
+                                //console.log(currentlevelObj.array_of_pickables[i].name + " is too far away..");
 								continue;
 							}
 							
-                            //console.log(array_of_pickables[i].name + " is colse!");
+                            //console.log(currentlevelObj.array_of_pickables[i].name + " is colse!");
 							//check if pickable is clicked on
-							var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+							var intersects = ray.intersectObject( currentlevelObj.array_of_pickables[i].mesh );
 							
 							// if there is one (or more) intersections
 							if ( intersects.length > 0 )
 							{
 								// if the closest object intersected is not the currently stored intersection object
-								if ( intersects[0].object.id == array_of_pickables[i].id )
+								if ( intersects[0].object.id == currentlevelObj.array_of_pickables[i].id )
 								{
 									//change mouse pointer to cursor
 									setCursor('pointer');
@@ -1931,22 +1899,22 @@
 					}
 					
 					//mouse over wall writtings
-					for (var n=0; n<writtingsArr.length; n++)
+					for (var n=0; n<currentlevelObj.writtingsArr.length; n++)
 					{
-						if((writtingsArr[n][0] == current_position.x)&&(writtingsArr[n][1] == current_position.z))
+						if((currentlevelObj.writtingsArr[n][0] == current_position.x)&&(currentlevelObj.writtingsArr[n][1] == current_position.z))
 						{
 							var lookie = new THREE.Vector3(0,0,0).add(looker);
 							lookie.normalize();
 							
-							if(((lookie.x==0) && (lookie.z ==1) && (writtingsArr[n][2] == 0)) //north
-							|| ((lookie.x==0) && (lookie.z ==-1) && (writtingsArr[n][2] == 2)) //south
-							|| ((lookie.x==1) && (lookie.z ==0) && (writtingsArr[n][2] == 3)) //left
-							|| ((lookie.x==-1) && (lookie.z ==0) && (writtingsArr[n][2] == 1))) //right
+							if(((lookie.x==0) && (lookie.z ==1) && (currentlevelObj.writtingsArr[n][2] == 0)) //north
+							|| ((lookie.x==0) && (lookie.z ==-1) && (currentlevelObj.writtingsArr[n][2] == 2)) //south
+							|| ((lookie.x==1) && (lookie.z ==0) && (currentlevelObj.writtingsArr[n][2] == 3)) //left
+							|| ((lookie.x==-1) && (lookie.z ==0) && (currentlevelObj.writtingsArr[n][2] == 1))) //right
 							{
-								console.log("writ " + n + " mesh:" + writtingsArr[n][4]);
-								if(writtingsArr[n][4] != 0)
+								console.log("writ " + n + " mesh:" + currentlevelObj.writtingsArr[n][4]);
+								if(currentlevelObj.writtingsArr[n][4] != 0)
 								{
-									var intersects = ray.intersectObject( writtingsArr[n][4] );
+									var intersects = ray.intersectObject( currentlevelObj.writtingsArr[n][4] );
 							
 									console.log("writtingsArr");
 									// if there is one (or more) intersections
@@ -1964,15 +1932,15 @@
 					}
 					
 					//mouse over doors
-					for(var d=0; d < doorsArr3D.length; d++)
+					for(var d=0; d < currentlevelObj.array_of_doors.length; d++)
 					{
-						if(doorsArr3D[d][4] != 0)
+						if(currentlevelObj.array_of_doors[d].mesh != 0)
 						{
 							//if there are doors in that position
-							if((doorsArr3D[d][0] == look_pos.x) && (doorsArr3D[d][1] == look_pos.z))
+							if((currentlevelObj.array_of_doors[d].map_position.x == look_pos.x) && (currentlevelObj.array_of_doors[d].map_position.z == look_pos.z))
 							{
 								//intersect..
-								var intersects = ray.intersectObject( doorsArr3D[d][4] );
+								var intersects = ray.intersectObject( currentlevelObj.array_of_doors[d].mesh );
 								
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
@@ -1985,14 +1953,14 @@
 					}
 					
 					//mouse over secret walls
-					for(var s=0; s<secretWallsArr.length; s++)
+					for(var s=0; s<currentlevelObj.secretWallsArr.length; s++)
 					{
-						if(secretWallsArr[s].length > 3)
+						if(currentlevelObj.secretWallsArr[s].length > 3)
 						{
-							if((secretWallsArr[s][0] == current_position.x)&&(secretWallsArr[s][1] == current_position.z))
+							if((currentlevelObj.secretWallsArr[s][0] == current_position.x)&&(currentlevelObj.secretWallsArr[s][1] == current_position.z))
 							{
 								//intersect..
-								var intersects = ray.intersectObject( secretWallsArr[s][3] );
+								var intersects = ray.intersectObject( currentlevelObj.secretWallsArr[s][3] );
 								
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
@@ -2006,14 +1974,14 @@
 					}
 					
 					//mouse over buttons
-					for (var b=0; b<buttons_array.length; b++)
+					for (var b=0; b<currentlevelObj.array_of_buttons.length; b++)
 					{
-						if((buttons_array[b][2] == current_position.x)&&(buttons_array[b][3] == current_position.z))
+						if((currentlevelObj.array_of_buttons[b].map_position.x == current_position.x)&&(currentlevelObj.array_of_buttons[b].map_position.z == current_position.z))
 						{
 							//console.log("paaaaaaa");
-							if(array_of_buttons[b].mesh != 0)
+							if(currentlevelObj.array_of_buttons[b].mesh != 0)
 							{
-								var intersects = ray.intersectObject( array_of_buttons[b].mesh );
+								var intersects = ray.intersectObject( currentlevelObj.array_of_buttons[b].mesh );
 								
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
@@ -2030,16 +1998,18 @@
 					
 					
 					//mouse over props
-					if(typeof propsArr != 'undefined')
+					if(typeof currentlevelObj.array_of_props != 'undefined')
 					{
-						for (var p=0; p<propsArr.length; p++)
+						for (var p=0; p<currentlevelObj.array_of_props.length; p++)
 						{
-							if((propsArr[p][1] == look_pos.x)&&(propsArr[p][2] == look_pos.z))
+							var propX = currentlevelObj.array_of_props[p].map_position.x;
+							var propZ = currentlevelObj.array_of_props[p].map_position.z;
+							if((propX == look_pos.x)&&(propZ == look_pos.z))
 							{
 								//console.log("prrrooopaaaaaaa");
-								if(propsArr[p].mesh != 0)
+								if(currentlevelObj.array_of_props[p].mesh != 0)
 								{
-									var intersects = ray.intersectObject( array_of_props[p].mesh );
+									var intersects = ray.intersectObject( currentlevelObj.array_of_props[p].mesh );
 									
 									// if there is one (or more) intersections
 									if ( intersects.length > 0 )
@@ -2056,16 +2026,18 @@
 					}
 					
 					//mouse over animated props
-					if(typeof array_of_animated_props != 'undefined')
+					if(typeof currentlevelObj.array_of_animated_props != 'undefined')
 					{
-						for (var p=0; p<array_of_animated_props.length; p++)
+						for (var p=0; p<currentlevelObj.array_of_animated_props.length; p++)
 						{
-							if(((animatedPropsArr[p][1] == look_pos.x)&&(animatedPropsArr[p][2] == look_pos.z))||((animatedPropsArr[p][1] == current_position.x)&&(animatedPropsArr[p][2] == current_position.z)))
+							var propX = currentlevelObj.array_of_animated_props[p].map_position.x;
+							var propZ = currentlevelObj.array_of_animated_props[p].map_position.z;
+							if(((propX == look_pos.x)&&(propZ == look_pos.z))||((propX == current_position.x)&&(propZ == current_position.z)))
 							{
 								console.log("anim prrrooopaaaaaaa");
-								if(array_of_animated_props[p].mesh != 0)
+								if(currentlevelObj.array_of_animated_props[p].mesh != 0)
 								{
-									var intersects = ray.intersectObject( array_of_animated_props[p].mesh );
+									var intersects = ray.intersectObject( currentlevelObj.array_of_animated_props[p].mesh );
 									
 									// if there is one (or more) intersections
 									if ( intersects.length > 0 )
@@ -2082,14 +2054,14 @@
 					}
 					
 					//mouse over keyholes
-					for (var k=0; k<keyholes_array.length; k++)
+					for (var k=0; k<currentlevelObj.array_of_keyholes.length; k++)
 					{
-						if((keyholes_array[k][2] == current_position.x)&&(keyholes_array[k][3] == current_position.z))
+						if((currentlevelObj.array_of_keyholes[k].map_position.x == current_position.x)&&(currentlevelObj.array_of_keyholes[k].map_position.z == current_position.z))
 						{
 							//console.log("paaaaaaa");
-							if(array_of_keyholes[k].mesh != 0)
+							if(currentlevelObj.array_of_keyholes[k].mesh != 0)
 							{
-								var intersects = ray.intersectObject( array_of_keyholes[k].mesh );
+								var intersects = ray.intersectObject( currentlevelObj.array_of_keyholes[k].mesh );
 								
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
@@ -2109,9 +2081,9 @@
 					if(c > -1)
 					{
 						//console.log("coooooontainernrr");
-						if(array_of_containers[c].mesh != 0)
+						if(currentlevelObj.array_of_containers[c].mesh != 0)
 						{
-							var intersects = ray.intersectObject( array_of_containers[c].mesh );
+							var intersects = ray.intersectObject( currentlevelObj.array_of_containers[c].mesh );
 							
 							// if there is one (or more) intersections
 							if ( intersects.length > 0 )
@@ -2126,10 +2098,10 @@
 					}
 					
 					//mouse over monster
-					for ( var m = 0; m < array_of_monsters.length; m ++ )
+					for ( var m = 0; m < currentlevelObj.array_of_monsters.length; m ++ )
 					{
-						var monster = array_of_monsters[ m ];
-						if(monster.mesh != 0)
+						var monster = currentlevelObj.array_of_monsters[ m ];
+						if((monster.mesh != 0)&&(monster.alive))
 						{
 							//is monster standing in front of player?
 							if((monster.position.x == look_pos.x)&&(monster.position.z == look_pos.z))
@@ -2195,14 +2167,14 @@
 					}
 					
 					//pickable over keyhole
-					for (var b=0; b<keyholes_array.length; b++)
+					for (var k=0; k<currentlevelObj.array_of_keyholes.length; k++)
 					{
-						if((keyholes_array[b][2] == current_position.x)&&(keyholes_array[b][3] == current_position.z))
+						if((currentlevelObj.array_of_keyholes[k].map_position.x == current_position.x)&&(currentlevelObj.array_of_keyholes[k].map_position.z == current_position.z))
 						{
 							//console.log("paaaaaaa");
-							if(array_of_keyholes[b].mesh != 0)
+							if(currentlevelObj.array_of_keyholes[k].mesh != 0)
 							{
-								var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+								var intersects = ray.intersectObject( currentlevelObj.array_of_keyholes[k].mesh );
 								
 								// if there is one (or more) intersections
 								if ( intersects.length > 0 )
@@ -2210,7 +2182,7 @@
 									console.log("prrrt " + item_over_keyhole);
 									//change mouse pointer to cursor
 									setCursor('pointer');
-									item_over_keyhole = b;
+									item_over_keyhole = k;
 									return;
 								}
 								else
@@ -2224,7 +2196,7 @@
 									projector.unprojectVector( vector, camera );
 									var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
-									var intersects = ray.intersectObject( array_of_keyholes[b].mesh );
+									var intersects = ray.intersectObject( currentlevelObj.array_of_keyholes[k].mesh );
 								
 									// if there is one (or more) intersections
 									if ( intersects.length > 0 )
@@ -2232,7 +2204,7 @@
 										console.log("grrrt " + item_over_keyhole);
 										//change mouse pointer to cursor
 										setCursor('pointer');
-										item_over_keyhole = b;
+										item_over_keyhole = k;
 										return;
 									}
 								
@@ -2242,9 +2214,9 @@
 					}
 					
 					//pickable over monster
-					for ( var m = 0; m < array_of_monsters.length; m ++ )
+					for ( var m = 0; m < currentlevelObj.array_of_monsters.length; m ++ )
 					{
-						var monster = array_of_monsters[ m ];
+						var monster = currentlevelObj.array_of_monsters[ m ];
 						if(monster.mesh != 0)
 						{
 							//is monster standing in front of player?
@@ -2301,31 +2273,30 @@
 					var look_pos =new THREE.Vector3(0,0,0).add(current_position);
 					look_pos.add(looker);
 					
-						
 					/*if(yaw == 0) {xDoor = currentPos.x; zDoor = currentPos.z-1;}
 					if((yaw == 90)||(yaw == -270)) {xDoor = currentPos.x-1; zDoor = currentPos.z}
 					if((yaw == 180)||(yaw == -180)) {xDoor = currentPos.x; zDoor = currentPos.z+1;}
 					if((yaw == 270)||(yaw == -90)) {xDoor = currentPos.x+1; zDoor = currentPos.z}*/
 
-					for(i=0; i < doorsArr3D.length; i++)
+					for(i=0; i < currentlevelObj.array_of_doors.length; i++)
 					{
 						//if there are doors in that position
-						if((doorsArr3D[i][0] == look_pos.x) && (doorsArr3D[i][1] == look_pos.z))
+						if((currentlevelObj.array_of_doors[i].map_position.x == look_pos.x) && (currentlevelObj.array_of_doors[i].map_position.z == look_pos.z))
 						{
 							// and door are unlocked..
-							if(doorsArr3D[i][6] == 1)
+							if(currentlevelObj.array_of_doors[i].openable == 1)
 							{
 								/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
-								doorsArr3D[i][5] = 1; //animate flag
+								currentlevelObj.array_of_doors[i].animate = true; //animate flag
 								//alert("ima!");
-								audio_door.load();
-								audio_door.play();
-								if(doorsArr3D[i][3] == 0) doorsArr3D[i][3] = 1; // open/close flag
-								else doorsArr3D[i][3] = 0;
+								currentlevelObj.array_of_doors[i].audio_door.currentTime = 0;
+								currentlevelObj.array_of_doors[i].audio_door.play();
+								if(currentlevelObj.array_of_doors[i].open == 0) currentlevelObj.array_of_doors[i].open = 1; // open/close flag
+								else currentlevelObj.array_of_doors[i].open = 0;
 							}
 							else
 							{
-								if(doorsArr3D[i][3] == 0)
+								if(currentlevelObj.array_of_doors[i].open == 0)
 								{
 									DisplayInfoDiv("These doors are opened elsewhere..");
 								}
@@ -2394,6 +2365,8 @@
 			function onMouseDown(event) {
 
 				//console.log("onMouseDown");
+				if(gameState != GAME_STATE_IN_GAME)
+					return;
 
 				var isRightMB;
 				var e = event || window.event;
@@ -2632,11 +2605,11 @@
 					}
 					
 					//check if player is trying to put it in the niche
-					var nicheID = niche_clicked_in(x_pos,y_pos);
+					var nicheID = niche_clicked_in(currentlevelObj,x_pos,y_pos);
 					if(nicheID > -1)
 					{
 						//add pickable at hand to niche
-						add_to_niche(nicheID,pickable_at_hand);
+						add_to_niche(currentlevelObj,nicheID,pickable_at_hand);
 						pickable_at_hand = 0;
 						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
@@ -2649,7 +2622,7 @@
 					//var monsterID = monster_clicked_on(look_pos);
 					if(item_over_monster > -1)
 					{
-						var monster = array_of_monsters[ item_over_monster ];
+						var monster = currentlevelObj.array_of_monsters[ item_over_monster ];
 						
 						console.log("player clicked item on " + monster.name);
 						var taken = monster.OnItemClick(pickable_at_hand);
@@ -2659,7 +2632,8 @@
 						{
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
-							pickable_at_hand.mesh.visible = false;
+							remove_pickable_from_array(currentlevelObj.array_of_pickables,pickable_at_hand);
+                            pickable_at_hand.mesh.visible = false;
 							pickable_at_hand = 0;
 						}
 						return;
@@ -2670,14 +2644,14 @@
 					{
 						console.log("iiiki " + item_over_keyhole);
 						//if item id is same as keyhole id => it is a match!
-						if(keyholes_array[item_over_keyhole][0] == pickable_at_hand.gameID)
+						if(currentlevelObj.array_of_keyholes[item_over_keyhole].gameID == pickable_at_hand.gameID)
 						{
 							//unlock the keyhole!
 							//play sound
 							audio_lock_unlock.play();
 							//call script function
-							array_of_keyholes[item_over_keyhole].onPressFunc();
-							array_of_keyholes[item_over_keyhole].locked = false;
+							currentlevelObj.array_of_keyholes[item_over_keyhole].onPressFunc();
+							currentlevelObj.array_of_keyholes[item_over_keyhole].locked = false;
 							//drop the key icon
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
@@ -2702,7 +2676,7 @@
 					//drop it on the ground
 					
 					//check if pickable is dropped on the pressure plate plynth
-					var plateID = standing_on_plate();
+					var plateID = standing_on_plate(currentlevelObj);
 					var looker = camera.look.clone().sub(camera.position);
 					
 					DisplayInfoDiv(pickable_at_hand.name + " dropped on the ground..");
@@ -2720,7 +2694,7 @@
 							looker.multiplyScalar(0.62);
 							gWeightOnThePlate = true;
 							pickable_at_hand.plated = plateID;
-							array_of_plates[plateID].mesh.position.y -=0.2;
+							currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 							//plate_click_audio.play();
 							//var onPress = plates_array[plateID][5];
 							//if(onPress !=0 )
@@ -2730,14 +2704,14 @@
 						}
 						else
 						{
-							plateID = clicking_on_plate();
+							plateID = clicking_on_plate(currentlevelObj);
 							//if not standing on plate, check if clicking on plate
 							if(plateID>-1)
 							{
 								looker.multiplyScalar(1.52);
 								gWeightOnThePlate = true;
 								pickable_at_hand.plated = plateID;
-								array_of_plates[plateID].mesh.position.y -=0.2;
+								currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 								plate_click_audio.play();
 								var onPress = plates_array[plateID][5];
 								if(onPress !=0 )
@@ -2775,6 +2749,11 @@
 						pickable_at_hand.mesh.position.y = 0;
 					}
 					pickable_at_hand.mesh.visible = true;
+                    //add this pickable to array of pickables if not already there!
+                    if(get_pickable_item_by_id(currentlevelObj,pickable_at_hand.gameID) == 0)
+                    {
+                        currentlevelObj.array_of_pickables.push(pickable_at_hand);
+                    }
 					pickable_at_hand = 0;
 
 					pickable_at_hand_icon.style.display = "none";
@@ -2790,7 +2769,7 @@
 					//click on monster
 					if(mouse_over_monster > -1)
 					{
-						var monster = array_of_monsters[ mouse_over_monster ];
+						var monster = currentlevelObj.array_of_monsters[ mouse_over_monster ];
 						monster.OnClick();
 					}
 					
@@ -2901,7 +2880,7 @@
 							// }
 							//place inventory item at hand
 							pickable_at_hand = mouse_over_item_in_inventory;
-							pickable_at_hand.mesh.visible = false; //TODO remove this line?
+							
 							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 							pickable_at_hand_icon.src = mouse_over_item_in_inventory.icon;
 						}
@@ -2918,7 +2897,7 @@
 						{
 							//place container item at hand
 							pickable_at_hand = item;
-							pickable_at_hand.mesh.visible = false;
+							//pickable_at_hand.mesh.visible = false;
 							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 							pickable_at_hand_icon.src = item.icon;
 
@@ -2930,16 +2909,16 @@
 					//button
 					if(mouse_over_button > -1)
 					{
-						if(array_of_buttons[mouse_over_button].pressed == false)
+						if(currentlevelObj.array_of_buttons[mouse_over_button].pressed == false)
 						{
 							//play sound
 							button_click_audio.play();
 							//move button in the wall
-							array_of_buttons[mouse_over_button].mesh.position.x -= 0.05; //TODO move depending on orientation
+							currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.x -= 0.05; //TODO move depending on orientation
 							//do button action
-							array_of_buttons[mouse_over_button].onPressFunc();
+							currentlevelObj.array_of_buttons[mouse_over_button].onPressFunc();
 							//set it to be budged.. no more clicking.
-							array_of_buttons[mouse_over_button].pressed = true;
+							currentlevelObj.array_of_buttons[mouse_over_button].pressed = true;
 							//info
 							DisplayInfoDiv("Buttons triggers some mechanism!");
 						}
@@ -2949,29 +2928,26 @@
 					if(mouse_over_prop > -1)
 					{
 						//do prop click action
-						array_of_props[mouse_over_prop].onPressFunc();
+						currentlevelObj.array_of_props[mouse_over_prop].onPressFunc();
 					}
 					if(mouse_over_animated_prop > -1)
 					{
 						//do prop click action
-						array_of_animated_props[mouse_over_animated_prop].onPressFunc();
+						currentlevelObj.array_of_animated_props[mouse_over_animated_prop].onPressFunc();
 					}
 					
 					
 					//secret wall
 					if(mouse_over_secret_wall > -1)
 					{
-						DisplayInfoDiv(secretWallsArr[mouse_over_secret_wall][4]);
+						DisplayInfoDiv(currentlevelObj.secretWallsArr[mouse_over_secret_wall][4]);
 					}
 					
-					//button
+					//keyhole
 					if(mouse_over_keyhole > -1)
 					{
-						//play sound ?
-						//button_click_audio.play();
-						
 						//show info
-						if(array_of_keyholes[mouse_over_keyhole].locked)
+						if(currentlevelObj.array_of_keyholes[mouse_over_keyhole].locked)
 						{
 							DisplayInfoDiv("For every keyhole there is a key..");
 						}
@@ -2998,7 +2974,7 @@
 					{
 						audio_click.play();
 						//console.log("clicking at writting!");
-						show_message(" <br> " + writtingsArr[mouse_over_wall_writting][3] + " <br><br><br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 300, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
+						show_message(" <br> " + currentlevelObj.writtingsArr[mouse_over_wall_writting][3] + " <br><br><br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 300, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
 						//DisplayInfoDiv("Ancient writting deciphered..");
 						mouse_over_wall_writting = -1;
 						return;
@@ -3031,48 +3007,49 @@
 					projector.unprojectVector( vector, camera );
 					var ray = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
 
-					for (var i=0; i< array_of_pickables.length; i++)
+					for (var i=0; i< currentlevelObj.array_of_pickables.length; i++)
 					{
-                        //console.log("for 2:" + array_of_pickables[i].name)
+                        //console.log("for 2:" + currentlevelObj.array_of_pickables[i].name)
 						//first skip buggers that are already picked. they are invisible still laying on the ground and intersection picks them up..
-						if(array_of_pickables[i].mesh.visible == false)
+						if(currentlevelObj.array_of_pickables[i].mesh.visible == false)
 							continue;
 						
 						//check if player is close to pickable
-						if(camera.position.distanceTo(array_of_pickables[i].mesh.position)>18)
+						if(camera.position.distanceTo(currentlevelObj.array_of_pickables[i].mesh.position)>18)
 						{
-                            //console.log ("asd = " + camera.position.distanceTo(array_of_pickables[i].mesh.position));
-							//console.log("too far = " + Math.abs(camera.position.z-array_of_pickables[i].position.z));
+                            //console.log ("asd = " + camera.position.distanceTo(currentlevelObj.array_of_pickables[i].mesh.position));
+							//console.log("too far = " + Math.abs(camera.position.z-currentlevelObj.array_of_pickables[i].position.z));
 							continue;
 						}
 						
-                        //console.log ("close!" + array_of_pickables[i].name);
+                        //console.log ("close!" + currentlevelObj.array_of_pickables[i].name);
                         
 						//check if pickable is clicked on
-						var intersects = ray.intersectObject( array_of_pickables[i].mesh );
+						var intersects = ray.intersectObject( currentlevelObj.array_of_pickables[i].mesh );
 						
 						// if there is one (or more) intersections
 						if ( intersects.length > 0 )
 						{
 							
 							// if the closest object intersected is not the currently stored intersection object
-							if ( intersects[0].object.id == array_of_pickables[i].id )
+							if ( intersects[0].object.id == currentlevelObj.array_of_pickables[i].id )
 							{
-								pickable_at_hand = array_of_pickables[i];
-								pickable_at_hand.mesh.visible = false;
+								pickable_at_hand = currentlevelObj.array_of_pickables[i];
+                                remove_pickable_from_array(currentlevelObj.array_of_pickables,pickable_at_hand);
+                                pickable_at_hand.mesh.visible = false;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								var from_where = "from the ground..";
 								if(pickable_at_hand.niched > -1) from_where = "from niche in the wall";
 								DisplayInfoDiv(pickable_at_hand.name + " picked up " + from_where);
-								//alert("picked z = " + Math.abs(camera.position.z-array_of_pickables[i].mesh.position.z));
+								//alert("picked z = " + Math.abs(camera.position.z-currentlevelObj.array_of_pickables[i].mesh.position.z));
 								pickable_at_hand_icon.src = pickable_at_hand.icon;
 								//if pickable belongs to niche, remove from niche array
-								if(pickable_at_hand.niched > -1) remove_from_niche(pickable_at_hand);
+								if(pickable_at_hand.niched > -1) remove_from_niche(currentlevelObj,pickable_at_hand);
 								if(pickable_at_hand.plated > -1)
 								{
 									//TODO: check if more items remain on the plate
 									gWeightOnThePlate = false;
-									array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
+									currentlevelObj.array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
 									//console.log("lifting item off the plate!");
 									plate_unclick_audio.play();
 									var onUnpress = plates_array[pickable_at_hand.plated][6];
@@ -3106,7 +3083,7 @@
 						}
 						else
 						{
-							//alert("not intersecting!" + array_of_pickables[i].mesh.id);
+							//alert("not intersecting!" + currentlevelObj.array_of_pickables[i].mesh.id);
 						}
 					}
 					
@@ -3117,473 +3094,15 @@
 			}
 	
 
-			    var lastTime = 0;
+			var lastTime = 0;
 
 
 	
 			function animate() {
 			
-				if(m_GamePaused)
-					return;
-
 				requestAnimationFrame( animate );
-
-				var timeNow = new Date().getTime();
+				game_loop();
 				
-				//..so it begins
-				if (lastTime != 0) {
-
-					var elapsed = timeNow - lastTime;
-
-					update_teleport(elapsed/10000);
-					
-					//lifting wound div up and opacitating it to transparent
-					if(monster_wound_div.style.display == "inline-block")
-					{
-						monster_wound_div_top_lift += elapsed;
-						if(monster_wound_div_top_lift < 3000)
-						{
-							var new_top = monster_wound_div_top - monster_wound_div_top_lift/20;
-							monster_wound_div.style.top = new_top + "px";
-							monster_wound_div.style.opacity -= monster_wound_div_top_lift/30000;
-						}
-						else
-						{
-							//wound should dissappear
-							monster_wound_div.style.display = 'none';
-						}
-					}
-					
-					//lifting info div up and opacitating it to transparent
-					if(info_tip_div.style.display == "inline-block")
-					{
-						info_tip_div_top_lift += elapsed;
-						if(info_tip_div_top_lift < 6000)
-						{
-							var new_top = info_tip_div_top - info_tip_div_top_lift/20;
-							//info_tip_div.style.top = new_top + "px";
-							info_tip_div.style.opacity -= info_tip_div_top_lift/60000;
-						}
-						else
-						{
-							//wound should dissappear
-							info_tip_div.style.display = 'none';
-						}
-					}
-					
-					if(playerCanHitLeft == false)
-					{
-						playerHitTimeoutLeft -= elapsed;
-						
-						if(playerHitTimeoutLeft < 0)
-						{
-							console.log("left hit available again");
-							playerHitTimeoutLeft = 0;
-							playerCanHitLeft = true;
-							lhandDiv.style.opacity=1.0;
-						}
-					}
-					
-					if(playerCanHitRight == false)
-					{
-						playerHitTimeoutRight -= elapsed;
-						
-						if(playerHitTimeoutRight < 0)
-						{
-							console.log("right hit available again");
-							playerHitTimeoutRight = 0;
-							playerCanHitRight = true;
-							rhandDiv.style.opacity=1.0;
-						}
-					}
-
-					//animate camera move
-					if(cameraMove)
-					{
-						//calculate delta position from start to end based on elapsed time
-						var deltaMove = elapsed*SQUARE_SIZE/STEP_MOVE_DURATION;
-						var deltaLooker = new THREE.Vector3(0,0,0).add(cameraLooker);
-						deltaLooker.multiplyScalar(deltaMove/10); //i don't know why i have to divide here by 10?
-						
-						//set camera position to delta
-						cameraDelta+=deltaMove;
-						camera.position.add(deltaLooker);
-						camera.look.add(deltaLooker);
-						camera.lookAt(camera.look);
-						pointLight.position.add(deltaLooker);
-						if (cameraDelta >= SQUARE_SIZE-0.3)
-						{
-							//console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
-							//console.log("stop move cameraLooker.x: " + cameraLooker.x);
-							cameraMove = false;
-							camera.position.multiplyScalar(0);
-							camera.position.add(cameraOriginalPosition.add(cameraLooker));
-							camera.look.multiplyScalar(0);
-							camera.look.add(cameraOriginalLook.add(cameraLooker));
-							camera.lookAt(camera.look);
-							current_position.add(cameraLookie);
-							cameraLooker.multiplyScalar(0);
-							cameraLookie.multiplyScalar(0);
-							cameraOriginalPosition.multiplyScalar(0);
-							cameraOriginalLook.multiplyScalar(0);
-							cameraDelta = 0;
-							
-							pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
-							
-							//check if player stepped onto hole in the ground
-							if(positionIsHole(current_position.x, current_position.z))
-							{
-								//animate fall into hole
-								fallInHole();
-							}
-							
-							
-							if(typeof win_area != 'undefined')
-							{
-								if((win_area[0][0]==current_position.x)&&(win_area[0][1]==current_position.z)&&(win_area[0][3]==0))
-								{
-									//play win sound
-									audio_win1.play();
-									//show win message
-									DisplayInfoDiv(win_area[0][2]);
-									//set area flag to discovered
-									win_area[0][3]=1;
-								}
-							}
-							
-							//check if player was standing on press plate before this move..
-							if(gStandingOnPlate > -1)
-							{
-								//call pressure plate onUnpress function..
-								if(gWeightOnThePlate)
-								{
-									console.log("plate is not unpressed because weight is on it!");
-								}
-								else
-								{
-									console.log("plate unpressed!");
-									///
-									plate_unclick_audio.play();
-									var onUnpress = plates_array[gStandingOnPlate][6];
-									if(onUnpress !=0 )
-									{
-										onUnpress();
-									}
-								}
-								gStandingOnPlate = -1;
-							}
-							
-							//check if player has stepped on the pressure plate
-							var plateID = standing_on_plate();
-							if(plateID>-1)
-							{
-								if (!gWeightOnThePlate)
-								{
-									//call pressure plate onPress function..
-									console.log("plate pressed!");
-									plate_click_audio.play();
-									var onPress = plates_array[plateID][5];
-									if(onPress !=0 )
-									{
-										onPress();
-									}
-								}
-								gStandingOnPlate = plateID;
-							}
-							
-							//check if player stepped onto teleport!
-							if(teleport != 0)
-							{
-								if(positionIsTeleport(current_position.x, current_position.z))
-								{
-									//pause game
-									//m_GamePaused = true;
-									//show final register/feedback level complete screen!
-									//displayLevelCompleteDialog();
-									teleportGo();
-								}
-							}
-							
-							//if stepped on stairs..
-							if(typeof stairsArr != 'undefined')
-							{
-								for(i=0; i < stairsArr.length; i++)
-								{
-									if((stairsArr[i][0] == current_position.x) && (stairsArr[i][1] == current_position.z))
-									{
-										//go to next level..
-										console.log("go to next level: " + stairsArr[i][5]);
-										
-										var mapExists = false;
-										for(var l=0; l<existingMaps.length; l++)
-										{
-											if (existingMaps[l] == stairsArr[i][5])
-											{
-												mapExists = true;
-												break;
-											}
-										}
-										if(mapExists)
-										{
-											window.location.href = 'cuber.php?lvl=' + stairsArr[i][5];
-										}
-										else
-										{
-											//display no more levels info..
-											displayLevelInCompleteDialog();
-										}
-									}
-								}
-							}
-						}
-						
-					}
-					
-					//animate camera rotate
-					if(cameraRotate)
-					{
-						var deltaMove = elapsed*SQUARE_SIZE/STEP_MOVE_DURATION;
-						var deltaRotateMover = new THREE.Vector3(0,0,0).add(cameraRotateMover);
-						var deltaRotateTurner = new THREE.Vector3(0,0,0).add(cameraRotateTurner);
-						deltaRotateMover.multiplyScalar(deltaMove/cameraRotateMover.distanceTo(new THREE.Vector3(0,0,0))); //i don't know why i have to divide here by length?
-						deltaRotateTurner.multiplyScalar(deltaMove/cameraRotateTurner.distanceTo(new THREE.Vector3(0,0,0))); //i don't know why i have to divide here by length?
-						cameraDelta+=deltaMove;
-						
-						camera.position.add(deltaRotateMover);
-						camera.look.add(deltaRotateTurner);
-						camera.lookAt(camera.look);
-						//pointLight.position.set(camera.look.x, 4, camera.look.z);
-						//cameraRotateMover
-						//cameraLooker
-						//cameraOriginalLook
-						if (cameraDelta >= cameraRotateMover.distanceTo(new THREE.Vector3(0,0,0)))
-						{
-							var cameraRotLookie = new THREE.Vector3(0,0,0).add(cameraLooker);
-							cameraRotLookie.normalize();
-							console.log("stop rotate cameraRotateTurner.x: " + cameraRotateTurner.x);
-							console.log("stop rotate cameraRotateTurner.z: " + cameraRotateTurner.z);
-							cameraRotate = false;
-							camera.position.multiplyScalar(0);
-							camera.position.add(cameraOriginalPosition.add(cameraRotateMover));
-							camera.look.multiplyScalar(0);
-							camera.look.add(cameraOriginalLook.add(cameraRotateTurner));
-							camera.lookAt(camera.look);
-							//current_position.add(cameraRotLookie);
-							cameraLooker.multiplyScalar(0);
-							cameraRotateMover.multiplyScalar(0);
-							cameraRotateTurner.multiplyScalar(0);
-							cameraRotLookie.multiplyScalar(0);
-							cameraOriginalPosition.multiplyScalar(0);
-							cameraOriginalLook.multiplyScalar(0);
-							cameraDelta = 0;
-						}
-					}
-					
-					//animate doors opening/closing
-					for(i=0; i < doorsArr3D.length; i++)
-					{
-						if(doorsArr3D[i][5] == 1) //being animated..
-						{
-							animateDoor(doorsArr3D[i],elapsed);
-						}
-					}
-					
-					
-					//slide inventory up
-					/*if(inventorySlide == 1)
-					{
-						inventory_div_vertical_pos += elapsed/3;
-						inventory_div.style.bottom = inventory_div_vertical_pos + 'px';
-						//alert(inventory_div.style.bottom);
-						if(inventory_div_vertical_pos > INVENTORY_POS_SHOWN)
-						{
-							inventory_div.style.bottom = INVENTORY_POS_SHOWN + 'px';
-							inventory_div_vertical_pos = INVENTORY_POS_SHOWN;
-							inventorySlide = 0;
-						}
-						//inventory_div.style.top = '100px';
-					}
-					if(inventorySlide == -1)
-					{
-						inventory_div_vertical_pos -= elapsed/3;
-						inventory_div.style.bottom = inventory_div_vertical_pos +'px';
-						//alert(inventory_div.style.bottom);
-						if(inventory_div_vertical_pos < INVENTORY_POS_HIDDEN)
-						{
-							inventory_div.style.bottom = INVENTORY_POS_HIDDEN + 'px';
-							inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
-							inventorySlide = 0;
-						}
-						//inventory_div.style.top = '100px';
-					}*/
-					
-					
-					//animate hole fall
-					if(holeFallen)
-					{
-						if(camera.position.y > -6)
-						{
-							var looker = camera.look.clone().sub(camera.position);
-							camera.position.x += elapsed*looker.x/1200;
-							camera.position.z += elapsed*looker.z/1200;
-							camera.position.y -= elapsed/40;
-							camera.look.y += elapsed/60;
-							camera.lookAt(camera.look);
-						}
-						else if(!alerted)
-						{
-							alerted = true;
-							//alert("game over");
-							show_message("<br><br>You have fallen to your demise. <br><br>Only thing you can do now is reload the page and start again. <br><br><br><br><br> <button onclick='location.reload();'> Restart </button>  &nbsp;&nbsp; <input type='button' value=' Load ' disabled>", 600, 400, "url(media/pannel_small.png)", "Copperplate, 'Copperplate Gothic Light', Garamond, Baskerville", "#ddddd0", "400", "20px");
-							player_dies();
-						}
-					}
-					
-					//animate throwing weapon
-					if(thrownWeaponIsFlying)
-					{
-						//move item forward
-						//thrownWeapon.mesh.position += thrownWeaponDirection/100;
-						var deltaThrowMove = elapsed/200;
-						var oldThrownWeaponCubePath = thrownWeaponCubePath;
-						thrownWeaponCubePath += deltaThrowMove;
-						if(thrownWeaponCubePath > 0.99)
-						{
-							deltaThrowMove = 0.99 - oldThrownWeaponCubePath;
-							thrownWeaponCubePath = 0;
-							var thrownWeaponNewPosition = thrownWeaponDirection.clone().normalize();
-							thrownWeaponNewPosition.add(thrownWeaponPosition);
-							//moving to next cube if its possible
-							if(canMoveTo(0, thrownWeaponNewPosition.x, thrownWeaponNewPosition.z))
-							{
-								//keep moving
-								console.log("flying one more step");
-								var deltaThrowMoveVector = thrownWeaponDirection.clone();
-								deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
-								thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
-								thrownWeaponPosition = thrownWeaponNewPosition.clone();
-							}
-							else
-							{
-								console.log("no more flying");
-								thrownWeaponIsFlying = false;
-								//drop item on the ground
-								thrownWeapon.mesh.position.y = 0;
-							}
-						}
-						else
-						{
-							var deltaThrowMoveVector = thrownWeaponDirection.clone();
-							deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
-							thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
-						}
-					}
-					
-				}
-				
-				lastTime = timeNow;
-		
-		
-				/*
-				//move pickable 3d object on the screen under mouse
-				if(pickable_at_hand)
-				{
-					var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
-					projector.unprojectVector( vector, camera );
-					var dir = vector.sub( camera.position ).normalize();
-					dir.multiplyScalar( 10 );
-					var pos = camera.position.clone().add( dir );
-					pickable_at_hand.mesh.position = pos;
-					//alert("pickable_at_hand oooo" + pickable_at_hand);	
-				}*/
-				
-				var top  = window.pageYOffset || document.documentElement.scrollTop;
-				var	left = window.pageXOffset || document.documentElement.scrollLeft;
-				
-				if(pickable_at_hand_icon)
-				{
-					pickable_at_hand_icon.style.display = "block";
-					pickable_at_hand_icon.style.left = (x_pos - 64 + left) + 'px';
-					pickable_at_hand_icon.style.top = (y_pos - 64 + top) + 'px';
-				}
-		
-		
-				render();
-				//stats.update();
-				
-				
-				
-	
-	
-	
-
-			}
-
-			function render() {
-
-			
-				var delta = clock.getDelta();
-				round_time += delta;
-				if(round_time > ROUND_DURATION)
-				{
-					//console.log("round tick");
-					player_wound_div.style.display = 'none';
-					round_time = 0;
-					
-					for ( var i = 0; i < array_of_monsters.length; i ++ ) {
-
-						var monster = array_of_monsters[ i ];
-						if(monster.mesh != 0)
-						{
-							if(monster.mood == MONSTER_MAD)
-							{
-								monster.find_player(current_position);
-							}
-							else if(monster.mood == MONSTER_WALK)
-							{
-								var destination = new THREE.Vector3(16,0,13);
-								monster.find_path(destination);
-							}
-						}
-						//console.log(" " + i)
-					}
-				
-				}
-
-				for ( var i = 0; i < array_of_monsters.length; i ++ ) {
-
-					var monster = array_of_monsters[ i ];
-					if(monster.mesh != 0)
-					{
-						monster.mesh.updateAnimation( 1000 * delta );
-						monster.move(round_time*SQUARE_SIZE/ROUND_DURATION);
-					}
-					//console.log(" " + i)
-				}
-				
-				for ( var i = 0; i < array_of_animated_props.length; i ++ ) {
-
-					var animProp = array_of_animated_props[ i ];
-					if(animProp.mesh != 0)
-					{
-												
-						if(animate_chain)
-						{
-							if(animProp.mesh.currentKeyframe == 50)
-							{
-								array_of_animated_props[0].mesh.setFrameRange(0,1);
-								array_of_animated_props[0].mesh.duration = 40000;
-								animate_chain = false;
-							}
-						}
-
-						animProp.mesh.updateAnimation( 1000 * delta );
-					}
-					//console.log(" " + i)
-				}
-
-				renderer.render( scene, camera );
-
 			}
 			
 

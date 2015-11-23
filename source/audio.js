@@ -7,6 +7,16 @@ function init_audio()
 	var source = document.createElement('source');
 	source.src = 'media/thud.mp3';
 	audio.appendChild(source);
+
+	bare_foot_audio = document.createElement('audio');
+	var bare_foot_source = document.createElement('source');
+	bare_foot_source.src = 'media/bare_footstep.mp3';
+	bare_foot_audio.appendChild(bare_foot_source);
+
+	foot_turn = document.createElement('audio');
+	var foot_turn_source = document.createElement('source');
+	foot_turn_source.src = 'media/foot_turn.mp3';
+	foot_turn.appendChild(foot_turn_source);
 	
 	plate_click_audio = document.createElement('audio');
 	var sourcep = document.createElement('source');
@@ -72,13 +82,6 @@ function init_audio()
 	var source_drop_rock = document.createElement('source');
 	source_drop_rock.src = 'media/drop_rock.mp3';
 	audio_drop_rock.appendChild(source_drop_rock);
-
-	
-	audio_door = document.createElement('audio');
-	var source_door = document.createElement('source');
-	source_door.src = 'media/door.mp3';
-	if(typeof door_audio != 'undefined') source_door.src = door_audio;
-	audio_door.appendChild(source_door);
 	
 	audio_scroll = document.createElement('audio');
 	var source_scroll = document.createElement('source');
@@ -109,14 +112,6 @@ function init_audio()
 	var source_fanfare = document.createElement('source');
 	source_fanfare.src = 'media/victory_fanfare.mp3';
 	audio_fanfare.appendChild(source_fanfare);
-	
-	audio_ambient = document.createElement('audio');
-	var source_ambient = document.createElement('source');
-	source_ambient.src = ambient_music_file;
-	audio_ambient.appendChild(source_ambient);
-	
-	// audio_ambient.volume = 0.4;
-	// audio_ambient.play();
 	
 	audio_maintheme = document.createElement('audio');
 	var source_maintheme = document.createElement('source');

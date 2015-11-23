@@ -5,12 +5,8 @@
 //if you have gameID of item and you need itemID you just type all_items_array[gameID]
 all_items_array = [0,0,2,3,2,5,4];
 
-//this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
-var array_of_pickables = [];
+function load_saved_pickables(loader, saved_pickables, levelObj) {
 
-function load_saved_pickables(saved_pickables) {
-
-	var loader = new THREE.JSONLoader();
 	//{"gameID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1}
 	for(var i=0; i<saved_pickables.length; i++) {
 		var picki = create_game_object();
@@ -53,28 +49,44 @@ function load_saved_pickables(saved_pickables) {
 
 		loadGameObjectCheck(loader, picki);
 		
-		array_of_pickables.push(picki);
+		//this is array of pickables on the ground, but also of those lying in the niches (added in niche.js)
+		levelObj.array_of_pickables.push(picki);
 	}
 
 }
 
-//load pickable 3d models on the map
-function load_pickables () {
-
-	//var loader = new THREE.JSONLoader();
-	
-	//pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1}
-	load_saved_pickables(pickables_array);
-
+//used in temp level loading
+function reload_pickables(levelObj)
+{
+	for(var i=0; i<levelObj.array_of_pickables.length;i++)
+	{
+        if(levelObj.array_of_pickables[i].visible)
+            scene.add(levelObj.array_of_pickables[i].mesh);
+	}
 }
 
-function get_pickable_item_by_id(id)
+//remove element
+function remove_pickable_from_array(pickArr,item)
 {
-	for(var i=0; i< array_of_pickables.length; i++)
+    var index = pickArr.indexOf(item);
+    pickArr.splice(index, 1);
+}
+
+
+//load pickable 3d models on the map
+function load_pickables (loader, levelObj) {
+
+	//pickables":[{"gameID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1}
+	load_saved_pickables(loader, levelObj.pickablesArr, levelObj);
+}
+
+function get_pickable_item_by_id(levelObj,id)
+{
+	for(var i=0; i< levelObj.array_of_pickables.length; i++)
 	{
-		if(array_of_pickables[i].gameID == id)
+		if(levelObj.array_of_pickables[i].gameID == id)
 		{
-			return array_of_pickables[i];
+			return levelObj.array_of_pickables[i];
 		}
 	}
 	

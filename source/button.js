@@ -1,33 +1,46 @@
 
 //buttons
 
-//this is array of buttons
-var array_of_buttons = [];
-
+//used in temp level loading
+function reload_buttons(levelObj)
+{
+	for(var i=0; i<levelObj.array_of_buttons.length;i++)
+	{
+		scene.add(levelObj.array_of_buttons[i].mesh);
+	}
+}
 
 //load button 3d models on the map
-function load_buttons () {
+function load_buttons (loader, levelObj) {
 
-	var loader = new THREE.JSONLoader();
-	
-	for(var i=0; i<buttons_array.length; i++) {
+	for(var i=0; i<levelObj.buttonsArr.length; i++) {
 
 		// id, model, x, z, pressed, script function..
 
 		var butsy = create_game_object();
-		butsy.gameID = buttons_array[i][0];
+		butsy.gameID = levelObj.buttonsArr[i][0];
 		butsy.name = "button" + i;
-		butsy.model = buttons_array[i][1];
+		butsy.model = levelObj.buttonsArr[i][1];
 		butsy.pressed = false;
-		butsy.orientation = buttons_array[i][4];
-		butsy.onPressFunc = buttons_array[i][5];
-		butsy.position.set((buttons_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(buttons_array[i][3])*SQUARE_SIZE);
+		butsy.orientation = levelObj.buttonsArr[i][4];
+		butsy.position.set((levelObj.buttonsArr[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(levelObj.buttonsArr[i][3])*SQUARE_SIZE);
+		butsy.map_position.set(levelObj.buttonsArr[i][2],0,levelObj.buttonsArr[i][3]);
 		butsy.rotation.set(0, Math.PI/2, 0);
 		
-		//loader.load( butsy.model, butsy.loadObject(butsy) );
+		//get js function from string
+		var onPressFn = window[levelObj.buttonsArr[i][5]];
+		if(typeof onPressFn === 'function') 
+		{
+			butsy.onPressFunc = onPressFn;
+		}
+		else
+		{
+			butsy.onPressFunc = missing_click_function;
+		}
+
 		loadGameObjectCheck(loader, butsy);
 		
-		array_of_buttons.push(butsy);
+		levelObj.array_of_buttons.push(butsy);
 	}
 
 }

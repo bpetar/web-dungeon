@@ -1,0 +1,62 @@
+{
+	"level":{
+		"id":4,
+		
+		"levelNumber":4,
+		"totalModels":12,
+		"curved_walls":true,
+		"curved_ceiling":false,
+		
+		"floorsArr2D":[[13,7], [10,7], [13,6], [10,6], [16,5], [15,5], [14,5], [13,5], [12,5], [11,5], [10,5], [9,5], [13,4], [10,4], [13,3], [10,3]],
+		"levelEntrances":[[10,3,0],[10,7,2]],
+		"holesArr":[],
+		"holesAboveArr":[],
+		"writtingsArr":[],
+		"secretWallsArr":[],
+		"doorsArr":[],
+		"stairsArr":[[10,3,0,"maps/level3/models/slope.js",0,3,1]],
+		"buttonsArr":[],
+		"keyholesArr":[],
+		"containersArr":[],
+		"pillarsArr":[],
+		"propsArr":[],
+		"animatedPropsArr":[],
+		"nicheArr":[],
+		"monsterArr":[],
+		"pickablesArr":[],
+		"lightsArr":[],
+		"platesArr":[],
+		"tapestriesArr":[],
+		"teleportArr":[],
+
+		"floor_texture_file":"maps/level3/models/dirtpath.png",
+		"wall_texture_file":"maps/level3/media/wall.png",
+		"ceiling_texture_file":"maps/level3/models/dirt.png",
+
+		"wall_model":"maps/level3/models/wallc.js",
+		"wall_model_curve_left":"maps/level3/models/wallcl.js",
+		"wall_model_curve_right":"maps/level3/models/wallcr.js",
+		"wall_model_durve_lr":"maps/level3/models/walldlr.js",
+		"wall_model_durve_l":"maps/level3/models/walldl.js",
+		"wall_model_durve_r":"maps/level3/models/walldr.js",
+		"wall_model_curve_durve_right_left":"maps/level3/models/wallcdrl.js",
+		"wall_model_curve_durve_left_right":"maps/level3/models/wallcdlr.js",
+		"celing_model_fb":"maps/level3/models/ceiling.js",
+		"wall_model_curve_writ":"maps/level3/models/wallcwrit.js",
+		"suporter_model":"models/suporter.js",
+		"decorPillarModel":"",
+		"hole_above_model":"maps/level3/models/hole_above.js",
+		"hole_model":"",
+		"niche_model":"maps/level3/models/nichecc.js",
+		"doorway_model":"maps/level3/models/doorway.js",
+		"door_model":"maps/level3/models/door.js",
+
+		"ambient_music_file":"maps/level3/media/wormhole.mp3",
+		"door_audio":"media/creak.mp3",
+	
+		"point_light_color":"ffffaa",
+		"point_light_intensity":0.9,
+		"fog_color":[0.076,0.076,0.62],
+		"fog_density":0.018525
+	}
+}

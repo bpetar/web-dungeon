@@ -1,71 +1,24 @@
 
-function levelOnLoad()
+function level3OnLoad(levelObj)
 {
-	//info_dialog_div.style.display = "inline";
-	//loading_div.style.display = "none";
+	levelObj.audio_ambient = document.createElement('audio');
+	var source_ambient = document.createElement('source');
+	source_ambient.src = levelObj.ambient_music_file;
+	levelObj.audio_ambient.appendChild(source_ambient);
 	
-	//show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
-	//playerHPcurrent = 10;
-	//updatePlayerHealthBar();
-	//current_position = new THREE.Vector3(10,0,3); //16,0,12
-	//camera.position.x = current_position.x*10;
-	//camera.position.y = 4;
-	//camera.position.z = current_position.z*10-5; //115
-	//camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
-	//camera.lookAt(camera.look);
-	
-	audio_ambient.volume = 0.4;
-	audio_ambient.loop = true;
-	audio_ambient.play();
-	
+	levelObj.audio_ambient.volume = 0.2;
+	levelObj.audio_ambient.loop = true;
+	levelObj.audio_ambient.play();
 }
 
-var levelNumber = 3;
-var totalModels = 22;
+function level3OnFirstLoad(levelObj)
+{
+}
 
-// map arrays..
-var floorsArr2D = [[15,18], [14,18], [16,17], [15,17], [14,17], [16,16], [17,15], [16,15], [14,15], [13,15], [17,14], [14,14], [11,14], [17,13], [16,13], [14,13], [11,13], [9,13], [8,13], [16,12], [15,12], [14,12], [11,12], [10,12], [9,12], [5,12], [14,11], [9,11], [5,11], [3,11], [2,11], [1,11], [15,10], [14,10], [13,10], [12,10], [10,10], [9,10], [8,10], [5,10], [4,10], [3,10], [2,10], [1,10], [15,9], [12,9], [8,9], [5,9], [3,9], [2,9], [1,9], [13,8], [12,8], [11,8], [10,8], [8,8], [7,8], [6,8], [5,8], [13,7], [10,7], [9,7], [8,7], [5,7], [14,6], [13,6], [10,6], [13,5], [11,5], [10,5], [13,4], [13,3], [14,3], [10,4], [10,3], [9,3]];
-var holesArr = [];
-var holesAboveArr = [[9,3], [11,5], [14,6], [15,9], [10,10], [8,13], [13,15], [11,14]];
-var writtingsArr = [[5,12,1,"Punishment for killing a worm is work in the kitchen!",0]];
-var secretWallsArr = []; //x,y,orientation
-var doorsArr3D = [[7,8,1,0,0,0,1,7]]; //x,z,rot,open,mesh,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up
-var stairsArr = [[5,13,0,"maps/level3/models/slope.js",0,"level4"]];
-
-//basic level textures
-var floor_texture_file = 'maps/level3/models/dirtpath.png';
-var wall_texture_file = 'maps/level3/media/wall.png';
-var ceiling_texture_file = 'maps/level3/models/dirt.png';
-
-var curved_walls = true;
-var suporter_model = "models/suporter.js";
-var curved_ceiling = false;
-var wall_model = 'maps/level3/models/wallc.js';
-var wall_model_curve_left = 'maps/level3/models/wallcl.js';
-var wall_model_curve_right = 'maps/level3/models/wallcr.js';
-var wall_model_durve_lr = 'maps/level3/models/walldlr.js';
-var wall_model_durve_l = 'maps/level3/models/walldl.js';
-var wall_model_durve_r = 'maps/level3/models/walldr.js';
-var wall_model_curve_durve_right_left = 'maps/level3/models/wallcdrl.js';
-var wall_model_curve_durve_left_right = 'maps/level3/models/wallcdlr.js';
-var celing_model_fb = 'maps/level3/models/ceiling.js';
-var wall_model_curve_writ = 'maps/level3/models/wallcwrit.js';
-//var decorPillarModel = "maps/level3/models/decorPillar2.js";
-
-//basic level models
-var hole_above_model = 'maps/level3/models/hole_above.js';
-var niche_model = 'maps/level3/models/nichecc.js';
-var doorway_model = 'maps/level3/models/doorway.js';
-var door_model = 'maps/level3/models/door.js';
-var door_audio = 'media/creak.mp3';
-
-//level related values
-var ambient_music_file = 'maps/level3/media/wormhole.mp3';
-
+//level specific functions
 
 function propOnClick1()
 {
-	//DisplayInfoDiv("I was lucky to avoid these spikes!");
 	show_speech_bubble("&nbsp;I was lucky to stay alive after falling on these spikes from above! <br><br> &nbsp;Few bruises and scratches.. that's all.", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
 }
 
@@ -92,7 +45,6 @@ function propOnClick4()
 	DisplayInfoDiv("Sharp sticks..");
 }
 
-
 function propOnClick5()
 {
 	show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
@@ -100,56 +52,37 @@ function propOnClick5()
 
 function propOnClick6()
 {
-	//console.log("swing a chain");
-	addToConsole("Nothing happens..","gray");
-	animate_chain = true;
-	array_of_animated_props[0].mesh.duration = 4000;
-	array_of_animated_props[0].mesh.setFrameRange(0,50);
+	console.log("swing a chaino");
+	addToConsole("Nothing seems to happen..","gray");
+	this.animAudio.currentTime = 0;
+	this.animAudio.play();
+	this.mesh.duration = this.animDuration;
+	this.mesh.setFrameRange(this.animStart,this.animStop);
+	this.animateFlag = true;
 }
 
-//props x,z,model,onClick script
-var propsArr = [[111, 9, 3, 0, "models/spears.js", propOnClick1], [112, 11, 5, 0, "models/spears.js", propOnClick4], [113, 15, 9, 0, "models/spears_blood.js", propOnClick2], [114, 10, 10, 0, "models/spears.js", propOnClick4], [114, 8, 13, 0, "models/spears_blood.js", propOnClick2], [114, 13, 15, 0, "models/spears.js", propOnClick3], [114, 11, 14, 0, "models/spears.js", propOnClick4], [115, 13, 5, -1, "maps/level3/models/boulder.json", propOnClick5]];
-var animatedPropsArr = [[136, 1, 10, 1, "maps/level3/models/chains.json", propOnClick6,4.1,-0.1,-1]];
+function propOnClick7()
+{
+	addToConsole("Hm... weird device..","gray");
+}
 
-// id, name, model, x, z, orientation, mesh
-var containers_array = [];
 
-// id, model, x, z, pressed, script functions..
-var plates_array = [];
-
-var pillar_array = [];
-
-var nicheArr = [];
-var tapestries_array = [];
-
-//buttons
-var buttons_array = [];
-
-//keyholes
-var keyholes_array = [];
-
-// id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [{"gameID":2,"itemID":2,"x":103,"y":6,"z":41,"niched":-1,"plated":-1},{"gameID":3,"itemID":3,"x":88,"y":0,"z":26,"niched":-1,"plated":-1},{"gameID":4,"itemID":2,"x":104,"y":6,"z":56,"niched":-1,"plated":-1},{"gameID":5,"itemID":5,"x":131,"y":0,"z":54,"niched":-1,"plated":-1}];
-// [2, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 4.5, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> This actually heals my wounds..", "script_rootHealingScript", 1], 
-// [3, "Stake", "Type: <span style='color:yellow;'>weapon</span><br><br>Speed: <span id='id-item-info-speed' style='color:green;'>0</span><br>Damage: <span id='id-item-info-dmg' style='color:green;'>4</span><br>Attack Bonus: <span id='id-item-info-attack-bonus' style='color:green;'>0</span>", "models/stake.js", 9, 3, 0, "media/stake.png", "media/gui/stake.png", "Pointy stick, better then nothing.", "0", 0, 4, 4, 0, 1], 
-// [4, "Root", "Type: <span style='color:yellow;'>consumable</span><br> (right click to eat)<br><br>Effect: <span style='color:green;'>healing</span>", "maps/level3/models/root.js", 10.5, 6, 6, "media/root.png", "media/gui/root.png", "<span style='color:green;'> HP +5. </span> Hard to chew but pays off..", "script_rootHealingScript", 1],
-// [5, "Ground Rock", "Type: <span style='color:yellow;'>dead weight</span>", "maps/level3/models/dirt_rock.js", 13.3, 4.8, 0, "media/ground_rock.png", "media/gui/ground_rock_icon.png", "<span style='color:green;'> Nothing to do with this </span>", "0", 1]];
-////////////////////////////////////////////////
 
 var monsterEncountered = false;
 
-var wormPickables = [];
 function WormOnClick1()
 {
 	DisplayInfoDiv("Its squishy and slimy.");
 	monsterEncountered = true;
 	//Play tounchy sound
+	this.audio_monster_click.currentTime = 0;
 	this.audio_monster_click.play();
 }
 function WormOnItemClick1()
 {
 	DisplayInfoDiv("He doesn't need that.");
 	//Play tounchy sound
+	this.audio_monster_click.currentTime = 0;
 	this.audio_monster_click.play();
 }
 
@@ -164,46 +97,5 @@ function monsterPun()
 
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
-var monster_array = [[121,"Giant Worm","maps/level3/models/worm.js", 15,18,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"media/monsters/worm_wound.mp3","media/monsters/worm_death.mp3","media/monsters/worm_roar.mp3","media/monsters/worm_attack.mp3","media/monsters/worm_click.mp3"], [122,"Giant Worm","maps/level3/models/worm.js", 11,14,2, 20, 15, 10, 5, wormPickables, WormOnClick1, WormOnItemClick1,1,24,25,49,50,74,1,"media/monsters/worm_wound.mp3","media/monsters/worm_death.mp3","media/monsters/worm_roar.mp3","media/monsters/worm_attack.mp3","media/monsters/worm_click.mp3"]];
 
-
-// niche_pickables_array just contains gameID of items
-var niche_pickables_array1 = [6];
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
-//x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[5, 8, 1, niche_pickables_array1]];
-
- 
-
-
-
-
-var teleport_array = [];
-
-var point_light_color = 0xffffaa;
-var point_light_intensity = 0.9;
-fog_color = 0x111100;
-fog_intensity = 0.008525;
-
-function load_level_lights()
-{
-
-	var spotLight = new THREE.SpotLight();
-	spotLight.position.set( 90, 54, 30 );
-	spotLight.target.position.set( 90, 0, 30 );
-	//pointLight.castShadow = true;
-	scene.add( spotLight );
-
-	var spotLight2 = spotLight.clone();
-	spotLight.position.set( 80, 54, 130 );
-	spotLight.target.position.set( 80, 0, 130 );
-	//pointLight.castShadow = true;
-	scene.add( spotLight2 );
-
-	var spotLight3 = spotLight.clone();
-	spotLight.position.set( 150, 34, 90 );
-	spotLight.target.position.set( 150, 0, 90 );
-	//pointLight.castShadow = true;
-	scene.add( spotLight3 );
-
-}

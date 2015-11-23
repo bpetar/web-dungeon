@@ -126,7 +126,6 @@ optimizations:
 + game object load
 + monster loading
 + decor pillars
-- app cache models http://www.html5rocks.com/en/tutorials/appcache/beginner/
 
 --- third level:
 
@@ -310,12 +309,102 @@ optimizations:
  + (A) make worm sounds
  + (A) add root munching sound
  - boy face
- - (O) merge static geometries, increase in performance! http://learningthreejs.com/blog/2011/10/05/performance-merging-geometry/
- - (O) images are preloading while in main menu..
- - (O) two "new game" functions are two much
- - (O) sounds reorganize
- - BUG: save game in front of monster, when loaded later monster rotates for no reason
- - BUG: after killed monster area is clickable and we hear sound and mouse arrow is pointer
+ + (O) images are preloading while in main menu..
+ ~ (O) app cache models http://www.html5rocks.com/en/tutorials/appcache/beginner/
+ + (O) main menu loads just that for quick start.
+ + (A) chain sound
+ + (A) foot steps
+ + BUG: save game in front of monster, when loaded later monster rotates for no reason
+ + BUG: after killed monster area is clickable and we hear sound and mouse arrow is pointer
+ + BUG: in chrome, page shows some gui element under main menu for a second on load
+
+second level
+ + make map
+ + level entrances
+ + transfer to new map
+ + save temp level
+ + loading screen + no level notification
+ + make old map use json level 
+	+[listOfLevelsObj - going to previous level just use old object]
+	+[fixing all arrays - moving globals to level members]
+	+[main loop file]
+	+[dynamicaly load js file with functions]
+	+[eval functions from json]
+	 + items
+	 + monsters
+	 + crazy door
+	 + prop on click (eval)
+	 + fix chain anim
+	 + levelOnLoad function should be part of level object?
+	 + make chain (animated mesh) more universal, sound and anim loop should be part of json file, each anim prop with its state of being animated or not.
+	 + stairs, move to next level (again)
+	 + you wake up
+	 + fog
+	 + lights
+	 + all other arrays in level (plates array missing causes item drop to fail)
+	 + clean level.js file
+	
+ + go back a map
+	+ load_props(globalJSONloader, level_obj);
+	+ load_animated_props(globalJSONloader, level_obj);
+	+ load_monsters(globalJSONloader, level_obj);
+	+ load_pickables(globalJSONloader, level_obj);
+	+ load_niches(globalJSONloader, level_obj);
+	+ load_keyholes(globalJSONloader, level_obj);
+	+ load_stairs(globalJSONloader, level_obj);
+	+ load_level_lights(level_obj);
+	+ load_containers(globalJSONloader, level_obj);
+	+ fog
+	+ load_tapestries(globalJSONloader, level_obj);
+	+ load_plates(globalJSONloader, level_obj);
+	+ containers
+	
+ + check save/load - wtf this is not just check, this is huge task of rewritting!!!
+   + load percent not working
+   + load game saved on second level and go back to first level - its all new
+   + take item in niche, save, load - item is back in niche (plus inventory)
+   + take bunch of items in inventory, save, reload, drop them on the ground, save, reload - items gone.
+   + load saved monsters
+   - /buttons
+   - /containers
+   - /keyholes
+   - /plates
+ + new game : if there is saved game - Are you sure you want to start new game because previous saved progress will be lost? 
+   - if yes delete saved game (this is important because we dont want new game to load saved later levels)
+   + check new game (in the middle of playing)
+   + clean start error: array of monsters not defined - rewrite the damn thing
+   + new game pickables gone
+   + new game door left opened
+   - new game remains 'nice wormup'
+   - make new game while playing on second level
+ - check load while playing at same level
+ - make load while playing on different level
+ + pick item on one level and drop it on another, when you go back to first level - item is there on the ground! he he...
+   + problem here is that while transiting levels all data is saved in dynamic memory, all pickables are still in arrays (only invisible), when item is dropped on some level it turns visible, and it is same object reference used in previous levels, so it turns visible there as well... horrid. proper fix would be to remove pickable from array once picked, not just turn it invisible but will this break something else? Hack will be to add extra property droppedOnLevelID - oh my god, I should have done this when rested.
+ - try to save with item at hand
+ - test rock throw (because pickable adding/removing changed)
+ - when game is loaded at second level from Main Menu - light is not right (visible on first level stairs)
+ - make downstairs model
+ - add first and second level to the game
+ - rewrite teleport code
+ - [event file]
+ - [floors and walls file]
+ 
+clear dynamic arrays of objects like doors and monsters! Or not? Maybe we should clear them only when player clicks save. Not when transitioning between levels.
+inventory items meshes need to be kept in the scene with //gObject.mesh.noremove = true;
+
+
+- test:
+  - pillars
+  - teleports
+  - plates
+  - keyholes
+  - buttons
+  - tapestries
+  - secret walls
+  - containers
+
+
 
 - make level editor
  - make sqare borders transparent between neighboring squares
@@ -348,6 +437,7 @@ optimizations:
 - fight music
 - php session
 - php login 
+- make stairs sliding motion up/down
 - save game in mysql for registered - they can login to play from another computer
 - record player movements (clicks and keypresses) and time, and reproduce gameplay
 - registration fail: your email was wrong should have printed the wrong mail, and offer re-registration.
@@ -357,6 +447,7 @@ optimizations:
 - magic atlas book of maps flies to special slot and particles sprinkle
 - compass flies to its special slot. it turns to show north.
 - lantern flies to its slot. lantern is refiled with light stones
+- loading screen to show percentage linearly - make it calculate total byte size being downloaded
 ~ make item combining
 ~ (M) make smaller worms give soft hearth
 ~ (M) make big worm give hard hearth
@@ -371,5 +462,13 @@ optimizations:
  - character name
  - more tabs
 - rss feed
+
+- big code reorganization
+ - (O) merge static geometries, increase in performance! http://learningthreejs.com/blog/2011/10/05/performance-merging-geometry/
+ - (O) two "new game" functions are two much
+ - (O) sounds reorganize
+ - (O) use JSHint for all code
+ - (O) all models from js to binary! this will reduce download size by 10!
+ + remove pickable from array when picked from the ground. put it back to array when dropped on the ground.
 
 - add new team members instructions

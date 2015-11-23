@@ -1,58 +1,64 @@
 
 //containers and their content..
-var array_of_containers = [];
 
 var currently_opened_container = -1;
 
-//load chests on the map
-function load_containers () {
+//used in temp level loading
+function reload_containers(levelObj)
+{
+	for(var i=0; i<levelObj.array_of_containers.length;i++)
+	{
+		scene.add(levelObj.array_of_containers[i].mesh);
+	}
+}
 
-	var loader = new THREE.JSONLoader();
-	
-	for(var i=0; i<containers_array.length; i++) {
+//load chests on the map
+function load_containers (loader, levelObj) {
+
+	for(var i=0; i<levelObj.containersArr.length; i++) {
 		var chest = create_game_object();
-		chest.gameID = containers_array[i][0];
-		chest.name = containers_array[i][1];
-		chest.model = containers_array[i][2];
+		chest.gameID = levelObj.containersArr[i][0];
+		chest.name = levelObj.containersArr[i][1];
+		chest.model = levelObj.containersArr[i][2];
 		
 		//position depends on orientation
-		chest.orientation = containers_array[i][5];
+		chest.orientation = levelObj.containersArr[i][5];
 		if(chest.orientation == 0)
 		{
-			chest.position.x = containers_array[i][3]*SQUARE_SIZE;
-			chest.position.z = containers_array[i][4]*SQUARE_SIZE+4;
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE+4;
 			chest.rotation.y = 0;
 		}
 		else if(chest.orientation == 1)
 		{
-			chest.position.x = containers_array[i][3]*SQUARE_SIZE-4;
-			chest.position.z = containers_array[i][4]*SQUARE_SIZE;
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE-4;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE;
 			chest.rotation.y = -Math.PI/2;
 		}
 		else if(chest.orientation == 2)
 		{
-			chest.position.x = containers_array[i][3]*SQUARE_SIZE;
-			chest.position.z = containers_array[i][4]*SQUARE_SIZE-4;
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE-4;
 			chest.rotation.y = -Math.PI;
 		}
 		else if(chest.orientation == 3)
 		{
-			chest.position.x = containers_array[i][3]*SQUARE_SIZE+4;
-			chest.position.z = containers_array[i][4]*SQUARE_SIZE;
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE+4;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE;
 			chest.rotation.y = Math.PI/2;
 		}
 		
 		//loader.load( chest.model, chest.loadObject(chest) );
 		loadGameObjectCheck(loader, chest);
 		
-		array_of_containers.push(chest);
+		levelObj.array_of_containers.push(chest);
 	}
 }
 
 //draw item icons in container gui
 function container_fill_gui(containerID)
 {
-	var container_pickables_array = containers_array[containerID][6];
+	/*var container_pickables_array = containers_array[containerID][6];
 	
 	for(var c=0; c<container_pickables_array.length; c++)
 	{
@@ -64,14 +70,14 @@ function container_fill_gui(containerID)
 		}
 	}
 	container_div.style.display = "inline-block";
-	currently_opened_container = containerID;
+	currently_opened_container = containerID;*/
 }
 
 //add pickable item to current container
 function add_to_container(gObject, slot) 
 {
 
-	if(currently_opened_container>-1)
+	/*if(currently_opened_container>-1)
 	{
 		var container_pickables_array = containers_array[currently_opened_container][6];
 		
@@ -91,14 +97,15 @@ function add_to_container(gObject, slot)
 		container_pickables_array.push(newContainerItem);
 		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
 		slot_icon.src = gObject.icon;
-	}
-	//TODO: start timer for automatic inventory draw back at later time..
+	}*/
+	
+	//start timer for automatic inventory draw back at later time..
 
 }
 
 function container_mouse_over_slot(x_pos,y_pos)
 {
-	var slot = container_clicked_in_slot(x_pos,y_pos);
+	/*var slot = container_clicked_in_slot(x_pos,y_pos);
 	
 	if(slot>0)
 	{
@@ -111,14 +118,14 @@ function container_mouse_over_slot(x_pos,y_pos)
 				return slot;
 			}
 		}
-	}
+	}*/
 	
 	return -1;
 }
 
 function container_item_clicked(x_pos,y_pos)
 {
-	var slot = container_clicked_in_slot(x_pos,y_pos);
+	/*var slot = container_clicked_in_slot(x_pos,y_pos);
 	
 	if(slot>0)
 	{
@@ -166,7 +173,7 @@ function container_item_clicked(x_pos,y_pos)
 				return picki;
 			}
 		}
-	}
+	}*/
 	
 	return 0;
 }
@@ -174,7 +181,7 @@ function container_item_clicked(x_pos,y_pos)
 //check if player clicked in container gui
 function container_clicked_in_slot(x_pos,y_pos)
 {
-	var left = windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
+	/*var left = windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
 	var right = windowHalfX + (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
 	var bottom = SLOT_WIDTH + NUM_CONTAINER_ROWS*SLOT_WIDTH;
 	var top = SLOT_WIDTH;
@@ -193,7 +200,7 @@ function container_clicked_in_slot(x_pos,y_pos)
 			if(x_pos < left+4*SLOT_WIDTH)
 				return 4;
 		}
-	}
+	}*/
 
 	return -1;
 }
@@ -201,7 +208,7 @@ function container_clicked_in_slot(x_pos,y_pos)
 //check if player standing in front of container
 function looking_at_container() {
 	//check if player is facing container
-	for(var n=0; n<containers_array.length; n++)
+	/*for(var n=0; n<containers_array.length; n++)
 	{
 		if((current_position.x == containers_array[n][3])&&(current_position.z == containers_array[n][4]))
 		{
@@ -226,7 +233,7 @@ function looking_at_container() {
 					return n;
 			}
 		}
-	}
+	}*/
 	
 	return -1;
 }

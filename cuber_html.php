@@ -3,7 +3,7 @@
 ?>
 
     
-<html lang="en">
+<html lang="en" manifest="cuber.appcache">
 	<head>
 		<title>cuber</title>
 		<meta charset="utf-8">
@@ -66,62 +66,121 @@
 				border-radius: 6px;
 				-webkit-box-shadow: inset 4px 4px 6px rgba(0,180,10,0.5); 
 			}
+			
+			//preloading 
+			#preload-01 { background: url(media/speech_bubble.png) no-repeat -9999px -9999px; }
+			#preload-02 { background: url(media/scroll.png) no-repeat -9999px -9999px; }
+			#preload-03 { background: url(media/char_screen_hud.png) no-repeat -9999px -9999px; }
+			#preload-04 { background: url(media/console-big.png) no-repeat -9999px -9999px; }
+			#preload-04 { background: url(media/console-big-middle.png) no-repeat -9999px -9999px; }
 
 		</style>
 	</head>
+	
 	<body onload="onPageLoad()">
     
-	<img id="pickable_at_hand_id" src="media/none.png" style="display:none; position:absolute; left:-170px; z-index:4;" />
-	
-    <div id="gui" style="border:0px solid red; min-height:650px; min-width:1120px; height:100%; width:100px; display:block; margin-left: auto; margin-right: auto;">
-	
+		<img id="pickable_at_hand_id" src="media/none.png" style="display:none; position:absolute; left:-170px; z-index:4;" />
 
-		<?php include "cuber_html_left.php"; ?>
-		
-		<?php include "cuber_html_console.php"; ?>
-        
-		<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:0px solid black; width:200px; height:100%;">
-        
-            <div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">.
-			</div>
-            
-            <div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:4px;">
-				<div id="gui_slot1_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+
+
+		<div id="id-main-menu" style="position:absolute; width:100%; height:100%; top:0; margin: auto; background-color: #000000; z-index:4;">
+
+			<div id="id-main-menu-sub" style="position:absolute; width:400px; height:600px; background: url(media/dragon_sep.png); background-size: 100% 100%; left:0; right:0; top:0; bottom:0; margin: auto;">
+				<span id="main_menu_message" style="font-size:14px; color:#988455;">Great earthquake awoke the dragon. Or was it the other way around? It was not the mindless beast, the dragon, but ancient malice with wit and wisdom that no man could match.</span> <br>
+				<br><br><br><br><br><br><br><br><br><br><br>
+				<div id="id-main-menu-buttons-container" style="border: solid red 0px;">
+					<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
+					</div>
+					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
+					</div>
+					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
+					</div>
+					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
+					</div>
+					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
+					</div>
 				</div>
-				<div id="gui_slot2_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				<div id="id-main-menu-credits-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
+					<div id="id-main-menu-credits-sub" style="position:absolute; border: solid red 0px; width:200px; height:220px; left:10; right:0; top:0; bottom:0; margin: auto;">
+						Petar Bajic<br>
+						Dragan Kurbalija<br>
+						Birdao Basumataru<br>
+						Zorana Markovic<br>
+						<br>
+						<a href="http://threejs.org/">Three.js</a><br>
+						<a href="http://www.blendswap.com/">BlendSwap</a><br>
+						<br>
+						Big thanks to my family and all of you who bother playing it :)<br>
+						<br>
+					</div>
+					<div id="id-main-menu-credits-back" onclick="mainMenuCreditsBack()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCreditsBack()" style="position:absolute; margin:auto; border: solid green 0px; display:block; top:250px; left:100px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">
+						Back
+					</div>
 				</div>
-				<div id="gui_slot3_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+				<div id="id-main-menu-todo-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
+					<div id="id-main-menu-todo-sub" style="position:absolute; width:200px; height:220px; background: #000000; left:10; right:0; top:0; bottom:0; margin: auto;">
+						<br>Nothing to see here. 
+						<br>
+						<br>Go play somewhere else.
+					</div>
+					<div id="id-main-menu-todo-back" onclick="mainMenuTodoBack()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverTodoBack()" style="position:absolute; margin:auto; border: solid green 0px; display:block; top:250px; left:100px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">
+						Back
+					</div>
 				</div>
-				<div id="gui_slot4_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-				<div id="gui_slot5_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-				<div id="gui_slot6_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-				<div id="gui_slot7_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-				<div id="gui_slot8_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-				<div id="gui_slot9_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
-				</div>
-			</div>
-            
-            <div style="width:192px; margin-left:4px; height:8px;">
-			</div>
-            
-            <div id="player2-inventory" style="background: url(media/gui/root.png); border:1px solid yellow; width:192px; height:192px; display:none;">
-			</div>
-            
-            <div style="background: url(media/gui/background.png); border:1px solid red; width:192px; height:8px; display:none;">
-			</div>
-                
-			<div id="map" style="background:url(media/gui/background.png); position:absolute; bottom:0px; height:64px; width:100%;">
-                <div id="special_slot1" style="float:left; margin-right:1px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-                <div id="special_slot2" style="float:left; margin-right:1px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
-				<div id="special_slot3" style="float:left; margin-right:2px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+				
 			</div>
 		</div>
-	</div>
+
+		
+		<div id="gui" style="border:0px solid red; min-height:650px; min-width:1120px; height:100%; width:100px; display:block; margin-left: auto; margin-right: auto;">
+	
+
+			<?php include "cuber_html_left.php"; ?>
+			
+			<?php include "cuber_html_console.php"; ?>
+			
+			<div id="gui_right" style="position:relative; float:left; background: url(media/gui/background_up_green.png); border:0px solid black; width:200px; height:100%;">
+			
+				<div style="width:192px; height:8px; margin-left:6px; border:0px solid yellow;">.
+				</div>
+				
+				<div id="player1-inventory" style="background: url(media/gui/slot.png); width:192px; height:192px; margin-left:4px;">
+					<div id="gui_slot1_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot2_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot3_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot4_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot5_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot6_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot7_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot8_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+					<div id="gui_slot9_item_icon" style="width:64px; height:64px; float:left; border:0px solid yellow;">
+					</div>
+				</div>
+				
+				<div style="width:192px; margin-left:4px; height:8px;">
+				</div>
+				
+				<div id="player2-inventory" style="background: url(media/gui/root.png); border:1px solid yellow; width:192px; height:192px; display:none;">
+				</div>
+				
+				<div style="background: url(media/gui/background.png); border:1px solid red; width:192px; height:8px; display:none;">
+				</div>
+					
+				<div id="map" style="background:url(media/gui/background.png); position:absolute; bottom:0px; height:64px; width:100%;">
+					<div id="special_slot1" style="float:left; margin-right:1px; margin-left:2px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+					<div id="special_slot2" style="float:left; margin-right:1px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+					<div id="special_slot3" style="float:left; margin-right:2px; margin-left:1px; background: url(media/gui/slot1.png) no-repeat; width:64px; height:64px"></div>
+				</div>
+			</div>
+		</div>
     
     
     
@@ -206,53 +265,8 @@
 			</div>
 		</div>
 		
-		<div id="id-main-menu" style="position:absolute; width:100%; height:100%; top:0; margin: auto; background-color: #000000; z-index:4;">
+		
 
-			<div id="id-main-menu-sub" style="position:absolute; width:400px; height:600px; background: url(media/dragon_sep.png); background-size: 100% 100%; left:0; right:0; top:0; bottom:0; margin: auto;">
-				<span id="main_menu_message" style="font-size:14px; color:#988455;">Great earthquake awoke the dragon. Or was it the other way around? It was not the mindless beast, the dragon, but ancient malice with wit and wisdom that no man could match.</span> <br>
-				<br><br><br><br><br><br><br><br><br><br><br>
-				<div id="id-main-menu-buttons-container" style="border: solid red 0px;">
-					<div id="id-main-menu-new" onclick="mainMenuNewGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverNew()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">New
-					</div>
-					<div id="id-main-menu-load" onclick="mainMenuLoadGame()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverLoad()" style="color: gray; margin: auto; margin-top:6px; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Load
-					</div>
-					<div id="id-main-menu-settings" onclick="mainMenuSettings()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverSettings()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Settings
-					</div>
-					<div id="id-main-menu-register" onclick="mainMenuRegister()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverRegister()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Register
-					</div>
-					<div id="id-main-menu-credits" onclick="mainMenuCredits()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCredits()" style="margin: auto; margin-top:6px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">Credits
-					</div>
-				</div>
-				<div id="id-main-menu-credits-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
-					<div id="id-main-menu-credits-sub" style="position:absolute; border: solid red 0px; width:200px; height:220px; left:10; right:0; top:0; bottom:0; margin: auto;">
-						Petar Bajic<br>
-						Dragan Kurbalija<br>
-						Birdao Basumataru<br>
-						Zorana Markovic<br>
-						<br>
-						<a href="http://threejs.org/">Three.js</a><br>
-						<a href="http://www.blendswap.com/">BlendSwap</a><br>
-						<br>
-						Big thanks to my family and all of you who bother playing it :)<br>
-						<br>
-					</div>
-					<div id="id-main-menu-credits-back" onclick="mainMenuCreditsBack()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverCreditsBack()" style="position:absolute; margin:auto; border: solid green 0px; display:block; top:250px; left:100px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">
-						Back
-					</div>
-				</div>
-				<div id="id-main-menu-todo-container" style="position:relative; display:none; border: solid red 0px; height:284px; width:400px;">
-					<div id="id-main-menu-todo-sub" style="position:absolute; width:200px; height:220px; background: #000000; left:10; right:0; top:0; bottom:0; margin: auto;">
-						<br>Nothing to see here. 
-						<br>
-						<br>Go play somewhere else.
-					</div>
-					<div id="id-main-menu-todo-back" onclick="mainMenuTodoBack()" onmouseout="mainMenuMouseOut()" onmouseover="mainMenuMouseOverTodoBack()" style="position:absolute; margin:auto; border: solid green 0px; display:block; top:250px; left:100px; cursor:pointer; height:54px; width:200px; text-align:center; font-size:26px; line-height:64px;">
-						Back
-					</div>
-				</div>
-				
-			</div>
-		</div>
 		
 		<script>
 		

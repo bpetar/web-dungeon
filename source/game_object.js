@@ -10,6 +10,7 @@ function create_game_object () {
 	var gobject = new Object();
 	
 	//game object position is not updated with mesh position properly. this needs close attention.. do we need double position variable?
+	gobject.map_position = new THREE.Vector3(0, 0, 0);
 	gobject.position = new THREE.Vector3(0, 0, 0);
 	gobject.rotation = new THREE.Vector3(0, 0, 0);
 	gobject.scale = new THREE.Vector3(1, 1, 1);
@@ -84,7 +85,7 @@ function loadGameObjectCheck(loader, gobject)
 		//download it first time..
 		loaded3Dmodels.push([gobject.model,0]);
 		loader.load( gobject.model, gobject.loadObject(gobject) );
-		//console.log("loadGameObjectCheck loading first time: " + gobject.name);
+		relativeLevelModelCount++;
 	}
 	
 }
@@ -123,7 +124,7 @@ function loadAnimatedGameObjectCheck(loader, gobject)
 		//download it first time..
 		loaded3Dmodels.push([gobject.model,0]);
 		loader.load( gobject.model, gobject.loadAnimatedObject(gobject) );
-		//console.log("loadGameObjectCheck loading first time: " + gobject.name);
+		relativeLevelModelCount++;
 	}
 	
 }
@@ -151,7 +152,8 @@ function loadObject( gobject ) {
 			gobject.mesh.name = gobject.name;
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
-			if(gobject.name == "writting") writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
+			//TODO: revise this writting peculiarity
+			if(gobject.name == "writting") currentlevelObj.writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
 			scene.add( gobject.mesh );
 			
 		
@@ -167,7 +169,7 @@ function loadObject( gobject ) {
 					clone.rotation = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
-					if(waitingGobject.name == "writting") writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
+					if(waitingGobject.name == "writting") currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
 					scene.add( clone );
 				}
 			}
@@ -204,6 +206,12 @@ function loadAnimatedObject( gobject ) {
 			gobject.mesh.position = gobject.position;
 			gobject.mesh.rotation = gobject.rotation;
 			gobject.mesh.name = gobject.name;
+			
+			if(typeof gobject.animDuration !== 'undefined')
+			{
+				gobject.mesh.duration = gobject.animDuration;
+			}
+			
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
 			scene.add( gobject.mesh );
@@ -221,7 +229,7 @@ function loadAnimatedObject( gobject ) {
 					clone.rotation = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
-					if(waitingGobject.name == "writting") writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
+					if(waitingGobject.name == "writting") currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
 					scene.add( clone );
 				}
 			}

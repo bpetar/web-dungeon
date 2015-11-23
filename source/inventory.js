@@ -47,7 +47,7 @@ function loadInventory(inventoryArr)
 		add_to_inventory(inventory_item, inventoryArr[i].slot);
 		
 		//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
-		array_of_pickables.push(inventory_item);
+		//currentlevelObj.array_of_pickables.push(inventory_item);
 	}
 }
 
@@ -120,6 +120,8 @@ function add_to_inventory (gObject, slot) {
 	
 	console.log("pera added inventory item: " + gObject.icon);
 	//TODO: start timer for automatic inventory draw back at later time..
+	
+	gObject.mesh.noremove = true;
 }
 
 document.getElementById("player1-inventory").onmousedown = function () {
@@ -192,6 +194,7 @@ function inventory_item_remove(item)
 			var slot_icon = document.getElementById("gui_slot" + inventory_array[i].slot + "_item_icon");
 			//slot_icon.src = "media/none.png";
 			slot_icon.style.backgroundImage = "";
+			inventory_array[i].gObject.mesh.noremove = false;
 			inventory_array.splice(i,1);
 			break;
 		}

@@ -1,0 +1,119 @@
+how to make game with levels
+
+some games don't have levels. open world games, flappy bird, ..and cant think of another example right now, but most games have levels. In this article I will talk specifically about games where character can move between levels interact with objects around him and save the progress.
+
+requrements:
+ - game has multiple levels, levels have static (inane) and moving (interactive) parts. 
+ - player starts new game at level 1, but can load the game at any subsequent level
+ - player moves between levels mostly forward, but he is able to go back to previous levels and he can jump between levels with some kind of teleport device. for example, on 5th level there is portal that takes him back to second level, exactly the part of second level that couldnt be (have been) accessed before.
+ - level has multiple entry and exit points. this means if you go from level 3 to level 4 you appear by the river at the cave entrance. But if you go from level 8 to level 4 you appear in front of traders house. So level 4 has two entry points.
+ - player can save position anywhere at any moment and load that saved position from anywhere in the game. if player exits game, unsaved progress is lost.
+
+I will discuss code for simplified version of such game where each level only has 10 colored balls, just to demonstrate the system without adding complexity of level itself.
+
+ok how do we define level:
+ - its environment around the character with interactive pieces.
+ - player can change state of interactive pieces, closed doors are left opened, aroused levers are pulled down, healthy living monsters are now not so well, coins are gone...
+ - some games allow player to destroy background environment, leaving it completely changed - its ok it just have to be taken into account as interactive piece as well.
+ - in our simple example each level will have 10 balls that player can move around and paint them.
+ 
+how do we code it?
+
+ - level is object with these fields:
+	LevelObj
+	{
+		id //simple number
+		array levelBalls[{position,color}] //position of balls and their color
+		array levelExits[{position,idOfNextLevel] //position of exit and where it leads to
+		array levelEntrances[{position,rotation}] //position of player and facing upon level entrance
+	}
+	
+Lets say our game has 20 levels, in real life we would store these in 20 different files, but for our very simple example we will use just one array with 20 elements:
+gameLevelsArray = [
+	{id:1, levelBalls:[{[2,3],red},{[4,6],blue}], levelExits:[{[3,3],2}], levelEntrances:[{[1,2],90}]},
+	{id:2, levelBalls:[], levelExits:[], levelEntrances:[]},
+	{id:3, levelBalls:[], levelExits:[], levelEntrances:[]},
+	{id:4, levelBalls:[], levelExits:[], levelEntrances:[]},
+	...
+	];
+
+Globals:
+ - currentLevelPointer //initially null
+ - gameState //initially GAME_STATE_MAINMENU;
+ - arrayOfVisitedLevels //initially empty
+ 
+This is how level loading could look like. This function is called when player is just starting a game, or when changing levels while playing the game.
+
+//this function takes parameters 
+//id - what level we are going to
+//entrance - what entrance we shall appear at
+function loadLevel(id, entrance)
+{
+	gameState = GAME_STATE_LOADING;
+	
+	//if game just started, no need to cleanup previous level data
+	if(currentLevelPointer != 0)
+	{
+		//save current level - here we just push pointer to our level object to an array
+		arrayOfVisitedLevels.push(currentLevelPointer);
+		
+		//clear current level - we want to render new one
+		//for example this could delete objects from the 3d scene
+		clearLevel(currentLevelPointer); //this function will have access to array of balls on that level and erase them
+	}
+	
+	//if we are entering level that we already visited
+	if(levelAlreadyVisited(id) //check arrayOfVisitedLevels to see if id is in there
+	{
+		//we get the level from array of visited levels
+		//big idea here is that all the changes player made to this level are still in this object in memory
+		nextLevel = getLevelFromArrayByID(arrayOfVisitedLevels,id);
+	}
+	else
+	{
+		//get level from array of game levels - these are default unchanged levels
+		//in real life we would load level from file here
+		nextLevel = getLevelFromArrayByID(gameLevelsArray,id);
+	}
+	
+	//now that we got the level we need, lets draw it 
+	loadLevelAssets(nextLevel);
+	showLevel(nextLevel);
+	
+	//remove the loading screen and start the game loop
+	gameState = GAME_STATE_PLAY;
+}
+
+Game Save
+
+In this example we dont address how player moves around and changes the balls color and position, but he does and he is satisfied with what he's done and now he wants to save it. Lets consider different saving scenarios:
+- Player starts new game, moves through three levels and then press save.
+- He then fiddles some more on third level, and goes back to second level and presses save there again.
+- After that, he goes back to third level, then fourth and fifth and finally saves again before exiting the game.
+
+We want to have 5 levels saved, so that when player loads the game, he can go back and see those levels exectly as he left them.
+While player was playing we decided to hold visited levels in dynamic variable, in memory. When he presses save, it would be nice to store those visited levels in permanent storage and release dynamic objects from RAM. So first save is pretty straight forward - he hits the save - we save three levels, and release first and second level from memory (third one is still being used). When player wants to move to second level again we have to check first if we have that level in RAM, if not we have to check if that level was visited before, and if it is - we load it from saved file. So now player wants to hit save button second time. He is at the second level but has third and second changed a little, so we have to save that too. If he saves over the same game, we can overwrite those levels in saved file. If he saves new game slot, we have to keep previously saved data in case he wants to load that first saved game later, so we create new save file, but what do we put in second save file - just second and third level or all levels from the start? By the time he hits save button third time, we understood we need to go back one step and discuss save position some more.
+
+Save slots.
+
+Some games have checkpoints for saving progress. On the level there is some prop that player needs to approach to save the progress. If he dies, the game will automatically return him to last saved position. This is equivalent to one saving slot that is overwritten each time. Some games have multiple save slots, that allow you to name your saved game and then later overwrite it, or create a new one. When you think about it, saving each time to new game slot means last saved game should have all the data from previous saved games. We could make last saved game save only what is changed between previous saved game and now. Differential approach means smaller save files, but we must traverse through all previous saved game files when we are looking for some older level. Alternatively, last saved game could have all the levels accessed (changed) from the game start.
+
+Now the fun starts. Imagine player has 20 saved games, and more then half game finished. And then he desides (decides) to click 'New Game'. He (or his brother) wants to start the game from the begining, and after 5 levels hits the save. Now whether you have differential or all-in-one approach, this saved game must be somehow separated from all others. And not just the "New Game", even if player load some older saved game and starts from there - he will take a new path from that point and branch into parallel adventure. When he keeps saving games on this new path, differential aproach must be able to trace back previous saved games not just by date, but some smarter linked list mechanism.
+
+What I like to do here is create stories. Each time player starts a New Game he starts a new story. Each time he branches out from older saved game he creates another story. A story is a collection (linked list) of saved games that traces back to the begining. Even if you make a game with one save slot (checkpoint usecase) - you can use one story (in case you want to change it later). One save slot version has only one story. It can have numerous save nodes, but they are in a straight line. Load always loads last one. Start from beginning starts new story and previous one is deleted.
+
+At this point, bugs like "Go to next level, save, load, pick an item, go to previous level, save, load - drop item on the ground, save, load - ITEM IS GONE!" start appearing.
+
+saveLevel()
+{
+    //here are some hints not related to our simple ball game:
+    //save player stats in that moment: xp, hp, strength...
+    //save player inventory, and also what he has equipped
+    //these are level independent data, but needs to be saved each time
+    
+    //save player position and rotation
+}
+
+
+
+	

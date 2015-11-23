@@ -1,6 +1,5 @@
 //save and load position
 
-
 //when user gets to site (game) first time, there is no cookie.
 //create cookie with user id
 //create tmp user in database
@@ -17,7 +16,7 @@
 //when user returns, if there are save nodes -> load one with biggest id (automatic continue)
 //when user returns, if there are temp levels, discard them?
 
-//when user clicks 'start from beginning' ignore saved levels
+//when user clicks 'start from beginning' ignore saved levels and start new story
 
 //each load is start of new story (and each time user clicks new start)
 //each story can consists of several saved games
@@ -62,6 +61,19 @@ function save_position()
 		return;
 	}
 	
+	//are you sure you want to save?
+	if(arrayOfGameStories.length>1)
+	{
+		if (confirm("You started new game and this save will overwrite your previous saved game. Are you sure?") == true) {
+			console.log("He is sure...");
+			arrayOfGameStories.splice(0,1);
+			currentStory = 0;
+		} else {
+			console.log("We saved a life today.");
+			return;
+		}
+	}
+	
 	var save_data = {"data_type":"save", "desc":"data to be saved"};
 	
 	//player stats:
@@ -91,7 +103,7 @@ function save_position()
 	//rotation
 	save_data["rotation"] = current_rotation;
 	//level
-	save_data["current_level"] = 3;
+	save_data["current_level"] = current_level;
 	
 	//game global quirks
 	save_data["quirks"] = game_quirks;
@@ -130,22 +142,191 @@ function save_position()
 	//and these temp levels were used if player goes back to them (all without saving game).
 	//we could do something like that here.
 	
+    //in this game we have visited levels in synamic array so we go through that array and save all levels in a loop
+    //arrayOfGameStories[0][0] stores what is saved before, we overwrite levels in there.
+ 
+    save_data["levels"] = arrayOfGameStories[0][0].levels;
+    
+    //if(newgame) save_data["levels"] = {}; //!!!! NEW STORY
+    
+    for (var vli=0; vli<arrayOfVisitedLevels.length; vli++)
+	{
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id] = {}; //overwrite if exists
+
+        //doors
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["doors"] = [];
+        var j = 0;
+        for(var i=0; i<arrayOfVisitedLevels[vli].array_of_doors.length; i++)
+        {
+            //if doors are opened, save that
+            if(arrayOfVisitedLevels[vli].array_of_doors[i].open == 1)
+            {
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["doors"][j] = i; //we just save index of doors that are opened, so only opened doors are saved.
+                j++;
+            }
+        }
+
+        //pickables on the ground, niches
+        j = 0;
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"] = [];
+        for (i=0; i< arrayOfVisitedLevels[vli].array_of_pickables.length; i++)
+        {
+            // atm, pickables remain in this array even when placed in inventory or consumed. 
+            // only way to know they are still on the ground is that mesh is visible.
+            if(arrayOfVisitedLevels[vli].array_of_pickables[i].mesh.visible)
+            {
+                //save item id, position, niched
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j] = {};
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["gameID"] = arrayOfVisitedLevels[vli].array_of_pickables[i].gameID;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["x"] = arrayOfVisitedLevels[vli].array_of_pickables[i].mesh.position.x;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["y"] = arrayOfVisitedLevels[vli].array_of_pickables[i].mesh.position.y;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["z"] = arrayOfVisitedLevels[vli].array_of_pickables[i].mesh.position.z;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["niched"] = arrayOfVisitedLevels[vli].array_of_pickables[i].niched;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"][j]["plated"] = arrayOfVisitedLevels[vli].array_of_pickables[i].plated;
+                j++;
+            }
+        }
+
+        //monsters:
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"] = [];
+        var mindex = 0;
+        for(var m=0; m<arrayOfVisitedLevels[vli].array_of_monsters.length; m++)
+        {
+            if(arrayOfVisitedLevels[vli].array_of_monsters[m].alive)
+            {
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex] = {};
+                //id
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["gameID"] = arrayOfVisitedLevels[vli].array_of_monsters[m].gameID;
+                //position
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["position"] = {};
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["position"]["x"] = arrayOfVisitedLevels[vli].array_of_monsters[m].position.x;
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["position"]["z"] = arrayOfVisitedLevels[vli].array_of_monsters[m].position.z;
+                //rotation
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["rotation"] = arrayOfVisitedLevels[vli].array_of_monsters[m].rotation;
+                //mood
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["mood"] = arrayOfVisitedLevels[vli].array_of_monsters[m].mood;
+                //hp
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"][mindex]["hp"] = arrayOfVisitedLevels[vli].array_of_monsters[m].hp;
+                
+                mindex++;
+            }
+        }
+    }
+    
+    
+    //currentlevelObj
+    {
+        save_data["levels"]["id"+currentlevelObj.id] = {}; //overwrite if exists
+
+        //doors
+        save_data["levels"]["id"+currentlevelObj.id]["doors"] = [];
+        var j = 0;
+        for(var i=0; i<currentlevelObj.array_of_doors.length; i++)
+        {
+            //if doors are opened, save that
+            if(currentlevelObj.array_of_doors[i].open == 1)
+            {
+                save_data["levels"]["id"+currentlevelObj.id]["doors"][j] = i; //we just save index of doors that are opened, so only opened doors are saved.
+                j++;
+            }
+        }
+
+        //pickables on the ground, niches
+        j = 0;
+        save_data["levels"]["id"+currentlevelObj.id]["pickables"] = [];
+        for (i=0; i< currentlevelObj.array_of_pickables.length; i++)
+        {
+            // atm, pickables remain in this array even when placed in inventory or consumed. 
+            // only way to know they are still on the ground is that mesh is visible.
+            if(currentlevelObj.array_of_pickables[i].mesh.visible)
+            {
+                //save item id, position, niched
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j] = {};
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["gameID"] = currentlevelObj.array_of_pickables[i].gameID;
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["x"] = currentlevelObj.array_of_pickables[i].mesh.position.x;
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["y"] = currentlevelObj.array_of_pickables[i].mesh.position.y;
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["z"] = currentlevelObj.array_of_pickables[i].mesh.position.z;
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["niched"] = currentlevelObj.array_of_pickables[i].niched;
+                save_data["levels"]["id"+currentlevelObj.id]["pickables"][j]["plated"] = currentlevelObj.array_of_pickables[i].plated;
+                j++;
+            }
+        }
+
+        //monsters:
+        save_data["levels"]["id"+currentlevelObj.id]["monsters"] = [];
+        var mindex = 0;
+        for(var m=0; m<currentlevelObj.array_of_monsters.length; m++)
+        {
+            if(currentlevelObj.array_of_monsters[m].alive)
+            {
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex] = {};
+                //id
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["gameID"] = currentlevelObj.array_of_monsters[m].gameID;
+                //position
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["position"] = {};
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["position"]["x"] = currentlevelObj.array_of_monsters[m].position.x;
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["position"]["z"] = currentlevelObj.array_of_monsters[m].position.z;
+                //rotation
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["rotation"] = currentlevelObj.array_of_monsters[m].rotation;
+                //mood
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["mood"] = currentlevelObj.array_of_monsters[m].mood;
+                //hp
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["hp"] = currentlevelObj.array_of_monsters[m].hp;
+                
+                mindex++;
+            }
+        }
+    }
+	
+	//chests, containers
+	//keyholes
+	//plates
+	//buttons
+	//
+	//journal entries
+	//
+	//dialogs? npc?
+	
+	var save_data_json_str = JSON.stringify( save_data );
+	console.log(save_data_json_str);
+	
+	setCookie("saved_game", save_data_json_str, 90);
+	
+	arrayOfGameStories[0][0] = save_data;
+	
+	saved_game = true;
+	
+	ajaxPost("save.php",save_cb,save_data_json_str);
+}
+
+
+//save temp level
+function save_temp(level)
+{
+
+	var temp_data = {"data_type":"temp", "desc":"temp level data to be saved"};
+	
+	//player could go through three levels before hitting save button and all three levels should be saved.
+	//in turtle game, we use to save temp levels once player leaves them (goes to next one), 
+	//and these temp levels were used if player goes back to them (all without saving game).
+	//we could do something like that here.
+	
 	//doors
 	var j = 0;
-	save_data["doors"] = [];
+	temp_data["doors"] = [];
 	for(var i=0; i<doorsArr3D.length; i++)
 	{
 		//if doors are opened, save that
 		if(doorsArr3D[i][3] == 1)
 		{
-			save_data["doors"][j] = i; //we just save index of doors that are opened, so only opened doors are saved.
+			temp_data["doors"][j] = i; //we just save index of doors that are opened, so only opened doors are saved.
 			j++;
 		}
 	}
 	
 	//pickables on the ground, niches
 	j = 0;
-	save_data["pickables"] = [];
+	temp_data["pickables"] = [];
 	for (i=0; i< array_of_pickables.length; i++)
 	{
 		// atm, pickables remain in this array even when placed in inventory or consumed. 
@@ -153,13 +334,13 @@ function save_position()
 		if(array_of_pickables[i].mesh.visible)
 		{
 			//save item id, position, niched
-			save_data["pickables"][j] = {};
-			save_data["pickables"][j]["gameID"] = array_of_pickables[i].gameID;
-			save_data["pickables"][j]["x"] = array_of_pickables[i].mesh.position.x;
-			save_data["pickables"][j]["y"] = array_of_pickables[i].mesh.position.y;
-			save_data["pickables"][j]["z"] = array_of_pickables[i].mesh.position.z;
-			save_data["pickables"][j]["niched"] = array_of_pickables[i].niched;
-			save_data["pickables"][j]["plated"] = array_of_pickables[i].plated;
+			temp_data["pickables"][j] = {};
+			temp_data["pickables"][j]["gameID"] = array_of_pickables[i].gameID;
+			temp_data["pickables"][j]["x"] = array_of_pickables[i].mesh.position.x;
+			temp_data["pickables"][j]["y"] = array_of_pickables[i].mesh.position.y;
+			temp_data["pickables"][j]["z"] = array_of_pickables[i].mesh.position.z;
+			temp_data["pickables"][j]["niched"] = array_of_pickables[i].niched;
+			temp_data["pickables"][j]["plated"] = array_of_pickables[i].plated;
 			j++;
 		}
 	}
@@ -171,25 +352,25 @@ function save_position()
 	
 	
 	//monsters:
-	save_data["monsters"] = [];
+	temp_data["monsters"] = [];
 	var mindex = 0;
 	for(var m=0; m<array_of_monsters.length; m++)
 	{
 		if(array_of_monsters[m].alive)
 		{
-			save_data["monsters"][mindex] = {};
+			temp_data["monsters"][mindex] = {};
 			//id
-			save_data["monsters"][mindex]["gameID"] = array_of_monsters[m].gameID;
+			temp_data["monsters"][mindex]["gameID"] = array_of_monsters[m].gameID;
 			//position
-			save_data["monsters"][mindex]["position"] = {};
-			save_data["monsters"][mindex]["position"]["x"] = array_of_monsters[m].position.x;
-			save_data["monsters"][mindex]["position"]["z"] = array_of_monsters[m].position.z;
+			temp_data["monsters"][mindex]["position"] = {};
+			temp_data["monsters"][mindex]["position"]["x"] = array_of_monsters[m].position.x;
+			temp_data["monsters"][mindex]["position"]["z"] = array_of_monsters[m].position.z;
 			//rotation
-			save_data["monsters"][mindex]["rotation"] = array_of_monsters[m].rotation;
+			temp_data["monsters"][mindex]["rotation"] = array_of_monsters[m].rotation;
 			//mood
-			save_data["monsters"][mindex]["mood"] = array_of_monsters[m].mood;
+			temp_data["monsters"][mindex]["mood"] = array_of_monsters[m].mood;
 			//hp
-			save_data["monsters"][mindex]["hp"] = array_of_monsters[m].hp;
+			temp_data["monsters"][mindex]["hp"] = array_of_monsters[m].hp;
 			
 			mindex++;
 		}
@@ -200,101 +381,178 @@ function save_position()
 	//
 	//dialogs? npc?
 	
-	var save_data_json_str = JSON.stringify( save_data );
-	console.log(save_data_json_str);
+	var temp_data_json_str = JSON.stringify( temp_data );
+	console.log(temp_data_json_str);
 	
-	setCookie("saved_game", save_data_json_str, 90);
+	setCookie("temp_level_" + level, temp_data_json_str, 90);
 	
-	last_saved_data = save_data;
-	saved_game = true;
+	//ajaxPost("save.php",save_cb,save_data_json_str);
+}
+
+
+
+function newGameMainMenu()
+{
+	main_menu_div.style.display = "none";
+	//audio_maintheme.pause();
+	audio_change_volume(audio_maintheme,0);
+
+	//player data
+	martin_level = 1;
+	//experience
+	martin_experience = 1;
+	//playerHPmax
+	playerHPmax = 30;
+	//playerHPcurrent;
+	playerHPcurrent = 10;
+	//strength
+	martin_strength = 10;
+	//dexterity
+	martin_dexterity = 10;
+	//attack
+	martin_attack = 10;
+	//defence
+	martin_defence = 10;
+
+	//load lights
+	load_lights();
+
+	//load level walls and floors etc..
+	//should be called after load_saved_doors because it will set the doors opened for saved position
+	loadLevel(3,0);
+
+	loadCharacter();
 	
-	ajaxPost("save.php",save_cb,save_data_json_str);
+	updatePlayerHealthBar();
+
+	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
+
 }
 
 //new game
 function newGameOnSameLevel()
 {
 	//clear current monsters and stop them
-	for(var j=0; j<array_of_monsters.length;j++)
+	for(var m=0; m<currentlevelObj.array_of_monsters.length;m++)
 	{
-		array_of_monsters[j].alive = false;
-		array_of_monsters[j].mesh.visible = false;
-		array_of_monsters[j].should_move= false;
-		array_of_monsters[j].should_turn= false;
-		array_of_monsters[j].should_attack= false;
+		currentlevelObj.array_of_monsters[m].alive = false;
+		currentlevelObj.array_of_monsters[m].mesh.visible = false;
+		currentlevelObj.array_of_monsters[m].should_move= false;
+		currentlevelObj.array_of_monsters[m].should_turn= false;
+		currentlevelObj.array_of_monsters[m].should_attack= false;
 	}
 	
-	//place monsters in saved position and activate them
-	for(var i=0; i<monster_array.length;i++)
+	//place monsters in original position and activate them
+	for(var i=0; i<currentlevelObj.monsterArr.length;i++)
 	{
-		for(var j=0; j<array_of_monsters.length;j++)
+		for(var m=0; m<currentlevelObj.array_of_monsters.length;m++)
 		{
-			if(array_of_monsters[j].gameID == monster_array[i][0])
+			if(currentlevelObj.array_of_monsters[m].gameID == currentlevelObj.monsterArr[i][0])
 			{
-				array_of_monsters[j].alive = true;
-				array_of_monsters[j].mesh.visible = true;
-				array_of_monsters[j].position.x = monster_array[i][3];//.position.x;
-				array_of_monsters[j].position.z = monster_array[i][4];//last_saved_data.monsters[i].position.z;
-				array_of_monsters[j].target.x = monster_array[i][3];//.position.x;
-				array_of_monsters[j].target.z = monster_array[i][4];//last_saved_data.monsters[i].position.z;
-				array_of_monsters[j].mesh.position.x = array_of_monsters[j].position.x*SQUARE_SIZE;
-				array_of_monsters[j].mesh.position.z = array_of_monsters[j].position.z*SQUARE_SIZE;
-				array_of_monsters[j].rotation = monster_array[j][5];
-				array_of_monsters[j].mood = monster_array[j][19];
-				array_of_monsters[j].hp = monster_array[j][6];//.hp;
+				currentlevelObj.array_of_monsters[m].alive = true;
+				currentlevelObj.array_of_monsters[m].mesh.visible = true;
+				currentlevelObj.array_of_monsters[m].position.x = currentlevelObj.monsterArr[i][3];
+				currentlevelObj.array_of_monsters[m].position.z = currentlevelObj.monsterArr[i][4];
+				currentlevelObj.array_of_monsters[m].target.x = currentlevelObj.monsterArr[i][3];
+				currentlevelObj.array_of_monsters[m].target.z = currentlevelObj.monsterArr[i][4];
+				currentlevelObj.array_of_monsters[m].mesh.position.x = currentlevelObj.array_of_monsters[m].position.x*SQUARE_SIZE;
+				currentlevelObj.array_of_monsters[m].mesh.position.z = currentlevelObj.array_of_monsters[m].position.z*SQUARE_SIZE;
+				currentlevelObj.array_of_monsters[m].rotation = currentlevelObj.monsterArr[i][5];
+				currentlevelObj.array_of_monsters[m].mesh.rotation = new THREE.Vector3(0, currentlevelObj.monsterArr[i][5]*Math.PI/2, 0);
+				currentlevelObj.array_of_monsters[m].target_rotation = currentlevelObj.monsterArr[i][5];
+				currentlevelObj.array_of_monsters[m].mood = currentlevelObj.monsterArr[i][19];
+				currentlevelObj.array_of_monsters[m].hp = currentlevelObj.monsterArr[i][6];
 			}
 		}
 	}
 		
 	//clear current pickables
-	for(var i=0; i<array_of_pickables.length;i++)
+	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
-		array_of_pickables[i].mesh.visible = false;
+		currentlevelObj.array_of_pickables[i].mesh.visible = false;
 	}
+	currentlevelObj.array_of_pickables = []; //this should free the memory
+	
+	load_saved_pickables(globalJSONloader,currentlevelObj.pickablesArr,currentlevelObj);
 	
 	//make them visible and place them where saved game says so
-	for(var i=0; i<pickables_array.length;i++)
+	/*for(var i=0; i<currentlevelObj.pickablesArr.length;i++)
 	{
-		for(var j=0; j<array_of_pickables.length;j++)
+		for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
 		{
 			//we must add gameID beside itemID, and check status of game items to put in place.
 			//once gameID is added we can remove that additional check if mesh is visible
-			if(array_of_pickables[j].gameID == pickables_array[i].gameID)
+			if(currentlevelObj.array_of_pickables[j].gameID == currentlevelObj.pickablesArr[i].gameID)
 			{
-				array_of_pickables[j].mesh.visible = true;
-				array_of_pickables[j].position.x = pickables_array[i].x;
-				array_of_pickables[j].position.z = pickables_array[i].z;
-				array_of_pickables[j].position.y = pickables_array[i].y;
-				array_of_pickables[j].mesh.position.x = pickables_array[i].x;
-				array_of_pickables[j].mesh.position.z = pickables_array[i].z;
-				array_of_pickables[j].mesh.position.y = pickables_array[i].y;
-				array_of_pickables[j].niched = pickables_array[i].niched; //flag indicating if pickable is in the niche
-				array_of_pickables[j].plated = pickables_array[i].plated; //flag indicating if pickable is on the plate
+				currentlevelObj.array_of_pickables[j].mesh.visible = true;
+				currentlevelObj.array_of_pickables[j].position.x = currentlevelObj.pickablesArr[i].x;
+				currentlevelObj.array_of_pickables[j].position.z = currentlevelObj.pickablesArr[i].z;
+				currentlevelObj.array_of_pickables[j].position.y = currentlevelObj.pickablesArr[i].y;
+				currentlevelObj.array_of_pickables[j].mesh.position.x = currentlevelObj.pickablesArr[i].x;
+				currentlevelObj.array_of_pickables[j].mesh.position.z = currentlevelObj.pickablesArr[i].z;
+				currentlevelObj.array_of_pickables[j].mesh.position.y = currentlevelObj.pickablesArr[i].y;
+				currentlevelObj.array_of_pickables[j].niched = currentlevelObj.pickablesArr[i].niched; //flag indicating if pickable is in the niche
+				currentlevelObj.array_of_pickables[j].plated = currentlevelObj.pickablesArr[i].plated; //flag indicating if pickable is on the plate
 				break;
 			}
 		}
 		
-	}
+	}*/
 	
 	//niches, well one niche item on first level:
-	var niche_pickables = nicheArr[0][3];
+	var niche_pickables = currentlevelObj.nicheArr[0][3];
 	for(var i=0; i<niche_pickables.length; i++) 
 	{
-		for(var j=0; j<array_of_pickables.length;j++)
+		//for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
 		{
-			if(array_of_pickables[j].gameID == niche_pickables[i])
+			//if(currentlevelObj.array_of_pickables[j].gameID == niche_pickables[i])
 			{
+				var nicki = create_game_object();
+				nicki.gameID = niche_pickables[i];
+				nicki.itemID =all_items_array[niche_pickables[i]];
+
+				var item = get_item_by_id(nicki.itemID);
+				nicki.name = item.name;
+				nicki.description = item.desc;
+				nicki.model = item.model;
+				
+				nicki.icon = item.icon;
+				nicki.icon2 = item.icon2;
+				nicki.useHint = item.useHint;
+				
+				nicki.useScript = item.useScript;
+				
+				nicki.consumable = (item.type == "consumable")?true:false;
+				
+				nicki.type = item.type;
+				
+				if(item.type == "weapon")
+				{
+					nicki.weapon_type = item.weapon_prop.type;
+					nicki.weapon_speed = item.weapon_prop.speed;
+					nicki.weapon_dmg = item.weapon_prop.damage;
+					nicki.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
+					nicki.weapon_attack_bonus = item.weapon_prop.attack_bonus;
+					//TODO:
+					//"hand":"one", "damage_type":"piercing",
+				}
 				var niche_item_uffset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
 				var emover = -1+i/2;
-				array_of_pickables[j].position.x = nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
-				array_of_pickables[j].position.z = nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
-				array_of_pickables[j].position.y = 4.0+niche_item_uffset.y;
-				array_of_pickables[j].mesh.position.x = nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
-				array_of_pickables[j].mesh.position.z = nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
-				array_of_pickables[j].mesh.position.y = 4.0+niche_item_uffset.y;
-				array_of_pickables[j].mesh.visible = true;
-				array_of_pickables[j].niched = 0;
-				break;
+				nicki.position.x = currentlevelObj.nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
+				nicki.position.z = currentlevelObj.nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
+				nicki.position.y = 4.0+niche_item_uffset.y;
+				//nicki.mesh.position.x = currentlevelObj.nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
+				//nicki.mesh.position.z = currentlevelObj.nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
+				//nicki.mesh.position.y = 4.0+niche_item_uffset.y;
+				//nicki.mesh.visible = true;
+				nicki.niched = 0;
+				nicki.plated = -1; //flag indicating if pickable is on the plate
+			
+			
+				//loader.load( picki.model, picki.loadObject(picki) );
+				loadGameObjectCheck(globalJSONloader, nicki);
+				
+				currentlevelObj.array_of_pickables.push(nicki);
 			}
 		}
 	}
@@ -332,6 +590,16 @@ function newGameOnSameLevel()
 	// pants
 	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
 	
+	
+	//TODO: restart music
+	
+	//doors
+	if(currentlevelObj.array_of_doors[0].open == 1)
+	{
+		currentlevelObj.array_of_doors[0].open = 0;
+		setDoorClosed(currentlevelObj.array_of_doors[0]);
+	}
+
 }
 
 //load game without models reloading
@@ -348,48 +616,50 @@ function loadGameOnSameLevel()
 	}
 	
 	//place monsters in saved position and activate them
-	for(var i=0; i<last_saved_data.monsters.length;i++)
+	for(var i=0; i<arrayOfGameStories[0][0].monsters.length;i++)
 	{
 		for(var j=0; j<array_of_monsters.length;j++)
 		{
-			if(array_of_monsters[j].gameID == last_saved_data.monsters[i].gameID)
+			if(array_of_monsters[j].gameID == arrayOfGameStories[0][0].monsters[i].gameID)
 			{
 				array_of_monsters[j].alive = true;
 				array_of_monsters[j].mesh.visible = true;
-				array_of_monsters[j].position.x = last_saved_data.monsters[i].position.x;
-				array_of_monsters[j].position.z = last_saved_data.monsters[i].position.z;
-				array_of_monsters[j].target.x = last_saved_data.monsters[i].position.x;
-				array_of_monsters[j].target.z = last_saved_data.monsters[i].position.z;
-				array_of_monsters[j].mesh.position.x = last_saved_data.monsters[i].position.x*SQUARE_SIZE;
-				array_of_monsters[j].mesh.position.z = last_saved_data.monsters[i].position.z*SQUARE_SIZE;
-				array_of_monsters[j].rotation = last_saved_data.monsters[i].rotation;
-				array_of_monsters[j].mood = last_saved_data.monsters[i].mood;
-				array_of_monsters[j].hp = last_saved_data.monsters[i].hp;
+				array_of_monsters[j].position.x = arrayOfGameStories[0][0].monsters[i].position.x;
+				array_of_monsters[j].position.z = arrayOfGameStories[0][0].monsters[i].position.z;
+				array_of_monsters[j].target.x = arrayOfGameStories[0][0].monsters[i].position.x;
+				array_of_monsters[j].target.z = arrayOfGameStories[0][0].monsters[i].position.z;
+				array_of_monsters[j].mesh.position.x = arrayOfGameStories[0][0].monsters[i].position.x*SQUARE_SIZE;
+				array_of_monsters[j].mesh.position.z = arrayOfGameStories[0][0].monsters[i].position.z*SQUARE_SIZE;
+				array_of_monsters[j].rotation = arrayOfGameStories[0][0].monsters[i].rotation;
+				array_of_monsters[j].mesh.rotation = new THREE.Vector3(0, arrayOfGameStories[0][0].monsters[i].rotation*Math.PI/2, 0);
+				array_of_monsters[j].target_rotation = arrayOfGameStories[0][0].monsters[i].rotation;
+				array_of_monsters[j].mood = arrayOfGameStories[0][0].monsters[i].mood;
+				array_of_monsters[j].hp = arrayOfGameStories[0][0].monsters[i].hp;
 			}
 		}
 	}
 		
 	//clear current pickables
-	for(var i=0; i<array_of_pickables.length;i++)
+	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
-		array_of_pickables[i].mesh.visible = false;
+		currentlevelObj.array_of_pickables[i].mesh.visible = false;
 	}
 	
 	//make them visible and place them where saved game says so
-	for(var i=0; i<last_saved_data.pickables.length;i++)
+	for(var i=0; i<arrayOfGameStories[0][0].pickables.length;i++)
 	{
-		for(var j=0; j<array_of_pickables.length;j++)
+		for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
 		{
 			//we must add gameID beside itemID, and check status of game items to put in place.
 			//once gameID is added we can remove that additional check if mesh is visible
-			if((array_of_pickables[j].gameID == last_saved_data.pickables[i].gameID)&&(array_of_pickables[j].mesh.visible == false))
+			if((currentlevelObj.array_of_pickables[j].gameID == arrayOfGameStories[0][0].pickables[i].gameID)&&(currentlevelObj.array_of_pickables[j].mesh.visible == false))
 			{
-				array_of_pickables[j].mesh.visible = true;
-				array_of_pickables[j].position.x = last_saved_data.pickables[i].x;
-				array_of_pickables[j].position.z = last_saved_data.pickables[i].z;
-				array_of_pickables[j].position.y = last_saved_data.pickables[i].y;
-				array_of_pickables[j].niched = last_saved_data.pickables[i].niched; //flag indicating if pickable is in the niche
-				array_of_pickables[j].plated = last_saved_data.pickables[i].plated; //flag indicating if pickable is on the plate
+				currentlevelObj.array_of_pickables[j].mesh.visible = true;
+				currentlevelObj.array_of_pickables[j].position.x = arrayOfGameStories[0][0].pickables[i].x;
+				currentlevelObj.array_of_pickables[j].position.z = arrayOfGameStories[0][0].pickables[i].z;
+				currentlevelObj.array_of_pickables[j].position.y = arrayOfGameStories[0][0].pickables[i].y;
+				currentlevelObj.array_of_pickables[j].niched = arrayOfGameStories[0][0].pickables[i].niched; //flag indicating if pickable is in the niche
+				currentlevelObj.array_of_pickables[j].plated = arrayOfGameStories[0][0].pickables[i].plated; //flag indicating if pickable is on the plate
 				break;
 			}
 		}
@@ -398,21 +668,21 @@ function loadGameOnSameLevel()
 	
 	//inventory
 	clear_inventory();
-	loadInventoryNoReloading(last_saved_data.inventory)
+	loadInventoryNoReloading(arrayOfGameStories[0][0].inventory)
 	
 	
 	//equipment
 	//equipped items 
-	if(last_saved_data.left_hand_item)
+	if(arrayOfGameStories[0][0].left_hand_item)
 	{
-		martin_equipment.left_hand_item = get_pickable_item_by_id(last_saved_data.left_hand_item);
+		martin_equipment.left_hand_item = get_pickable_item_by_id(arrayOfGameStories[0][0].left_hand_item);
 		document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
 		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 	}
 	// right_hand_item
-	if(last_saved_data.right_hand_item)
+	if(arrayOfGameStories[0][0].right_hand_item)
 	{
-		martin_equipment.right_hand_item = get_pickable_item_by_id(last_saved_data.right_hand_item);
+		martin_equipment.right_hand_item = get_pickable_item_by_id(arrayOfGameStories[0][0].right_hand_item);
 		document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
 		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 	}
@@ -432,14 +702,294 @@ function loadGameOnSameLevel()
 }
 
 
-//load game
+//load game from main menu
+//saved game has all levels, but we load just one where player is at.
+//RAM will only have that one level.
+function load_saved_level_MainMenu(saved_data,level_id)
+{
+   
+	gameState = GAME_STATE_LOADING;
+	modelNumber = 0;
+	relativeLevelModelCount = 0;
+	
+	//load level js file dinamically, proceed with loadJSONfileMainMenu when script is ready (onload)
+	var fileref = document.createElement("script");
+	fileref.type = "text/javascript";
+	fileref.src = "maps/level"+level_id+"/level"+level_id+".js";
+	document.body.appendChild(fileref);
+	
+	fileref.onload = function() {
+		loadJSONfileMainMenu(level_id,saved_data);
+    };
+}
+
+function loadJSONfileMainMenu(id,saved_data)
+{
+	//get items json async, after JSON is retrieved call the function to proceed with level loading
+	ajaxGet("maps/level"+id+"/level"+id+".json",function(){load_level_JSON_cb_MainMenu(id,saved_data)},true);
+}
+
+function load_level_JSON_cb_MainMenu(levelId,saved_data)
+{
+	console.log("get_levels_cb levelId: " + levelId);
+	if (xmlhttp.readyState==4 && xmlhttp.status==200)
+	{
+		// Javascript function JSON.parse to parse JSON data
+        var levelJson = JSON.parse(xmlhttp.responseText);
+		nextlevelObj = levelJson["level"];
+		nextlevelObj.array_of_doors = [];
+		nextlevelObj.array_of_doorways = [];
+		nextlevelObj.array_of_buttons = [];
+		nextlevelObj.array_of_keyholes = [];
+		nextlevelObj.array_of_containers = [];
+		nextlevelObj.array_of_pillars = [];
+		nextlevelObj.array_of_props = [];
+		nextlevelObj.array_of_animated_props = [];
+		nextlevelObj.array_of_monsters = [];
+		nextlevelObj.array_of_pickables = [];
+		nextlevelObj.array_of_plates = [];
+		nextlevelObj.array_of_stairs = [];
+		nextlevelObj.array_of_lights = [];
+		nextlevelObj.array_of_tapestries = [];
+		console.log("get_levels_cb: level acquired.. totalModels:" + levelJson["level"]["totalModels"]);
+		loadLevelJsonSavedGameMainMenu(nextlevelObj,levelId,saved_data);
+	}
+	else
+	{
+		console.log("get_levels_cb: " + xmlhttp.readyState);
+		nextlevelObj = {};
+		//TODO: display error
+	}
+}
+
+function loadLevelJsonSavedGameMainMenu(nextlevelObj,levelId,saved_data)
+{
+	
+	if(nextlevelObj == {})
+	{
+		//display no more levels info..
+		displayLevelInCompleteDialog();
+		return;
+	}
+	
+	//load next level
+	currentlevelObj = nextlevelObj;
+	current_level = levelId;
+
+	//load level walls and floors etc..
+	load_level_obj_saved(currentlevelObj,saved_data);
+
+	//camera
+	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
+	else if(current_rotation==1) camera.position.x = current_position.x*10-5;
+	else camera.position.x = current_position.x*10+5;
+	
+	camera.position.y = 4;
+	
+	if((current_rotation==1)||(current_rotation==3)) camera.position.z = current_position.z*10;
+	else if(current_rotation==0) camera.position.z = current_position.z*10-5; //115
+	else camera.position.z = current_position.z*10+5;
+	
+	if(current_rotation==0) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
+	else if(current_rotation==1) camera.look = new THREE.Vector3(current_position.x*10+5,4,current_position.z*10); //160,4,125
+	else if(current_rotation==2) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10-5); //160,4,125
+	else camera.look = new THREE.Vector3(current_position.x*10-5,4,current_position.z*10); //160,4,125
+	camera.lookAt(camera.look);
+	
+	//one light that follows player around
+	pointLight.position.set( current_position.x*10, 4, current_position.z*10 );
+
+	//TODO dont write this on first level
+	//addToConsole("Moved to another level.","#BBFFBB");
+	
+	//setTimeout(function(){remove_loading_screen()}, 500);
+	updateModelLoading("end of level load");
+		
+	console.log("kraj");
+
+}
+
+function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
+{
+	
+	if(nextlevelObj == {})
+	{
+		//display no more levels info..
+		displayLevelInCompleteDialog();
+		return;
+	}
+	
+	//when player opens website and starts new game or load, current_level should be 0, so ne need for cleanup
+	if(current_level != 0)
+	{
+		loading_msg_span.innerHTML = "Loading...";
+		loading_msg_text_span.innerHTML = "Moving to a new level.";
+		loading_div.style.display = "block";
+		
+		//store current level object
+		//this should only push pointer to array, so if we change level object later, it will also change in the array.
+		arrayOfVisitedLevels.push(currentlevelObj);
+
+		//clear scene, clear current level
+		for( var i = scene.children.length - 1; i >= 0; i--) 
+		{
+			var tmpobj = scene.children[i];
+			if(!tmpobj.noremove)
+			{
+				console.log("removing " + tmpobj.name);
+				scene.remove(tmpobj);
+			}
+			else
+			{
+				console.log("skipping " + tmpobj.name);
+			}
+		}
+
+	}
+	
+	//load next level
+	currentlevelObj = nextlevelObj;
+	current_level = levelId;
+	current_position = new THREE.Vector3(nextlevelObj.levelEntrances[entrance][0],0,nextlevelObj.levelEntrances[entrance][1]);
+	current_rotation = nextlevelObj.levelEntrances[entrance][2];
+    
+	//load level walls and floors etc..
+	load_level_obj_saved(currentlevelObj,saved_data);
+
+	//camera
+	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
+	else if(current_rotation==1) camera.position.x = current_position.x*10-5;
+	else camera.position.x = current_position.x*10+5;
+	
+	camera.position.y = 4;
+	
+	if((current_rotation==1)||(current_rotation==3)) camera.position.z = current_position.z*10;
+	else if(current_rotation==0) camera.position.z = current_position.z*10-5; //115
+	else camera.position.z = current_position.z*10+5;
+	
+	if(current_rotation==0) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10+5); //160,4,125
+	else if(current_rotation==1) camera.look = new THREE.Vector3(current_position.x*10+5,4,current_position.z*10); //160,4,125
+	else if(current_rotation==2) camera.look = new THREE.Vector3(current_position.x*10,4,current_position.z*10-5); //160,4,125
+	else camera.look = new THREE.Vector3(current_position.x*10-5,4,current_position.z*10); //160,4,125
+	camera.lookAt(camera.look);
+	
+	//one light that follows player around
+	pointLight.position.set( current_position.x*10, 4, current_position.z*10 );
+
+	//TODO dont write this on first level
+	//addToConsole("Moved to another level.","#BBFFBB");
+	
+	//setTimeout(function(){remove_loading_screen()}, 500);
+	updateModelLoading("end of level load");
+		
+	console.log("kraj");
+
+}
+
+//load floors and walls and holes and niches and all basic and static level elements
+function load_level_obj_saved(level_obj,saved_data)
+{
+
+	//load floors and holes and ceilings
+	load_floors_level(globalJSONloader, level_obj);
+	
+	//walls
+	load_walls_level(globalJSONloader, level_obj);
+
+    //this must be done before load_doors();
+    for (i=0; i<saved_data.levels["id"+current_level].doors.length; i++)
+	{
+		level_obj.doorsArr[saved_data.levels["id"+current_level].doors[i]][3] = 1;
+	}
+	//doors
+	load_doors(globalJSONloader, level_obj);
+	
+	//pillars are in props.js file
+	load_pillars(globalJSONloader, level_obj);
+	
+	//buttons
+	load_buttons(globalJSONloader, level_obj);
+	
+	//load chests
+	load_containers(globalJSONloader, level_obj);
+
+	//props
+	load_props(globalJSONloader, level_obj);
+	
+	//animated props
+	load_animated_props(globalJSONloader, level_obj);
+
+	//monsters
+	load_saved_monsters(globalJSONloader, level_obj, arrayOfGameStories[0][0].levels["id"+current_level].monsters);
+	
+	//pickables
+	load_saved_pickables(globalJSONloader, saved_data.levels["id"+current_level].pickables, level_obj);
+
+	//niches - for some reason we dont need to reload niches. they are there with pickables.
+	//load_niches(globalJSONloader, level_obj);
+	
+	//keyholes
+	load_keyholes(globalJSONloader, level_obj);
+	
+	//stairs
+	load_stairs(globalJSONloader, level_obj);
+	
+	//load lights specific for each level
+	load_level_lights(level_obj);
+	
+	scene.fog.color.r = level_obj.fog_color[0];
+	scene.fog.color.g = level_obj.fog_color[1];
+	scene.fog.color.b = level_obj.fog_color[2];
+	scene.fog.density = level_obj.fog_density;
+	
+	//load tapestries
+	load_tapestries(globalJSONloader, level_obj);
+	
+	//load pressure plates (plynths)
+	load_plates(globalJSONloader, level_obj);
+	
+	//level specific action on load
+	//levelOnLoad(); level3OnLoad(level_obj);
+	var onLoadFn = window[level_obj.levelOnLoad];
+	if(typeof onLoadFn === 'function') 
+	{
+		onLoadFn(level_obj);
+	}
+
+    //we load player inventory here, its unfortunate but cant think of better now
+    //because async level loading, we have to make sure inventory is loaded after level
+    //because of loading percentages, pickable arrays etc
+    // 
+    //so here we are sure level is loaded, and we call it here, 
+    //but it would be better to somehow call it from main loading function and make it run after this..
+    loadInventory(saved_data.inventory);
+    
+    if(saved_data.left_hand_item)
+    {
+        martin_equipment.left_hand_item = load_item_by_id(saved_data.left_hand_item);
+        document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
+        document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+    }
+    // right_hand_item
+    if(saved_data.right_hand_item)
+    {
+        martin_equipment.right_hand_item = load_item_by_id(saved_data.right_hand_item);
+        document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
+        document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+    }
+	
+	//console.log("level end time:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
+}
+
+
+//load game while playing
 function loadGame()
 {
 	
 	//load game
-	console.log(last_saved_data);
-	current_position = new THREE.Vector3(last_saved_data.position.x,0,last_saved_data.position.z);
-	current_rotation = last_saved_data.rotation;
+	console.log(arrayOfGameStories[0][0]);
+	current_position = new THREE.Vector3(arrayOfGameStories[0][0].position.x,0,arrayOfGameStories[0][0].position.z);
+	current_rotation = arrayOfGameStories[0][0].rotation;
 	
 	playerDead = false; 
 	player1_face_div.style.opacity = "1.0";
@@ -447,25 +997,25 @@ function loadGame()
 	hide_message();
 	
 	//player data
-	martin_level = last_saved_data.martin_level;
+	martin_level = arrayOfGameStories[0][0].martin_level;
 	//experience
-	martin_experience = last_saved_data.martin_experience;
+	martin_experience = arrayOfGameStories[0][0].martin_experience;
 	//playerHPmax
-	playerHPmax = last_saved_data.martin_HPmax;
+	playerHPmax = arrayOfGameStories[0][0].martin_HPmax;
 	//playerHPcurrent;
-	playerHPcurrent = last_saved_data.martin_HPcurrent;
+	playerHPcurrent = arrayOfGameStories[0][0].martin_HPcurrent;
 	updatePlayerHealthBar();
 	//strength
-	martin_strength = last_saved_data.martin_strength;
+	martin_strength = arrayOfGameStories[0][0].martin_strength;
 	//dexterity
-	martin_dexterity = last_saved_data.martin_dexterity;
+	martin_dexterity = arrayOfGameStories[0][0].martin_dexterity;
 	//attack
-	martin_attack = last_saved_data.martin_attack;
+	martin_attack = arrayOfGameStories[0][0].martin_attack;
 	//defence
-	martin_defence = last_saved_data.martin_defence;
+	martin_defence = arrayOfGameStories[0][0].martin_defence;
 	
 	//quirks
-	game_quirks = last_saved_data.quirks;
+	game_quirks = arrayOfGameStories[0][0].quirks;
 	
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
@@ -488,7 +1038,7 @@ function loadGame()
 	pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
 
 	//if loading game on the same level just move the player and stuff back in saved position
-	if(current_level == last_saved_data.current_level)
+	if(current_level == arrayOfGameStories[0][0].current_level)
 	{
 		loadGameOnSameLevel();
 	}
@@ -498,11 +1048,11 @@ function loadGame()
 	}
 
 	//level
-	current_level = last_saved_data.current_level;
+	current_level = arrayOfGameStories[0][0].current_level;
 	
 	//doors
 	//this must be called before load_level();
-	load_saved_doors(last_saved_data.doors);
+	load_saved_doors(arrayOfGameStories[0][0].doors);
 
 	//level specific action on load
 	levelOnLoad();
@@ -593,17 +1143,10 @@ function newGame()
 	//level
 	current_level = 3;
 	
-	//doors
-	if(doorsArr3D[0][3] == 1)
-	{
-		doorsArr3D[0][3] = 0;
-		setDoorClosed(doorsArr3D[0]);
-	}
-
 	addToConsole("New Game started..","#BBFFBB");
 
 	//level specific action on load
-	levelOnLoad();
+	//levelOnLoad();
 	
 }
 

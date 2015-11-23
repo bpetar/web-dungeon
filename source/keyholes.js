@@ -1,32 +1,45 @@
 
 //keyholes
 
-//this is array of keyholes
-var array_of_keyholes = [];
+//used in temp level loading
+function reload_keyholes(levelObj)
+{
+	for(var i=0; i<levelObj.array_of_keyholes.length;i++)
+	{
+		scene.add(levelObj.array_of_keyholes[i].mesh);
+	}
+}
 
 //load keyhole 3d models on the map
-function load_keyholes () {
+function load_keyholes (loader,levelObj) {
 
-	var loader = new THREE.JSONLoader();
-	
-	for(var i=0; i<keyholes_array.length; i++) {
+	for(var i=0; i<levelObj.keyholesArr.length; i++) {
 
 		// id, model, x, z, pressed, script function..
 
 		var keyhols = create_game_object();
-		keyhols.gameID = keyholes_array[i][0];
+		keyhols.gameID = levelObj.keyholesArr[i][0];
 		keyhols.name = "keyhole" + i;
 		keyhols.locked = true;
-		keyhols.model = keyholes_array[i][1];
-		keyhols.orientation = keyholes_array[i][4];
-		keyhols.onPressFunc = keyholes_array[i][5];
-		keyhols.position.set((keyholes_array[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(keyholes_array[i][3])*SQUARE_SIZE);
+		keyhols.model = levelObj.keyholesArr[i][1];
+		keyhols.orientation = levelObj.keyholesArr[i][4];
+		keyhols.position.set((levelObj.keyholesArr[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(levelObj.keyholesArr[i][3])*SQUARE_SIZE);
 		keyhols.rotation.set(0, Math.PI/2, 0);
 		
-		//loader.load( keyhols.model, keyhols.loadObject(keyhols) );
+		//get js function from string
+		var onPressFn = window[levelObj.keyholesArr[i][5]];
+		if(typeof onPressFn === 'function') 
+		{
+			keyhols.onPressFunc = onPressFn;
+		}
+		else
+		{
+			keyhols.onPressFunc = missing_click_function;
+		}
+			
 		loadGameObjectCheck(loader, keyhols);
 		
-		array_of_keyholes.push(keyhols);
+		levelObj.array_of_keyholes.push(keyhols);
 	}
 
 }

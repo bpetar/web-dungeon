@@ -1,5 +1,19 @@
 //various utility functions..
 
+//if by some chance, click js function is not found, use this one..
+function missing_click_function()
+{
+	console.log("Error: Missing on click function!");
+}
+
+function levelIsSaved(id)
+{
+    if(arrayOfGameStories[currentStory][0].levels.hasOwnProperty("id"+id))
+        return true;
+
+    return false;
+}
+
 //function audio_change_volume
 function audio_change_volume(audio_element, desired_volume)
 {
@@ -70,7 +84,7 @@ function isPickableSaved(pickable, saved_pickables)
 //loads item in game with 3d model and everything
 function load_item_by_id(gameID)
 {
-	var loader = new THREE.JSONLoader();
+	var loader = new THREE.JSONLoader(); //TODO use global loader
 	
 	var game_item = create_game_object();
 	game_item.gameID = gameID;
@@ -106,7 +120,7 @@ function load_item_by_id(gameID)
 	loadGameObjectCheck(loader, game_item);
 
 	//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
-	array_of_pickables.push(game_item);
+	//currentlevelObj.array_of_pickables.push(game_item);
 	
 	return game_item;
 }
@@ -241,15 +255,18 @@ function show_model(loader, model_file, x, z, rot)
 
 function updateModelLoading(name)
 {
-	modelNumber++;
-	console.log("loading model nb: " + modelNumber + ", name: " + name);
-	if(typeof totalModels != 'undefined')
+	if(name != "end of level load") modelNumber++;
+	console.log("loading model nb: " + modelNumber + ", name: " + name + ", relativeLevelModelCount: " + relativeLevelModelCount);
+	//if(typeof relativeLevelModelCount != 'undefined')
+	var perc = 100;
+	if(relativeLevelModelCount != 0) //if new level has no new models to download, loading is finished right away..
 	{
-		var perc = (modelNumber*100)/totalModels;
+		var perc = (modelNumber*100)/relativeLevelModelCount;
 		//if(totalModels == modelNumber) remove_loading_screen();
 		console.log("loading percent: " + perc);
-		update_loading_screen(perc);
 	}
+
+	update_loading_screen(perc);
 }
 
 // Rotate an object around an arbitrary axis in world space       
@@ -272,292 +289,3 @@ function rotateAroundWorldAxis(object, axis, radians) {
     object.rotation.setEulerFromRotationMatrix(object.matrix);
 }
 
-var DOOR_ANIMATE_SLIDE_DOWN_UP = 0; //0-slide/down/up 
-var DOOR_ANIMATE_SLIDE_UP_DOWN = 1; //1-slide/up/down 
-var DOOR_ANIMATE_SLIDE_RIGHT_LEFT = 2; //2-slide/right/left 
-var DOOR_ANIMATE_SLIDE_LEFT_RIGHT = 3; //3-slide/left/right 
-var DOOR_ANIMATE_ROTATE_CENTER_LEFT_RIGHT = 4; //4-rotatec/left/right 
-var DOOR_ANIMATE_ROTATE_CENTER_RIGHT_LEFT = 5; //5-rotatec/right/left 
-var DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT = 6; //6-rotateo/left/right 
-var DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT = 7; //7-rotateo/right/left 
-var DOOR_ANIMATE_ROTATE_OFFSET_UP_DOWN = 8; //8-rotateo/top/down 
-var DOOR_ANIMATE_ROTATE_OFFSET_DOWN_UP = 9; //9-rotateo/down/up
-
-var angle = -1;
-var dongle = 4.2;
-var z_initial = -1;
-var x_initial = -1;
-
-function setDoorOpened(door)
-{
-	if(door.length > 7)
-	{
-		open_style = door[7];
-		
-		switch(open_style)
-		{
-			case DOOR_ANIMATE_SLIDE_DOWN_UP:
-			{
-				door[4].position.y = 7.5;
-			}
-			break;
-			case DOOR_ANIMATE_SLIDE_RIGHT_LEFT:
-			{
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
-			{
-				//opening door to the left, depends on initial door rotation
-				orientation = door[2];
-					
-				if(orientation == 0)
-				{
-					door[4].rotation.y = Math.PI/2;
-				}
-				else if(orientation == 1)
-				{
-					door[4].rotation.y = Math.PI*2;
-					door[4].position.x -=4.0;
-					door[4].position.z +=4.0;
-				}
-				else if(orientation == 2)
-				{
-					door[4].rotation.y = Math.PI*3/2;
-				}
-				else if(orientation == 3)
-				{
-					door[4].rotation.y = Math.PI;
-				}
-
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT:
-			{
-			}
-			break;
-			default:
-			{
-			}
-		}
-	}
-}
-
-
-function setDoorClosed(door)
-{
-	if(door.length > 7)
-	{
-		open_style = door[7];
-		
-		switch(open_style)
-		{
-			case DOOR_ANIMATE_SLIDE_DOWN_UP:
-			{
-				door[4].position.y = 0;
-			}
-			break;
-			case DOOR_ANIMATE_SLIDE_RIGHT_LEFT:
-			{
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
-			{
-				//opening door to the left, depends on initial door rotation
-				orientation = door[2];
-					
-				if(orientation == 0)
-				{
-					door[4].rotation.y = 0;
-				}
-				else if(orientation == 1)
-				{
-					door[4].rotation.y = 3*Math.PI/2;
-					door[4].position.x +=4.0;
-					door[4].position.z -=4.0;
-				}
-				else if(orientation == 2)
-				{
-					door[4].rotation.y = Math.PI;
-				}
-				else if(orientation == 3)
-				{
-					door[4].rotation.y = Math.PI/2;
-				}
-
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT:
-			{
-			}
-			break;
-			default:
-			{
-			}
-		}
-	}
-}
-
-function animateDoor(door, elapsed)
-{
-	if(door.length > 7)
-	{
-		open_style = door[7];
-		
-		switch(open_style)
-		{
-			case DOOR_ANIMATE_SLIDE_DOWN_UP:
-			{
-				if(door[3] == 0) //closing..
-				{
-					door[4].position.y -= elapsed/400;
-					if(door[4].position.y < 0.01) 
-					{
-						door[5] = 0;
-						audio_door.pause();
-					}
-				}
-				else 
-				{
-					door[4].position.y += elapsed/400;
-					if(door[4].position.y > 7.5) 
-					{
-						door[5] = 0;
-						audio_door.pause();
-					}
-				}
-			}
-			break;
-			case DOOR_ANIMATE_SLIDE_RIGHT_LEFT:
-			{
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
-			{
-				if(door[3] == 0) //closing..
-				{
-					var oldz = Math.sin(door[4].rotation.y);
-					var oldx = Math.cos(door[4].rotation.y);
-					door[4].rotation.y -= elapsed/600;
-					var newz = Math.sin(door[4].rotation.y);
-					var newx = Math.cos(door[4].rotation.y);
-					var deltaz = oldz - newz;
-					var deltax = oldx - newx;
-					door[4].position.x += deltax*4;
-					door[4].position.z -= deltaz*4;
-					
-					orientation = door[2];
-					if(orientation == 0)
-					{
-						if(door[4].rotation.y < 0.1) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 1)
-					{
-						if(door[4].rotation.y < Math.PI*3/2) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 2)
-					{
-						if(door[4].rotation.y < Math.PI) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 3)
-					{
-						if(door[4].rotation.y < Math.PI/2) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-				}
-				else 
-				{
-					var oldz = Math.sin(door[4].rotation.y);
-					var oldx = Math.cos(door[4].rotation.y);
-					door[4].rotation.y += elapsed/600;
-					var newz = Math.sin(door[4].rotation.y);
-					var newx = Math.cos(door[4].rotation.y);
-					var deltaz = oldz - newz;
-					var deltax = oldx - newx;
-					door[4].position.x += deltax*4;
-					door[4].position.z -= deltaz*4;
-
-					//opening door to the left, depends on initial door rotation
-					orientation = door[2];
-					if(orientation == 0)
-					{
-						if(door[4].rotation.y > Math.PI/2) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 1)
-					{
-						if(door[4].rotation.y > Math.PI*2) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 2)
-					{
-						if(door[4].rotation.y > Math.PI*3/2) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-					else if(orientation == 3)
-					{
-						if(door[4].rotation.y > Math.PI) 
-						{
-							door[5] = 0;
-							audio_door.pause();
-						}
-					}
-
-				}
-			}
-			break;
-			case DOOR_ANIMATE_ROTATE_OFFSET_LEFT_RIGHT:
-			{
-			}
-			break;
-			default:
-			{
-			}
-		}
-	}
-	else //old levels have only up down animation..  TODO:remove this block and fix old levels
-	{
-		//console.log("old door code");
-		if(door[3] == 0) //closing..
-		{
-			door[4].position.y -= elapsed/400;
-			if(door[4].position.y < 0.01) 
-			{
-				door[5] = 0;
-				audio_door.pause();
-			}
-		}
-		else 
-		{
-			door[4].position.y += elapsed/400;
-			if(door[4].position.y > 7.5) 
-			{
-				door[5] = 0;
-				audio_door.pause();
-			}
-		}
-	}
-}

@@ -1,13 +1,9 @@
 //monster.js
 //monster class, attributes and methods
 
-//lively moved and modified (populated from save file and should be saved to save file)
-var array_of_monsters = [];
-
 var MONSTER_IDLE = 0;
 var MONSTER_MAD = 1;
 var MONSTER_WALK = 2;
-
 
 //monster class declaration
 Monster = function ( ) {
@@ -95,7 +91,7 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 	if(this.hp < 0)
 	{
 		//Monster is dead!
-		if(typeof monsterPun != 'undefined') setTimeout(monsterPun, 900);
+		if(typeof monsterPun != 'undefined') setTimeout(monsterPun, 600);
 		
 		//soundy play sound of monstrous death
 		this.audio_monster_dies.play();
@@ -201,7 +197,7 @@ function loadMonsterCheck(loader, monster)
 		//download it first time..
 		loaded3Dmodels.push([monster.model,0]);
 		loader.load( monster.model, monster.loadObject(monster) );
-		//console.log("loadMonsterCheck loading first time: " + monster.model);
+		relativeLevelModelCount++;
 	}
 	
 }
@@ -273,15 +269,24 @@ Monster.prototype.loadObject = function ( munster ) {
 
 };
 
-function getMonsterFromLevelArrayByID(id) {
-	for(var i=0; i<monster_array.length; i++) {
-		if (monster_array[i][0] == id)
-			return monster_array[i];
-	}
-	return 0;
-}
 
-function loadMonsterDataFromLevelArray(monsterObj, monsterArr) {
+function loadMonsterDataFromLevelArray(monsterObj, levelObj, id) {
+	
+	var monsterArr = 0;
+	
+	for(var i=0; i<levelObj.monsterArr.length; i++) {
+		if (levelObj.monsterArr[i][0] == id)
+		{
+			monsterArr = levelObj.monsterArr[i];
+			break;
+		}
+	}
+	if(monsterArr == 0)
+	{
+		console.log("Error: Loading couldn't find monster with id: " + id);
+		return;
+	}
+	
 	monsterObj.gameID = monsterArr[0];
 	monsterObj.name = monsterArr[1];
 	monsterObj.model = monsterArr[2];
@@ -338,13 +343,13 @@ function loadMonsterDataFromLevelArray(monsterObj, monsterArr) {
 	
 }
 
-function load_saved_monsters (saved_monsters_arr) {
-	var loader = new THREE.JSONLoader();
+function load_saved_monsters (loader,levelObj,saved_monsters_arr) {
+
 	for (i=0; i<saved_monsters_arr.length; i++)
 	{
-		level_monster = getMonsterFromLevelArrayByID(saved_monsters_arr[i].gameID);
+		//var level_monster = getMonsterFromLevelArrayByID(levelObj, saved_monsters_arr[i].gameID);
 		var munster = new Monster();
-		loadMonsterDataFromLevelArray(munster,level_monster);
+		loadMonsterDataFromLevelArray(munster,levelObj,saved_monsters_arr[i].gameID);
 		munster.position.x = saved_monsters_arr[i].position.x;
 		munster.position.z = saved_monsters_arr[i].position.z;
 		munster.position.y = 0;
@@ -354,96 +359,102 @@ function load_saved_monsters (saved_monsters_arr) {
 		munster.rotation = saved_monsters_arr[i].rotation;
 		munster.hp = saved_monsters_arr[i].hp;
 		munster.mood = saved_monsters_arr[i].mood;
+
 		loadMonsterCheck(loader,munster);
-		//loader.callbackProgress = callbackProgress;
-		array_of_monsters.push(munster);
+
+		levelObj.array_of_monsters.push(munster);
+	}
+}
+
+function reload_monsters (levelObj)
+{
+	for(var i=0; i<levelObj.array_of_monsters.length;i++)
+	{
+		scene.add(levelObj.array_of_monsters[i].mesh);
 	}
 }
 				
 //load monsters on the map
-function load_monsters () {
-
-	var loader = new THREE.JSONLoader();
-
-	var callbackProgress = function( progress, result ) {
-
-		//console.log("loading monstere kod pere");
-		
-		var bar = 250,
-			total = progress.totalModels + progress.totalTextures,
-			loaded = progress.loadedModels + progress.loadedTextures;
-
-		if ( total )
-			bar = Math.floor( bar * loaded / total );
-
-		//console.log("bar: " + bar);//$( "bar" ).style.width = bar + "px";
-
-
-	}
-
-	loader.callbackProgress = callbackProgress;
-	for(var i=0; i<monster_array.length; i++) {
+function load_monsters (loader, levelObj)
+{
+	for(var i=0; i<levelObj.monsterArr.length; i++) {
 		var munster = new Monster();
-		munster.gameID = monster_array[i][0];
-		munster.name = monster_array[i][1];
-		munster.model = monster_array[i][2];
-		munster.position.x = monster_array[i][3];
-		munster.position.z = monster_array[i][4];
+		munster.gameID = levelObj.monsterArr[i][0];
+		munster.name = levelObj.monsterArr[i][1];
+		munster.model = levelObj.monsterArr[i][2];
+		munster.position.x = levelObj.monsterArr[i][3];
+		munster.position.z = levelObj.monsterArr[i][4];
 		munster.position.y = 0;
 		munster.target.x = munster.position.x;
 		munster.target.z = munster.position.z;
 		munster.target.y = munster.position.y;
-		munster.rotation = monster_array[i][5];
-		munster.hp = monster_array[i][6];
-		munster.ac = monster_array[i][7];
-		munster.attack = monster_array[i][8];
-		munster.dmg = monster_array[i][9];
-		munster.pickables = monster_array[i][10];
-		munster.OnClick = monster_array[i][11];
-		munster.OnItemClick = monster_array[i][12];
+		munster.rotation = levelObj.monsterArr[i][5];
+		munster.hp = levelObj.monsterArr[i][6];
+		munster.ac = levelObj.monsterArr[i][7];
+		munster.attack = levelObj.monsterArr[i][8];
+		munster.dmg = levelObj.monsterArr[i][9];
+		munster.pickables = levelObj.monsterArr[i][10];
+		
+		//get js function from string
+		var onPressFn = window[levelObj.monsterArr[i][11]];
+		if(typeof onPressFn === 'function') 
+		{
+			munster.OnClick = onPressFn;
+		}
+		else
+		{
+			munster.OnClick = missing_click_function;
+		}
+		//get js function from string
+		var onPressItemFn = window[levelObj.monsterArr[i][12]];
+		if(typeof onPressItemFn === 'function') 
+		{
+			munster.OnItemClick = onPressItemFn;
+		}
+		else
+		{
+			munster.OnItemClick = missing_click_function;
+		}
 		
 		//animation keyframes
-		if(monster_array[i].length > 18)
+		if(levelObj.monsterArr[i].length > 18)
 		{
-			munster.idle_startKeyframe = monster_array[i][13];
-			munster.idle_endKeyframe = monster_array[i][14];
-			munster.attack_startKeyframe = monster_array[i][15];
-			munster.attack_endKeyframe = monster_array[i][16];
-			munster.walk_startKeyframe = monster_array[i][17];
-			munster.walk_endKeyframe = monster_array[i][18];
+			munster.idle_startKeyframe = levelObj.monsterArr[i][13];
+			munster.idle_endKeyframe = levelObj.monsterArr[i][14];
+			munster.attack_startKeyframe = levelObj.monsterArr[i][15];
+			munster.attack_endKeyframe = levelObj.monsterArr[i][16];
+			munster.walk_startKeyframe = levelObj.monsterArr[i][17];
+			munster.walk_endKeyframe = levelObj.monsterArr[i][18];
 		}
 
-		if(monster_array[i].length > 19)
+		if(levelObj.monsterArr[i].length > 19)
 		{
-			munster.mood = monster_array[i][19];
+			munster.mood = levelObj.monsterArr[i][19];
 		}
 		
 		//audio
 		var source_monster_wound = document.createElement('source');
-		source_monster_wound.src = monster_array[i][20];
+		source_monster_wound.src = levelObj.monsterArr[i][20];
 		munster.audio_monster_wound.appendChild(source_monster_wound);
 		var source_monster_dies = document.createElement('source');
-		source_monster_dies.src = monster_array[i][21];
+		source_monster_dies.src = levelObj.monsterArr[i][21];
 		munster.audio_monster_dies.appendChild(source_monster_dies);
 		var source_monster_roar = document.createElement('source');
-		source_monster_roar.src = monster_array[i][22];
+		source_monster_roar.src = levelObj.monsterArr[i][22];
 		munster.audio_monster_roar.appendChild(source_monster_roar);
 		var source_monster_attack = document.createElement('source');
-		source_monster_attack.src = monster_array[i][23];
+		source_monster_attack.src = levelObj.monsterArr[i][23];
 		munster.audio_monster_attack.appendChild(source_monster_attack);
 		var source_monster_click = document.createElement('source');
-		source_monster_click.src = monster_array[i][24];
+		source_monster_click.src = levelObj.monsterArr[i][24];
 		munster.audio_monster_click.appendChild(source_monster_click);
 
-		
 		//console.log("loading monstere " + i);
 		
 		loadMonsterCheck(loader,munster);
 		//loader.load( munster.model, munster.loadObject(munster) );
 		
-		loader.callbackProgress = callbackProgress;
-		
-		array_of_monsters.push(munster);
+		levelObj.array_of_monsters.push(munster);
 
 	}
 
