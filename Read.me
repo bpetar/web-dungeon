@@ -370,23 +370,38 @@ second level
    - /keyholes
    - /plates
  + new game : if there is saved game - Are you sure you want to start new game because previous saved progress will be lost? 
-   - if yes delete saved game (this is important because we dont want new game to load saved later levels)
+   + if yes delete saved game (this is important because we dont want new game to load saved later levels)
    + check new game (in the middle of playing)
    + clean start error: array of monsters not defined - rewrite the damn thing
    + new game pickables gone
    + new game door left opened
-   - new game remains 'nice wormup'
-   - make new game while playing on second level
- - check load while playing at same level
+   + new game remains 'nice wormup'
+   + make new game while playing on second level
+   + load to second level, then try new game.
+ + check load while playing at same level
+  + doors not loaded
+  + moved pickable item is not returned to its saved position
+  + drop item from inventory or hand to the ground and reload - item will be visible on the ground
+  + drop item on second level and go back to first and reload game saved on first.
+  + save game on second level, go to first level drop item/change doors, go back to second level, then reload go check first level 
+  + save game on second level item on the ground, go to first level, hit new game, go to second level - item is on the ground.
+  + put item in hand and reload - item is still in hand
+  + check monsters
  - make load while playing on different level
  + pick item on one level and drop it on another, when you go back to first level - item is there on the ground! he he...
    + problem here is that while transiting levels all data is saved in dynamic memory, all pickables are still in arrays (only invisible), when item is dropped on some level it turns visible, and it is same object reference used in previous levels, so it turns visible there as well... horrid. proper fix would be to remove pickable from array once picked, not just turn it invisible but will this break something else? Hack will be to add extra property droppedOnLevelID - oh my god, I should have done this when rested.
  - try to save with item at hand
+ + go to second level, try to put down on the ground stake from hand - it disappears (problem with noreload not set - removing from scene on change level)
+ + go to second level, put down on the ground stake from hand, go back to first leve - item is there on the ground (in same coordinates)
+ + start new game, go to second level, drop some items on the ground, go to first level, hit new game, go to second level - items on the ground! even if restarting on the same level we have to clean array of visited levels just in case we went there and back.
  - test rock throw (because pickable adding/removing changed)
+   - noremove must be added for throwables that are thrown
+ - load game should clear new story array entries. (for example, 5 times new game, then load game)
  - when game is loaded at second level from Main Menu - light is not right (visible on first level stairs)
  - make downstairs model
  - add first and second level to the game
  - rewrite teleport code
+ - save in front of the door click opens the door
  - [event file]
  - [floors and walls file]
  

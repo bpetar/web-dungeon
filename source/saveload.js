@@ -142,7 +142,7 @@ function save_position()
 	//and these temp levels were used if player goes back to them (all without saving game).
 	//we could do something like that here.
 	
-    //in this game we have visited levels in synamic array so we go through that array and save all levels in a loop
+    //in this game we have visited levels in dynamic array so we go through that array and save all levels in a loop
     //arrayOfGameStories[0][0] stores what is saved before, we overwrite levels in there.
  
     save_data["levels"] = arrayOfGameStories[0][0].levels;
@@ -300,97 +300,6 @@ function save_position()
 }
 
 
-//save temp level
-function save_temp(level)
-{
-
-	var temp_data = {"data_type":"temp", "desc":"temp level data to be saved"};
-	
-	//player could go through three levels before hitting save button and all three levels should be saved.
-	//in turtle game, we use to save temp levels once player leaves them (goes to next one), 
-	//and these temp levels were used if player goes back to them (all without saving game).
-	//we could do something like that here.
-	
-	//doors
-	var j = 0;
-	temp_data["doors"] = [];
-	for(var i=0; i<doorsArr3D.length; i++)
-	{
-		//if doors are opened, save that
-		if(doorsArr3D[i][3] == 1)
-		{
-			temp_data["doors"][j] = i; //we just save index of doors that are opened, so only opened doors are saved.
-			j++;
-		}
-	}
-	
-	//pickables on the ground, niches
-	j = 0;
-	temp_data["pickables"] = [];
-	for (i=0; i< array_of_pickables.length; i++)
-	{
-		// atm, pickables remain in this array even when placed in inventory or consumed. 
-		// only way to know they are still on the ground is that mesh is visible.
-		if(array_of_pickables[i].mesh.visible)
-		{
-			//save item id, position, niched
-			temp_data["pickables"][j] = {};
-			temp_data["pickables"][j]["gameID"] = array_of_pickables[i].gameID;
-			temp_data["pickables"][j]["x"] = array_of_pickables[i].mesh.position.x;
-			temp_data["pickables"][j]["y"] = array_of_pickables[i].mesh.position.y;
-			temp_data["pickables"][j]["z"] = array_of_pickables[i].mesh.position.z;
-			temp_data["pickables"][j]["niched"] = array_of_pickables[i].niched;
-			temp_data["pickables"][j]["plated"] = array_of_pickables[i].plated;
-			j++;
-		}
-	}
-	
-	//chests, containers
-	//keyholes
-	//plates
-	//buttons
-	
-	
-	//monsters:
-	temp_data["monsters"] = [];
-	var mindex = 0;
-	for(var m=0; m<array_of_monsters.length; m++)
-	{
-		if(array_of_monsters[m].alive)
-		{
-			temp_data["monsters"][mindex] = {};
-			//id
-			temp_data["monsters"][mindex]["gameID"] = array_of_monsters[m].gameID;
-			//position
-			temp_data["monsters"][mindex]["position"] = {};
-			temp_data["monsters"][mindex]["position"]["x"] = array_of_monsters[m].position.x;
-			temp_data["monsters"][mindex]["position"]["z"] = array_of_monsters[m].position.z;
-			//rotation
-			temp_data["monsters"][mindex]["rotation"] = array_of_monsters[m].rotation;
-			//mood
-			temp_data["monsters"][mindex]["mood"] = array_of_monsters[m].mood;
-			//hp
-			temp_data["monsters"][mindex]["hp"] = array_of_monsters[m].hp;
-			
-			mindex++;
-		}
-	}
-
-	//
-	//journal entries
-	//
-	//dialogs? npc?
-	
-	var temp_data_json_str = JSON.stringify( temp_data );
-	console.log(temp_data_json_str);
-	
-	setCookie("temp_level_" + level, temp_data_json_str, 90);
-	
-	//ajaxPost("save.php",save_cb,save_data_json_str);
-}
-
-
-
 function newGameMainMenu()
 {
 	main_menu_div.style.display = "none";
@@ -418,7 +327,6 @@ function newGameMainMenu()
 	load_lights();
 
 	//load level walls and floors etc..
-	//should be called after load_saved_doors because it will set the doors opened for saved position
 	loadLevel(3,0);
 
 	loadCharacter();
@@ -432,6 +340,15 @@ function newGameMainMenu()
 //new game
 function newGameOnSameLevel()
 {
+	nextlevelObj = {};
+	//currentlevelObj = {};
+	arrayOfVisitedLevels = [];
+
+	var story = [];
+	arrayOfGameStories.push(story);
+	currentStory = arrayOfGameStories.length-1;
+	arrayOfGameStories[currentStory].push({'levels':{}});
+	
 	//clear current monsters and stop them
 	for(var m=0; m<currentlevelObj.array_of_monsters.length;m++)
 	{
@@ -475,29 +392,6 @@ function newGameOnSameLevel()
 	
 	load_saved_pickables(globalJSONloader,currentlevelObj.pickablesArr,currentlevelObj);
 	
-	//make them visible and place them where saved game says so
-	/*for(var i=0; i<currentlevelObj.pickablesArr.length;i++)
-	{
-		for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
-		{
-			//we must add gameID beside itemID, and check status of game items to put in place.
-			//once gameID is added we can remove that additional check if mesh is visible
-			if(currentlevelObj.array_of_pickables[j].gameID == currentlevelObj.pickablesArr[i].gameID)
-			{
-				currentlevelObj.array_of_pickables[j].mesh.visible = true;
-				currentlevelObj.array_of_pickables[j].position.x = currentlevelObj.pickablesArr[i].x;
-				currentlevelObj.array_of_pickables[j].position.z = currentlevelObj.pickablesArr[i].z;
-				currentlevelObj.array_of_pickables[j].position.y = currentlevelObj.pickablesArr[i].y;
-				currentlevelObj.array_of_pickables[j].mesh.position.x = currentlevelObj.pickablesArr[i].x;
-				currentlevelObj.array_of_pickables[j].mesh.position.z = currentlevelObj.pickablesArr[i].z;
-				currentlevelObj.array_of_pickables[j].mesh.position.y = currentlevelObj.pickablesArr[i].y;
-				currentlevelObj.array_of_pickables[j].niched = currentlevelObj.pickablesArr[i].niched; //flag indicating if pickable is in the niche
-				currentlevelObj.array_of_pickables[j].plated = currentlevelObj.pickablesArr[i].plated; //flag indicating if pickable is on the plate
-				break;
-			}
-		}
-		
-	}*/
 	
 	//niches, well one niche item on first level:
 	var niche_pickables = currentlevelObj.nicheArr[0][3];
@@ -559,7 +453,7 @@ function newGameOnSameLevel()
 	
 	//inventory
 	clear_inventory();
-	loadInventoryNoReloading([]);
+	//loadInventoryNoReloading([]);
 	
 	
 	//equipment
@@ -599,42 +493,203 @@ function newGameOnSameLevel()
 		currentlevelObj.array_of_doors[0].open = 0;
 		setDoorClosed(currentlevelObj.array_of_doors[0]);
 	}
+	
+	//hide speech bubble
+	if(document.getElementById( "gui-speech" ).style.display == "block")
+		document.getElementById( "gui-speech" ).style.display = "none";
 
 }
+
+
+
+//new game
+function newGameOnDifferentLevel()
+{
+	
+	//clear scene, clear current level
+	for( var i = scene.children.length - 1; i >= 0; i--) 
+	{
+		var tmpobj = scene.children[i];
+		{
+			console.log("removing " + tmpobj.name);
+			scene.remove(tmpobj);
+		}
+	}
+	
+	//inventory
+	clear_inventory();
+	//loadInventoryNoReloading([]);
+
+	//stop the music, stop the fights, animations, actions, remove dialogs and what not?
+
+	//hide speech bubble
+	if(document.getElementById( "gui-speech" ).style.display == "block")
+		document.getElementById( "gui-speech" ).style.display = "none";
+
+	nextlevelObj = {};
+	currentlevelObj = {};
+	arrayOfVisitedLevels = [];
+		
+	var story = [];
+	arrayOfGameStories.push(story);
+	currentStory = arrayOfGameStories.length-1;
+	arrayOfGameStories[currentStory].push({'levels':{}});
+	
+	newGameMainMenu();
+		
+	//equipment
+	//equipped items 
+	if(martin_equipment.left_hand_item)
+	{
+		martin_equipment.left_hand_item = 0;
+		document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+	}
+	// right_hand_item
+	if(martin_equipment.right_hand_item)
+	{
+		martin_equipment.right_hand_item = 0;
+		document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+	}
+	// helmet
+	//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
+	// necklace
+	//if(martin_equipment.necklace != 0) save_data["necklace"] = martin_equipment.necklace.id;
+	// armour
+	//if(martin_equipment.armour != 0) save_data["armour"] = martin_equipment.armour.id;
+	// bracers
+	//if(martin_equipment.bracers != 0) save_data["bracers"] = martin_equipment.bracers.id;
+	// boots
+	//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
+	// pants
+	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
+	
+	
+	//TODO: restart music
+	
+	//doors
+	/*if(currentlevelObj.array_of_doors[0].open == 1)
+	{
+		currentlevelObj.array_of_doors[0].open = 0;
+		setDoorClosed(currentlevelObj.array_of_doors[0]);
+	}*/
+	
+
+}
+
+
+//load game
+function loadGameOnDifferentLevel()
+{
+	
+	//clear scene, clear current level
+	for( var i = scene.children.length - 1; i >= 0; i--) 
+	{
+		var tmpobj = scene.children[i];
+		{
+			console.log("removing " + tmpobj.name);
+			scene.remove(tmpobj);
+		}
+	}
+	
+	//inventory
+	clear_inventory();
+
+	//stop the music, stop the fights, animations, actions, remove dialogs and what not?
+
+	//hide speech bubble
+	if(document.getElementById( "gui-speech" ).style.display == "block")
+		document.getElementById( "gui-speech" ).style.display = "none";
+
+	nextlevelObj = {};
+	currentlevelObj = {};
+	arrayOfVisitedLevels = [];
+	
+	//???	
+	//var story = [];
+	//arrayOfGameStories.push(story);
+	//currentStory = arrayOfGameStories.length-1;
+	//arrayOfGameStories[currentStory].push({'levels':{}});
+	
+	//loadGameMainMenu();
+	load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
+
+		
+	//equipment
+	//equipped items 
+	/*if(martin_equipment.left_hand_item)
+	{
+		martin_equipment.left_hand_item = 0;
+		document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+	}
+	// right_hand_item
+	if(martin_equipment.right_hand_item)
+	{
+		martin_equipment.right_hand_item = 0;
+		document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+	}
+	// helmet
+	//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
+	// necklace
+	//if(martin_equipment.necklace != 0) save_data["necklace"] = martin_equipment.necklace.id;
+	// armour
+	//if(martin_equipment.armour != 0) save_data["armour"] = martin_equipment.armour.id;
+	// bracers
+	//if(martin_equipment.bracers != 0) save_data["bracers"] = martin_equipment.bracers.id;
+	// boots
+	//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
+	// pants
+	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
+	*/
+	
+	
+	//TODO: restart music
+
+}
+
 
 //load game without models reloading
 function loadGameOnSameLevel()
 {
+	
+	nextlevelObj = {};
+	//currentlevelObj = {};
+	arrayOfVisitedLevels = [];
+	
+	
 	//clear current monsters and stop them
-	for(var j=0; j<array_of_monsters.length;j++)
+	for(var j=0; j<currentlevelObj.array_of_monsters.length;j++)
 	{
-		array_of_monsters[j].alive = false;
-		array_of_monsters[j].mesh.visible = false;
-		array_of_monsters[j].should_move= false;
-		array_of_monsters[j].should_turn= false;
-		array_of_monsters[j].should_attack= false;
+		currentlevelObj.array_of_monsters[j].alive = false;
+		currentlevelObj.array_of_monsters[j].mesh.visible = false;
+		currentlevelObj.array_of_monsters[j].should_move= false;
+		currentlevelObj.array_of_monsters[j].should_turn= false;
+		currentlevelObj.array_of_monsters[j].should_attack= false;
 	}
 	
 	//place monsters in saved position and activate them
-	for(var i=0; i<arrayOfGameStories[0][0].monsters.length;i++)
+	for(var i=0; i<arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters.length;i++)
 	{
-		for(var j=0; j<array_of_monsters.length;j++)
+		for(var j=0; j<currentlevelObj.array_of_monsters.length;j++)
 		{
-			if(array_of_monsters[j].gameID == arrayOfGameStories[0][0].monsters[i].gameID)
+			if(currentlevelObj.array_of_monsters[j].gameID == arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].gameID)
 			{
-				array_of_monsters[j].alive = true;
-				array_of_monsters[j].mesh.visible = true;
-				array_of_monsters[j].position.x = arrayOfGameStories[0][0].monsters[i].position.x;
-				array_of_monsters[j].position.z = arrayOfGameStories[0][0].monsters[i].position.z;
-				array_of_monsters[j].target.x = arrayOfGameStories[0][0].monsters[i].position.x;
-				array_of_monsters[j].target.z = arrayOfGameStories[0][0].monsters[i].position.z;
-				array_of_monsters[j].mesh.position.x = arrayOfGameStories[0][0].monsters[i].position.x*SQUARE_SIZE;
-				array_of_monsters[j].mesh.position.z = arrayOfGameStories[0][0].monsters[i].position.z*SQUARE_SIZE;
-				array_of_monsters[j].rotation = arrayOfGameStories[0][0].monsters[i].rotation;
-				array_of_monsters[j].mesh.rotation = new THREE.Vector3(0, arrayOfGameStories[0][0].monsters[i].rotation*Math.PI/2, 0);
-				array_of_monsters[j].target_rotation = arrayOfGameStories[0][0].monsters[i].rotation;
-				array_of_monsters[j].mood = arrayOfGameStories[0][0].monsters[i].mood;
-				array_of_monsters[j].hp = arrayOfGameStories[0][0].monsters[i].hp;
+				currentlevelObj.array_of_monsters[j].alive = true;
+				currentlevelObj.array_of_monsters[j].mesh.visible = true;
+				currentlevelObj.array_of_monsters[j].position.x = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.x;
+				currentlevelObj.array_of_monsters[j].position.z = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.z;
+				currentlevelObj.array_of_monsters[j].target.x = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.x;
+				currentlevelObj.array_of_monsters[j].target.z = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.z;
+				currentlevelObj.array_of_monsters[j].mesh.position.x = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.x*SQUARE_SIZE;
+				currentlevelObj.array_of_monsters[j].mesh.position.z = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].position.z*SQUARE_SIZE;
+				currentlevelObj.array_of_monsters[j].rotation = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].rotation;
+				currentlevelObj.array_of_monsters[j].mesh.rotation = new THREE.Vector3(0, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].rotation*Math.PI/2, 0);
+				currentlevelObj.array_of_monsters[j].target_rotation = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].rotation;
+				currentlevelObj.array_of_monsters[j].mood = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].mood;
+				currentlevelObj.array_of_monsters[j].hp = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].monsters[i].hp;
 			}
 		}
 	}
@@ -644,45 +699,43 @@ function loadGameOnSameLevel()
 	{
 		currentlevelObj.array_of_pickables[i].mesh.visible = false;
 	}
+	currentlevelObj.array_of_pickables = []; //this should free the memory
 	
-	//make them visible and place them where saved game says so
-	for(var i=0; i<arrayOfGameStories[0][0].pickables.length;i++)
-	{
-		for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
-		{
-			//we must add gameID beside itemID, and check status of game items to put in place.
-			//once gameID is added we can remove that additional check if mesh is visible
-			if((currentlevelObj.array_of_pickables[j].gameID == arrayOfGameStories[0][0].pickables[i].gameID)&&(currentlevelObj.array_of_pickables[j].mesh.visible == false))
-			{
-				currentlevelObj.array_of_pickables[j].mesh.visible = true;
-				currentlevelObj.array_of_pickables[j].position.x = arrayOfGameStories[0][0].pickables[i].x;
-				currentlevelObj.array_of_pickables[j].position.z = arrayOfGameStories[0][0].pickables[i].z;
-				currentlevelObj.array_of_pickables[j].position.y = arrayOfGameStories[0][0].pickables[i].y;
-				currentlevelObj.array_of_pickables[j].niched = arrayOfGameStories[0][0].pickables[i].niched; //flag indicating if pickable is in the niche
-				currentlevelObj.array_of_pickables[j].plated = arrayOfGameStories[0][0].pickables[i].plated; //flag indicating if pickable is on the plate
-				break;
-			}
-		}
-		
-	}
+	load_saved_pickables(globalJSONloader,arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].pickables,currentlevelObj);
 	
 	//inventory
 	clear_inventory();
-	loadInventoryNoReloading(arrayOfGameStories[0][0].inventory)
+	//loadInventoryNoReloading(arrayOfGameStories[0][0].inventory)
+	loadInventory(arrayOfGameStories[0][0].inventory)
 	
 	
 	//equipment
 	//equipped items 
+	
+	if(martin_equipment.left_hand_item)
+	{
+		martin_equipment.left_hand_item = 0;
+		document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
+		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+	}
+	// right_hand_item
+	if(martin_equipment.right_hand_item)
+	{
+		martin_equipment.right_hand_item = 0;
+		document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
+		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+	}
+	
 	if(arrayOfGameStories[0][0].left_hand_item)
 	{
-		martin_equipment.left_hand_item = get_pickable_item_by_id(arrayOfGameStories[0][0].left_hand_item);
+		martin_equipment.left_hand_item = load_item_by_id(arrayOfGameStories[0][0].left_hand_item);//get_pickable_item_by_id(arrayOfGameStories[0][0].left_hand_item);
 		document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
 		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 	}
 	// right_hand_item
 	if(arrayOfGameStories[0][0].right_hand_item)
 	{
-		martin_equipment.right_hand_item = get_pickable_item_by_id(arrayOfGameStories[0][0].right_hand_item);
+		martin_equipment.right_hand_item = load_item_by_id(arrayOfGameStories[0][0].right_hand_item);//get_pickable_item_by_id(arrayOfGameStories[0][0].right_hand_item);
 		document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
 		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 	}
@@ -698,6 +751,10 @@ function loadGameOnSameLevel()
 	//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
 	// pants
 	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
+	
+	
+	//doors
+	load_saved_doors_same_level(currentlevelObj,arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].doors);	
 
 }
 
@@ -705,6 +762,7 @@ function loadGameOnSameLevel()
 //load game from main menu
 //saved game has all levels, but we load just one where player is at.
 //RAM will only have that one level.
+//load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
 function load_saved_level_MainMenu(saved_data,level_id)
 {
    
@@ -1037,6 +1095,9 @@ function loadGame()
 	//lights
 	pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
 
+	//level
+	current_level = arrayOfGameStories[0][0].current_level;
+
 	//if loading game on the same level just move the player and stuff back in saved position
 	if(current_level == arrayOfGameStories[0][0].current_level)
 	{
@@ -1045,17 +1106,11 @@ function loadGame()
 	else 
 	{
 		//load everything from start
+		loadGameOnDifferentLevel();
 	}
-
-	//level
-	current_level = arrayOfGameStories[0][0].current_level;
 	
-	//doors
-	//this must be called before load_level();
-	load_saved_doors(arrayOfGameStories[0][0].doors);
-
 	//level specific action on load
-	levelOnLoad();
+	//levelOnLoad();
 	
 }
 
@@ -1138,6 +1193,7 @@ function newGame()
 	else 
 	{
 		//load everything from start
+		newGameOnDifferentLevel();
 	}
 
 	//level

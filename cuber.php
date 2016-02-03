@@ -1150,8 +1150,8 @@
 				if(holeFallen||playerDead)
 					return false;
 				
-				
-				
+				var loader = new THREE.JSONLoader();
+								
 				for(i=0; i < currentlevelObj.floorsArr2D.length; i++)
 				{
 					if((currentlevelObj.floorsArr2D[i][0] == x) && (currentlevelObj.floorsArr2D[i][1] == z))
@@ -2333,6 +2333,7 @@
 						document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
 						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
+						martin_equipment.left_hand_item.mesh.noremove = false;
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 						pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
 						pickable_at_hand = martin_equipment.left_hand_item;
@@ -2350,6 +2351,7 @@
 						document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
 						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
+						martin_equipment.right_hand_item.mesh.noremove = false;
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 						pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
 						pickable_at_hand = martin_equipment.right_hand_item;
@@ -2520,17 +2522,20 @@
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								martin_equipment.left_hand_item = pickable_at_hand;
+								martin_equipment.left_hand_item.mesh.noremove = true;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
+								pickable_at_hand.mesh.noremove = false;
 							}
 							else
 							{
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								martin_equipment.left_hand_item = pickable_at_hand;
+								martin_equipment.left_hand_item.mesh.noremove = true;
 								//pickable at hand is gone
 								audio_click.currentTime = 0;
 								audio_click.play();
@@ -2572,17 +2577,20 @@
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								martin_equipment.right_hand_item = pickable_at_hand;
+								martin_equipment.right_hand_item.mesh.noremove = true;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
+								pickable_at_hand.mesh.noremove = false;
 							}
 							else
 							{
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								martin_equipment.right_hand_item = pickable_at_hand;
+								martin_equipment.right_hand_item.mesh.noremove = true;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is gone
@@ -2788,6 +2796,7 @@
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
+								martin_equipment.left_hand_item.mesh.noremove = false;
 								pickable_at_hand = martin_equipment.left_hand_item;
 								martin_equipment.left_hand_item = 0;
 								audio_click.currentTime = 0;
@@ -2822,6 +2831,7 @@
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
+								martin_equipment.right_hand_item.mesh.noremove = false;
 								pickable_at_hand = martin_equipment.right_hand_item;
 								martin_equipment.right_hand_item = 0;
 								audio_click.currentTime = 0;

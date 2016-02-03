@@ -110,9 +110,15 @@ function setDoorClosed(door)
 				}
 				else if(door.orientation == 1)
 				{
-					door.mesh.rotation.y = Math.PI/2;
-					door.mesh.position.x +=4.0;
-					door.mesh.position.z -=4.0;
+                    door.rotation.y = Math.PI/2;
+                    door.position.x +=4.0;
+                    door.position.z -=4.0;
+					if(door.mesh != 0)
+					{						
+						door.mesh.rotation.y = Math.PI/2;
+						door.mesh.position.x +=4.0;
+						door.mesh.position.z -=4.0;
+					}
 				}
 				else if(door.orientation == 2)
 				{
@@ -281,13 +287,24 @@ function animateDoor(door, elapsed)
 
 //savedDoorsArr is just array of indexes of opened doors..
 //set opened door flag to 1, then setDoorOpened will be called
-//function load_saved_doors( savedDoorsArr )
-//{
-	//for (i=0; i<savedDoorsArr.length; i++)
-	//{
-	//	doorsArr3D[savedDoorsArr[i]][3] = 1;
-	//}
-//}
+function load_saved_doors_same_level( levelObj,savedDoorsArr )
+{
+	//first set all doors closed
+	for (var i=0; i<levelObj.array_of_doors.length; i++)
+	{
+		if(levelObj.array_of_doors[i].open == 1)
+		{
+			setDoorClosed(levelObj.array_of_doors[i]);
+			levelObj.array_of_doors[i].open = 0;
+		}
+	}
+	//then set saved doors opened, ha ha
+	for (var j=0; j<savedDoorsArr.length; j++)
+	{
+		setDoorOpened(levelObj.array_of_doors[savedDoorsArr[j]]);
+		levelObj.array_of_doors[savedDoorsArr[j]].open = 1;
+	}
+}
 
 //used in temp level loading
 function reload_doors(loader, levelObj)

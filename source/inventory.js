@@ -56,8 +56,24 @@ function loadInventoryNoReloading(inventoryArr)
 {
 	//var loader = new THREE.JSONLoader();
 	console.log("loading inventory no reload");
+	
+	//remove new items from inventory
+	
+	//keep items in inventory that are also in saved game
+	
+	//find remaining items that should be in inventory
+	
+	//if they are not on this level, load them
+	
+	//fuck this too complicated
+	
+	//this all got complicated because level pickable items are not all stored in pickable array any more.
+	//if item gets eaten, it is gone from that level and there is no more reference to that object.
+	// so when we load we must, just in case, reload all pickables.
+	
 	for (i=0; i< inventoryArr.length; i++)
 	{
+		//if item is already in inventory
 		for(j=0; j< array_of_pickables.length; j++)
 		{
 			if(inventoryArr[i].gameID == array_of_pickables[j].gameID)

@@ -74,8 +74,8 @@ function loadGameObjectCheck(loader, gobject)
 		
 		//console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
 		gobject.mesh = object.clone();
-		gobject.mesh.position = gobject.position;
-		gobject.mesh.rotation = gobject.rotation;
+		gobject.mesh.position.set(gobject.position.x,gobject.position.y,gobject.position.z);
+		gobject.mesh.rotation.set(gobject.rotation.x,gobject.rotation.y,gobject.rotation.z);// = gobject.rotation;
 		gobject.id=gobject.mesh.id;
 		gobject.mesh.visible = gobject.visible;
 		scene.add( gobject.mesh );		
@@ -113,8 +113,8 @@ function loadAnimatedGameObjectCheck(loader, gobject)
 		
 		//console.log("loadGameObjectCheck, model loaded!: " + gobject.name);
 		gobject.mesh = object.clone();
-		gobject.mesh.position = gobject.position;
-		gobject.mesh.rotation = gobject.rotation;
+		gobject.mesh.position.set(gobject.position.x,gobject.position.y,gobject.position.z);// = gobject.position;
+		gobject.mesh.rotation.set(gobject.rotation.x,gobject.rotation.y,gobject.rotation.z);// = gobject.rotation;
 		gobject.id=gobject.mesh.id;
 		gobject.mesh.visible = gobject.visible;
 		scene.add( gobject.mesh );		
@@ -147,8 +147,8 @@ function loadObject( gobject ) {
 				}
 			}
 			
-			gobject.mesh.position = gobject.position;
-			gobject.mesh.rotation = gobject.rotation;
+			gobject.mesh.position.set(gobject.position.x,gobject.position.y,gobject.position.z);// = gobject.position;
+			gobject.mesh.rotation.set(gobject.rotation.x,gobject.rotation.y,gobject.rotation.z);// = gobject.rotation;
 			gobject.mesh.name = gobject.name;
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
@@ -165,8 +165,8 @@ function loadObject( gobject ) {
 					//console.log("loadModel waiter cloned: " + gobject.name);
 					var waitingGobject = modelWaiters[gobject.model][i];
 					var clone = gobject.mesh.clone();
-					clone.position = waitingGobject.position;
-					clone.rotation = waitingGobject.rotation;
+					clone.position.set(waitingGobject.position.x,waitingGobject.position.y,waitingGobject.position.z);// = waitingGobject.position;
+					clone.rotation.set(waitingGobject.rotation.x,waitingGobject.rotation.y,waitingGobject.rotation.z);// = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
 					if(waitingGobject.name == "writting") currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
@@ -203,8 +203,8 @@ function loadAnimatedObject( gobject ) {
 				}
 			}
 			
-			gobject.mesh.position = gobject.position;
-			gobject.mesh.rotation = gobject.rotation;
+			gobject.mesh.position.set(gobject.position.x,gobject.position.y,gobject.position.z);
+			gobject.mesh.rotation.set(gobject.rotation.x,gobject.rotation.y,gobject.rotation.z);// = gobject.rotation;
 			gobject.mesh.name = gobject.name;
 			
 			if(typeof gobject.animDuration !== 'undefined')
@@ -225,8 +225,8 @@ function loadAnimatedObject( gobject ) {
 					//console.log("loadModel waiter cloned: " + gobject.name);
 					var waitingGobject = modelWaiters[gobject.model][i];
 					var clone = gobject.mesh.clone();
-					clone.position = waitingGobject.position;
-					clone.rotation = waitingGobject.rotation;
+					clone.position.set(waitingGobject.position.x,waitingGobject.position.y,waitingGobject.position.z);// = waitingGobject.position;
+					clone.rotation.set(waitingGobject.rotation.x,waitingGobject.rotation.y,waitingGobject.rotation.z);// = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
 					if(waitingGobject.name == "writting") currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;

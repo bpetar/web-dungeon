@@ -23,7 +23,10 @@ function audio_change_volume(audio_element, desired_volume)
 	
 	var increment = 0.1*increment_direction;
 	
-	audio_element.volume+=increment;
+	//watch out for boundaries
+	if(audio_element.volume+increment < 0) audio_element.volume = 0;
+	else if(audio_element.volume+increment > 1) audio_element.volume = 1;
+	else audio_element.volume+=increment;
 	
 	if((increment_direction>0)&&(audio_element.volume < desired_volume))
 	{
