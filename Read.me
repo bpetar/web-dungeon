@@ -388,6 +388,7 @@ second level
   + put item in hand and reload - item is still in hand
   + check monsters
  - make load while playing on different level
+   - its dark in there
  + pick item on one level and drop it on another, when you go back to first level - item is there on the ground! he he...
    + problem here is that while transiting levels all data is saved in dynamic memory, all pickables are still in arrays (only invisible), when item is dropped on some level it turns visible, and it is same object reference used in previous levels, so it turns visible there as well... horrid. proper fix would be to remove pickable from array once picked, not just turn it invisible but will this break something else? Hack will be to add extra property droppedOnLevelID - oh my god, I should have done this when rested.
  - try to save with item at hand
@@ -399,6 +400,7 @@ second level
  - load game should clear new story array entries. (for example, 5 times new game, then load game)
  - when game is loaded at second level from Main Menu - light is not right (visible on first level stairs)
  - make downstairs model
+ - door ropes are bad when opening
  - add first and second level to the game
  - rewrite teleport code
  - save in front of the door click opens the door

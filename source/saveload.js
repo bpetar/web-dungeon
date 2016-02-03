@@ -1095,9 +1095,6 @@ function loadGame()
 	//lights
 	pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
 
-	//level
-	current_level = arrayOfGameStories[0][0].current_level;
-
 	//if loading game on the same level just move the player and stuff back in saved position
 	if(current_level == arrayOfGameStories[0][0].current_level)
 	{
@@ -1106,6 +1103,7 @@ function loadGame()
 	else 
 	{
 		//load everything from start
+		current_level = arrayOfGameStories[0][0].current_level;
 		loadGameOnDifferentLevel();
 	}
 	
