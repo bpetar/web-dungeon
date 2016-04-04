@@ -66,7 +66,7 @@ function save_position()
 	{
 		if (confirm("You started new game and this save will overwrite your previous saved game. Are you sure?") == true) {
 			console.log("He is sure...");
-			arrayOfGameStories.splice(0,1);
+			arrayOfGameStories.splice(0,currentStory); //delete all stories up to last one.
 			currentStory = 0;
 		} else {
 			console.log("We saved a life today.");
@@ -394,7 +394,10 @@ function newGameOnSameLevel()
 	
 	
 	//niches, well one niche item on first level:
-	var niche_pickables = currentlevelObj.nicheArr[0][3];
+	//nicheUrr is hack to make first level new game load niche content.
+	//nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
+	//I anticipate this problem will not exist on following levels as this function is only called on first level
+	var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
 	for(var i=0; i<niche_pickables.length; i++) 
 	{
 		//for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
@@ -583,6 +586,10 @@ function newGameOnDifferentLevel()
 function loadGameOnDifferentLevel()
 {
 	
+	loading_msg_span.innerHTML = "Loading...";
+	loading_msg_text_span.innerHTML = "Loading saved game.";
+	loading_div.style.display = "block";
+
 	//clear scene, clear current level
 	for( var i = scene.children.length - 1; i >= 0; i--) 
 	{
@@ -595,7 +602,9 @@ function loadGameOnDifferentLevel()
 	
 	//inventory
 	clear_inventory();
-
+	//loadInventoryNoReloading(arrayOfGameStories[0][0].inventory)
+	//???loadInventory(arrayOfGameStories[0][0].inventory)
+	
 	//stop the music, stop the fights, animations, actions, remove dialogs and what not?
 
 	//hide speech bubble
@@ -611,14 +620,17 @@ function loadGameOnDifferentLevel()
 	//arrayOfGameStories.push(story);
 	//currentStory = arrayOfGameStories.length-1;
 	//arrayOfGameStories[currentStory].push({'levels':{}});
+	if(currentStory>0) arrayOfGameStories.splice(1,currentStory); //delete all stories except 0.
+	currentStory = 0;
 	
-	//loadGameMainMenu();
 	load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
 
+	//load lights
+	load_lights();
 		
 	//equipment
 	//equipped items 
-	/*if(martin_equipment.left_hand_item)
+	if(martin_equipment.left_hand_item)
 	{
 		martin_equipment.left_hand_item = 0;
 		document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
@@ -631,6 +643,21 @@ function loadGameOnDifferentLevel()
 		document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
 		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 	}
+	
+	if(arrayOfGameStories[0][0].left_hand_item)
+	{
+		martin_equipment.left_hand_item = load_item_by_id(arrayOfGameStories[0][0].left_hand_item);//get_pickable_item_by_id(arrayOfGameStories[0][0].left_hand_item);
+		document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+martin_equipment.left_hand_item.icon+")";
+		document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
+	}
+	// right_hand_item
+	if(arrayOfGameStories[0][0].right_hand_item)
+	{
+		martin_equipment.right_hand_item = load_item_by_id(arrayOfGameStories[0][0].right_hand_item);//get_pickable_item_by_id(arrayOfGameStories[0][0].right_hand_item);
+		document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+martin_equipment.right_hand_item.icon+")";
+		document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
+	}
+
 	// helmet
 	//if(martin_equipment.helmet != 0) save_data["helmet"] = martin_equipment.helmet.id;
 	// necklace
@@ -643,8 +670,11 @@ function loadGameOnDifferentLevel()
 	//if(martin_equipment.boots != 0) save_data["boots"] = martin_equipment.boots.id;
 	// pants
 	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
-	*/
 	
+	
+	updateModelLoading("end of level load");
+
+	addToConsole("Game loaded..","#BBFFBB");
 	
 	//TODO: restart music
 
@@ -655,10 +685,16 @@ function loadGameOnDifferentLevel()
 function loadGameOnSameLevel()
 {
 	
+	loading_msg_span.innerHTML = "Loading...";
+	loading_msg_text_span.innerHTML = "Loading saved game.";
+	loading_div.style.display = "block";
+
 	nextlevelObj = {};
 	//currentlevelObj = {};
 	arrayOfVisitedLevels = [];
 	
+	if(currentStory>0) arrayOfGameStories.splice(1,currentStory); //delete all stories except 0.
+	currentStory = 0;
 	
 	//clear current monsters and stop them
 	for(var j=0; j<currentlevelObj.array_of_monsters.length;j++)
@@ -756,6 +792,9 @@ function loadGameOnSameLevel()
 	//doors
 	load_saved_doors_same_level(currentlevelObj,arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].doors);	
 
+	updateModelLoading("end of level load");
+
+	addToConsole("Game loaded..","#BBFFBB");
 }
 
 
@@ -765,7 +804,8 @@ function loadGameOnSameLevel()
 //load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
 function load_saved_level_MainMenu(saved_data,level_id)
 {
-   
+	audio_change_volume(audio_maintheme,0);
+	
 	gameState = GAME_STATE_LOADING;
 	modelNumber = 0;
 	relativeLevelModelCount = 0;
@@ -946,8 +986,10 @@ function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
 
 //load floors and walls and holes and niches and all basic and static level elements
 function load_level_obj_saved(level_obj,saved_data)
-{
-
+{	
+	//load lights specific for each level
+	load_level_lights(level_obj);
+	
 	//load floors and holes and ceilings
 	load_floors_level(globalJSONloader, level_obj);
 	
@@ -992,9 +1034,10 @@ function load_level_obj_saved(level_obj,saved_data)
 	//stairs
 	load_stairs(globalJSONloader, level_obj);
 	
-	//load lights specific for each level
-	load_level_lights(level_obj);
-	
+	//load lights loads just point light,
+	//this must be done after scene is cleared, and after json is loaded
+	//load_lights();
+		
 	scene.fog.color.r = level_obj.fog_color[0];
 	scene.fog.color.g = level_obj.fog_color[1];
 	scene.fog.color.b = level_obj.fog_color[2];
@@ -1092,9 +1135,6 @@ function loadGame()
 	else camera.look = new THREE.Vector3(current_position.x*10-5,4,current_position.z*10); //160,4,125
 	camera.lookAt(camera.look);
 	
-	//lights
-	pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
-
 	//if loading game on the same level just move the player and stuff back in saved position
 	if(current_level == arrayOfGameStories[0][0].current_level)
 	{
@@ -1107,6 +1147,9 @@ function loadGame()
 		loadGameOnDifferentLevel();
 	}
 	
+	//set lights
+	pointLight.position.set(current_position.x*SQUARE_SIZE, 4, current_position.z*SQUARE_SIZE);
+
 	//level specific action on load
 	//levelOnLoad();
 	

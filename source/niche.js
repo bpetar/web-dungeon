@@ -128,14 +128,7 @@ function add_to_niche (levelObj,nicheID, gObject) {
 	//get niche from niche_array using nicheID
 	var niche_pickables = levelObj.nicheArr[nicheID][3];
 	var index = niche_pickables.length;
-	niche_pickables[index] = new Array();
-	
-	niche_pickables[index][0] = gObject.gameID;
-	niche_pickables[index][1] = gObject.name;
-	niche_pickables[index][2] = gObject.description;
-	niche_pickables[index][3] = gObject.model;
-	niche_pickables[index][4] = gObject.icon;
-	niche_pickables[index][5] = gObject.icon2;
+	niche_pickables[index] = gObject.gameID;
 	
 	var mover = -1+index/2;
 	//draw model in niche here
@@ -200,14 +193,15 @@ function add_to_niche (levelObj,nicheID, gObject) {
 
 //add item to niche
 function remove_from_niche(levelObj,gObject) {
-
 	//get niche pickables
 	var niche_pickables = levelObj.nicheArr[gObject.niched][3];
+	//it happens so that object is marked niched but its not in niche.
+	//thats why we set it here to -1 at start.
+	gObject.niched = -1;
 	for(var i=0; i<niche_pickables.length; i++) {
-		if(niche_pickables[i][0] == gObject.gameID)
+		if(niche_pickables[i] == gObject.gameID)
 		{
 			niche_pickables.splice(i,1);
-			gObject.niched = -1;
 			return;
 		}
 	}

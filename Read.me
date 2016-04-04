@@ -387,25 +387,59 @@ second level
   + save game on second level item on the ground, go to first level, hit new game, go to second level - item is on the ground.
   + put item in hand and reload - item is still in hand
   + check monsters
- - make load while playing on different level
-   - its dark in there
+ + make load while playing on different level
+   + its dark in there
  + pick item on one level and drop it on another, when you go back to first level - item is there on the ground! he he...
    + problem here is that while transiting levels all data is saved in dynamic memory, all pickables are still in arrays (only invisible), when item is dropped on some level it turns visible, and it is same object reference used in previous levels, so it turns visible there as well... horrid. proper fix would be to remove pickable from array once picked, not just turn it invisible but will this break something else? Hack will be to add extra property droppedOnLevelID - oh my god, I should have done this when rested.
- - try to save with item at hand
  + go to second level, try to put down on the ground stake from hand - it disappears (problem with noreload not set - removing from scene on change level)
  + go to second level, put down on the ground stake from hand, go back to first leve - item is there on the ground (in same coordinates)
  + start new game, go to second level, drop some items on the ground, go to first level, hit new game, go to second level - items on the ground! even if restarting on the same level we have to clean array of visited levels just in case we went there and back.
+ + load game should clear new story array entries. (for example, 5 times new game, then load game)
+ // load game with two inventory items, pick them up and return them to same place - they duplicate. - cant reproduce
+ + load game while playing does not throw loading screen.
+ + new game -> pickup stick and place it in hand -> load game saved on second level -> stick is in hand!
+   + also, nothing written in console like 'game loaded', also if load again on same level - stick is gone and console prints fine.
+ + new game, go to scroll, take from niche, put on the floor, new game, go to niche - no scroll.
+ 
+Bugs:
+ + load from main menu leaves main menu theme music playing
+ + save/load in front of the door click opens the door
+  + open door -> new game -> door are fucked up
+ + when game is loaded at second level from Main Menu - light is not right (visible on first level stairs)
+  + when game is loaded from first level to second level load lights is called 2 times 
+  + spotlight is not right - visible on some black walls - had to add hack - spotlight must be loaded before all.
+  + why point light is sometimes removed? - some games clear whole scene no excuses (like new game), so point light needs to be recreated.
+ + when leaving firs level first time its removing 144 objects. next time, its 268. there are some duplication of objects in the scene. - no, just my mistake with counting
+ - click on sticks should have some sound.
+ - namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
+ - save game throws error: "array_of_doors undefined" in save_game at line: arrayOfVisitedLevels[vli].array_of_doors.length;
+ - load to second level has no ambient sound?
+
+Checks:
+ - try to save with item at hand
+ - check monster drop pickable item after death - how it works with save load?
  - test rock throw (because pickable adding/removing changed)
    - noremove must be added for throwables that are thrown
- - load game should clear new story array entries. (for example, 5 times new game, then load game)
- - when game is loaded at second level from Main Menu - light is not right (visible on first level stairs)
+ - check monster killing with save/load
+ - level 4 json has door_audio but level 3 has not?
+ 
+New levels:
  - make downstairs model
  - door ropes are bad when opening
  - add first and second level to the game
- - rewrite teleport code
- - save in front of the door click opens the door
- - [event file]
+
+Code order:
+ - [event file - mouse and key events in separate js file]
  - [floors and walls file]
+ - [rewrite teleport code]
+ 
+New functionality:
+ - character hud
+   - functionality for other slots
+   - character name
+   - more tabs
+
+ - icon stack in inventory
  
 clear dynamic arrays of objects like doors and monsters! Or not? Maybe we should clear them only when player clicks save. Not when transitioning between levels.
 inventory items meshes need to be kept in the scene with //gObject.mesh.noremove = true;
@@ -438,7 +472,6 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
 --- various game features todo: 
 
 + change attack to left click..
-- icon stack in inventory
 - make worm control 
 - dust spec particles..
 - make worm dig passage in ground..
@@ -450,7 +483,6 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
 - sound off/on button
 - money, experience, leveling, skills
 - magic
-- mouse and key events in separate js file
 - fight music
 - php session
 - php login 
@@ -474,10 +506,6 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
 + item info on mouse pause
 + make speech bubbles for boy
 + when item is picked, appropriate hand slots glow
-- character hud
- - functionality for other slots
- - character name
- - more tabs
 - rss feed
 
 - big code reorganization

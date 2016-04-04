@@ -959,9 +959,8 @@
 				// pants
 				//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
 
-				//load lights
 				load_lights();
-
+				
                 load_saved_level_MainMenu(arrayOfGameStories[0][0],arrayOfGameStories[0][0].current_level);
                 
 				//load inventory moved to after level is loaded (it is async so we cant call it here)
@@ -1265,7 +1264,7 @@
 
 			//
 			function handleKeyDown(event) {
-				//console.log(event.keyCode);
+				console.log(event.keyCode);
 				
 				if(gameState != GAME_STATE_IN_GAME)
 					return;
@@ -1281,18 +1280,22 @@
 				
 				//Key I = Inventory
 				//alert(event.keyCode);
-				if (event.keyCode == 73) {
+				/*if (event.keyCode == 73) {
 					//show inventory if hidden, hide elsewhere
 					
-					if(inventory_div_vertical_pos == INVENTORY_POS_HIDDEN)
-					{
-						inventorySlide = 1;
-					}
-					else
-					{
-						inventorySlide = -1;
-					}
+					show_model(globalJSONloader, "models/spears.js", 10,7,0);
+
+				}*/
+				
+				/*if (event.keyCode == 74) {
+					//clone_model();
 				}
+				if (event.keyCode == 75) {
+					//addd_spot_light();
+					load_level_lights_hard();
+					console.log("light hard");
+					load_level_lights(currentlevelObj);
+				}*/
 				
 				if ((event.keyCode == 37) || (event.keyCode == 81)) {
 					// Turn Left Q
@@ -1558,11 +1561,7 @@
 						audio.play();
 					}
 				}
-				else if (event.keyCode == 78)
-				{
-					console.log("new level test");
-					loadLevel(3,1);
-				}
+
 			}
 	
 
@@ -2242,7 +2241,11 @@
 			}
 
 			function handleMouseClick(event, x,y) {
-		
+				
+				if(optionsOpened) return;
+				
+				//console.log("uh oh");
+
 				//this is only for doors i think
 				var isRightMB;
 				var e = event || window.event;
@@ -2618,10 +2621,10 @@
 					{
 						//add pickable at hand to niche
 						add_to_niche(currentlevelObj,nicheID,pickable_at_hand);
+						DisplayInfoDiv(pickable_at_hand.name + " placed in niche..");
 						pickable_at_hand = 0;
 						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
-						
 						audio_drop.play();
 						return;
 					}

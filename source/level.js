@@ -52,6 +52,8 @@ function modelAlreadyLoaded(model)
 	return -1;
 }
 
+var someglobalmeshnamecounter = 0;
+
 function loadModel(pos, rot, model) {
 	return function (geometry, materials ) {
 		var i=0;
@@ -66,7 +68,8 @@ function loadModel(pos, rot, model) {
 				loaded3Dmodels[i][1] = mesh;
 			}
 		}
-		
+		someglobalmeshnamecounter++;
+		mesh.name = "wallorfloor" + someglobalmeshnamecounter;
 		mesh.position = pos;
 		mesh.rotation = rot;
 		scene.add( mesh );
@@ -80,6 +83,8 @@ function loadModel(pos, rot, model) {
 			{
 				//console.log("loadModel waiter cloned: " + model);
 				var clone = mesh.clone();
+				someglobalmeshnamecounter++;
+				clone.name = "wallorfloor" + someglobalmeshnamecounter;
 				clone.position = modelWaiters[model][i][0];
 				clone.rotation = modelWaiters[model][i][1];
 				scene.add( clone );
@@ -114,6 +119,8 @@ function loadModelCheck(loader, pos, rot, model)
 		
 		//console.log("loadModelCheck, model loaded!: " + model);
 		var clony = object.clone();
+		someglobalmeshnamecounter++;
+		clony.name = "wallorfloor" + someglobalmeshnamecounter;
 		clony.position = pos;
 		clony.rotation = rot;
 		scene.add( clony );
@@ -137,30 +144,13 @@ function loadLevelTextures()
 }
 
 
-function load_lights()
-{
-	/*var ambientLight = new THREE.AmbientLight( 0x101000 ); // soft white light
-	scene.add( ambientLight );*/
-
-	var pointColor=0xffffff;
-	var pointIntensity = 1;
-	if(typeof point_light_color != 'undefined') pointColor = point_light_color;
-	if(typeof point_light_intensity != 'undefined') pointIntensity = point_light_intensity;
-	pointLight = new THREE.PointLight(pointColor, pointIntensity, 40);
-	pointLight.position.set( 160, 4, 0 );
-	pointLight.name = "pointlight";
-	pointLight.noremove = true;
-	//pointLight.castShadow = true;
-	scene.add( pointLight );
-}
-
-
-
 var globalJSONloader = new THREE.JSONLoader();
 
 
 function load_walls_level(loader, level_obj)
 {
+	
+	console.log("load_walls_level enter");
 	
 	//model walls
 	if((typeof level_obj.curved_walls == 'undefined') && (typeof level_obj.wall_model != 'undefined'))
@@ -1091,6 +1081,8 @@ function load_floors_level(loader, level_obj)
 	floor_map.wrapS = floor_map.wrapT = THREE.RepeatWrapping;
 	floor_map.anisotropy = 16;
 	
+	console.log("load_floors_level enter");
+
 	//teleport
 	var teleport_material;
 	if(level_obj.teleportArr.length > 0)

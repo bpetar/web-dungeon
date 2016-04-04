@@ -192,6 +192,7 @@
 		function optionsMouseLoad()
 		{
 			//ask are you sure?
+			console.log("optionsMouseLoad");
 			loadGame();
 			toggleOptions();
 		}
