@@ -1,57 +1,61 @@
 
-function levelOnLoad()
+function level1OnLoad()
 {
-	info_dialog_div.style.display = "inline";
+	//info_dialog_div.style.display = "inline";
+}
+function level1OnFirstLoad()
+{
+	//info_dialog_div.style.display = "inline";
 }
 
-var levelNumber = 1;
-var totalModels = 12;
+//var levelNumber = 1;
+//var totalModels = 12;
 
 // map arrays..
-var floorsArr2D = [[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [18,9], [18,10], [18,11], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1], [16,0]];
-var secretWallsArr = [[16,9,3,0,"This wall seems odd"]]; //x,y,orientation,model,hint
-var doorsArr3D = [[16,3,0,0,0,0,0], [16,7,0,0,0,0,0], [16,11,0,0,0,0,0]]; //x,z,rot,open,mesh,animate flag,openable on click
-var holesArr = [];
-var writtingsArr = [[16,1,1,"Put some weight..",0]]; 
+//var floorsArr2D = [];
+//var secretWallsArr = []; //x,y,orientation,model,hint
+//var doorsArr3D = []; //x,z,rot,open,mesh,animate flag,openable on click
+//var holesArr = [];
+//var writtingsArr = []; 
 
-var models3D = ['maps/level1/models/hole.js', 'maps/level1/models/niche.js', 'maps/level1/models/doorway.js', 'maps/level1/models/door.js', 'models/tapestry1.js', 'models/tapestry2.js', 'maps/level1/models/chest2.js', 'maps/level1/models/pillar.js', 'maps/level1/models/button_small.js', 'models/keyhole.js', 'models/crystal.js', 'models/rocky.js'];
+//var models3D = ['maps/level1/models/hole.js', 'maps/level1/models/niche.js', 'maps/level1/models/doorway.js', 'maps/level1/models/door.js', 'models/tapestry1.js', 'models/tapestry2.js', 'maps/level1/models/chest2.js', 'maps/level1/models/pillar.js', 'maps/level1/models/button_small.js', 'models/keyhole.js', 'models/crystal.js', 'models/rocky.js'];
 
 //basic level textures
-var floor_texture_file = 'maps/level1/media/floor_11_1.png';
-var wall_texture_file = 'maps/level1/media/stone_wall_01_01.png';
-var ceiling_texture_file = 'maps/level1/media/ceiling.png';
-var teleport_floor_texture_file = 'maps/level1/media/teleport_floor.png';
-var wall_writting_texture_file = 'maps/level1/media/wallwrit.png';
-var decorPillarModel = "maps/level1/models/decorPillar.js";
+//var floor_texture_file = '';
+//var wall_texture_file = '';
+//var ceiling_texture_file = '';
+//var teleport_floor_texture_file = '';
+//var wall_writting_texture_file = '';
+//var decorPillarModel = "";
 
 //basic level models
-var hole_model = 'maps/level1/models/hole.js';
-var niche_model = 'maps/level1/models/niche.js';
-var doorway_model = 'maps/level1/models/doorway.js';
-var door_model = 'maps/level1/models/door.js';
+//var hole_model = '';
+//var niche_model = '';
+//var doorway_model = '';
+//var door_model = '';
 
 //level related values
-var ambient_music_file = 'media/ambient_music.mp3';
-var win_area = [[17,9, "Secret area found!",0]];
+//var ambient_music_file = '';
+//var win_area = [[17,9, "Secret area found!",0]];
 
 // id, name, model, x, z, icon
-var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry2.js", 16,9,3]];
+//var tapestries_array = [];
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
+//var container_pickables_array1 = [[1,"Gold key","models/key.js", "media/key.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation, mesh
-var containers_array = [[1,"Chest","maps/level1/models/chest2.js", 18,11,0, container_pickables_array1, 0]];
+//var containers_array = [[1,"Chest","maps/level1/models/chest2.js", 18,11,0, container_pickables_array1, 0]];
 
 // id, model, x, z, pressed, script functions..
-var plates_array = [[1, "models/plynth.js", 16,1,0,onPressPlate1,onUnpressPlate1]];
+//var plates_array = [];
 
-var pillar_array = [[2, "maps/level1/models/pillar.js", 12,14]];
+//var pillar_array = [];
 
 //buttons
-var buttons_array = [[1, "maps/level1/models/button_small.js", 16,6,1,onPressButton1]];
+//var buttons_array = [];
 
 //keyholes
-var keyholes_array = [[1, "models/keyhole.js", 16,9,1,onKeyClick]];
+//var keyholes_array = [];
 
 
 //monsters
@@ -59,7 +63,7 @@ var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
 
 //on click script functions
-function MonsterOnClick1()
+function level1MonsterOnClick1()
 {
 	if(this.mood == MONSTER_MAD)
 	{
@@ -75,7 +79,7 @@ function MonsterOnClick1()
 	}
 }
 
-function MonsterOnItemClick1(pickable)
+function level1MonsterOnItemClick1(pickable)
 {
 	DisplayInfoDiv("It doesn't want to take it..");
 	// soundy Play tounchy mad sound
@@ -84,69 +88,53 @@ function MonsterOnItemClick1(pickable)
 }
 
 //monster inventory items: id, name, model, icon, picki
-var monster_pickables_array1 = [];
+//var monster_pickables_array1 = [];
 // id, name, model, x, z, rot, hp, ac, attack, dmg, pickables, onclick, onitemclick, idlestart, idleend, walkstart, walkend, attackstart, attackend, mood
-var monster_array = [[2,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"], [3,"Crystal Elemental Djoka","models/crystal.js", 6,14,1, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]];
+//var monster_array = [[2,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"], [3,"Crystal Elemental Djoka","models/crystal.js", 6,14,1, 15, 35, 10, 5, monster_pickables_array1, MonsterOnClick1, MonsterOnItemClick1,1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]];
 
 
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-function onKeyClick()
+function level1OnKeyClick()
 {
 	console.log("gold key to open door");
 	
-	doorsArr3D[2][5] = 1; //animate flag
-	doorsArr3D[2][3] = 1; // open/close flag
-	
-	audio_door.load();
-	audio_door.play();
+	openDoor(currentlevelObj.array_of_doors[2]);
 
 	//temp hack
-	load_teleport();
+	//load_teleport();
 }
 
-function onPressButton1()
+function level1OnPressButton1()
 {
 	console.log("button to open door");
 	
-	doorsArr3D[1][5] = 1; //animate flag
-	doorsArr3D[1][3] = 1; // open/close flag
-	
-	audio_door.load();
-	audio_door.play();
+	openDoor(currentlevelObj.array_of_doors[1]);
 }
 
-function onPressPlate1()
+function level1OnPressPlate1()
 {
-	console.log("plate to open door");
+	console.log("plate to open dooor");
 
-	doorsArr3D[0][5] = 1; //animate flag
-	doorsArr3D[0][3] = 1; // open/close flag
-	
-	audio_door.load();
-	audio_door.play();
+	openDoor(currentlevelObj.array_of_doors[0]);
 }
 
-function onUnpressPlate1()
+function level1OnUnpressPlate1()
 {
 	console.log("plate to close door");
-	doorsArr3D[0][5] = 1; //animate flag
-	doorsArr3D[0][3] = 0; // open/close flag
-
-	audio_door.load();
-	audio_door.play();
+	closeDoor(currentlevelObj.array_of_doors[0]);
 }
 
 
 
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl1_msg"]];
+//var niche_pickables_array1 = [[3,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl1_msg"]];
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[16,5,3,niche_pickables_array1]]; 
+//var nicheArr = [[16,5,3,niche_pickables_array1]]; 
 
-NICHES_CLOSED = 0;
+/*NICHES_CLOSED = 0;
 
 function niche_onItemAdd (nicheID, itemID)
 {
@@ -214,7 +202,7 @@ function niche_onItemAdd (nicheID, itemID)
 		
 	}
 }
-
+*/
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -223,12 +211,12 @@ function niche_onItemAdd (nicheID, itemID)
 ///////////////////////////////////////////////////
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Rock","models/rocky.js", 16,0,0, "media/rock.png", "This is too hard to chew.."]];
+//var pickables_array = [];
 ////////////////////////////////////////////////
 
 
 //teleports
-
+/*
 var teleport_array = [[5,14]];
 
 //var teleport_pos = new THREE.Vector3(160, 0, 110); //position on map
@@ -248,14 +236,14 @@ function teleportGo()
 	audio_enchant.play();
 	//block movement here
 	setTimeout(changeLevel, 300);
-}
+}*/
 
-var fog_color = 0x000033;
-var fog_intensity = 0.008525;
-var point_light_color = 0xaaaaff;
-var point_light_intensity = 1.6;
+//var fog_color = 0x000033;
+//var fog_intensity = 0.008525;
+//var point_light_color = 0xaaaaff;
+//var point_light_intensity = 1.6;
 
-function load_level_lights()
+/*function load_level_lights()
 {
 				//light2 = new THREE.DirectionalLight( 0xffffff );
 				//light2.position.set( 50, 50, 50 ).normalize();
@@ -271,4 +259,4 @@ function load_level_lights()
 				//light2.position.set( 50, -10, -30 ).normalize();
 				//light2.castShadow = true;
 				//scene.add( light2 );
-}
+}*/

@@ -22,8 +22,30 @@ function load_plates (loader,levelObj) {
 		platsy.name = "plate" + i;
 		platsy.model = levelObj.platesArr[i][1];
 		platsy.pressed = levelObj.platesArr[i][4];
-		platsy.onPressFunc = levelObj.platesArr[i][5];
-		platsy.onUnpressFunc = levelObj.platesArr[i][6];
+		
+		//get js function from string
+		var onPressFn = window[levelObj.platesArr[i][5]];
+		if(typeof onPressFn === 'function') 
+		{
+			platsy.onPressFunc = onPressFn;
+		}
+		else
+		{
+			platsy.onPressFunc = missing_click_function;
+		}
+		
+		
+		//get js function from string
+		var onUnPressFn = window[levelObj.platesArr[i][6]];
+		if(typeof onUnPressFn === 'function') 
+		{
+			platsy.onUnpressFunc = onUnPressFn;
+		}
+		else
+		{
+			platsy.onUnpressFunc = missing_click_function;
+		}
+		
 		platsy.position.y = 0;
 		platsy.position.x = levelObj.platesArr[i][2]*SQUARE_SIZE;
 		platsy.position.z = levelObj.platesArr[i][3]*SQUARE_SIZE;
@@ -42,6 +64,20 @@ function standing_on_plate(levelObj)
 	for(var n=0; n<levelObj.platesArr.length; n++)
 	{
 		if((current_position.x == levelObj.platesArr[n][2])&&(current_position.z == levelObj.platesArr[n][3]))
+		{
+			//standing on plate position..
+			return n;
+		}
+	}
+	return -1;
+}
+
+function standingOnPlatePos(x,z,levelObj)
+{
+	//check if player is standing on plate
+	for(var n=0; n<levelObj.platesArr.length; n++)
+	{
+		if((x == levelObj.platesArr[n][2])&&(z == levelObj.platesArr[n][3]))
 		{
 			//standing on plate position..
 			return n;
@@ -72,7 +108,19 @@ function clicking_on_plate(levelObj)
 	return -1;
 }
 
-function item_on_plate (item,levelObj)
+function someItemIsOnThePlate(plateID,levelObj)
+{
+	for(var n=0; n<levelObj.array_of_pickables.length; n++)
+	{
+		if(levelObj.array_of_pickables[n].plated == plateID)
+			return true;
+	}
+	
+	return false;
+}
+
+//this function checks item on any plate, I dont think this is used anywhere??
+function item_on_plate(item,levelObj)
 {
 	//check if item is standing on plate
 	for(var n=0; n<levelObj.platesArr.length; n++)

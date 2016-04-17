@@ -327,7 +327,7 @@ function newGameMainMenu()
 	load_lights();
 
 	//load level walls and floors etc..
-	loadLevel(3,0);
+	loadLevel(2,0);
 
 	loadCharacter();
 	
@@ -514,7 +514,7 @@ function newGameOnDifferentLevel()
 	{
 		var tmpobj = scene.children[i];
 		{
-			console.log("removing " + tmpobj.name);
+			//console.log("removing " + tmpobj.name);
 			scene.remove(tmpobj);
 		}
 	}
@@ -595,7 +595,7 @@ function loadGameOnDifferentLevel()
 	{
 		var tmpobj = scene.children[i];
 		{
-			console.log("removing " + tmpobj.name);
+			//console.log("removing " + tmpobj.name);
 			scene.remove(tmpobj);
 		}
 	}
@@ -934,12 +934,12 @@ function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
 			var tmpobj = scene.children[i];
 			if(!tmpobj.noremove)
 			{
-				console.log("removing " + tmpobj.name);
+				//console.log("removing " + tmpobj.name);
 				scene.remove(tmpobj);
 			}
 			else
 			{
-				console.log("skipping " + tmpobj.name);
+				//console.log("skipping " + tmpobj.name);
 			}
 		}
 
@@ -999,6 +999,7 @@ function load_level_obj_saved(level_obj,saved_data)
     //this must be done before load_doors();
     for (i=0; i<saved_data.levels["id"+current_level].doors.length; i++)
 	{
+		//seems like levels.doors only contains open doors, so we set them here to 1?
 		level_obj.doorsArr[saved_data.levels["id"+current_level].doors[i]][3] = 1;
 	}
 	//doors

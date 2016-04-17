@@ -100,6 +100,9 @@ function game_loop() {
 				{
 					//console.log("stop move cameraOriginalPosition.x: " + cameraOriginalPosition.x);
 					//console.log("stop move cameraLooker.x: " + cameraLooker.x);
+					var old_x = current_position.x;
+					var old_z = current_position.z;
+					
 					cameraMove = false;
 					camera.position.multiplyScalar(0);
 					camera.position.add(cameraOriginalPosition.add(cameraLooker));
@@ -122,59 +125,53 @@ function game_loop() {
 						fallInHole();
 					}
 					
-					/*
-					if(typeof win_area != 'undefined')
+					
+					if(currentlevelObj.win_area.length > 0)
 					{
-						if((win_area[0][0]==current_position.x)&&(win_area[0][1]==current_position.z)&&(win_area[0][3]==0))
+						if((currentlevelObj.win_area[0][0]==current_position.x)&&(currentlevelObj.win_area[0][1]==current_position.z)&&(currentlevelObj.win_area[0][3]==0))
 						{
 							//play win sound
 							audio_win1.play();
 							//show win message
-							DisplayInfoDiv(win_area[0][2]);
+							DisplayInfoDiv(currentlevelObj.win_area[0][2]);
 							//set area flag to discovered
-							win_area[0][3]=1;
+							currentlevelObj.win_area[0][3]=1;
 						}
-					}*/
+					}
 					
 					//check if player was standing on press plate before this move..
-					/*if(gStandingOnPlate > -1)
+					var wasStandingOnPlate = standingOnPlatePos(old_x,old_z,currentlevelObj);
+					if(wasStandingOnPlate > -1)
 					{
 						//call pressure plate onUnpress function..
-						if(gWeightOnThePlate)
+						var itemOnThePlate = someItemIsOnThePlate(wasStandingOnPlate,currentlevelObj);
+						if(itemOnThePlate)
 						{
 							console.log("plate is not unpressed because weight is on it!");
 						}
 						else
 						{
+							//call pressure plate onUnPress function..
 							console.log("plate unpressed!");
-							///
+							currentlevelObj.array_of_plates[wasStandingOnPlate].pressed = 0;
 							plate_unclick_audio.play();
-							var onUnpress = plates_array[gStandingOnPlate][6];
-							if(onUnpress !=0 )
-							{
-								onUnpress();
-							}
+							currentlevelObj.array_of_plates[wasStandingOnPlate].onUnpressFunc();
 						}
-						gStandingOnPlate = -1;
-					}*/
+					}
 					
 					//check if player has stepped on the pressure plate
-					/*var plateID = standing_on_plate();
+					var plateID = standing_on_plate(currentlevelObj);
 					if(plateID>-1)
 					{
-						if (!gWeightOnThePlate)
+						if (currentlevelObj.array_of_plates[plateID].pressed == 0)
 						{
 							//call pressure plate onPress function..
 							console.log("plate pressed!");
+							currentlevelObj.array_of_plates[plateID].pressed = 1;
 							plate_click_audio.play();
-							var onPress = plates_array[plateID][5];
-							if(onPress !=0 )
-							{
-								onPress();
-							}
+							currentlevelObj.array_of_plates[plateID].onPressFunc();
 						}
-						gStandingOnPlate = plateID;
-					}*/
+					}
 					
 					//check if player stepped onto teleport!
 					/*if(teleport != 0)
@@ -248,8 +245,8 @@ function game_loop() {
 				{
 					var cameraRotLookie = new THREE.Vector3(0,0,0).add(cameraLooker);
 					cameraRotLookie.normalize();
-					console.log("stop rotate cameraRotateTurner.x: " + cameraRotateTurner.x);
-					console.log("stop rotate cameraRotateTurner.z: " + cameraRotateTurner.z);
+					//console.log("stop rotate cameraRotateTurner.x: " + cameraRotateTurner.x);
+					//console.log("stop rotate cameraRotateTurner.z: " + cameraRotateTurner.z);
 					cameraRotate = false;
 					camera.position.multiplyScalar(0);
 					camera.position.add(cameraOriginalPosition.add(cameraRotateMover));

@@ -124,7 +124,7 @@ function add_to_inventory (gObject, slot) {
 	
 	//if inventory slot is free, place object in inventory
 	
-	var inventory_array_item = new Object();;
+	var inventory_array_item = new Object();
 	inventory_array_item.slot = slot;
 	inventory_array_item.gObject = gObject;
 	

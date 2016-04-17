@@ -259,14 +259,14 @@ function show_model(loader, model_file, x, z, rot)
 function updateModelLoading(name)
 {
 	if(name != "end of level load") modelNumber++;
-	console.log("loading model nb: " + modelNumber + ", name: " + name + ", relativeLevelModelCount: " + relativeLevelModelCount);
+	//console.log("loading model nb: " + modelNumber + ", name: " + name + ", relativeLevelModelCount: " + relativeLevelModelCount);
 	//if(typeof relativeLevelModelCount != 'undefined')
 	var perc = 100;
 	if(relativeLevelModelCount != 0) //if new level has no new models to download, loading is finished right away..
 	{
 		var perc = (modelNumber*100)/relativeLevelModelCount;
 		//if(totalModels == modelNumber) remove_loading_screen();
-		console.log("loading percent: " + perc);
+		//console.log("loading percent: " + perc);
 	}
 
 	update_loading_screen(perc);

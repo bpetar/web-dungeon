@@ -20,12 +20,16 @@ function level3OnFirstLoad(levelObj)
 function propOnClick1()
 {
 	show_speech_bubble("&nbsp;I was lucky to stay alive after falling on these spikes from above! <br><br> &nbsp;Few bruises and scratches.. that's all.", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
+	audio_click.currentTime = 0;
+	audio_click.play();
 }
 
 function propOnClick2()
 {
 	if(Math.random()>0.5)DisplayInfoDiv("Many have died on these traps..");
 	else show_speech_bubble("&nbsp;Day light from above and blood on these spikes means someone fell into this trap, but where is the body?", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
+	audio_click.currentTime = 0;
+	audio_click.play();
 }
 
 function propOnClick3()
@@ -38,16 +42,22 @@ function propOnClick3()
 	{
 		DisplayInfoDiv("I cant climb up there..");
 	}
+	audio_click.currentTime = 0;
+	audio_click.play();
 }
 
 function propOnClick4()
 {
 	DisplayInfoDiv("Sharp sticks..");
+	audio_click.currentTime = 0;
+	audio_click.play();
 }
 
 function propOnClick5()
 {
-	show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");	
+	show_speech_bubble("&nbsp;Rocks!...Rocks everywhere! ", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#dddd70", "300", "14px");
+	audio_click.currentTime = 0;
+	audio_click.play();	
 }
 
 function propOnClick6()
@@ -78,6 +88,7 @@ function WormOnClick1()
 	this.audio_monster_click.currentTime = 0;
 	this.audio_monster_click.play();
 }
+
 function WormOnItemClick1()
 {
 	DisplayInfoDiv("He doesn't need that.");

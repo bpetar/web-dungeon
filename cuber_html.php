@@ -196,38 +196,26 @@
 
 		
 		
-		<div id="container_slots" style="position:absolute; left:256px; top:100px; display: none;">
+		<div id="container_slots" style="position:absolute; left:366px; top:200px; display: none;">
 			<div id="container_slots1" style="float:left;">
-				<div id="container_slots1_item" style="float:left;">
-					<img id="container_slots1_item_icon" src="media/none.png"> 
-				</div>
-				<div id="container_slots1_border" style="position:absolute;">
-					<img src="media/slot.png"> 
+				<div id="container_slots1_item" onclick="containerItemClick(1);" style="float:left;">
+					<img id="container_slots1_item_icon" src="media/gui/slot.png"> 
 				</div>
 			</div>
 			<div id="container_slots2" style="float:left;">
-				<div id="container_slots2_item" style="float:left;">
-					<img id="container_slots2_item_icon" src="media/none.png"> 
+				<div id="container_slots2_item" onclick="containerItemClick(2);" style="float:left;">
+					<img id="container_slots2_item_icon" src="media/gui/slot.png"> 
 				</div>
-				<div id="container_slots2_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
 			</div>
 			<div id="container_slots3" style="float:left;">
-				<div id="container_slots3_item" style="float:left;">
-					<img id="container_slots3_item_icon" src="media/none.png"> 
+				<div id="container_slots3_item" onclick="containerItemClick(3);" style="float:left;">
+					<img id="container_slots3_item_icon" src="media/gui/slot.png"> 
 				</div>
-				<div id="container_slots3_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
 			</div>
 			<div id="container_slots41" style="float:left;">
-				<div id="container_slots4_item" style="float:left;">
-					<img id="container_slots4_item_icon" src="media/none.png"> 
+				<div id="container_slots4_item" onclick="containerItemClick(4);" style="float:left;">
+					<img id="container_slots4_item_icon" src="media/gui/slot.png"> 
 				</div>
-				<div id="container_slots4_border" style="position:absolute;">
-					<img src="media/slot.png"> 
-				</div> 
 			</div>
 		</div>
 

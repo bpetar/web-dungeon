@@ -21,6 +21,9 @@ function load_containers (loader, levelObj) {
 		chest.name = levelObj.containersArr[i][1];
 		chest.model = levelObj.containersArr[i][2];
 		
+		chest.xpos = levelObj.containersArr[i][3];
+		chest.ypos = levelObj.containersArr[i][4];
+				
 		//position depends on orientation
 		chest.orientation = levelObj.containersArr[i][5];
 		if(chest.orientation == 0)
@@ -51,26 +54,128 @@ function load_containers (loader, levelObj) {
 		//loader.load( chest.model, chest.loadObject(chest) );
 		loadGameObjectCheck(loader, chest);
 		
+		chest.array_of_chest_pickables = [];
+
+		//create container slot objects. they were dynamic at first, 
+		//but multiple item take/put would create new, and i think they were leaked eventually
+		for(var gi=0; gi<NUM_CONTAINER_ROWS*NUM_CONTAINER_COLS; gi++)
+		{
+			var container_array_item = new Object();
+			chest.array_of_chest_pickables.push(container_array_item);
+		}
+		
+		//load pickables
+		for(var p=0; p<levelObj.containersArr[i][6].length; p++)
+		{
+			var gameItem = load_item_by_id(levelObj.containersArr[i][6][p].itemID);
+			chest.array_of_chest_pickables[levelObj.containersArr[i][6][p].slot-1].slot = levelObj.containersArr[i][6][p].slot;
+			chest.array_of_chest_pickables[levelObj.containersArr[i][6][p].slot-1].gObject = gameItem;
+		}
+		
 		levelObj.array_of_containers.push(chest);
 	}
 }
 
-//draw item icons in container gui
-function container_fill_gui(containerID)
+function containerItemPut(slot)
 {
-	/*var container_pickables_array = containers_array[containerID][6];
+	var item=0;
+	console.log("heee");
+	
+	//check if there is item in container in that slot
+	//for(var i=0; i<currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.length; i++)
+	{
+		if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject != 0)
+		{
+			//get item
+			item = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
+			//remove from container
+			//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.splice(i,1);
+			//document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
+			//break;
+		}
+	}
+	
+	//var container_array_item = new Object();
+	currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].slot = slot;
+	currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject = pickable_at_hand;
+	//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.push(container_array_item);
+	document.getElementById("container_slots" + slot + "_item_icon").src = pickable_at_hand.icon2;
+	document.getElementById("container_slots" + slot + "_item_icon").style.cursor = 'pointer';
+
+	//if slot is already occupied - replace
+	if(item)
+	{
+		pickable_at_hand = item;
+		//pickable_at_hand_icon.style.display = "block";
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = pickable_at_hand.icon;
+	}
+	else
+	{
+		pickable_at_hand = 0;
+		pickable_at_hand_icon.style.display = "none";
+		pickable_at_hand_icon = 0;
+	}
+}
+
+//player clicked in container slot..
+function containerItemClick(slot)
+{
+	//var item=0;
+	
+	console.log("huuu");
+	
+	//find item in array with given slot
+	/*for(var i=0; i<currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.length; i++)
+	{
+		if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[i].slot == slot)
+		{
+			//get item
+			item = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[i].gObject;
+			//remove from container
+			currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[i].gObject = 0;
+			//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.splice(i,1);
+			document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
+			break;
+		}
+	}*/
+	
+	//set pickable at hand
+	if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject)
+	{
+		pickable_at_hand = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = pickable_at_hand.icon;
+		//remove from container
+		currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject = 0;
+		document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
+		document.getElementById("container_slots" + slot + "_item_icon").style.cursor = 'default';
+	}
+}
+
+//draw item icons in container gui
+function container_fill_gui(containerID, levelObj)
+{
+	var container_pickables_array = levelObj.array_of_containers[containerID].array_of_chest_pickables;
 	
 	for(var c=0; c<container_pickables_array.length; c++)
 	{
-		var slot = container_pickables_array[c][4];
-		var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
-		if(slot_icon)
+		//get item from id
+		var gameItem = container_pickables_array[c].gObject;
+		if(gameItem)
 		{
-			slot_icon.src = container_pickables_array[c][3];
+			var slot = container_pickables_array[c].slot;
+			var slot_icon = document.getElementById("container_slots" + slot + "_item_icon");
+			if(slot_icon)
+			{
+				slot_icon.src = gameItem.icon2;
+				slot_icon.style.cursor = 'pointer';
+				//slot_icon.src = "media/gui/key.png";//item.icon;
+			}
 		}
 	}
 	container_div.style.display = "inline-block";
-	currently_opened_container = containerID;*/
+	currently_opened_container = containerID;
 }
 
 //add pickable item to current container
@@ -118,9 +223,9 @@ function container_mouse_over_slot(x_pos,y_pos)
 				return slot;
 			}
 		}
-	}*/
+	}
 	
-	return -1;
+	return -1;*/
 }
 
 function container_item_clicked(x_pos,y_pos)
@@ -181,59 +286,59 @@ function container_item_clicked(x_pos,y_pos)
 //check if player clicked in container gui
 function container_clicked_in_slot(x_pos,y_pos)
 {
-	/*var left = windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
-	var right = windowHalfX + (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH);
-	var bottom = SLOT_WIDTH + NUM_CONTAINER_ROWS*SLOT_WIDTH;
-	var top = SLOT_WIDTH;
+	var left = windowHalfX - (NUM_CONTAINER_COLS/2*small_SLOT_WIDTH) - 20;
+	var right = windowHalfX + (NUM_CONTAINER_COLS/2*small_SLOT_WIDTH) - 20;
+	var bottom = 4*small_SLOT_WIDTH + NUM_CONTAINER_ROWS*small_SLOT_WIDTH;
+	var top = 4*small_SLOT_WIDTH;
 	
 	if((x_pos > left)&&(x_pos < right))
 	{
 		if((y_pos > top) && (y_pos < bottom))
 		{
 			//clicked in the container gui.. 
-			if(x_pos < left+SLOT_WIDTH)
+			if(x_pos < left+small_SLOT_WIDTH)
 				return 1;
-			if(x_pos < left+2*SLOT_WIDTH)
+			if(x_pos < left+2*small_SLOT_WIDTH)
 				return 2;
-			if(x_pos < left+3*SLOT_WIDTH)
+			if(x_pos < left+3*small_SLOT_WIDTH)
 				return 3;
-			if(x_pos < left+4*SLOT_WIDTH)
+			if(x_pos < left+4*small_SLOT_WIDTH)
 				return 4;
 		}
-	}*/
+	}
 
 	return -1;
 }
 
 //check if player standing in front of container
-function looking_at_container() {
+function looking_at_container(levelObj) {
 	//check if player is facing container
-	/*for(var n=0; n<containers_array.length; n++)
+	for(var n=0; n<levelObj.array_of_containers.length; n++)
 	{
-		if((current_position.x == containers_array[n][3])&&(current_position.z == containers_array[n][4]))
+		if((current_position.x == levelObj.array_of_containers[n].xpos)&&(current_position.z == levelObj.array_of_containers[n].ypos))
 		{
 			//standing in container position, now lets check facing..
 			var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 			looker.sub(camera.position);
 			if (looker.x > 0) {
 				//facing left
-				if(containers_array[n][5] == 3)
+				if(levelObj.array_of_containers[n].orientation == 3)
 					return n;
 			} else if (looker.x < 0) {
 				//facing right
-				if(containers_array[n][5] == 1)
+				if(levelObj.array_of_containers[n].orientation == 1)
 					return n;
 			} else if (looker.z < 0) {
 				//facing back
-				if(containers_array[n][5] == 2)
+				if(levelObj.array_of_containers[n].orientation == 2)
 					return n;
 			} else if (looker.z > 0) {
 				//facing front
-				if(containers_array[n][5] == 0)
+				if(levelObj.array_of_containers[n].orientation == 0)
 					return n;
 			}
 		}
-	}*/
+	}
 	
 	return -1;
 }

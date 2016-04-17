@@ -1,0 +1,61 @@
+{
+	"level":{
+		"id":1,
+		
+		"levelNumber":1,
+		"totalModels":12,
+		"curved_walls":false,
+		"curved_ceiling":false,
+		
+		"levelOnLoad":"level1OnLoad",
+		"levelOnFirstLoad":"level1OnFirstLoad",
+
+		"floorsArr2D":[[13,15], [12,15], [11,15], [10,15], [9,15], [6,15], [5,15], [4,15], [16,14], [15,14], [14,14], [13,14], [12,14], [11,14], [10,14], [9,14], [8,14], [7,14], [6,14], [5,14], [4,14], [16,13], [13,13], [12,13], [11,13], [10,13], [9,13], [6,13], [5,13], [4,13], [16,12], [16,11], [16,10], [17,9], [18,9], [18,10], [18,11], [16,9], [16,8], [16,7], [16,6], [16,5], [16,4], [16,3], [16,2], [16,1]],
+		"levelEntrances":[[16,1,0]],
+		"holesArr":[],
+		"holesAboveArr":[],
+		"writtingsArr":[[16,1,1,"Put some weight..",0]],
+		"secretWallsArr":[[16,9,3,0,"This wall seems odd"]],
+		"doorsArr":[[16,3,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"], [16,7,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"], [16,11,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"]],
+		"stairsArr":[[16,0,2,"maps/level3/models/slope.js",0,4,1]],
+		"buttonsArr":[[1, "maps/level1/models/button_small.js", 16,6,1,"level1OnPressButton1"]],
+		"keyholesArr":[[9, "models/keyhole.js", 16,9,1,"level1OnKeyClick"]],
+		"containersArr":[[1,"Chest","maps/level1/models/chest2.js", 18,11,0, [{"itemID":9,"slot":1}], 0]],
+		"pillarsArr":[[2, "maps/level1/models/pillar.js", 12,14]],
+		"propsArr":[],
+		"animatedPropsArr":[],
+		"nicheArr":[[16, 5, 3, [8]]],
+		"monsterArr":[[121,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, [], "level1MonsterOnClick1", "level1MonsterOnItemClick1",1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]],
+		"pickablesArr":[{"gameID":7,"itemID":6,"x":163,"y":0,"z":5,"niched":-1,"plated":-1}],
+		"lightsArr":[],
+		"platesArr":[[1, "models/plynth.js", 16,1,0,"level1OnPressPlate1","level1OnUnpressPlate1"]],
+		"tapestriesArr":[["models/tapestry1.js", 16,1,3], ["models/tapestry2.js", 16,9,3]],
+		"teleportArr":[],
+		"win_area":[[17,9, "Secret area found!",0]],
+
+		"floor_texture_file":"maps/level1/media/floor_11_1.png",
+		"wall_texture_file":"maps/level1/media/stone_wall_01_01.png",
+		"ceiling_texture_file":"maps/level1/media/ceiling.png",
+
+		
+		"celing_model_fb":"",
+		"wall_model_curve_writ":"",
+		"wall_writting_texture_file":"maps/level1/media/wallwrit.png",
+		"teleport_floor_texture_file":"maps/level1/media/teleport_floor.png",
+		"suporter_model":"",
+		"decorPillarModel":"maps/level1/models/decorPillar.js",
+		"hole_above_model":"",
+		"hole_model":"maps/level1/models/hole.js",
+		"niche_model":"maps/level1/models/niche.js",
+		"doorway_model":"maps/level1/models/doorway.js",
+		"door_model":"maps/level1/models/door.js",
+
+		"ambient_music_file":"media/ambient_music.mp3",
+		"door_audio":"media/creak.mp3",
+	
+		"point_light_color":"aaaaff",
+		"point_light_intensity":1.6,
+		"fog_color":[0.0,0.0,0.12],
+		"fog_density":0.008525
+	}
+}

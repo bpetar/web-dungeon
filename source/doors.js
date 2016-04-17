@@ -174,7 +174,7 @@ function animateDoor(door, elapsed)
 		break;
 		case DOOR_ANIMATE_ROTATE_OFFSET_RIGHT_LEFT:
 		{
-			console.log("door openAnimation: " + door.openAnimation);
+			//console.log("door openAnimation: " + door.openAnimation);
 			
 			if(door.open == 0) //closing..
 			{
@@ -233,7 +233,7 @@ function animateDoor(door, elapsed)
 				door.mesh.position.x -= deltax*4;
 				door.mesh.position.z += deltaz*4;
 
-				console.log("door orientation: " + door.orientation);
+				//console.log("door orientation: " + door.orientation);
 				
 				//opening door to the left, depends on initial door rotation
 				if(door.orientation == 0)
@@ -246,7 +246,7 @@ function animateDoor(door, elapsed)
 				}
 				else if(door.orientation == 1)
 				{
-					console.log("door rotation: " + door.mesh.rotation.y);
+					//console.log("door rotation: " + door.mesh.rotation.y);
 					
 					if(door.mesh.rotation.y > Math.PI) 
 					{
@@ -283,6 +283,22 @@ function animateDoor(door, elapsed)
 		}
 	}
 
+}
+
+function openDoor(door)
+{
+	door.animate = true;
+	door.audio_door.currentTime = 0;
+	door.audio_door.play();
+	door.open = 1; // open/close flag
+}
+
+function closeDoor(door)
+{
+	door.animate = true;
+	door.audio_door.currentTime = 0;
+	door.audio_door.play();
+	door.open = 0; // open/close flag
 }
 
 //savedDoorsArr is just array of indexes of opened doors..
@@ -328,7 +344,7 @@ function load_doors (loader, levelObj) {
 	{
 		//x,z,rot,open,door_model,doorway_model,animate flag,openable on click,open animation  0-slide/up/down 1-slide/down/up 2-slide/right/left 3-slide/left/right 4-rotatec/left/right 5-rotatec/right/left 6-rotateo/left/right 7-rotateo/right/left 8-rotateo/top/down 9-rotateo/down/up    
 		var doorsy = create_game_object();
-		doorsy.gameID = levelObj.doorsArr[i][0];
+		doorsy.gameID = levelObj.doorsArr[i][0]; //ERROR: we are setting xpos as id!!!
 		doorsy.name = "door" + i;
 		doorsy.map_position.set(levelObj.doorsArr[i][0],0,levelObj.doorsArr[i][1]);
 		doorsy.position.set(levelObj.doorsArr[i][0]*SQUARE_SIZE,0,levelObj.doorsArr[i][1]*SQUARE_SIZE);

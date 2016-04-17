@@ -22,6 +22,8 @@ function load_keyholes (loader,levelObj) {
 		keyhols.name = "keyhole" + i;
 		keyhols.locked = true;
 		keyhols.model = levelObj.keyholesArr[i][1];
+		keyhols.map_position.x = levelObj.keyholesArr[i][2];
+		keyhols.map_position.z = levelObj.keyholesArr[i][3];
 		keyhols.orientation = levelObj.keyholesArr[i][4];
 		keyhols.position.set((levelObj.keyholesArr[i][2]-0.5)*SQUARE_SIZE,0.4*SQUARE_SIZE,(levelObj.keyholesArr[i][3])*SQUARE_SIZE);
 		keyhols.rotation.set(0, Math.PI/2, 0);

@@ -44,5 +44,39 @@
 		"useScript":"0",
 		"type":"weapon",
 		"weapon_prop":{"type":"throwing", "hand":"one", "damage_type":"bludgeoning", "speed":4, "damage":4, "damage_bonus":0, "attack_bonus":1}
+	},
+	"6":{
+		"id":6,
+		"name":"Rock",
+		"desc":"Type: <span style='color:yellow;'>rock</span>",
+		"model":"models/rocky.js",
+		"icon":"media/rock.png",
+		"icon2":"media/gui/rock_icon.png",
+		"useHint":"<span style='color:green;'> This is too hard to chew.. </span>",
+		"useScript":"0",
+		"type":"weapon",
+		"weapon_prop":{"type":"throwing", "hand":"one", "damage_type":"bludgeoning", "speed":4, "damage":4, "damage_bonus":0, "attack_bonus":1}
+	},
+	"7":{
+		"id":7,
+		"name":"Scroll",
+		"desc":"Type: <span style='color:yellow;'>Rolled parchment.</span><br> (right click to read)",
+		"model":"models/scroll.js",
+		"icon":"media/scrolly.png",
+		"icon2":"media/gui/scroll_icon.png",
+		"useHint":"...",
+		"useScript":"script_showScroll_lvl1_msg",
+		"type":"reusable"
+	},
+	"8":{
+		"id":8,
+		"name":"Gold Key",
+		"desc":"Type: <span style='color:yellow;'>Golden key. A treasure by itself!</span><br>",
+		"model":"models/key.js",
+		"icon":"media/key.png",
+		"icon2":"media/gui/key_icon.png",
+		"useHint":"...",
+		"useScript":"",
+		"type":"reusable"
 	}
 }

@@ -294,14 +294,14 @@ optimizations:
 	  - settings (TODO, maybe just sound)
 	  - credits should link to peoples pages
 	  - help should link to facebook page and email
- - make dirt rock throwing weapon
+ + make dirt rock throwing weapon
 	  + bug: right click consumes the rock?
-	  - light hands when rock is picked
-	  - add damage to rock
-	  - attack with rock throws 3d model
-	  - thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
-	  - thrown item falls on the ground
-	  - thrown item is automatically picked up??? (animation of picking)
+	  + light hands when rock is picked
+	  + add damage to rock
+	  + attack with rock throws 3d model
+	  + thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
+	  + thrown item falls on the ground
+	  /- thrown item is automatically picked up??? (animation of picking)
 
  + add animated chain model that swings when clicked.
  + (A) First Level Music 
@@ -410,24 +410,59 @@ Bugs:
   + spotlight is not right - visible on some black walls - had to add hack - spotlight must be loaded before all.
   + why point light is sometimes removed? - some games clear whole scene no excuses (like new game), so point light needs to be recreated.
  + when leaving firs level first time its removing 144 objects. next time, its 268. there are some duplication of objects in the scene. - no, just my mistake with counting
- - click on sticks should have some sound.
+ + click on sticks should have some sound.
+ + save game throws error: "array_of_doors undefined" in save_game at line: arrayOfVisitedLevels[vli].array_of_doors.length;
+ + load to second level has no ambient sound?
+ - onfirstload not called?
+ - monster on level 5 -> load to level 5 from main menu and there is error undefined IDLE animation var
+ - prop click not working on level 5 if load directly, and functions not defined in level5 js
+ - in function mainMenuMouseOverLoad audio_click undefined appears on main menu. maybe when hovering right on very start.
+ - new game -> load to second level with rock on the ground -> picking makes hands glow again.
  - namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
- - save game throws error: "array_of_doors undefined" in save_game at line: arrayOfVisitedLevels[vli].array_of_doors.length;
- - load to second level has no ambient sound?
-
+ - IDLE_ANIM_DURATION mora da ide u monster niz, inace, ako se odma ucita neki kasniji nivo gde to nije definisano, a da ne govorim ako na novou ima vise monstera sa razlicitim vrednostima...
+ 
 Checks:
  - try to save with item at hand
  - check monster drop pickable item after death - how it works with save load?
  - test rock throw (because pickable adding/removing changed)
-   - noremove must be added for throwables that are thrown
+   + noremove must be added for throwables that are thrown
+   + thrown rock can not be picked
+   - try to hit monster with rock.
  - check monster killing with save/load
  - level 4 json has door_audio but level 3 has not?
- 
-New levels:
- - make downstairs model
- - door ropes are bad when opening
- - add first and second level to the game
+ - //TODO: check if more items remain on the plate
 
+New levels:
+ + make downstairs model
+ - making level 5
+ - door ropes are bad when opening
+ + add first and second level to the game
+  + pretabati prvi nivo u json tako da se pojavi bez errora
+  + namestiti sve komponente prvog nivoa da rade
+   + win area
+   + plate stand (gWeightOnThePlate treba izbaciti, jer ne radi sa vise od jedim plateom po nivou)
+   + doors (ocemo geometrijska vrata, nihc modelsice)
+   + suporteri drveni a treba kameni stubovi
+   + rock, scroll icon
+   + door sound
+   + button
+   + chest
+   + lock
+   + key
+   + monsters
+   -/ teleport
+  - namestiti save/load da radi sa tim prvim nivoom
+   - sacuvaj win area state
+   - sacuvaj plate state (gStandingOnPlate?)
+   - sacuvaj button state
+   - sacuvaj container state
+  - namestiti sve komponente drugog nivoa da rade
+   + pretabaj u json
+   - doors
+   - pickables
+   - monster
+   
+  
 Code order:
  - [event file - mouse and key events in separate js file]
  - [floors and walls file]
@@ -440,6 +475,8 @@ New functionality:
    - more tabs
 
  - icon stack in inventory
+ 
+ - experience, levels
  
 clear dynamic arrays of objects like doors and monsters! Or not? Maybe we should clear them only when player clicks save. Not when transitioning between levels.
 inventory items meshes need to be kept in the scene with //gObject.mesh.noremove = true;

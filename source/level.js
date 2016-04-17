@@ -12,9 +12,9 @@ function decorPillarAlreadyAdded(decorPil) {
 	return false;
 }
 
-function addPillar(loader, x, z)
+function addPillar(loader, level_obj, x, z)
 {
-	if((typeof decorPillarModel != 'undefined') && (decorPillarModel != ""))
+	if(level_obj.decorPillarModel != "")
 	{
 		var decorPil = new THREE.Vector3(x, 0, z);
 		if(!decorPillarAlreadyAdded(decorPil))
@@ -23,7 +23,7 @@ function addPillar(loader, x, z)
 			
 			var decorPillarke = create_game_object();
 			decorPillarke.name = "decorPillar";
-			decorPillarke.model = decorPillarModel;
+			decorPillarke.model = level_obj.decorPillarModel;
 
 			decorPillarke.position.y = 0;
 			decorPillarke.position.x = x;
@@ -281,8 +281,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE+5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -387,8 +387,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -494,8 +494,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -604,8 +604,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 				
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -706,7 +706,7 @@ function load_walls_level(loader, level_obj)
 		var secretWallObj;
 		var wallWritObject;
 		//wall texture
-		var wall_map = THREE.ImageUtils.loadTexture( wall_texture_file );
+		var wall_map = THREE.ImageUtils.loadTexture( level_obj.wall_texture_file );
 		wall_map.wrapS = wall_map.wrapT = THREE.RepeatWrapping;
 		wall_map.anisotropy = 16;
 		var materialWall = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: wall_map, side: THREE.DoubleSide } );
@@ -714,7 +714,7 @@ function load_walls_level(loader, level_obj)
 		//writting on the wall texture
 		if(level_obj.writtingsArr.length>0)
 		{
-			var mapwrit = THREE.ImageUtils.loadTexture( wall_writting_texture_file );
+			var mapwrit = THREE.ImageUtils.loadTexture( level_obj.wall_writting_texture_file );
 			mapwrit.wrapS = mapwrit.wrapT = THREE.RepeatWrapping;
 			mapwrit.anisotropy = 16;
 			materialWrit = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: mapwrit, side: THREE.DoubleSide } );
@@ -791,6 +791,26 @@ function load_walls_level(loader, level_obj)
 				}
 			}
 			
+			//check stairs
+			if(typeof level_obj.stairsArr != 'undefined')
+			{
+				for(var s=0; s<level_obj.stairsArr.length; s++)
+				{
+					//front stairs
+					if((level_obj.stairsArr[s][0] == xTile) && (level_obj.stairsArr[s][1] == yTile+1))
+					{
+						frontWall = false;
+					}
+					
+					//back stairs
+					if((level_obj.stairsArr[s][0] == xTile) && (level_obj.stairsArr[s][1] == yTile-1))
+					{
+						backWall = false;
+					}
+					
+				}
+			}
+			
 			if(leftWall)
 			{
 				//pillars
@@ -798,8 +818,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE+5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -868,8 +888,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -938,8 +958,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE+5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -1007,8 +1027,8 @@ function load_walls_level(loader, level_obj)
 				var x2 = (level_obj.floorsArr2D[i][0])*SQUARE_SIZE-5;
 				var z1 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
 				var z2 = (level_obj.floorsArr2D[i][1])*SQUARE_SIZE-5;
-				addPillar(loader,x1,z1);
-				addPillar(loader,x2,z2);
+				addPillar(loader,level_obj,x1,z1);
+				addPillar(loader,level_obj,x2,z2);
 				
 				var nicheIsOnTheWall = false;
 				//loop level_obj.nicheArr
@@ -1419,6 +1439,13 @@ function load_level_obj_temp(level_obj)
 
 	//load chests
 	reload_containers(level_obj);
+	
+	var onLoadFn = window[level_obj.levelOnLoad];
+	if(typeof onLoadFn === 'function') 
+	{
+		onLoadFn(level_obj);
+	}
+
 
 }
 
@@ -1553,6 +1580,15 @@ function loadLevel(id,entrance)
 	modelNumber = 0;
 	relativeLevelModelCount = 0;
 
+	//stop ambient music of current level
+	if(typeof currentlevelObj.audio_ambient != 'undefined')
+	{
+		currentlevelObj.audio_ambient.loop = false;
+		currentlevelObj.audio_ambient.pause();
+		currentlevelObj.audio_ambient.currentTime = 0;
+		console.log("sprangeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+	}
+	
 	//if level already visited, get that object
 	for (var i=0; i<arrayOfVisitedLevels.length; i++)
 	{
@@ -1591,12 +1627,12 @@ function loadTempLevel(nextlevelObj,entrance)
 		var tmpobj = scene.children[i];
 		if(!tmpobj.noremove)
 		{
-			console.log("removing " + tmpobj.name);
+			//console.log("removing " + tmpobj.name);
 			scene.remove(tmpobj);
 		}
 		else
 		{
-			console.log("skipping " + tmpobj.name);
+			//console.log("skipping " + tmpobj.name);
 		}
 	}
 
@@ -1664,12 +1700,12 @@ function loadLevelJson(nextlevelObj,levelId,entrance)
 			var tmpobj = scene.children[i];
 			if(!tmpobj.noremove)
 			{
-				console.log("removing " + tmpobj.name);
+				//console.log("removing " + tmpobj.name);
 				scene.remove(tmpobj);
 			}
 			else
 			{
-				console.log("skipping " + tmpobj.name);
+				//console.log("skipping " + tmpobj.name);
 			}
 		}
 

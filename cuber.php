@@ -377,7 +377,7 @@
 					console.log("throwing right weapon..");
 					//todo:
 					//add code for right hand same as for left
-          thrownWeapon = martin_equipment.right_hand_item;
+					thrownWeapon = martin_equipment.right_hand_item;
 					playerCanHitRight = false;
 					playerHitTimeoutRight = thrownWeapon.weapon_speed*1000;
 					rhandDiv.style.opacity=0.5;
@@ -407,6 +407,13 @@
 				}
 				
 				thrownWeaponIsFlying = true;
+				thrownWeapon.mesh.noremove = false;
+				
+				//add this pickable to array of pickables if not already there!
+				if(get_pickable_item_by_id(currentlevelObj,thrownWeapon.gameID) == 0)
+				{
+					currentlevelObj.array_of_pickables.push(thrownWeapon);
+				}
 			}
 			
 			
@@ -494,7 +501,9 @@
 			var current_rotation = 0;
 			var NUM_SLOTS_INVENTORY_ROW = 4;
 			var NUM_CONTAINER_ROWS = 1;
+			var NUM_CONTAINER_COLS = 4;
 			var SLOT_WIDTH = 128;
+			var small_SLOT_WIDTH = 64;
 			var inventorySlide = 0;
 			//var inventory_div;
 			var INVENTORY_POS_HIDDEN = -170;
@@ -737,8 +746,8 @@
 				gui_right_div = document.getElementById( 'gui_right' );
 				document.getElementById( 'info_dialog_button' ).focus();
 				container_div = document.getElementById('container_slots');
-				container_div.style.left = (windowHalfX - (NUM_SLOTS_INVENTORY_ROW/2*SLOT_WIDTH)) +'px';
-				container_div.style.top = SLOT_WIDTH +'px';
+				container_div.style.left = (windowHalfX - (NUM_CONTAINER_COLS/2*small_SLOT_WIDTH)-20) +'px';
+				container_div.style.top = 4*small_SLOT_WIDTH +'px';
 				loading_div = document.getElementById('loading_progress');
 				main_menu_div = document.getElementById('id-main-menu');
 				main_menu_sub_div = document.getElementById('id-main-menu-sub');
@@ -1264,7 +1273,7 @@
 
 			//
 			function handleKeyDown(event) {
-				console.log(event.keyCode);
+				//console.log(event.keyCode);
 				
 				if(gameState != GAME_STATE_IN_GAME)
 					return;
@@ -1647,7 +1656,7 @@
 			//there are 10 loading points (squares) each should ligh up when percentage cross it
 			function update_loading_screen(perc)
 			{
-				console.log("update loading screen");
+				//console.log("update loading screen");
 				//remove loading screen
 				if(perc==100)
 					setTimeout(function(){remove_loading_screen()}, 400);
@@ -1829,15 +1838,7 @@
 					//mouse over container item
 					if(container_div.style.display == "inline-block")
 					{
-						var slot = container_mouse_over_slot(x_pos,y_pos);
-						if(slot > -1)
-						{
-							console.log("conktiitit");
-							mouse_over_item_in_container = slot;
-							setCursor('pointer');
-							//drawItemInfo(x_pos,y_pos,item);
-							return;
-						}
+						//this is handled in containerItemClick function as item slot onclick function
 					}
 					mouse_over_item_in_container = -1;
 					
@@ -2076,7 +2077,7 @@
 					}
 					
 					//mouse over containers
-					var c = looking_at_container();
+					var c = looking_at_container(currentlevelObj);
 					if(c > -1)
 					{
 						//console.log("coooooontainernrr");
@@ -2164,6 +2165,10 @@
 						item_over_right_hand = 1;
 						return;
 					}
+					
+					//pickable over container? no. whe'll do this only when we need some glowing on item hover or such
+					
+					//pickable over inventory? no. whe'll do this only when we need some glowing on item hover or such
 					
 					//pickable over keyhole
 					for (var k=0; k<currentlevelObj.array_of_keyholes.length; k++)
@@ -2480,14 +2485,12 @@
 					//check if pickable is being placed in container
 					if(container_div.style.display == "inline-block")
 					{
+						console.log("checking container..");
 						slot_index = container_clicked_in_slot(x_pos,y_pos);
 						if(slot_index > 0)
 						{
-							//alert("yo yo " + pickable_at_hand);
-							add_to_container(pickable_at_hand, slot_index);
-							pickable_at_hand_icon.style.display = "none";
-							pickable_at_hand_icon = 0;
-							pickable_at_hand = 0;
+							console.log("yo yo " + pickable_at_hand.name);
+							containerItemPut(slot_index);
 							audio_click.currentTime = 0;
 							audio_click.play();
 							return;
@@ -2703,7 +2706,6 @@
 						if(plateID>-1)
 						{
 							looker.multiplyScalar(0.62);
-							gWeightOnThePlate = true;
 							pickable_at_hand.plated = plateID;
 							currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 							//plate_click_audio.play();
@@ -2720,15 +2722,11 @@
 							if(plateID>-1)
 							{
 								looker.multiplyScalar(1.52);
-								gWeightOnThePlate = true;
 								pickable_at_hand.plated = plateID;
 								currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 								plate_click_audio.play();
-								var onPress = plates_array[plateID][5];
-								if(onPress !=0 )
-								{
-									onPress();
-								}
+								currentlevelObj.array_of_plates[plateID].pressed = 1;
+								currentlevelObj.array_of_plates[plateID].onPressFunc();
 							}
 							else
 							{
@@ -2903,20 +2901,9 @@
 					}
 					
 					//check if item from container is clicked
-					if(container_div.style.display == "inline-block")
+					if(mouse_over_item_in_container > -1)
 					{
-						var item = container_item_clicked(x_pos,y_pos);
-						if(item)
-						{
-							//place container item at hand
-							pickable_at_hand = item;
-							//pickable_at_hand.mesh.visible = false;
-							pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
-							pickable_at_hand_icon.src = item.icon;
-
-							//dont do anything else if item is picked
-							return;
-						}
+						//this is handled in containerItemClick function that is called as item onclick function
 					}
 					
 					//button
@@ -2976,7 +2963,7 @@
 						//open container inventory, and player inventory
 						//play sound
 						audio_chest_open.play();
-						container_fill_gui(mouse_over_container);
+						container_fill_gui(mouse_over_container, currentlevelObj);
 						inventorySlide = 1;
 						DisplayInfoDiv("Chest opened..");
 						return;
@@ -3061,15 +3048,11 @@
 								if(pickable_at_hand.plated > -1)
 								{
 									//TODO: check if more items remain on the plate
-									gWeightOnThePlate = false;
 									currentlevelObj.array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
 									//console.log("lifting item off the plate!");
+									currentlevelObj.array_of_plates[pickable_at_hand.plated].pressed = 0;
 									plate_unclick_audio.play();
-									var onUnpress = plates_array[pickable_at_hand.plated][6];
-									if(onUnpress !=0 )
-									{
-										onUnpress();
-									}
+									currentlevelObj.array_of_plates[pickable_at_hand.plated].onUnpressFunc();
 									pickable_at_hand.plated = -1;
 								}
 								
