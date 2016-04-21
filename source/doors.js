@@ -287,18 +287,39 @@ function animateDoor(door, elapsed)
 
 function openDoor(door)
 {
+	if(door.open == 0)
+	{
+		door.animate = true;
+		door.audio_door.currentTime = 0;
+		door.audio_door.play();
+		door.open = 1; // open/close flag
+	}
+}
+
+function toggleDoor(door)
+{
+	if(door.open == 1)
+	{
+		door.open = 0; // open/close flag
+	}
+	else
+	{
+		door.open = 1; // open/close flag
+	}
 	door.animate = true;
 	door.audio_door.currentTime = 0;
 	door.audio_door.play();
-	door.open = 1; // open/close flag
 }
 
 function closeDoor(door)
 {
-	door.animate = true;
-	door.audio_door.currentTime = 0;
-	door.audio_door.play();
-	door.open = 0; // open/close flag
+	if(door.open == 1)
+	{
+		door.animate = true;
+		door.audio_door.currentTime = 0;
+		door.audio_door.play();
+		door.open = 0; // open/close flag
+	}
 }
 
 //savedDoorsArr is just array of indexes of opened doors..

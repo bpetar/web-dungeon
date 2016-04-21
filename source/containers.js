@@ -67,7 +67,7 @@ function load_containers (loader, levelObj) {
 		//load pickables
 		for(var p=0; p<levelObj.containersArr[i][6].length; p++)
 		{
-			var gameItem = load_item_by_id(levelObj.containersArr[i][6][p].itemID);
+			var gameItem = load_item_by_id(levelObj.containersArr[i][6][p].gameID);
 			chest.array_of_chest_pickables[levelObj.containersArr[i][6][p].slot-1].slot = levelObj.containersArr[i][6][p].slot;
 			chest.array_of_chest_pickables[levelObj.containersArr[i][6][p].slot-1].gObject = gameItem;
 		}

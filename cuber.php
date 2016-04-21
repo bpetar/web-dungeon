@@ -2294,13 +2294,7 @@
 							// and door are unlocked..
 							if(currentlevelObj.array_of_doors[i].openable == 1)
 							{
-								/*if((x>450)&&(x<500)&&(y>200)&&(y<250))*/ //location of button
-								currentlevelObj.array_of_doors[i].animate = true; //animate flag
-								//alert("ima!");
-								currentlevelObj.array_of_doors[i].audio_door.currentTime = 0;
-								currentlevelObj.array_of_doors[i].audio_door.play();
-								if(currentlevelObj.array_of_doors[i].open == 0) currentlevelObj.array_of_doors[i].open = 1; // open/close flag
-								else currentlevelObj.array_of_doors[i].open = 0;
+								toggleDoor(currentlevelObj.array_of_doors[i]);
 							}
 							else
 							{

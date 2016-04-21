@@ -78,5 +78,16 @@
 		"useHint":"...",
 		"useScript":"",
 		"type":"reusable"
+	},
+	"9":{
+		"id":9,
+		"name":"Healing Potion",
+		"desc":"Type: <span style='color:yellow;'>Healing potion.</span><br>",
+		"model":"models/healing.js",
+		"icon":"media/healing_potion.png",
+		"icon2":"media/gui/healing_potion_icon.png",
+		"useHint":"<span style='color:#5BE44C;'> HP +15. </span> Healing potion replenishes health!",
+		"useScript":"script_healingScript",
+		"type":"consumable"
 	}
 }

@@ -234,7 +234,7 @@ function niche_onItemAdd (nicheID, itemID)
 ///////////////////////////////////////////////////
 
 // id, name, model, x, z, icon, useage hint, use script, consumable
-var pickables_array = [[2,"Rock","models/rocky.js", 12,2,0, "media/rock.png", "This is too hard to chew.."], [3,"Healing Potion","models/healing.js", 9,0,0, "media/potion.png", "Healing potion replenishes 15 hp!", "script_healingScript", 1]];
+//var pickables_array = [];
 ////////////////////////////////////////////////
 
 
