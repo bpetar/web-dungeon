@@ -89,5 +89,27 @@
 		"useHint":"<span style='color:#5BE44C;'> HP +15. </span> Healing potion replenishes health!",
 		"useScript":"script_healingScript",
 		"type":"consumable"
+	},
+	"10":{
+		"id":10,
+		"name":"Ring",
+		"desc":"Type: <span style='color:yellow;'>Jewelry.</span><br>",
+		"model":"models/ring.js",
+		"icon":"media/ring.png",
+		"icon2":"media/gui/ring.png",
+		"useHint":"<span style='color:#5BE44C;'> HP +15. </span> One ring to make you look jewelry oriented.",
+		"useScript":"",
+		"type":"unusable"
+	},
+	"11":{
+		"id":11,
+		"name":"Scroll",
+		"desc":"Type: <span style='color:yellow;'>Rolled parchment.</span><br> (right click to read)",
+		"model":"models/scroll.js",
+		"icon":"media/scrolly.png",
+		"icon2":"media/gui/scroll_icon.png",
+		"useHint":"...",
+		"useScript":"script_showScroll_lvl2_msg",
+		"type":"reusable"
 	}
 }

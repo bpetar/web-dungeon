@@ -42,9 +42,9 @@ var ambient_music_file = 'maps/level2/media/mountain_path.mp3';*/
 //var tapestries_array = [["models/tapestry1.js", 16,0,2], ["models/tapestry1.js", 19,10,3], ["models/tapestry1.js", 19,12,3], ["models/tapestry1.js", 0,9,1], ["models/tapestry2.js", 6,2,3]];
 
 // id, name, model, icon, slot
-var container_pickables_array1 = [[1,"Ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
+//var container_pickables_array1 = [[1,"Ring","models/ring.js", "media/ring.png", 1, 0]];// id, name, model, icon, slot, picki
 // id, name, model, x, z, orientation, mesh
-var containers_array = [[1,"Chest","models/chest.js", 0,8,1, container_pickables_array1,0]];
+//var containers_array = [[1,"Chest","models/chest.js", 0,8,1, container_pickables_array1,0]];
 
 
 // id, model, x, z, pressed, script functions..
@@ -147,14 +147,14 @@ var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30
 
 
 // id, name, model, icon, useHint, script function onUse
-var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl2_msg"]];
+/*var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl2_msg"]];
 var niche_pickables_array2 = [];
 var niche_pickables_array3 = [];
 var niche_pickables_array4 = [];
-
+*/
 
 //x,z,rot,content, script, open, wallcover, script func niche_onItemAdd
-var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, 0, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, 0, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, 0, niche_onItemAdd]]; 
+/*var nicheArr = [[3,5,1,niche_pickables_array1], [20,11,0,niche_pickables_array2, 1, 0, niche_onItemAdd], [20,11,3,niche_pickables_array3, 1, 0, niche_onItemAdd], [20,11,2,niche_pickables_array4, 1, 0, niche_onItemAdd]]; 
 
 NICHES_CLOSED = 0;
 
@@ -224,7 +224,7 @@ function niche_onItemAdd (nicheID, itemID)
 		//play win sound
 		audio_win2.play();
 	}
-}
+}*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 

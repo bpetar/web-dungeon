@@ -3,6 +3,7 @@ function level1OnLoad()
 {
 	//info_dialog_div.style.display = "inline";
 }
+
 function level1OnFirstLoad()
 {
 	//info_dialog_div.style.display = "inline";

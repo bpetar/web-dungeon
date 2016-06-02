@@ -4,7 +4,7 @@
 //every time you add pickable to the game, it must be added to this array
 //if you have gameID of item and you need itemID you just type all_items_array[gameID]
 all_items_array = [  0,  0,  2,  3,  2,  5,  4,  6,  7,  8,
-                     6,  9
+                     6,  9, 10, 11
 				  ];
 
 function load_saved_pickables(loader, saved_pickables, levelObj) {
