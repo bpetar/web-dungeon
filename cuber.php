@@ -1289,12 +1289,15 @@
 				
 				//Key I = Inventory
 				//alert(event.keyCode);
-				/*if (event.keyCode == 73) {
+				if (event.keyCode == 73) {
 					//show inventory if hidden, hide elsewhere
-					
-					show_model(globalJSONloader, "models/spears.js", 10,7,0);
+					if(currentlevelObj.id == 2)
+						loadLevel(1,0);
+					else
+						loadLevel(2,0);
+					//show_model(globalJSONloader, "models/spears.js", 10,7,0);
 
-				}*/
+				}
 				
 				/*if (event.keyCode == 74) {
 					//clone_model();

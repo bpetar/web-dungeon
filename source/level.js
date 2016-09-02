@@ -1546,6 +1546,7 @@ function get_levels_cb(levelId,entrance)
 		nextlevelObj.array_of_stairs = [];
 		nextlevelObj.array_of_lights = [];
 		nextlevelObj.array_of_tapestries = [];
+		nextlevelObj.array_of_niches = [];
 		console.log("get_levels_cb: level acquired.. totalModels:" + levelJson["level"]["totalModels"]);
         
         //if this level is saved, we should load saved version.

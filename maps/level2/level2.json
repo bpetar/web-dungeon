@@ -24,7 +24,7 @@
 		"pillarsArr":[],
 		"propsArr":[],
 		"animatedPropsArr":[],
-		"nicheArr":[[3, 5, 1, [13]], [20,11,0,[]], [20,11,3,[]], [20,11,2,[]]],
+		"nicheArr":[[3, 5, 1, [13], 2016, "", 1, "level2Niche1_OnItemAdd", "level2Niche1_OnItemRemove", "level2Niche1_ToggleOpenClose"], [20,11,0,[], 2017, "", 1, "level2Niche2_OnItemAdd", "level2Niche2_OnItemRemove", "level2Niche2_ToggleOpenClose"], [20,11,3,[], 2018, "", 1, "level2Niche3_OnItemAdd", "level2Niche3_OnItemRemove", "level2Niche3_ToggleOpenClose"], [20,11,2,[], 2019, "", 1, "level2Niche4_OnItemAdd", "level2Niche4_OnItemRemove", "level2Niche4_ToggleOpenClose"]],
 		"monsterArr":[[121,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, [], "level1MonsterOnClick1", "level1MonsterOnItemClick1",1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]],
 		"pickablesArr":[{"gameID":10,"itemID":6,"x":120,"y":0,"z":20,"niched":-1,"plated":-1}, {"gameID":11,"itemID":9,"x":90,"y":0,"z":0,"niched":-1,"plated":-1}],
 		"lightsArr":[],

@@ -6,6 +6,21 @@ function missing_click_function()
 	console.log("Error: Missing on click function!");
 }
 
+function missing_niche_add_function()
+{
+	console.log("Error: Missing niche onItemAdd function!");
+}
+
+function missing_niche_remove_function()
+{
+	console.log("Error: Missing niche onItemRemove function!");
+}
+
+function missing_niche_toggle_function()
+{
+	console.log("Error: Missing niche onItemRemove function!");
+}
+
 function levelIsSaved(id)
 {
     if(arrayOfGameStories[currentStory][0].levels.hasOwnProperty("id"+id))

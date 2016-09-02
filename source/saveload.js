@@ -849,6 +849,7 @@ function load_level_JSON_cb_MainMenu(levelId,saved_data)
 		nextlevelObj.array_of_stairs = [];
 		nextlevelObj.array_of_lights = [];
 		nextlevelObj.array_of_tapestries = [];
+		nextlevelObj.array_of_niches = [];
 		console.log("get_levels_cb: level acquired.. totalModels:" + levelJson["level"]["totalModels"]);
 		loadLevelJsonSavedGameMainMenu(nextlevelObj,levelId,saved_data);
 	}

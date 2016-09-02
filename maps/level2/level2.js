@@ -2,7 +2,7 @@
 function level2OnLoad(levelObj)
 {
 	//info_dialog_div.style.display = "inline";
-	console.log("if levelObj.audio_ambient already exists, dont recreate it but restart playing");
+	console.log("is this adding new dom elements each time? do we need this like that?");
 	levelObj.audio_ambient = document.createElement('audio');
 	var source_ambient = document.createElement('source');
 	source_ambient.src = levelObj.ambient_music_file;
@@ -17,6 +17,7 @@ function level2OnLoad(levelObj)
 function level2OnFirstLoad()
 {
 	//info_dialog_div.style.display = "inline";
+	GLOBAL_LEVEL2_NICHES_CLOSED = 0;
 }
 
 //var levelNumber = 2;
@@ -95,7 +96,7 @@ function level2MonsterOnItemClick1(pickable)
 	//if golem is idle react to pickable click
 	if(this.mood == MONSTER_IDLE)
 	{
-		console.log("item on mosnter: " + pickable.name + ", id: " + pickable.gameID);
+		console.log("item on monster: " + pickable.name + ", id: " + pickable.gameID);
 		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
 		{
 			//add item to monster inventory, its his item now :)
@@ -147,14 +148,114 @@ function level2MonsterOnItemClick1(pickable)
 }
 
 //monster inventory items: id, name, model, icon, picki
-var monster_pickables_array = [[5,"Rock","models/rocky.js", "media/rock.png", 0], [6,"Rock","models/rocky.js", "media/rock.png", 0]];
+//var monster_pickables_array = [[5,"Rock","models/rocky.js", "media/rock.png", 0], [6,"Rock","models/rocky.js", "media/rock.png", 0]];
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array, MonsterOnClick1, MonsterOnItemClick1,0,90,90,138,140,179,0,"maps/level2/media/golem_wound.mp3","maps/level2/media/golem_death.mp3","maps/level2/media/golem_roar.mp3","maps/level2/media/golem_attack.mp3","maps/level2/media/golem_click.mp3"]];
+//var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array, MonsterOnClick1, MonsterOnItemClick1,0,90,90,138,140,179,0,"maps/level2/media/golem_wound.mp3","maps/level2/media/golem_death.mp3","maps/level2/media/golem_roar.mp3","maps/level2/media/golem_attack.mp3","maps/level2/media/golem_click.mp3"]];
 
 
 //niches and their content
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+var GLOBAL_LEVEL2_NICHES_CLOSED = 0;
+
+function level2Niche1_OnItemAdd(levelObj, nichi, gObject)
+{
+	console.log("niche added item: " + gObject.name);
+}
+
+function level2Niche1_OnItemRemove(levelObj, nichi, gObject)
+{
+	console.log("niche removed item: " + gObject.name);
+}
+
+function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
+{
+	console.log("niche added item: " + gObject.name);
+
+	//change state to closed
+	//nicheArr[nicheID][4] = 0;
+	nichi.opened = 0;
+
+	var nicheID = nichi.id;
+
+
+
+	//draw wall over niche
+	var map = THREE.ImageUtils.loadTexture( wall_texture_file );
+	map.wrapS = map.wrapT = THREE.RepeatWrapping;
+	map.anisotropy = 16;
+	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+	nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+	nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+	//nichi.coverModel.receiveShadow = true;
+	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; //y
+	if(nichi.orientation == 1) 
+	{
+		nichi.coverModel.position.x = (nichi.map_position.x-0.5)*SQUARE_SIZE+0.2; //x
+		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+	}
+	if(nichi.orientation == 3) 
+	{
+		nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.3; //x
+		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
+	}
+	if(nichi.orientation == 0) 
+	{
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.2; //z
+		nichi.coverModel.rotation.set(0, 0, 0);
+	}
+	if(nichi.orientation == 2) 
+	{
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, Math.PI, 0);
+	}
+	scene.add( nichi.coverModel );
+	
+	//remove pickable item from game, this niche is eating items!
+	console.log("removing pickable..." + itemID);
+	for (var i=0; i< levelObj.array_of_pickables.length; i++)
+	{
+		console.log("removing pickable in for..." + levelObj.array_of_pickables[i].gameID);
+		if(levelObj.array_of_pickables[i].gameID == itemID)
+		{
+			console.log("removing pickable..." + i);
+			levelObj.array_of_pickables[i].mesh.visible = false; //TODO: not really removing mesh from scene here, we should do it to free mem
+			levelObj.array_of_pickables.splice(i,1);
+		}
+	}
+	
+	GLOBAL_LEVEL2_NICHES_CLOSED++;
+	
+	if (GLOBAL_LEVEL2_NICHES_CLOSED == 3)
+	{
+		//open portal...
+		console.log("open portal...");
+		//load teleport();
+		//load_teleport();
+		//play win sound
+		audio_win2.play();
+	}
+
+}
+
+function level2Niche2_OnItemRemove(levelObj, levelObj, nicheID, gObject)
+{
+	console.log("niche removed item: " + gObject.name);
+}
+
+function level2Niche3_OnItemAdd()
+{
+	
+}
+
+function level2Niche4_OnItemAdd()
+{
+	
+}
 
 // id, name, model, icon, useHint, script function onUse
 /*var niche_pickables_array1 = [[4,"Scroll","models/scroll.js", "media/scrolly.png", "", "script_showScroll_lvl2_msg"]];
@@ -180,35 +281,35 @@ function niche_onItemAdd (nicheID, itemID)
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
-	nicheArr[nicheID][5] = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
-	nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
-	//nicheArr[nicheID][5].receiveShadow = true;
-	nicheArr[nicheID][5].position.y = 0.4*SQUARE_SIZE; //y
-	if(nicheArr[nicheID][2] == 1) 
+	nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+	nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+	//nichi.coverModel.receiveShadow = true;
+	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; //y
+	if(nichi.orientation == 1) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]-0.5)*SQUARE_SIZE+0.2; //x
-		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
-		nicheArr[nicheID][5].rotation.set(0, Math.PI/2, 0);
+		nichi.coverModel.position.x = (nichi.map_position.x-0.5)*SQUARE_SIZE+0.2; //x
+		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
 	}
-	if(nicheArr[nicheID][2] == 3) 
+	if(nichi.orientation == 3) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0]+0.5)*SQUARE_SIZE-0.3; //x
-		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1])*SQUARE_SIZE; //z
-		nicheArr[nicheID][5].rotation.set(0, -Math.PI/2, 0);
+		nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.3; //x
+		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
 	}
-	if(nicheArr[nicheID][2] == 0) 
+	if(nichi.orientation == 0) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0])*SQUARE_SIZE; //x
-		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]+0.5)*SQUARE_SIZE-0.2; //z
-		nicheArr[nicheID][5].rotation.set(0, 0, 0);
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.2; //z
+		nichi.coverModel.rotation.set(0, 0, 0);
 	}
-	if(nicheArr[nicheID][2] == 2) 
+	if(nichi.orientation == 2) 
 	{
-		nicheArr[nicheID][5].position.x = (nicheArr[nicheID][0])*SQUARE_SIZE; //x
-		nicheArr[nicheID][5].position.z = (nicheArr[nicheID][1]-0.5)*SQUARE_SIZE; //z
-		nicheArr[nicheID][5].rotation.set(0, Math.PI, 0);
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, Math.PI, 0);
 	}
-	scene.add( nicheArr[nicheID][5] );
+	scene.add( nichi.coverModel );
 	
 	//remove pickable item from game, this niche is eating items!
 	console.log("removing pickable..." + itemID);
