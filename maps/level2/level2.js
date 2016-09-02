@@ -139,7 +139,7 @@ function level2MonsterOnItemClick1(pickable)
 //monster inventory items: id, name, model, icon, picki
 var monster_pickables_array = [[5,"Rock","models/rocky.js", "media/rock.png", 0], [6,"Rock","models/rocky.js", "media/rock.png", 0]];
 // id, name, model, x, z, rot, hp, ac, attack
-var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array, MonsterOnClick1, MonsterOnItemClick1,0,90,90,138,140,179,0,"maps/level2/media/golem_wound.mp3","maps/level2/media/golem_death.mp3","maps/level2/media/golem_roar.mp3","maps/level2/media/golem_attack.mp3","maps/level2/media/golem_click.mp3"]];
+//var monster_array = [[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, monster_pickables_array, MonsterOnClick1, MonsterOnItemClick1,0,90,90,138,140,179,0,"maps/level2/media/golem_wound.mp3","maps/level2/media/golem_death.mp3","maps/level2/media/golem_roar.mp3","maps/level2/media/golem_attack.mp3","maps/level2/media/golem_click.mp3"]];
 
 
 //niches and their content

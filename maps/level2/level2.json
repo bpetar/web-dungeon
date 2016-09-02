@@ -25,7 +25,7 @@
 		"propsArr":[],
 		"animatedPropsArr":[],
 		"nicheArr":[[3, 5, 1, [13]], [20,11,0,[]], [20,11,3,[]], [20,11,2,[]]],
-		"monsterArr":[[121,"Crystal Elemental Pera","models/crystal.js", 11,14,3, 10, 35, 10, 5, [], "level1MonsterOnClick1", "level1MonsterOnItemClick1",1,25,25,50,50,75,1,"maps/level1/media/crystal_wound.mp3","maps/level1/media/crystal_death.mp3","maps/level1/media/crystal_roar.mp3","maps/level1/media/crystal_attack.mp3","maps/level1/media/crystal_click.mp3"]],
+		"monsterArr":[[2,"Rock Golem","models/golem.js", 20,11,3, 100, 35, 20, 30, [], "level2MonsterOnClick1", "level2MonsterOnItemClick1",0,90,90,138,140,179,0,"maps/level2/media/golem_wound.mp3","maps/level2/media/golem_death.mp3","maps/level2/media/golem_roar.mp3","maps/level2/media/golem_attack.mp3","maps/level2/media/golem_click.mp3"]],
 		"pickablesArr":[{"gameID":10,"itemID":6,"x":120,"y":0,"z":20,"niched":-1,"plated":-1}, {"gameID":11,"itemID":9,"x":90,"y":0,"z":0,"niched":-1,"plated":-1}],
 		"lightsArr":[],
 		"platesArr":[],
