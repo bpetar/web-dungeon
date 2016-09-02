@@ -1,7 +1,16 @@
 
-function level1OnLoad()
+function level1OnLoad(levelObj)
 {
 	//info_dialog_div.style.display = "inline";
+	console.log("levelObj.audio_ambient: " + levelObj.audio_ambient);
+	levelObj.audio_ambient = document.createElement('audio');
+	var source_ambient = document.createElement('source');
+	source_ambient.src = levelObj.ambient_music_file;
+	levelObj.audio_ambient.appendChild(source_ambient);
+	
+	levelObj.audio_ambient.volume = 0.5;
+	levelObj.audio_ambient.loop = true;
+	levelObj.audio_ambient.play();
 }
 
 function level1OnFirstLoad()

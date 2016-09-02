@@ -2,12 +2,59 @@
 
 // niches and their content..
 
+//used in temp level loading
+function reload_niches(levelObj)
+{
+	for(var i=0; i<levelObj.array_of_niches.length;i++)
+	{
+		//scene.add(levelObj.array_of_niches[i].mesh);
+	}
+}
+
 //load all niche pickables content
 function load_niches(loader, levelObj) {
 	
 	//nicheArr
 	for(var n=0; n<levelObj.nicheArr.length; n++)
 	{
+		var nichi = create_game_object();
+		nichi.onItemAddFn = missing_niche_add_function;
+		nichi.onItemRemoveFn = missing_niche_remove_function;
+		nichi.onToggleOpenCloseFn = missing_niche_toggle_function;
+
+		nichi.map_position.x = levelObj.nicheArr[n][0];
+		nichi.map_position.z = levelObj.nicheArr[n][1];
+		nichi.orientation = levelObj.nicheArr[n][2];
+
+		if(levelObj.nicheArr[n].length>4)
+		{
+			//new niche atributes
+			nichi.id = n;
+			nichi.gameID = levelObj.nicheArr[n][4];
+			nichi.name = "niche" + n;
+			nichi.coverModel = levelObj.nicheArr[n][5]; //if empty string "" use default niche model for that level
+			nichi.opened = levelObj.nicheArr[n][6];
+
+			//get js function from string
+			var onItemAddFn = window[levelObj.nicheArr[n][7]];
+			if(typeof onItemAddFn === 'function')
+			{
+				nichi.onItemAddFn = onItemAddFn;
+			}
+			var onItemRemoveFn = window[levelObj.nicheArr[n][8]];
+			if(typeof onItemRemoveFn === 'function')
+			{
+				nichi.onItemRemoveFn = onItemRemoveFn;
+			}
+			var onToggleOpenCloseFn = window[levelObj.nicheArr[n][9]];
+			if(typeof onToggleOpenCloseFn === 'function')
+			{
+				nichi.onToggleOpenCloseFn = onToggleOpenCloseFn;
+			}
+		}
+
+		levelObj.array_of_niches.push(nichi);
+
 		var niche_pickables = levelObj.nicheArr[n][3];
 		for(var i=0; i<niche_pickables.length; i++) {
 			
@@ -126,6 +173,20 @@ function load_niches(loader, levelObj) {
 function add_to_niche (levelObj,nicheID, gObject) {
 
 	//get niche from niche_array using nicheID
+	var nichi = 0;
+	for(var n = 0; n < levelObj.array_of_niches.length; n++)
+	{
+		nichi = levelObj.array_of_niches[n];
+		if(nichi.id == nicheID)
+		{
+			//found our niche
+			nichi.onItemAddFn(levelObj, nichi, gObject);
+			break;
+		}
+	}
+	
+
+	//add item to array
 	var niche_pickables = levelObj.nicheArr[nicheID][3];
 	var index = niche_pickables.length;
 	niche_pickables[index] = gObject.gameID;
@@ -182,17 +243,25 @@ function add_to_niche (levelObj,nicheID, gObject) {
         currentlevelObj.array_of_pickables.push(pickable_at_hand);
     }
 	gObject.niched = nicheID;
-	//if there is script function for adding item, call it
-	if(levelObj.nicheArr[nicheID].length>6)
-	{
-		var onItemAdd = levelObj.nicheArr[nicheID][6];
-		onItemAdd(nicheID, gObject.gameID);
-	}
 	
 }
 
 //add item to niche
 function remove_from_niche(levelObj,gObject) {
+
+	//get niche from niche_array using nicheID == gObject.niched
+	var nichi = 0;
+	for(var n = 0; n < levelObj.array_of_niches.length; n++)
+	{
+		nichi = levelObj.array_of_niches[n];
+		if(nichi.id == gObject.niched)
+		{
+			//found our niche
+			nichi.onItemRemoveFn(levelObj, gObject.niched, gObject);
+			break;
+		}
+	}
+
 	//get niche pickables
 	var niche_pickables = levelObj.nicheArr[gObject.niched][3];
 	//it happens so that object is marked niched but its not in niche.
