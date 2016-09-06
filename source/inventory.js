@@ -46,8 +46,6 @@ function loadInventory(inventoryArr)
 
 		add_to_inventory(inventory_item, inventoryArr[i].slot);
 		
-		//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
-		//currentlevelObj.array_of_pickables.push(inventory_item);
 	}
 }
 

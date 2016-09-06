@@ -59,8 +59,8 @@ function load_niches(loader, levelObj) {
 		for(var i=0; i<niche_pickables.length; i++) {
 			
 			var picki = create_game_object();
-			picki.gameID = niche_pickables[i];
-			picki.itemID =all_items_array[niche_pickables[i]];
+			picki.gameID = niche_pickables[i].gameID;
+			picki.itemID =all_items_array[niche_pickables[i].gameID];
 
 			var item = get_item_by_id(picki.itemID);
 			picki.name = item.name;

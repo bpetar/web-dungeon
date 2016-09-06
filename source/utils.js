@@ -137,9 +137,6 @@ function load_item_by_id(gameID)
 	
 	loadGameObjectCheck(loader, game_item);
 
-	//hmm i dont like this, but for now there is no other way to pick items from ground after loading game
-	//currentlevelObj.array_of_pickables.push(game_item);
-	
 	return game_item;
 }
 

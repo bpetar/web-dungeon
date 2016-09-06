@@ -187,6 +187,24 @@ function save_position()
             }
         }
 
+        //containers
+		save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"] = [];
+		for (var c=0; c<arrayOfVisitedLevels[vli].array_of_containers.length; c++)
+		{
+			save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"][c] = {};
+			save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"][c]["container_pickables"] = [];
+			var cp_index = 0;
+			for (var cp=0; cp<arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables.length; cp++)
+			{
+				///
+				if(arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].gObject != 0)
+				{
+					save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"][c]["container_pickables"][cp_index] = {"slot":cp, "gObject":arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
+					cp_index++;
+				}
+			}
+		}
+
         //monsters:
         save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["monsters"] = [];
         var mindex = 0;
@@ -251,6 +269,26 @@ function save_position()
                 j++;
             }
         }
+
+
+		//containers
+		save_data["levels"]["id"+currentlevelObj.id]["containers"] = [];
+		for (var c=0; c<currentlevelObj.array_of_containers.length; c++)
+		{
+			save_data["levels"]["id"+currentlevelObj.id]["containers"][c] = {};
+			save_data["levels"]["id"+currentlevelObj.id]["containers"][c]["container_pickables"] = [];
+			var cp_index = 0;
+			for (var cp=0; cp<currentlevelObj.array_of_containers[c].array_of_chest_pickables.length; cp++)
+			{
+				//save container slot only if it has object 
+				if(currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject != 0)
+				{
+					save_data["levels"]["id"+currentlevelObj.id]["containers"][c]["container_pickables"][cp_index] = {"slot":cp, "gObject":currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
+					cp_index++;
+				}
+			}
+		}
+
 
         //monsters:
         save_data["levels"]["id"+currentlevelObj.id]["monsters"] = [];
@@ -394,62 +432,57 @@ function newGameOnSameLevel()
 	
 	
 	//niches, well one niche item on first level:
-	//nicheUrr is hack to make first level new game load niche content.
-	//nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
-	//I anticipate this problem will not exist on following levels as this function is only called on first level
-	var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
-	for(var i=0; i<niche_pickables.length; i++) 
+	for(var n=0; n<currentlevelObj.nicheArr.length; n++) 
 	{
-		//for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
+		var niche_pickables = currentlevelObj.nicheArr[n][3]; 
+		for(var i=0; i<niche_pickables.length; i++) 
 		{
-			//if(currentlevelObj.array_of_pickables[j].gameID == niche_pickables[i])
+			//for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
 			{
-				var nicki = create_game_object();
-				nicki.gameID = niche_pickables[i];
-				nicki.itemID =all_items_array[niche_pickables[i]];
-
-				var item = get_item_by_id(nicki.itemID);
-				nicki.name = item.name;
-				nicki.description = item.desc;
-				nicki.model = item.model;
-				
-				nicki.icon = item.icon;
-				nicki.icon2 = item.icon2;
-				nicki.useHint = item.useHint;
-				
-				nicki.useScript = item.useScript;
-				
-				nicki.consumable = (item.type == "consumable")?true:false;
-				
-				nicki.type = item.type;
-				
-				if(item.type == "weapon")
+				//if(currentlevelObj.array_of_pickables[j].gameID == niche_pickables[i])
 				{
-					nicki.weapon_type = item.weapon_prop.type;
-					nicki.weapon_speed = item.weapon_prop.speed;
-					nicki.weapon_dmg = item.weapon_prop.damage;
-					nicki.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
-					nicki.weapon_attack_bonus = item.weapon_prop.attack_bonus;
-					//TODO:
-					//"hand":"one", "damage_type":"piercing",
-				}
-				var niche_item_uffset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
-				var emover = -1+i/2;
-				nicki.position.x = currentlevelObj.nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
-				nicki.position.z = currentlevelObj.nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
-				nicki.position.y = 4.0+niche_item_uffset.y;
-				//nicki.mesh.position.x = currentlevelObj.nicheArr[0][0]*SQUARE_SIZE-6+niche_item_uffset.x;
-				//nicki.mesh.position.z = currentlevelObj.nicheArr[0][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
-				//nicki.mesh.position.y = 4.0+niche_item_uffset.y;
-				//nicki.mesh.visible = true;
-				nicki.niched = 0;
-				nicki.plated = -1; //flag indicating if pickable is on the plate
-			
-			
-				//loader.load( picki.model, picki.loadObject(picki) );
-				loadGameObjectCheck(globalJSONloader, nicki);
+					var nicki = create_game_object();
+					nicki.gameID = niche_pickables[i];
+					nicki.itemID =all_items_array[niche_pickables[i]];
+
+					var item = get_item_by_id(nicki.itemID);
+					nicki.name = item.name;
+					nicki.description = item.desc;
+					nicki.model = item.model;
+					
+					nicki.icon = item.icon;
+					nicki.icon2 = item.icon2;
+					nicki.useHint = item.useHint;
+					
+					nicki.useScript = item.useScript;
+					
+					nicki.consumable = (item.type == "consumable")?true:false;
+					
+					nicki.type = item.type;
+					
+					if(item.type == "weapon")
+					{
+						nicki.weapon_type = item.weapon_prop.type;
+						nicki.weapon_speed = item.weapon_prop.speed;
+						nicki.weapon_dmg = item.weapon_prop.damage;
+						nicki.weapon_dmg_bonus = item.weapon_prop.damage_bonus;
+						nicki.weapon_attack_bonus = item.weapon_prop.attack_bonus;
+						//TODO:
+						//"hand":"one", "damage_type":"piercing",
+					}
+					var niche_item_uffset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
+					var emover = -1+i/2;
+					nicki.position.x = currentlevelObj.nicheArr[n][0]*SQUARE_SIZE-6+niche_item_uffset.x;
+					nicki.position.z = currentlevelObj.nicheArr[n][1]*SQUARE_SIZE+emover+niche_item_uffset.z;
+					nicki.position.y = 4.0+niche_item_uffset.y;
+					nicki.niched = 0;
+					nicki.plated = -1; //flag indicating if pickable is on the plate
 				
-				currentlevelObj.array_of_pickables.push(nicki);
+					//loader.load( picki.model, picki.loadObject(picki) );
+					loadGameObjectCheck(globalJSONloader, nicki);
+					
+					currentlevelObj.array_of_pickables.push(nicki);
+				}
 			}
 		}
 	}
@@ -730,6 +763,9 @@ function loadGameOnSameLevel()
 		}
 	}
 		
+	//clear current container content
+	//load saved container content
+	
 	//clear current pickables
 	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
@@ -1013,7 +1049,7 @@ function load_level_obj_saved(level_obj,saved_data)
 	load_buttons(globalJSONloader, level_obj);
 	
 	//load chests
-	load_containers(globalJSONloader, level_obj);
+	load_saved_containers(globalJSONloader, saved_data.levels["id"+current_level].containers, level_obj);
 
 	//props
 	load_props(globalJSONloader, level_obj);
@@ -1022,14 +1058,14 @@ function load_level_obj_saved(level_obj,saved_data)
 	load_animated_props(globalJSONloader, level_obj);
 
 	//monsters
-	load_saved_monsters(globalJSONloader, level_obj, arrayOfGameStories[0][0].levels["id"+current_level].monsters);
+	load_saved_monsters(globalJSONloader, level_obj, save_data.levels["id"+current_level].monsters);
 	
 	//pickables
 	load_saved_pickables(globalJSONloader, saved_data.levels["id"+current_level].pickables, level_obj);
 
 	//niches - for some reason we dont need to reload niches. they are there with pickables.
 	//load_niches(globalJSONloader, level_obj);
-	
+
 	//keyholes
 	load_keyholes(globalJSONloader, level_obj);
 	

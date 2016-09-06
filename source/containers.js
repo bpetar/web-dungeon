@@ -12,7 +12,74 @@ function reload_containers(levelObj)
 	}
 }
 
-//load chests on the map
+
+//load saved chests on the map
+function load_saved_containers (loader, saved_containers, levelObj) 
+{
+	for(var i=0; i<levelObj.containersArr.length; i++) 
+	{
+		var chest = create_game_object();
+		chest.gameID = levelObj.containersArr[i][0];
+		chest.name = levelObj.containersArr[i][1];
+		chest.model = levelObj.containersArr[i][2];
+		
+		chest.xpos = levelObj.containersArr[i][3];
+		chest.ypos = levelObj.containersArr[i][4];
+				
+		//position depends on orientation
+		chest.orientation = levelObj.containersArr[i][5];
+		if(chest.orientation == 0)
+		{
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE+4;
+			chest.rotation.y = 0;
+		}
+		else if(chest.orientation == 1)
+		{
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE-4;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE;
+			chest.rotation.y = -Math.PI/2;
+		}
+		else if(chest.orientation == 2)
+		{
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE-4;
+			chest.rotation.y = -Math.PI;
+		}
+		else if(chest.orientation == 3)
+		{
+			chest.position.x = levelObj.containersArr[i][3]*SQUARE_SIZE+4;
+			chest.position.z = levelObj.containersArr[i][4]*SQUARE_SIZE;
+			chest.rotation.y = Math.PI/2;
+		}
+		
+		//loader.load( chest.model, chest.loadObject(chest) );
+		loadGameObjectCheck(loader, chest);
+		
+		chest.array_of_chest_pickables = [];
+
+		//create container slot objects. they were dynamic at first, 
+		//but multiple item take/put would create new, and i think they were leaked eventually
+		for(var gi=0; gi<NUM_CONTAINER_ROWS*NUM_CONTAINER_COLS; gi++)
+		{
+			var container_array_item = {"slot":-1,"gObject":0};
+			chest.array_of_chest_pickables.push(container_array_item);
+		}
+		
+		//load pickables
+		for(var p=0; p<saved_container[i].container_pickables.length; p++)
+		{
+			var gameItem = load_item_by_id(saved_container[i].container_pickables[p].gameID);
+			chest.array_of_chest_pickables[saved_container[i].container_pickables[p].slot-1].slot = saved_container[i].container_pickables[p].slot;
+			chest.array_of_chest_pickables[saved_container[i].container_pickables[p].slot-1].gObject = gameItem;
+		}
+		
+		levelObj.array_of_containers.push(chest);
+	}
+}
+
+
+//load chests on the map (first time entering map, loading from json)
 function load_containers (loader, levelObj) {
 
 	for(var i=0; i<levelObj.containersArr.length; i++) {
@@ -60,7 +127,7 @@ function load_containers (loader, levelObj) {
 		//but multiple item take/put would create new, and i think they were leaked eventually
 		for(var gi=0; gi<NUM_CONTAINER_ROWS*NUM_CONTAINER_COLS; gi++)
 		{
-			var container_array_item = new Object();
+			var container_array_item = {"slot":-1,"gObject":0};
 			chest.array_of_chest_pickables.push(container_array_item);
 		}
 		
@@ -82,17 +149,14 @@ function containerItemPut(slot)
 	console.log("heee");
 	
 	//check if there is item in container in that slot
-	//for(var i=0; i<currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.length; i++)
+	if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject != 0)
 	{
-		if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject != 0)
-		{
-			//get item
-			item = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
-			//remove from container
-			//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.splice(i,1);
-			//document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
-			//break;
-		}
+		//get item
+		item = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
+		//remove from container
+		//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.splice(i,1);
+		//document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
+		//break;
 	}
 	
 	//var container_array_item = new Object();
