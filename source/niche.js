@@ -180,7 +180,6 @@ function add_to_niche (levelObj,nicheID, gObject) {
 		if(nichi.id == nicheID)
 		{
 			//found our niche
-			nichi.onItemAddFn(levelObj, nichi, gObject);
 			break;
 		}
 	}
@@ -244,6 +243,8 @@ function add_to_niche (levelObj,nicheID, gObject) {
     }
 	gObject.niched = nicheID;
 	
+	if(nichi)
+		nichi.onItemAddFn(levelObj, nichi, gObject);
 }
 
 //add item to niche

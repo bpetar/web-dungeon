@@ -9,7 +9,7 @@ function level2OnLoad(levelObj)
 	levelObj.audio_ambient.appendChild(source_ambient);
 	
 	levelObj.audio_ambient.volume = 0.5;
-	levelObj.audio_ambient.loop = true;
+	levelObj.audio_ambient.loop = false;
 	levelObj.audio_ambient.play();
 
 }
@@ -97,7 +97,7 @@ function level2MonsterOnItemClick1(pickable)
 	if(this.mood == MONSTER_IDLE)
 	{
 		console.log("item on monster: " + pickable.name + ", id: " + pickable.gameID);
-		if(pickable.gameID == 1) //1 is ID of ring in container on this level!
+		if(pickable.gameID == 12) //12 is ID of ring in container on this level!
 		{
 			//add item to monster inventory, its his item now :)
 			DisplayInfoDiv("Rock Golem takes ring from you!");
@@ -160,28 +160,23 @@ var GLOBAL_LEVEL2_NICHES_CLOSED = 0;
 
 function level2Niche1_OnItemAdd(levelObj, nichi, gObject)
 {
-	console.log("niche added item: " + gObject.name);
+	console.log("niche1 added item: " + gObject.name);
 }
 
 function level2Niche1_OnItemRemove(levelObj, nichi, gObject)
 {
-	console.log("niche removed item: " + gObject.name);
+	console.log("niche1 removed item: " + gObject.name);
 }
 
 function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
 {
-	console.log("niche added item: " + gObject.name);
+	console.log("niche2 added item: " + gObject.name);
 
 	//change state to closed
-	//nicheArr[nicheID][4] = 0;
 	nichi.opened = 0;
 
-	var nicheID = nichi.id;
-
-
-
 	//draw wall over niche
-	var map = THREE.ImageUtils.loadTexture( wall_texture_file );
+	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
 	map.wrapS = map.wrapT = THREE.RepeatWrapping;
 	map.anisotropy = 16;
 	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
@@ -189,40 +184,139 @@ function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
 	nichi.coverModel.rotation.set(0, Math.PI/2, 0);
 	//nichi.coverModel.receiveShadow = true;
 	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; //y
-	if(nichi.orientation == 1) 
-	{
-		nichi.coverModel.position.x = (nichi.map_position.x-0.5)*SQUARE_SIZE+0.2; //x
-		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
-		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
-	}
-	if(nichi.orientation == 3) 
-	{
-		nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.3; //x
-		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
-		nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
-	}
-	if(nichi.orientation == 0) 
-	{
-		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
-		nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.2; //z
-		nichi.coverModel.rotation.set(0, 0, 0);
-	}
-	if(nichi.orientation == 2) 
-	{
-		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
-		nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE; //z
-		nichi.coverModel.rotation.set(0, Math.PI, 0);
-	}
+	//if(nichi.orientation == 0) 
+	nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+	nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.2; //z
+	nichi.coverModel.rotation.set(0, 0, 0);
 	scene.add( nichi.coverModel );
 	
 	//remove pickable item from game, this niche is eating items!
-	console.log("removing pickable..." + itemID);
+	//console.log("removing pickable..." + gObject.gameID);
 	for (var i=0; i< levelObj.array_of_pickables.length; i++)
 	{
-		console.log("removing pickable in for..." + levelObj.array_of_pickables[i].gameID);
-		if(levelObj.array_of_pickables[i].gameID == itemID)
+		//console.log("removing pickable in for..." + levelObj.array_of_pickables[i].gameID);
+		if(levelObj.array_of_pickables[i].gameID == gObject.gameID)
 		{
-			console.log("removing pickable..." + i);
+			//console.log("removing pickable..." + i);
+			levelObj.array_of_pickables[i].mesh.visible = false; //TODO: not really removing mesh from scene here, we should do it to free mem
+			levelObj.array_of_pickables.splice(i,1);
+		}
+	}
+
+
+	GLOBAL_LEVEL2_NICHES_CLOSED++;
+	
+	if (GLOBAL_LEVEL2_NICHES_CLOSED == 3)
+	{
+		//open portal...
+		console.log("open portal...");
+		//load teleport();
+		//load_teleport();
+		//play win sound
+		audio_win2.play();
+		DisplayInfoDiv(" ..and third niche activated something!");
+	}
+	else
+	{
+		DisplayInfoDiv(" ..and niche suddenly closed!");
+	}
+
+}
+
+function level2Niche2_OnItemRemove(levelObj, nichi, gObject)
+{
+	console.log("niche2 removed item: " + gObject.name);
+}
+
+function level2Niche3_OnItemAdd(levelObj, nichi, gObject)
+{
+	console.log("niche3 added item: " + gObject.name);
+
+	//change state to closed
+	nichi.opened = 0;
+
+	//draw wall over niche
+	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
+	map.wrapS = map.wrapT = THREE.RepeatWrapping;
+	map.anisotropy = 16;
+	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+	nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+	nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+	//nichi.coverModel.receiveShadow = true;
+	nichi.coverModel.position.y = 0.4*SQUARE_SIZE;
+	//if(nichi.orientation == 3) 
+	nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.3; //x
+	nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+	nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
+	scene.add( nichi.coverModel );
+	
+	//remove pickable item from game, this niche is eating items!
+	//console.log("removing pickable..." + gObject.gameID);
+	for (var i=0; i< levelObj.array_of_pickables.length; i++)
+	{
+		//console.log("removing pickable in for..." + levelObj.array_of_pickables[i].gameID);
+		if(levelObj.array_of_pickables[i].gameID == gObject.gameID)
+		{
+			//console.log("removing pickable..." + i);
+			levelObj.array_of_pickables[i].mesh.visible = false; //TODO: not really removing mesh from scene here, we should do it to free mem
+			levelObj.array_of_pickables.splice(i,1);
+		}
+	}
+
+	GLOBAL_LEVEL2_NICHES_CLOSED++;
+	
+	if (GLOBAL_LEVEL2_NICHES_CLOSED == 3)
+	{
+		//open portal...
+		console.log("open portal...");
+		//load teleport();
+		//load_teleport();
+		//play win sound
+		audio_win2.play();
+		DisplayInfoDiv(" ..and third niche activated something!");
+	}
+	else
+	{
+		DisplayInfoDiv(" ..and what just happened?!");
+	}
+
+}
+
+function level2Niche3_OnItemRemove(levelObj, nichi, gObject)
+{
+	console.log("niche3 removed item: " + gObject.name);
+}
+
+function level2Niche4_OnItemAdd(levelObj, nichi, gObject)
+{
+	console.log("niche4 added item: " + gObject.name);
+
+	//change state to closed
+	nichi.opened = 0;
+
+	//draw wall over niche
+	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
+	map.wrapS = map.wrapT = THREE.RepeatWrapping;
+	map.anisotropy = 16;
+	var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+	nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+	nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+	//nichi.coverModel.receiveShadow = true;
+	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; 
+	//if(nichi.orientation == 2) 
+	nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+	nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE; //z
+	nichi.coverModel.rotation.set(0, Math.PI, 0);
+	scene.add( nichi.coverModel );
+	
+	//remove pickable item from game, this niche is eating items!
+	//console.log("removing pickable..." + gObject.gameID);
+	for (var i=0; i< levelObj.array_of_pickables.length; i++)
+	{
+		//console.log("removing pickable in for..." + levelObj.array_of_pickables[i].gameID);
+		if(levelObj.array_of_pickables[i].gameID == gObject.gameID)
+		{
+			//console.log("removing pickable..." + i);
 			levelObj.array_of_pickables[i].mesh.visible = false; //TODO: not really removing mesh from scene here, we should do it to free mem
 			levelObj.array_of_pickables.splice(i,1);
 		}
@@ -238,23 +332,18 @@ function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
 		//load_teleport();
 		//play win sound
 		audio_win2.play();
+		DisplayInfoDiv(" ..and third niche activated something!");
+	}
+	else
+	{
+		DisplayInfoDiv(" ..and niche ate my item!");
 	}
 
 }
 
-function level2Niche2_OnItemRemove(levelObj, levelObj, nicheID, gObject)
+function level2Niche4_OnItemRemove(levelObj, nichi, gObject)
 {
-	console.log("niche removed item: " + gObject.name);
-}
-
-function level2Niche3_OnItemAdd()
-{
-	
-}
-
-function level2Niche4_OnItemAdd()
-{
-	
+	console.log("niche4 removed item: " + gObject.name);
 }
 
 // id, name, model, icon, useHint, script function onUse
