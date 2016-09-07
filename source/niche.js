@@ -169,6 +169,19 @@ function load_niches(loader, levelObj) {
 	}
 }
 
+//get_number_of_items_in_niche(nicheID)
+function get_number_of_items_in_niche(levelObj, nicheID)
+{
+	var numberOfItemsInNiche = 0;
+	for (var i = 0; i < levelObj.array_of_pickables.length; i++)
+	{
+		if(levelObj.array_of_pickables[i].niched == nicheID)
+			numberOfItemsInNiche++;
+	}
+
+	return numberOfItemsInNiche;
+}
+
 //add item to niche
 function add_to_niche (levelObj,nicheID, gObject) {
 
@@ -187,7 +200,7 @@ function add_to_niche (levelObj,nicheID, gObject) {
 
 	//add item to array
 	//var niche_pickables = levelObj.nicheArr[nicheID][3];
-	//var index = niche_pickables.length;
+	var index = get_number_of_items_in_niche(levelObj, nicheID);
 	//niche_pickables[index] = gObject.gameID;
 	
 	var mover = -1+index/2;
