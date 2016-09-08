@@ -13,6 +13,23 @@ function reload_containers(levelObj)
 }
 
 
+//load saved chest content
+function load_saved_containers_content (loader, saved_containers, levelObj) 
+{
+	for (var c = 0; c < levelObj.array_of_containers.length; c++)
+	{
+		var chest = levelObj.array_of_containers[c];
+
+		//load pickables
+		for(var p=0; p<saved_containers[c].container_pickables.length; p++)
+		{
+			var gameItem = load_item_by_id(saved_containers[c].container_pickables[p].gameID);
+			chest.array_of_chest_pickables[saved_containers[c].container_pickables[p].slot-1].slot = saved_containers[c].container_pickables[p].slot;
+			chest.array_of_chest_pickables[saved_containers[c].container_pickables[p].slot-1].gObject = gameItem;
+		}
+	}
+}
+
 //load saved chests on the map
 function load_saved_containers (loader, saved_containers, levelObj) 
 {
@@ -67,11 +84,11 @@ function load_saved_containers (loader, saved_containers, levelObj)
 		}
 		
 		//load pickables
-		for(var p=0; p<saved_container[i].container_pickables.length; p++)
+		for(var p=0; p<saved_containers[i].container_pickables.length; p++)
 		{
-			var gameItem = load_item_by_id(saved_container[i].container_pickables[p].gameID);
-			chest.array_of_chest_pickables[saved_container[i].container_pickables[p].slot-1].slot = saved_container[i].container_pickables[p].slot;
-			chest.array_of_chest_pickables[saved_container[i].container_pickables[p].slot-1].gObject = gameItem;
+			var gameItem = load_item_by_id(saved_containers[i].container_pickables[p].gameID);
+			chest.array_of_chest_pickables[saved_containers[i].container_pickables[p].slot-1].slot = saved_containers[i].container_pickables[p].slot;
+			chest.array_of_chest_pickables[saved_containers[i].container_pickables[p].slot-1].gObject = gameItem;
 		}
 		
 		levelObj.array_of_containers.push(chest);
@@ -234,7 +251,15 @@ function container_fill_gui(containerID, levelObj)
 			{
 				slot_icon.src = gameItem.icon2;
 				slot_icon.style.cursor = 'pointer';
-				//slot_icon.src = "media/gui/key.png";//item.icon;
+			}
+		}
+		else
+		{
+			var slot_icon = document.getElementById("container_slots" + (c+1) + "_item_icon");
+			if(slot_icon)
+			{
+				slot_icon.src = "media/gui/slot.png";
+				slot_icon.style.cursor = 'default';
 			}
 		}
 	}

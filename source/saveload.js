@@ -199,7 +199,7 @@ function save_position()
 				///
 				if(arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].gObject != 0)
 				{
-					save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"][c]["container_pickables"][cp_index] = {"slot":cp, "gObject":arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
+					save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["containers"][c]["container_pickables"][cp_index] = {"slot":arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].slot, "gameID":arrayOfVisitedLevels[vli].array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
 					cp_index++;
 				}
 			}
@@ -283,7 +283,7 @@ function save_position()
 				//save container slot only if it has object 
 				if(currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject != 0)
 				{
-					save_data["levels"]["id"+currentlevelObj.id]["containers"][c]["container_pickables"][cp_index] = {"slot":cp, "gObject":currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
+					save_data["levels"]["id"+currentlevelObj.id]["containers"][c]["container_pickables"][cp_index] = {"slot":currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].slot, "gameID":currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject.gameID};
 					cp_index++;
 				}
 			}
@@ -420,7 +420,20 @@ function newGameOnSameLevel()
 			}
 		}
 	}
-		
+	
+	//clear current container content
+	for(var c=0; c<currentlevelObj.array_of_containers.length;c++)
+	{
+		for(var cp=0; cp<currentlevelObj.array_of_containers[c].array_of_chest_pickables.length;cp++)
+		{
+			currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].slot = -1;
+			currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject = 0;
+		}
+	}
+	//load saved container content
+	load_saved_containers_content(globalJSONloader, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].containers, level_obj);
+
+
 	//clear current pickables
 	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
@@ -762,10 +775,19 @@ function loadGameOnSameLevel()
 			}
 		}
 	}
-		
-	//clear current container content
-	//load saved container content
 	
+	//clear current container content
+	for(var c=0; c<currentlevelObj.array_of_containers.length;c++)
+	{
+		for(var cp=0; cp<currentlevelObj.array_of_containers[c].array_of_chest_pickables.length;cp++)
+		{
+			currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].slot = -1;
+			currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject = 0;
+		}
+	}
+	//load saved container content
+	load_saved_containers_content(globalJSONloader, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].containers, currentlevelObj);
+
 	//clear current pickables
 	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
@@ -1058,7 +1080,7 @@ function load_level_obj_saved(level_obj,saved_data)
 	load_animated_props(globalJSONloader, level_obj);
 
 	//monsters
-	load_saved_monsters(globalJSONloader, level_obj, save_data.levels["id"+current_level].monsters);
+	load_saved_monsters(globalJSONloader, level_obj, saved_data.levels["id"+current_level].monsters);
 	
 	//pickables
 	load_saved_pickables(globalJSONloader, saved_data.levels["id"+current_level].pickables, level_obj);
@@ -1208,7 +1230,7 @@ function newGame()
 	player1_face_div.style.opacity = "1.0";
 	
 	hide_message();
-	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
+	//show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
 
 	game_quirks.q1 = 0;
 	game_quirks.q2 = 0;
