@@ -503,6 +503,7 @@ New levels:
      + BUG: new game, new game, go to level 2, save -> error
      + new game -> new game -> arrayOfVisitedLevels gets empty object kao prvi clan niza. 
         nove i ucitane igre prvo postavljaju arrayOfVisitedLevels na prazan niz, a posle zovu funkcije koje ucitavaju (neucitane) nivoe preko callbacka nakon json download. Te funkcije dodaju trenutni nivo u arrayOfVisitedLevels jer su to iste funkcije koje se pozivaju kad se prelazi sa nivoa na nivo.
+     - BUG: load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
 
 
    - monster add IDLE_ANIM_DURATION to monster property not level property

@@ -24,13 +24,13 @@ how do we code it?
 	{
 		id //simple number
 		array levelBalls[{position,color}] //position of balls and their color
-		array levelExits[{position,idOfNextLevel] //position of exit and where it leads to
-		array levelEntrances[{position,rotation}] //position of player and facing upon level entrance
+		array levelExits[{position,idOfNextLevel,idOfNextLevelEntrance}] //position of exit and where it leads to
+		array levelEntrances[{id,position,rotation}] //position of player and facing upon level entrance
 	}
 	
 Lets say our game has 20 levels, in real life we would store these in 20 different files, but for our very simple example we will use just one array with 20 elements:
 gameLevelsArray = [
-	{id:1, levelBalls:[{[2,3],red},{[4,6],blue}], levelExits:[{[3,3],2}], levelEntrances:[{[1,2],90}]},
+	{id:1, levelBalls:[{[2,3],red},{[4,6],blue}], levelExits:[{[3,3],2,1}], levelEntrances:[{1,[1,2],90}]},
 	{id:2, levelBalls:[], levelExits:[], levelEntrances:[]},
 	{id:3, levelBalls:[], levelExits:[], levelEntrances:[]},
 	{id:4, levelBalls:[], levelExits:[], levelEntrances:[]},
@@ -51,8 +51,8 @@ function loadLevel(id, entrance)
 {
 	gameState = GAME_STATE_LOADING;
 	
-	//if game just started, no need to cleanup previous level data
-	if(currentLevelPointer != 0)
+	//if game hasn't just started, we need to cleanup previous level data
+	if(currentLevelPointer != null)
 	{
 		//save current level - here we just push pointer to our level object to an array
 		arrayOfVisitedLevels.push(currentLevelPointer);
@@ -92,6 +92,7 @@ In this example we dont address how player moves around and changes the balls co
 - After that, he goes back to third level, then fourth and fifth and finally saves again before exiting the game.
 
 We want to have 5 levels saved, so that when player loads the game, he can go back and see those levels exectly as he left them.
+
 While player was playing we decided to hold visited levels in dynamic variable, in memory. When he presses save, it would be nice to store those visited levels in permanent storage and release dynamic objects from RAM. So first save is pretty straight forward - he hits the save - we save three levels, and release first and second level from memory (third one is still being used). When player wants to move to second level again we have to check first if we have that level in RAM, if not we have to check if that level was visited before, and if it is - we load it from saved file. So now player wants to hit save button second time. He is at the second level but has third and second changed a little, so we have to save that too. If he saves over the same game, we can overwrite those levels in saved file. If he saves new game slot, we have to keep previously saved data in case he wants to load that first saved game later, so we create new save file, but what do we put in second save file - just second and third level or all levels from the start? By the time he hits save button third time, we understood we need to go back one step and discuss save position some more.
 
 Save slots.
