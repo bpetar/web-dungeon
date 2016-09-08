@@ -42,6 +42,11 @@ function init_audio()
 	var sourcec = document.createElement('source');
 	sourcec.src = 'media/chest.mp3';
 	audio_chest_open.appendChild(sourcec);
+
+	audio_chest_closed = document.createElement('audio');
+	var sourcecc = document.createElement('source');
+	sourcecc.src = 'media/shut.mp3';
+	audio_chest_closed.appendChild(sourcecc);
 	
 	audio_player_death = document.createElement('audio');
 	var source_apd = document.createElement('source');

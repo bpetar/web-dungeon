@@ -273,36 +273,6 @@ function game_loop() {
 				}
 			}
 			
-			
-			//slide inventory up
-			/*if(inventorySlide == 1)
-			{
-				inventory_div_vertical_pos += elapsed/3;
-				inventory_div.style.bottom = inventory_div_vertical_pos + 'px';
-				//alert(inventory_div.style.bottom);
-				if(inventory_div_vertical_pos > INVENTORY_POS_SHOWN)
-				{
-					inventory_div.style.bottom = INVENTORY_POS_SHOWN + 'px';
-					inventory_div_vertical_pos = INVENTORY_POS_SHOWN;
-					inventorySlide = 0;
-				}
-				//inventory_div.style.top = '100px';
-			}
-			if(inventorySlide == -1)
-			{
-				inventory_div_vertical_pos -= elapsed/3;
-				inventory_div.style.bottom = inventory_div_vertical_pos +'px';
-				//alert(inventory_div.style.bottom);
-				if(inventory_div_vertical_pos < INVENTORY_POS_HIDDEN)
-				{
-					inventory_div.style.bottom = INVENTORY_POS_HIDDEN + 'px';
-					inventory_div_vertical_pos = INVENTORY_POS_HIDDEN;
-					inventorySlide = 0;
-				}
-				//inventory_div.style.top = '100px';
-			}*/
-			
-			
 			//animate hole fall
 			if(holeFallen)
 			{

@@ -478,7 +478,7 @@ New levels:
      - sacuvaj win area state
      - sacuvaj plate state (gStandingOnPlate?)
      - sacuvaj button state
-     - sacuvaj container state - open/close
+     + sacuvaj container state - open/close - nek uvek bude close, samo skloni gui kontejnera
 
   + namestiti sve komponente drugog nivoa da rade
    + pretabaj u json
@@ -488,16 +488,21 @@ New levels:
    + niches
    + monster
    + sklanjam item id iz liste pickables jer je redundant
-   - grupa objekata koji imaju pickables: containers, monsters, npc - njihovi static arrays treba da postanu dinamic, kod svih isto.
-   - niche nemaju svoj niz dinamic objekata nego se oni tretiraju kao pickables koji leze na zemlji. eto tako.
+   + grupa objekata koji imaju pickables: containers, monsters, npc - njihovi static arrays treba da postanu dinamic, kod svih isto.
+   + niche nemaju svoj niz dinamic objekata nego se oni tretiraju kao pickables koji leze na zemlji. eto tako.
      + save/load container pickables
      + save/load container on same level
      + what to do with niche pickables array if they are already in pickables array?
      - nicheUrr
-     - namesti sa drugog nivoa stepenice za prvi
+     + namesti sa drugog nivoa stepenice za prvi
      - proveri container content kad odes na drugi nivo pa se vratis
      - proveri niche content kad odes na drugi nivo pa se vratis
      - monster pickables save/load
+     + TODO double check going back and forth between temp levels to see if it stacks arrayOfVisitedLevels
+
+     + BUG: new game, new game, go to level 2, save -> error
+     + new game -> new game -> arrayOfVisitedLevels gets empty object kao prvi clan niza. 
+        nove i ucitane igre prvo postavljaju arrayOfVisitedLevels na prazan niz, a posle zovu funkcije koje ucitavaju (neucitane) nivoe preko callbacka nakon json download. Te funkcije dodaju trenutni nivo u arrayOfVisitedLevels jer su to iste funkcije koje se pozivaju kad se prelazi sa nivoa na nivo.
 
 
    - monster add IDLE_ANIM_DURATION to monster property not level property

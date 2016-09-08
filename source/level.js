@@ -1590,6 +1590,26 @@ function loadLevel(id,entrance)
 		console.log("sprangeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 	}
 	
+	//store current level object
+	//this should only push pointer to array, so if we change level object later, it will also change in the array.
+	//also, if new game is calling this function, it is reverting arrayOfVisitedLevels to [] right after this call.
+	if(typeof currentlevelObj.id != 'undefined')
+	{
+		//if current level already in arrayOfVisitedLevels, skip pushing
+		var levelFound = false;
+		for (var i=0; i<arrayOfVisitedLevels.length; i++)
+		{
+			if(arrayOfVisitedLevels[i].id == currentlevelObj.id)
+			{
+				levelFound = true;
+				break;
+			}
+		}
+
+		if(!levelFound)
+			arrayOfVisitedLevels.push(currentlevelObj);
+	}
+
 	//if level already visited, get that object
 	for (var i=0; i<arrayOfVisitedLevels.length; i++)
 	{
@@ -1618,9 +1638,6 @@ function loadTempLevel(nextlevelObj,entrance)
 	loading_msg_span.innerHTML = "Loading...";
 	loading_msg_text_span.innerHTML = "Moving to a new level.";
 	loading_div.style.display = "block";
-
-	//store current level object
-	arrayOfVisitedLevels.push(currentlevelObj);
 
 	//clear scene, clear current level
 	for( var i = scene.children.length - 1; i >= 0; i--) 
@@ -1688,13 +1705,6 @@ function loadLevelJson(nextlevelObj,levelId,entrance)
 		loading_msg_text_span.innerHTML = "Moving to a new level.";
 		loading_div.style.display = "block";
 		
-		//save temp level
-		//save_temp(current_level); //??? what is this?
-		
-		//store current level object
-		//this should only push pointer to array, so if we change level object later, it will also change in the array.
-		arrayOfVisitedLevels.push(currentlevelObj);
-
 		//clear scene, clear current level
 		for( var i = scene.children.length - 1; i >= 0; i--) 
 		{

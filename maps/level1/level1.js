@@ -9,7 +9,7 @@ function level1OnLoad(levelObj)
 	levelObj.audio_ambient.appendChild(source_ambient);
 	
 	levelObj.audio_ambient.volume = 0.5;
-	levelObj.audio_ambient.loop = true;
+	levelObj.audio_ambient.loop = false;
 	levelObj.audio_ambient.play();
 }
 

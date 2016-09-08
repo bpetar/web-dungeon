@@ -109,6 +109,9 @@
 			{
 				document.getElementById( 'id-options-container' ).style.display='block';
 				optionsOpened = true;
+				
+				//when options are opened, close containers gui
+				close_container();
 			}
 		}
 

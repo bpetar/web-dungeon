@@ -366,6 +366,7 @@ function newGameMainMenu()
 
 	//load level walls and floors etc..
 	loadLevel(4,0);
+	arrayOfVisitedLevels = [];
 
 	loadCharacter();
 	
@@ -534,7 +535,13 @@ function newGameOnSameLevel()
 	//if(martin_equipment.pants != 0) save_data["pants"] = martin_equipment.pants.id;
 	
 	
-	//TODO: restart music
+	//restart music
+	if(typeof currentlevelObj.audio_ambient != 'undefined')
+	{
+		currentlevelObj.audio_ambient.currentTime = 0;
+		console.log("restart ambient music on new game on same level");
+	}
+
 	
 	//doors
 	if(currentlevelObj.array_of_doors[0].open == 1)
@@ -570,6 +577,12 @@ function newGameOnDifferentLevel()
 	//loadInventoryNoReloading([]);
 
 	//stop the music, stop the fights, animations, actions, remove dialogs and what not?
+	if(typeof currentlevelObj.audio_ambient != 'undefined')
+	{
+		currentlevelObj.audio_ambient.pause();
+		currentlevelObj.audio_ambient.currentTime = 0;
+		console.log("stop the ambient music, it will be played from start on new game");
+	}
 
 	//hide speech bubble
 	if(document.getElementById( "gui-speech" ).style.display == "block")
@@ -652,6 +665,12 @@ function loadGameOnDifferentLevel()
 	//???loadInventory(arrayOfGameStories[0][0].inventory)
 	
 	//stop the music, stop the fights, animations, actions, remove dialogs and what not?
+	if(typeof currentlevelObj.audio_ambient != 'undefined')
+	{
+		currentlevelObj.audio_ambient.pause();
+		currentlevelObj.audio_ambient.currentTime = 0;
+		console.log("stop the ambient music, it will be played from start on loaded level");
+	}
 
 	//hide speech bubble
 	if(document.getElementById( "gui-speech" ).style.display == "block")
@@ -983,10 +1002,6 @@ function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
 		loading_msg_text_span.innerHTML = "Moving to a new level.";
 		loading_div.style.display = "block";
 		
-		//store current level object
-		//this should only push pointer to array, so if we change level object later, it will also change in the array.
-		arrayOfVisitedLevels.push(currentlevelObj);
-
 		//clear scene, clear current level
 		for( var i = scene.children.length - 1; i >= 0; i--) 
 		{

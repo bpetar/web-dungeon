@@ -504,7 +504,6 @@
 			var NUM_CONTAINER_COLS = 4;
 			var SLOT_WIDTH = 128;
 			var small_SLOT_WIDTH = 64;
-			var inventorySlide = 0;
 			//var inventory_div;
 			var INVENTORY_POS_HIDDEN = -170;
 			var INVENTORY_POS_SHOWN = 8;
@@ -554,6 +553,7 @@
 			var button_click_audio;
 			var audio_lock_unlock;
 			var audio_chest_open;
+			var audio_chest_closed;
 			var audio_player_death;
 			var audio_miss;
 			var audio_ngh;
@@ -1285,7 +1285,8 @@
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);
 				
-				container_div.style.display = "none";
+				//close container if player moves
+				close_container();
 				
 				//Key I = Inventory
 				//alert(event.keyCode);
@@ -2765,8 +2766,6 @@
 					pickable_at_hand_icon.style.display = "none";
 					pickable_at_hand_icon = 0;
 					
-					inventorySlide = -1;
-					
 					return;
 					
 				}
@@ -2958,10 +2957,7 @@
 					if(mouse_over_container > -1)
 					{
 						//open container inventory, and player inventory
-						//play sound
-						audio_chest_open.play();
 						container_fill_gui(mouse_over_container, currentlevelObj);
-						inventorySlide = 1;
 						DisplayInfoDiv("Chest opened..");
 						return;
 					}
@@ -3070,7 +3066,6 @@
 								}
 								
 								audio_click2.play();
-								inventorySlide = 1;
 								break;
 							}
 						}

@@ -238,7 +238,10 @@ function containerItemClick(slot)
 function container_fill_gui(containerID, levelObj)
 {
 	var container_pickables_array = levelObj.array_of_containers[containerID].array_of_chest_pickables;
-	
+
+	//play sound
+	audio_chest_open.play();
+
 	for(var c=0; c<container_pickables_array.length; c++)
 	{
 		//get item from id
@@ -265,6 +268,22 @@ function container_fill_gui(containerID, levelObj)
 	}
 	container_div.style.display = "inline-block";
 	currently_opened_container = containerID;
+}
+
+//close opened container
+function close_container()
+{
+	if(currently_opened_container != -1)
+	{
+		//currentlevelObj.array_of_containers[currently_opened_container].opened = 0;
+		currently_opened_container = -1;
+
+		//play sound of container closing
+		audio_chest_closed.play();
+
+		//hide gui
+		container_div.style.display = "none";
+	}
 }
 
 //add pickable item to current container
