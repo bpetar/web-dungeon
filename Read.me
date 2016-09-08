@@ -486,22 +486,27 @@ New levels:
    + pickables
    + containers
    + niches
-   - monster
+   + monster
    + sklanjam item id iz liste pickables jer je redundant
-   - grupa objekata koji imaju pickables: containers, niche, monsters, npc - njihovi static arrays treba da postanu dinamic, kod svih isto.
-     - save/load container pickables
+   - grupa objekata koji imaju pickables: containers, monsters, npc - njihovi static arrays treba da postanu dinamic, kod svih isto.
+   - niche nemaju svoj niz dinamic objekata nego se oni tretiraju kao pickables koji leze na zemlji. eto tako.
+     + save/load container pickables
      + save/load container on same level
-     - what to do with niche pickables array if they are already in pickables array?
+     + what to do with niche pickables array if they are already in pickables array?
      - nicheUrr
      - namesti sa drugog nivoa stepenice za prvi
      - proveri container content kad odes na drugi nivo pa se vratis
      - proveri niche content kad odes na drugi nivo pa se vratis
+     - monster pickables save/load
 
 
    - monster add IDLE_ANIM_DURATION to monster property not level property
    + music play?
    - namestiti save/load da radi sa tim drugim nivoom
      - save load da sacuva nishe koje su zatvorene?
+     - containers
+     - monster
+     - niche content
    
 
 

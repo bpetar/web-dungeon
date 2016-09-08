@@ -357,6 +357,7 @@ function load_saved_monsters (loader,levelObj,saved_monsters_arr) {
 		munster.target.z = munster.position.z;
 		munster.target.y = munster.position.y;
 		munster.rotation = saved_monsters_arr[i].rotation;
+		munster.pickables = saved_monsters_arr[i].pickables;
 		munster.hp = saved_monsters_arr[i].hp;
 		munster.mood = saved_monsters_arr[i].mood;
 

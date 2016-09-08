@@ -2620,8 +2620,8 @@
 					if(nicheID > -1)
 					{
 						//add pickable at hand to niche
-						add_to_niche(currentlevelObj,nicheID,pickable_at_hand);
 						DisplayInfoDiv(pickable_at_hand.name + " placed in niche..");
+						add_to_niche(currentlevelObj,nicheID,pickable_at_hand);
 						pickable_at_hand = 0;
 						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	

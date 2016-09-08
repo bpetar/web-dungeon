@@ -365,7 +365,7 @@ function newGameMainMenu()
 	load_lights();
 
 	//load level walls and floors etc..
-	loadLevel(2,0);
+	loadLevel(4,0);
 
 	loadCharacter();
 	

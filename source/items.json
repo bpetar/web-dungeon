@@ -28,7 +28,7 @@
 		"desc":"Type: <span style='color:yellow;'>Rolled parchment.</span><br> (right click to read)",
 		"model":"models/scroll.js",
 		"icon":"media/scrolly.png",
-		"icon2":"media/gui/scroll.png",
+		"icon2":"media/gui/scroll_icon.png",
 		"useHint":"A map! Oh now I see.. wait where am I?",
 		"useScript":"script_showScroll_lvl3_map",
 		"type":"reusable"
