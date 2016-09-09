@@ -40,7 +40,7 @@ function level2MonsterOnClick1()
 	}
 }
 
-
+//Make sure when player gives item to monster that its removed from list of pickables
 function level2MonsterOnItemClick1(pickable)
 {
 	//if golem is idle react to pickable click

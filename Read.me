@@ -493,7 +493,13 @@ New levels:
      + save/load container pickables
      + save/load container on same level
      + what to do with niche pickables array if they are already in pickables array?
+
      - nicheUrr
+      //nicheUrr is hack to make first level new game load niche content.
+      //nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
+      //I anticipate this problem will not exist on following levels as this function is only called on first level
+      //var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
+
      + namesti sa drugog nivoa stepenice za prvi
      - proveri container content kad odes na drugi nivo pa se vratis
      - proveri niche content kad odes na drugi nivo pa se vratis
@@ -630,3 +636,5 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  + remove pickable from array when picked from the ground. put it back to array when dropped on the ground.
 
 - add new team members instructions
+
+console.log(": " + );

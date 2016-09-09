@@ -101,33 +101,13 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 		{
 			for(var i=0; i<this.pickables.length; i++)
 			{
-				var picki = 0;
-				if(this.pickables[i][4] == 0)
-				{
-					console.log("creating new item..");
-					picki = create_game_object();
-					picki.gameID = this.pickables[i][0];
-					picki.name = this.pickables[i][1];
-					picki.model = this.pickables[i][2];
-					picki.icon = this.pickables[i][3];
-					picki.position = this.mesh.position.clone();
-					picki.position.y = 0;
-					picki.niched = -1;
-					picki.visible = true;
-					//lets make 3d model here
-					var loader = new THREE.JSONLoader();
-					loader.load( picki.model, picki.loadObject(picki) );
-				}
-				else
-				{
-					console.log("not creating item, but using object already created..");
-					picki = this.pickables[i][4];
-					picki.mesh.position = this.mesh.position.clone();
-					picki.mesh.position.y = 0;
-					picki.mesh.visible = true;
-				}
-				
-				array_of_pickables.push(picki);
+				var picki = load_item_by_id(this.pickables[i].gameID);
+				picki.visible = true;
+				picki.position = this.mesh.position.clone();
+				picki.position.y = 0;
+				currentlevelObj.array_of_pickables.push(picki);
+				//TODO: check if monster is standing on the plate then dropped item should be automatically plated
+				//Make sure when player gives item to monster that its removed from list of pickables
 			}
 		}
 		
@@ -301,9 +281,16 @@ function loadMonsterDataFromLevelArray(monsterObj, levelObj, id) {
 	monsterObj.ac = monsterArr[7];
 	monsterObj.attack = monsterArr[8];
 	monsterObj.dmg = monsterArr[9];
-	monsterObj.pickables = monsterArr[10];
+	monsterObj.pickables = [];
 	monsterObj.OnClick = monsterArr[11];
 	monsterObj.OnItemClick = monsterArr[12];
+
+	for (var mp = 0; mp < monsterArr[10].length; mp++)
+	{
+		var monsterPickableGameID = monsterArr[10][mp].gameID;
+		console.log("monsterPickableGameID: " + monsterPickableGameID);
+		monsterObj.pickables.push({"gameID":monsterPickableGameID});
+	}
 	
 	//animation keyframes
 	if(monsterArr.length > 18)
@@ -394,7 +381,14 @@ function load_monsters (loader, levelObj)
 		munster.ac = levelObj.monsterArr[i][7];
 		munster.attack = levelObj.monsterArr[i][8];
 		munster.dmg = levelObj.monsterArr[i][9];
-		munster.pickables = levelObj.monsterArr[i][10];
+		munster.pickables = [];
+
+		for (var mp = 0; mp < levelObj.monsterArr[i][10].length; mp++)
+		{
+			var monsterPickableGameID = levelObj.monsterArr[i][10][mp].gameID;
+			console.log("monsterPickableGameID: " + monsterPickableGameID);
+			munster.pickables.push({"gameID":monsterPickableGameID});
+		}
 		
 		//get js function from string
 		var onPressFn = window[levelObj.monsterArr[i][11]];

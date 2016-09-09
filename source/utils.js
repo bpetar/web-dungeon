@@ -102,8 +102,6 @@ function isPickableSaved(pickable, saved_pickables)
 //loads item in game with 3d model and everything
 function load_item_by_id(gameID)
 {
-	var loader = new THREE.JSONLoader(); //TODO use global loader
-	
 	var game_item = create_game_object();
 	game_item.gameID = gameID;
 	game_item.itemID = all_items_array[gameID];
@@ -112,12 +110,17 @@ function load_item_by_id(gameID)
 	game_item.name = item.name;
 	game_item.description = item.desc;
 	game_item.model = item.model;
+
 	game_item.icon = item.icon;
 	game_item.icon2 = item.icon2;
 	game_item.useHint = item.useHint;
+
 	game_item.useScript = item.useScript;
+
 	game_item.consumable = (item.type == "consumable")?true:false;
+
 	game_item.type = item.type;
+
 	if(item.type == "weapon")
 	{
 		game_item.weapon_type = item.weapon_prop.type;
@@ -135,7 +138,7 @@ function load_item_by_id(gameID)
 	//game_item.position.z = 0;
 	//game_item.position.y = 0;
 	
-	loadGameObjectCheck(loader, game_item);
+	loadGameObjectCheck(globalJSONloader, game_item);
 
 	return game_item;
 }
