@@ -71,7 +71,8 @@ function reload_pickables(levelObj)
 function remove_pickable_from_array(pickArr,item)
 {
     var index = pickArr.indexOf(item);
-    pickArr.splice(index, 1);
+    if(index>-1)
+    	pickArr.splice(index, 1);
 }
 
 

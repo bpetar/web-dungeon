@@ -40,7 +40,6 @@ function level2MonsterOnClick1()
 	}
 }
 
-//Make sure when player gives item to monster that its removed from list of pickables
 function level2MonsterOnItemClick1(pickable)
 {
 	//if golem is idle react to pickable click
@@ -51,21 +50,10 @@ function level2MonsterOnItemClick1(pickable)
 		{
 			//add item to monster inventory, its his item now :)
 			DisplayInfoDiv("Rock Golem takes ring from you!");
-			var newMonsterItem = new Array();
-			newMonsterItem[0] = pickable.id;
-			newMonsterItem[1] = pickable.name;
-			newMonsterItem[2] = pickable.model;
-			newMonsterItem[3] = pickable.icon;
-			newMonsterItem[4] = pickable;
-			if(this.pickables != 0)
-			{
-				this.pickables.push(newMonsterItem);
-			}
-			else
-			{
-				console.log("monster has no pickable item list!");
-			}
-			
+			this.pickables.push({"gameID":pickable.gameID});
+			//we dont have to remove item from level pickable array because 
+			//it should already be removed if its in players hand
+
 			// Play Golem happy sound
 			this.audio_monster_click.play();
 			

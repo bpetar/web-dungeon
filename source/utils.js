@@ -100,7 +100,7 @@ function isPickableSaved(pickable, saved_pickables)
 }
 
 //loads item in game with 3d model and everything
-function load_item_by_id(gameID)
+function load_item_by_id(gameID, position)
 {
 	var game_item = create_game_object();
 	game_item.gameID = gameID;
@@ -134,6 +134,13 @@ function load_item_by_id(gameID)
 	game_item.niched = -1; //flag indicating if pickable is in the niche
 	game_item.plated = -1; //flag indicating if pickable is in the niche
 	//game_item.mesh = 0;
+
+	console.log("position: " + position);
+	if(typeof position != 'undefined')
+	{
+		game_item.position = position;
+	}
+
 	//game_item.position.x = 0;
 	//game_item.position.z = 0;
 	//game_item.position.y = 0;

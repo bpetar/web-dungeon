@@ -47,6 +47,58 @@ function load_plates (loader,levelObj) {
 		}
 		
 		platsy.position.y = 0;
+		if(platsy.pressed == 1)
+			platsy.position.y -=0.2;
+		platsy.position.x = levelObj.platesArr[i][2]*SQUARE_SIZE;
+		platsy.position.z = levelObj.platesArr[i][3]*SQUARE_SIZE;
+
+		//loader.load( platsy.model, platsy.loadObject(platsy) );
+		loadGameObjectCheck(loader, platsy);
+		
+		levelObj.array_of_plates.push(platsy);
+	}
+
+}
+
+//load saved plates on the map
+function load_saved_plates (loader,levelObj, saved_plates) {
+
+	for(var i=0; i<levelObj.platesArr.length; i++) {
+
+		// id, model, x, z, pressed, script function..
+
+		var platsy = create_game_object();
+		platsy.gameID = levelObj.platesArr[i][0];
+		platsy.name = "plate" + i;
+		platsy.model = levelObj.platesArr[i][1];
+		platsy.pressed = saved_plates[i];
+		
+		//get js function from string
+		var onPressFn = window[levelObj.platesArr[i][5]];
+		if(typeof onPressFn === 'function') 
+		{
+			platsy.onPressFunc = onPressFn;
+		}
+		else
+		{
+			platsy.onPressFunc = missing_click_function;
+		}
+		
+		
+		//get js function from string
+		var onUnPressFn = window[levelObj.platesArr[i][6]];
+		if(typeof onUnPressFn === 'function') 
+		{
+			platsy.onUnpressFunc = onUnPressFn;
+		}
+		else
+		{
+			platsy.onUnpressFunc = missing_click_function;
+		}
+		
+		platsy.position.y = 0;
+		if(platsy.pressed == 1)
+			platsy.position.y -=0.2;
 		platsy.position.x = levelObj.platesArr[i][2]*SQUARE_SIZE;
 		platsy.position.z = levelObj.platesArr[i][3]*SQUARE_SIZE;
 

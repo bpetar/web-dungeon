@@ -154,6 +154,7 @@ function game_loop() {
 							//call pressure plate onUnPress function..
 							console.log("plate unpressed!");
 							currentlevelObj.array_of_plates[wasStandingOnPlate].pressed = 0;
+							currentlevelObj.array_of_plates[wasStandingOnPlate].mesh.position.y +=0.2;
 							plate_unclick_audio.play();
 							currentlevelObj.array_of_plates[wasStandingOnPlate].onUnpressFunc();
 						}
@@ -168,6 +169,7 @@ function game_loop() {
 							//call pressure plate onPress function..
 							console.log("plate pressed!");
 							currentlevelObj.array_of_plates[plateID].pressed = 1;
+							currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 							plate_click_audio.play();
 							currentlevelObj.array_of_plates[plateID].onPressFunc();
 						}

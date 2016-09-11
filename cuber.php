@@ -546,8 +546,6 @@
 			var ROUND_DURATION = 2; //2 seconds
 			var STEP_MOVE_DURATION = 150;
 			
-			var gStandingOnPlate = -1;
-			var gWeightOnThePlate = false;
 			var plate_click_audio;
 			var plate_unclick_audio;
 			var button_click_audio;
@@ -2644,7 +2642,6 @@
 						{
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
-							remove_pickable_from_array(currentlevelObj.array_of_pickables,pickable_at_hand);
                             pickable_at_hand.mesh.visible = false;
 							pickable_at_hand = 0;
 						}
@@ -2693,38 +2690,65 @@
 					
 					DisplayInfoDiv(pickable_at_hand.name + " dropped on the ground..");
 					
-					//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
-					if(pickable_at_hand.name=="Ring")
+					
+					if(plateID>-1)
 					{
-						console.log("trti ring");
-						looker.multiplyScalar(0.97);
+						looker.multiplyScalar(0.62);
+						pickable_at_hand.plated = plateID;
+						//if player is already standing on the plate, dont do anything else
+						/*//check if more items are on the plate
+						var moreItemsAreLyingOnThisParticularPlate = 0;
+
+						for(var pp=0; pp < currentlevelObj.array_of_pickables.length; pp++)
+						{
+							if(currentlevelObj.array_of_pickables[pp].plated == pickable_at_hand.plated)
+							{
+								moreItemsAreLyingOnThisParticularPlate++;
+								break;
+							}
+						}
+
+						if(moreItemsAreLyingOnThisParticularPlate == 0)
+							currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;*/
 					}
 					else
 					{
+						plateID = clicking_on_plate(currentlevelObj);
+						//if not standing on plate, check if clicking on plate
 						if(plateID>-1)
 						{
-							looker.multiplyScalar(0.62);
+							looker.multiplyScalar(1.52);
 							pickable_at_hand.plated = plateID;
-							currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
-							//plate_click_audio.play();
-							//var onPress = plates_array[plateID][5];
-							//if(onPress !=0 )
-							//{
-							//	onPress();
-							//}
-						}
-						else
-						{
-							plateID = clicking_on_plate(currentlevelObj);
-							//if not standing on plate, check if clicking on plate
-							if(plateID>-1)
+
+							//check if more items are on the plate
+							var moreItemsAreLyingOnThisParticularPlate = 0;
+
+							for(var pp=0; pp < currentlevelObj.array_of_pickables.length; pp++)
 							{
-								looker.multiplyScalar(1.52);
-								pickable_at_hand.plated = plateID;
+								if(currentlevelObj.array_of_pickables[pp].plated == pickable_at_hand.plated)
+								{
+									moreItemsAreLyingOnThisParticularPlate++;
+									break;
+								}
+							}
+
+							if(moreItemsAreLyingOnThisParticularPlate ==0)
+							{
 								currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 								plate_click_audio.play();
 								currentlevelObj.array_of_plates[plateID].pressed = 1;
 								currentlevelObj.array_of_plates[plateID].onPressFunc();
+							}
+						}
+						else
+						{
+							//Normal dropoff
+
+							//TODO: REMOVE DIRTY HACK, BECAUSE RING IS SMALL I MOVED IT CLOSER TO THE EDGE
+							if(pickable_at_hand.name=="Ring")
+							{
+								console.log("trti ring");
+								looker.multiplyScalar(0.97);
 							}
 							else
 							{
@@ -2732,6 +2756,7 @@
 							}
 						}
 					}
+					
 
 					//play drop sound
 					if(pickable_at_hand.name=="Rock")
@@ -3040,12 +3065,27 @@
 								if(pickable_at_hand.niched > -1) remove_from_niche(currentlevelObj,pickable_at_hand);
 								if(pickable_at_hand.plated > -1)
 								{
-									//TODO: check if more items remain on the plate
-									currentlevelObj.array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
-									//console.log("lifting item off the plate!");
-									currentlevelObj.array_of_plates[pickable_at_hand.plated].pressed = 0;
-									plate_unclick_audio.play();
-									currentlevelObj.array_of_plates[pickable_at_hand.plated].onUnpressFunc();
+									//check if more items remain on the plate
+									var moreItemsAreStillLyingOnThisParticularPlate = 0;
+
+									for(var pp=0; pp < currentlevelObj.array_of_pickables.length; pp++)
+									{
+										if(currentlevelObj.array_of_pickables[pp].plated == pickable_at_hand.plated)
+										{
+											moreItemsAreStillLyingOnThisParticularPlate++;
+											break;
+										}
+									}
+
+									if(moreItemsAreStillLyingOnThisParticularPlate == 0)
+									{
+										currentlevelObj.array_of_plates[pickable_at_hand.plated].mesh.position.y +=0.2;
+										//console.log("lifting item off the plate!");
+										currentlevelObj.array_of_plates[pickable_at_hand.plated].pressed = 0;
+										plate_unclick_audio.play();
+										currentlevelObj.array_of_plates[pickable_at_hand.plated].onUnpressFunc();
+									}
+									
 									pickable_at_hand.plated = -1;
 								}
 								

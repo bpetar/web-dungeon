@@ -166,6 +166,26 @@ function save_position()
             }
         }
 
+        //win areas 
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["win_area"] = [];
+        var windex = 0;
+        for(var i=0; i<arrayOfVisitedLevels[vli].win_area.length; i++)
+        {
+            //if win area is visited, save it
+            if(arrayOfVisitedLevels[vli].win_area[i][3] == 1)
+            {
+                save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["win_area"][windex] = i; //we just save index of win area that is found
+                windex++;
+            }
+        }
+
+        //plate states 
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["plates"] = [];
+        for(var i=0; i<arrayOfVisitedLevels[vli].array_of_plates.length; i++)
+        {
+            save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["plates"][i] = arrayOfVisitedLevels[vli].array_of_plates[i].pressed; //we save plate state
+        }
+
         //pickables on the ground, niches
         j = 0;
         save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"] = [];
@@ -249,6 +269,26 @@ function save_position()
             }
         }
 
+        //win areas 
+        save_data["levels"]["id"+currentlevelObj.id]["win_area"] = [];
+        var windex = 0;
+        for(var i=0; i<currentlevelObj.win_area.length; i++)
+        {
+            //if win area is visited, save it
+            if(currentlevelObj.win_area[i][3] == 1)
+            {
+                save_data["levels"]["id"+currentlevelObj.id]["win_area"][windex] = i; //we just save index of win area that is found
+                windex++;
+            }
+        }
+
+        //plate states
+        save_data["levels"]["id"+currentlevelObj.id]["plates"] = [];
+        for(var i=0; i<currentlevelObj.array_of_plates.length; i++)
+        {
+            save_data["levels"]["id"+currentlevelObj.id]["plates"][i] = currentlevelObj.array_of_plates[i].pressed; //we save plate state
+        }
+
         //pickables on the ground, niches
         j = 0;
         save_data["levels"]["id"+currentlevelObj.id]["pickables"] = [];
@@ -310,19 +350,19 @@ function save_position()
                 save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["mood"] = currentlevelObj.array_of_monsters[m].mood;
                 //hp
                 save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["hp"] = currentlevelObj.array_of_monsters[m].hp;
-                
+                //monster pickables
+                save_data["levels"]["id"+currentlevelObj.id]["monsters"][mindex]["pickables"] = currentlevelObj.array_of_monsters[m].pickables;
                 mindex++;
             }
         }
     }
 	
-	//chests, containers
 	//keyholes
 	//plates
 	//buttons
 	//
 	//journal entries
-	//
+	//money
 	//dialogs? npc?
 	
 	var save_data_json_str = JSON.stringify( save_data );
@@ -1088,6 +1128,12 @@ function load_level_obj_saved(level_obj,saved_data)
 	//load chests
 	load_saved_containers(globalJSONloader, saved_data.levels["id"+current_level].containers, level_obj);
 
+	//load saved win areas
+	for(var wi = 0; wi < saved_data.levels["id"+current_level].win_area.length; wi++)
+	{
+		level_obj.win_area[saved_data.levels["id"+current_level].win_area[wi]][3] = 1;
+	}
+
 	//props
 	load_props(globalJSONloader, level_obj);
 	
@@ -1121,8 +1167,8 @@ function load_level_obj_saved(level_obj,saved_data)
 	//load tapestries
 	load_tapestries(globalJSONloader, level_obj);
 	
-	//load pressure plates (plynths)
-	load_plates(globalJSONloader, level_obj);
+	//load saved pressure plates (plynths)
+	load_saved_plates(globalJSONloader, level_obj, saved_data.levels["id"+current_level].plates);
 	
 	//level specific action on load
 	//levelOnLoad(); level3OnLoad(level_obj);

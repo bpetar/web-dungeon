@@ -93,7 +93,7 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 		//Monster is dead!
 		if(typeof monsterPun != 'undefined') setTimeout(monsterPun, 600);
 		
-		//soundy play sound of monstrous death
+		//Soundy play sound of monstrous death
 		this.audio_monster_dies.play();
 		
 		//Monster drops loot
@@ -101,10 +101,10 @@ Monster.prototype.deal_damage = function ( dmg_done ) {
 		{
 			for(var i=0; i<this.pickables.length; i++)
 			{
-				var picki = load_item_by_id(this.pickables[i].gameID);
+				var pickiPosition = this.mesh.position.clone();
+				pickiPosition.y = 0;
+				var picki = load_item_by_id(this.pickables[i].gameID, pickiPosition);
 				picki.visible = true;
-				picki.position = this.mesh.position.clone();
-				picki.position.y = 0;
 				currentlevelObj.array_of_pickables.push(picki);
 				//TODO: check if monster is standing on the plate then dropped item should be automatically plated
 				//Make sure when player gives item to monster that its removed from list of pickables

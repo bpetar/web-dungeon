@@ -1446,6 +1446,20 @@ function load_level_obj_temp(level_obj)
 		onLoadFn(level_obj);
 	}
 
+	//if level is entered and players is standing on pressure plate, active it
+	var plateID = standing_on_plate(level_obj);
+	if(plateID>-1)
+	{
+		if (level_obj.array_of_plates[plateID].pressed == 0)
+		{
+			//call pressure plate onPress function..
+			console.log("plate pressed!");
+			level_obj.array_of_plates[plateID].pressed = 1;
+			level_obj.array_of_plates[plateID].position.y -=0.2;
+			plate_click_audio.play();
+			level_obj.array_of_plates[plateID].onPressFunc();
+		}
+	}
 
 }
 
@@ -1514,7 +1528,21 @@ function load_level_obj(level_obj)
 		onLoadFn(level_obj);
 	}
 
-	
+	//if level is entered and players is standing on pressure plate, active it
+	var plateID = standing_on_plate(level_obj);
+	if(plateID>-1)
+	{
+		if (level_obj.array_of_plates[plateID].pressed == 0)
+		{
+			//call pressure plate onPress function..
+			console.log("plate pressed!");
+			level_obj.array_of_plates[plateID].pressed = 1;
+			level_obj.array_of_plates[plateID].position.y -=0.2;
+			plate_click_audio.play();
+			level_obj.array_of_plates[plateID].onPressFunc();
+		}
+	}
+
 	//console.log("level end time:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: " + Date.now());
 }
 
