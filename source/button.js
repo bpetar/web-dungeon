@@ -65,6 +65,45 @@ function load_buttons (loader, levelObj) {
 
 }
 
+//load saved button states
+//meshes are already there, we just set the pressed flag and move it a bit to budge it
+function load_saved_button_states(loader, levelObj, saved_buttons) 
+{
+	for(var i=0; i<levelObj.array_of_buttons.length; i++) 
+	{
+		if(levelObj.array_of_buttons[i].pressed != saved_buttons[i])
+		{
+			levelObj.array_of_buttons[i].pressed = saved_buttons[i];
+
+			//if button is pressed, load it budged
+			if(levelObj.array_of_buttons[i].pressed == 1)
+			{
+				//budge depends on orientation
+				if(levelObj.array_of_buttons[i].orientation == 1)
+					levelObj.array_of_buttons[i].mesh.position.x -= 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 3)
+					levelObj.array_of_buttons[i].mesh.position.x += 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 0)
+					levelObj.array_of_buttons[i].mesh.position.z += 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 2)
+					levelObj.array_of_buttons[i].mesh.position.z -= 0.05;
+			}
+			else
+			{
+				//unbudge depends on orientation
+				if(levelObj.array_of_buttons[i].orientation == 1)
+					levelObj.array_of_buttons[i].mesh.position.x += 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 3)
+					levelObj.array_of_buttons[i].mesh.position.x -= 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 0)
+					levelObj.array_of_buttons[i].mesh.position.z -= 0.05;
+				if(levelObj.array_of_buttons[i].orientation == 2)
+					levelObj.array_of_buttons[i].mesh.position.z += 0.05;
+			}
+		}
+	}
+}
+
 
 //load button 3d models on the map
 function load_saved_buttons (loader, levelObj, saved_buttons) {

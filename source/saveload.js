@@ -193,6 +193,13 @@ function save_position()
             save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["buttons"][i] = arrayOfVisitedLevels[vli].array_of_buttons[i].pressed; //we save button state
         }
 
+        //keyholes 
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["keyholes"] = [];
+        for(var i=0; i<arrayOfVisitedLevels[vli].array_of_keyholes.length; i++)
+        {
+            save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["keyholes"][i] = arrayOfVisitedLevels[vli].array_of_keyholes[i].locked; //we save keyhole state
+        }
+
         //pickables on the ground, niches
         j = 0;
         save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"] = [];
@@ -301,6 +308,13 @@ function save_position()
         for(var i=0; i<currentlevelObj.array_of_buttons.length; i++)
         {
             save_data["levels"]["id"+currentlevelObj.id]["buttons"][i] = currentlevelObj.array_of_buttons[i].pressed; //we save button state
+        }
+
+        //keyholes 
+        save_data["levels"]["id"+currentlevelObj.id]["keyholes"] = [];
+        for(var i=0; i<currentlevelObj.array_of_keyholes.length; i++)
+        {
+            save_data["levels"]["id"+currentlevelObj.id]["keyholes"][i] = currentlevelObj.array_of_keyholes[i].locked; //we save keyhole state
         }
 
         //pickables on the ground, niches
@@ -860,6 +874,26 @@ function loadGameOnSameLevel()
 	//load saved container content
 	load_saved_containers_content(globalJSONloader, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].containers, currentlevelObj);
 
+	//load saved keyhole states
+	load_saved_keyhole_states(globalJSONloader, currentlevelObj, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].keyholes);
+
+	//load saved button states
+	load_saved_button_states(globalJSONloader, currentlevelObj, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].buttons);
+
+	//load saved plate state
+	load_saved_plate_state(globalJSONloader, currentlevelObj, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].plates);
+
+	//reset win areas
+	for(var i = 0; i < currentlevelObj.win_area.length; i++)
+	{
+		currentlevelObj.win_area[i][3] = 0;
+	}
+	//load saved win areas
+	for(var wi = 0; wi < arrayOfGameStories[0][0].levels["id"+current_level].win_area.length; wi++)
+	{
+		currentlevelObj.win_area[arrayOfGameStories[0][0].levels["id"+current_level].win_area[wi]][3] = 1;
+	}
+
 	//clear current pickables
 	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
 	{
@@ -1163,7 +1197,7 @@ function load_level_obj_saved(level_obj,saved_data)
 	//load_niches(globalJSONloader, level_obj);
 
 	//keyholes
-	load_keyholes(globalJSONloader, level_obj);
+	load_saved_keyholes(globalJSONloader, level_obj, saved_data.levels["id"+current_level].keyholes);
 	
 	//stairs
 	load_stairs(globalJSONloader, level_obj);

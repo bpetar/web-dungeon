@@ -60,8 +60,26 @@ function load_plates (loader,levelObj) {
 
 }
 
+//load saved plate states 
+//plates are already on the map, we just set them pressed or not
+function load_saved_plate_state (loader, levelObj, saved_plates) 
+{
+	for(var i=0; i<levelObj.array_of_plates.length; i++) 
+	{
+		if(levelObj.array_of_plates[i].pressed != saved_plates[i])
+		{
+			levelObj.array_of_plates[i].pressed = saved_plates[i];
+			
+			if(levelObj.array_of_plates[i].pressed == 1)
+				levelObj.array_of_plates[i].mesh.position.y -=0.2;
+			else
+				levelObj.array_of_plates[i].mesh.position.y +=0.2;
+		}
+	}
+}
+
 //load saved plates on the map
-function load_saved_plates (loader,levelObj, saved_plates) {
+function load_saved_plates (loader, levelObj, saved_plates) {
 
 	for(var i=0; i<levelObj.platesArr.length; i++) {
 

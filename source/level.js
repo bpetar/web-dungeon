@@ -1456,6 +1456,8 @@ function load_level_obj_temp(level_obj)
 			console.log("plate pressed!");
 			level_obj.array_of_plates[plateID].pressed = 1;
 			level_obj.array_of_plates[plateID].position.y -=0.2;
+			if(level_obj.array_of_plates[plateID].mesh != 0)
+				level_obj.array_of_plates[plateID].mesh.position.y -=0.2;
 			plate_click_audio.play();
 			level_obj.array_of_plates[plateID].onPressFunc();
 		}
@@ -1538,6 +1540,8 @@ function load_level_obj(level_obj)
 			console.log("plate pressed!");
 			level_obj.array_of_plates[plateID].pressed = 1;
 			level_obj.array_of_plates[plateID].position.y -=0.2;
+			if(level_obj.array_of_plates[plateID].mesh != 0)
+				level_obj.array_of_plates[plateID].mesh.position.y -=0.2;
 			plate_click_audio.play();
 			level_obj.array_of_plates[plateID].onPressFunc();
 		}

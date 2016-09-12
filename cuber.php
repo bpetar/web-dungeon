@@ -2660,7 +2660,7 @@
 							audio_lock_unlock.play();
 							//call script function
 							currentlevelObj.array_of_keyholes[item_over_keyhole].onPressFunc();
-							currentlevelObj.array_of_keyholes[item_over_keyhole].locked = false;
+							currentlevelObj.array_of_keyholes[item_over_keyhole].locked = 0;
 							//drop the key icon
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
@@ -2976,7 +2976,7 @@
 					if(mouse_over_keyhole > -1)
 					{
 						//show info
-						if(currentlevelObj.array_of_keyholes[mouse_over_keyhole].locked)
+						if(currentlevelObj.array_of_keyholes[mouse_over_keyhole].locked == 1)
 						{
 							DisplayInfoDiv("For every keyhole there is a key..");
 						}
