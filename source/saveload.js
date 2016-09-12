@@ -186,6 +186,13 @@ function save_position()
             save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["plates"][i] = arrayOfVisitedLevels[vli].array_of_plates[i].pressed; //we save plate state
         }
 
+        //buttons 
+        save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["buttons"] = [];
+        for(var i=0; i<arrayOfVisitedLevels[vli].array_of_buttons.length; i++)
+        {
+            save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["buttons"][i] = arrayOfVisitedLevels[vli].array_of_buttons[i].pressed; //we save button state
+        }
+
         //pickables on the ground, niches
         j = 0;
         save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["pickables"] = [];
@@ -289,6 +296,13 @@ function save_position()
             save_data["levels"]["id"+currentlevelObj.id]["plates"][i] = currentlevelObj.array_of_plates[i].pressed; //we save plate state
         }
 
+        //buttons 
+        save_data["levels"]["id"+currentlevelObj.id]["buttons"] = [];
+        for(var i=0; i<currentlevelObj.array_of_buttons.length; i++)
+        {
+            save_data["levels"]["id"+currentlevelObj.id]["buttons"][i] = currentlevelObj.array_of_buttons[i].pressed; //we save button state
+        }
+
         //pickables on the ground, niches
         j = 0;
         save_data["levels"]["id"+currentlevelObj.id]["pickables"] = [];
@@ -358,7 +372,6 @@ function save_position()
     }
 	
 	//keyholes
-	//plates
 	//buttons
 	//
 	//journal entries
@@ -1122,8 +1135,8 @@ function load_level_obj_saved(level_obj,saved_data)
 	//pillars are in props.js file
 	load_pillars(globalJSONloader, level_obj);
 	
-	//buttons
-	load_buttons(globalJSONloader, level_obj);
+	//load saved buttons
+	load_saved_buttons(globalJSONloader, level_obj, saved_data.levels["id"+current_level].buttons);
 	
 	//load chests
 	load_saved_containers(globalJSONloader, saved_data.levels["id"+current_level].containers, level_obj);

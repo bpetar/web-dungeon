@@ -56,7 +56,6 @@
 		"door_model":"maps/level3/models/door.js",
 
 		"ambient_music_file":"maps/level4/media/eastwood.mp3",
-		"door_audio":"media/creak.mp3",
 	
 		"point_light_color":"efeffa",
 		"point_light_intensity":0.7,

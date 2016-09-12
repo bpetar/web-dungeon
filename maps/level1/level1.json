@@ -18,7 +18,7 @@
 		"secretWallsArr":[[16,9,3,0,"This wall seems odd"]],
 		"doorsArr":[[16,3,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"], [16,7,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"], [16,11,0,0,"maps/level1/models/door.js","maps/level1/models/doorway.js",0,0,"media/door.mp3"]],
 		"stairsArr":[[16,0,2,"maps/level3/models/slope.js",0,4,3]],
-		"buttonsArr":[[1, "maps/level1/models/button_small.js", 16,6,1,"level1OnPressButton1"]],
+		"buttonsArr":[[1, "maps/level1/models/button_small.js", 16,1,2,"level1OnPressButton1"]],
 		"keyholesArr":[[9, "models/keyhole.js", 16,9,1,"level1OnKeyClick"]],
 		"containersArr":[[1,"Chest","maps/level1/models/chest2.js", 18,11,0, [{"gameID":9,"slot":1}], 0]],
 		"pillarsArr":[[2, "maps/level1/models/pillar.js", 12,14]],
@@ -51,7 +51,6 @@
 		"door_model":"maps/level1/models/door.js",
 
 		"ambient_music_file":"media/ambient_music.mp3",
-		"door_audio":"media/creak.mp3",
 	
 		"point_light_color":"aaaaff",
 		"point_light_intensity":1.6,

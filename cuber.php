@@ -2930,16 +2930,24 @@
 					//button
 					if(mouse_over_button > -1)
 					{
-						if(currentlevelObj.array_of_buttons[mouse_over_button].pressed == false)
+						if(currentlevelObj.array_of_buttons[mouse_over_button].pressed == 0)
 						{
 							//play sound
 							button_click_audio.play();
-							//move button in the wall
-							currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.x -= 0.05; //TODO move depending on orientation
+							//move button in the wall, depending on orientation
+							if(currentlevelObj.array_of_buttons[mouse_over_button].orientation == 1)
+								currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.x -= 0.05;
+							if(currentlevelObj.array_of_buttons[mouse_over_button].orientation == 3)
+								currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.x += 0.05;
+							if(currentlevelObj.array_of_buttons[mouse_over_button].orientation == 0)
+								currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.z += 0.05;
+							if(currentlevelObj.array_of_buttons[mouse_over_button].orientation == 2)
+								currentlevelObj.array_of_buttons[mouse_over_button].mesh.position.z -= 0.05;
+
 							//do button action
 							currentlevelObj.array_of_buttons[mouse_over_button].onPressFunc();
 							//set it to be budged.. no more clicking.
-							currentlevelObj.array_of_buttons[mouse_over_button].pressed = true;
+							currentlevelObj.array_of_buttons[mouse_over_button].pressed = 1;
 							//info
 							DisplayInfoDiv("Buttons triggers some mechanism!");
 						}

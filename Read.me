@@ -423,14 +423,14 @@ Bugs:
  
 Checks:
  - try to save with item at hand
- - check monster drop pickable item after death - how it works with save load?
+ + check monster drop pickable item after death - how it works with save load?
  - test rock throw (because pickable adding/removing changed)
    + noremove must be added for throwables that are thrown
    + thrown rock can not be picked
    - try to hit monster with rock.
- - check monster killing with save/load
- - level 4 json has door_audio but level 3 has not?
- - //TODO: check if more items remain on the plate
+ + check monster killing with save/load
+ + level 4 json has door_audio but level 3 has not?
+ + //TODO: check if more items remain on the plate
 
 New levels:
  + make downstairs model
@@ -477,8 +477,11 @@ New levels:
    - namestiti save/load da radi sa tim prvim nivoom
      + sacuvaj win area state
      + sacuvaj plate state
-     - sacuvaj button state
+     + sacuvaj button state
+     - keyholes
      + sacuvaj container state - open/close - nek uvek bude close, samo skloni gui kontejnera
+
+     - does loadGameOnSameLevel loads win, plate, keyholes and buttons state properly?
 
   + namestiti sve komponente drugog nivoa da rade
    + pretabaj u json
@@ -521,9 +524,9 @@ New levels:
    + music play?
    - namestiti save/load da radi sa tim drugim nivoom
      - save load da sacuva nishe koje su zatvorene?
-     - containers
-     - monster
-     - niche content
+     + containers
+     + monster
+     + niche content
    
 
 

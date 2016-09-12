@@ -53,9 +53,6 @@ function level1OnKeyClick()
 	console.log("gold key to open door");
 	
 	openDoor(currentlevelObj.array_of_doors[2]);
-
-	//temp hack
-	//load_teleport();
 }
 
 function level1OnPressButton1()
