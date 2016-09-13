@@ -93,18 +93,6 @@ todo:
 + secret area level 2 win sound
 + registration should be accessible from everywhere - No! If player is in the game, he is logged in.
 
---- publishing tasks:
-+ preview picture on facegroup
-- cuber code on mystic-peanut
-- check in all browsers
-- update MP news section
-- make previous level link to next one
-- reset counters
-- notify registered users
-- publish on facebook group
-- game name? kregan krodgan krid krib walker rune heart
-- make youtube video
-
 
 bugs:
 + item goes to niche instead of hand if standing in front of niche :)
@@ -114,8 +102,6 @@ bugs:
 + lvl floor is wrong! it seems like ceiling texture is used..
 + root heals player, but graphically it is not seen on green bar until monster hits you
 + root is not consumed when right clicked
-- loadModelCheck usaglasi sa loadGameObjectCheck
-- wall writting kod ravnih zidova klonira prvi objekat ali writtingIsOnTheWall ne mora biti 0 za prvi!!!
 + wall writ not working..
 
 optimizations:
@@ -136,8 +122,6 @@ optimizations:
   + (D) blood on spikes.. now we need blood on floor :/
   + (P) "this was nice worm up" comment
   + (P) make room pillars gone!
-  - (M) hard texture line on egdes
-  - (M) pixel align on edges
   + (M) pile of dirt rocks blocking the passage
 + (M) make wooden doors
 + (D) make player dialog speech bubble!
@@ -221,7 +205,7 @@ optimizations:
   + bug in: drop on the ground not working
  + add ajax
  + save
- - load game
+ + load game
   + item from id
   + inventory
   + equipment
@@ -229,8 +213,8 @@ optimizations:
   + niches
   + monsters
   + doors
-  - plates
-  - chest (container) content
+  + plates
+  + chest (container) content
 
  
  finish first level:
@@ -282,18 +266,7 @@ optimizations:
 	  + load is white if available
 	  + on hover change light and sound
 	  + impressive picture with dragon in main menu
- - options screen 
-	  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
-	  - pause game loop
-	  - gray out inventory and players and don't allow item interaction and clicks
-	  + new
-	  + load
-	  + save
-	  - register (uh oh)
-	  - donate (link to some cancer charity)
-	  - settings (TODO, maybe just sound)
-	  - credits should link to peoples pages
-	  - help should link to facebook page and email
+
  + make dirt rock throwing weapon
 	  + bug: right click consumes the rock?
 	  + light hands when rock is picked
@@ -301,14 +274,12 @@ optimizations:
 	  + attack with rock throws 3d model
 	  + thrown 3d model is flying till it reaches enemy or wall (or obstacle, props..)
 	  + thrown item falls on the ground
-	  /- thrown item is automatically picked up??? (animation of picking)
 
  + add animated chain model that swings when clicked.
  + (A) First Level Music 
  + (A) Main Menu Music
  + (A) make worm sounds
  + (A) add root munching sound
- - boy face
  + (O) images are preloading while in main menu..
  ~ (O) app cache models http://www.html5rocks.com/en/tutorials/appcache/beginner/
  + (O) main menu loads just that for quick start.
@@ -343,6 +314,11 @@ second level
 	 + lights
 	 + all other arrays in level (plates array missing causes item drop to fail)
 	 + clean level.js file
+   
+ + item info on mouse pause
+ + make speech bubbles for boy
+ + when item is picked, appropriate hand slots glow
+ + change attack to left click..
 	
  + go back a map
 	+ load_props(globalJSONloader, level_obj);
@@ -365,10 +341,10 @@ second level
    + take item in niche, save, load - item is back in niche (plus inventory)
    + take bunch of items in inventory, save, reload, drop them on the ground, save, reload - items gone.
    + load saved monsters
-   - /buttons
-   - /containers
-   - /keyholes
-   - /plates
+   + buttons
+   + containers
+   + keyholes
+   + plates
  + new game : if there is saved game - Are you sure you want to start new game because previous saved progress will be lost? 
    + if yes delete saved game (this is important because we dont want new game to load saved later levels)
    + check new game (in the middle of playing)
@@ -413,48 +389,15 @@ Bugs:
  + click on sticks should have some sound.
  + save game throws error: "array_of_doors undefined" in save_game at line: arrayOfVisitedLevels[vli].array_of_doors.length;
  + load to second level has no ambient sound?
- - onfirstload not called?
- - monster on level 5 -> load to level 5 from main menu and there is error undefined IDLE animation var
- - prop click not working on level 5 if load directly, and functions not defined in level5 js
- - in function mainMenuMouseOverLoad audio_click undefined appears on main menu. maybe when hovering right on very start.
- - new game -> load to second level with rock on the ground -> picking makes hands glow again.
- - namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
- - IDLE_ANIM_DURATION mora da ide u monster niz, inace, ako se odma ucita neki kasniji nivo gde to nije definisano, a da ne govorim ako na novou ima vise monstera sa razlicitim vrednostima...
  
 Checks:
- - try to save with item at hand
  + check monster drop pickable item after death - how it works with save load?
- - test rock throw (because pickable adding/removing changed)
+ + test rock throw (because pickable adding/removing changed)
    + noremove must be added for throwables that are thrown
    + thrown rock can not be picked
-   - try to hit monster with rock.
  + check monster killing with save/load
  + level 4 json has door_audio but level 3 has not?
  + //TODO: check if more items remain on the plate
-
-New levels:
- + make downstairs model
- - making level 5
- - door ropes are bad when opening
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
  + add first and second level to the game
@@ -472,7 +415,6 @@ New levels:
    + lock
    + key
    + monsters
-   -/ teleport
    + music play?
    + namestiti save/load da radi sa tim prvim nivoom
      + sacuvaj win area state
@@ -480,7 +422,6 @@ New levels:
      + sacuvaj button state
      + keyholes
      + sacuvaj container state - open/close - nek uvek bude close, samo skloni gui kontejnera
-
      + does loadGameOnSameLevel loads win, plate, keyholes and buttons state properly?
 
   + namestiti sve komponente drugog nivoa da rade
@@ -496,95 +437,114 @@ New levels:
      + save/load container pickables
      + save/load container on same level
      + what to do with niche pickables array if they are already in pickables array?
-
-     - nicheUrr
-      //nicheUrr is hack to make first level new game load niche content.
-      //nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
-      //I anticipate this problem will not exist on following levels as this function is only called on first level
-      //var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
-
      + namesti sa drugog nivoa stepenice za prvi
      + proveri container content kad odes na drugi nivo pa se vratis
      + proveri niche content kad odes na drugi nivo pa se vratis
      + monster pickables save/load
      + TODO double check going back and forth between temp levels to see if it stacks arrayOfVisitedLevels
-
      + BUG: new game, new game, go to level 2, save -> error
      + new game -> new game -> arrayOfVisitedLevels gets empty object kao prvi clan niza. 
         nove i ucitane igre prvo postavljaju arrayOfVisitedLevels na prazan niz, a posle zovu funkcije koje ucitavaju (neucitane) nivoe preko callbacka nakon json download. Te funkcije dodaju trenutni nivo u arrayOfVisitedLevels jer su to iste funkcije koje se pozivaju kad se prelazi sa nivoa na nivo.
-     - BUG: load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
-     - BUG: load saved game na drugom nivou i klikni na monstera - kaze OnClick is not a function.
-
    + load saved game where player is already standing on the plate: plate mesh stays pressed in the ground (although trigger functionality is ok), because player stepping on plate does not presses mesh down.
    + entering level on plate (need to lower mesh while its not yet loaded)
-   - throwing item on plate in the distance
    + leave plate and exit level at the same time -> door start closing and what happens with them when temp level is saved? it seems like they are closing on when return to level.
-
-   - monster add IDLE_ANIM_DURATION to monster property not level property
    + music play?
-   - namestiti save/load da radi sa tim drugim nivoom
-     - save load da sacuva nishe koje su zatvorene?
+   + namestiti save/load da radi sa tim drugim nivoom
      + containers
      + monster
      + niche content
    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-Code order:
- - [event file - mouse and key events in separate js file]
- - [floors and walls file]
- - [rewrite teleport code]
- 
-New functionality:
- - character hud
-   - functionality for other slots
-   - character name
-   - more tabs
-
- - icon stack in inventory
- 
- - experience, levels
- 
 clear dynamic arrays of objects like doors and monsters! Or not? Maybe we should clear them only when player clicks save. Not when transitioning between levels.
 inventory items meshes need to be kept in the scene with //gObject.mesh.noremove = true;
 
-
-- test:
++ test:
   + pillars
-  - teleports
-  - plates
-  - keyholes
-  - buttons
-  - tapestries
-  - secret walls
-  - containers
+  + teleports
+  + plates
+  + keyholes
+  + buttons
+  + tapestries
+  + secret walls
+  + containers
 
 
 
-- make level editor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ - loadModelCheck usaglasi sa loadGameObjectCheck
+ - wall writting kod ravnih zidova klonira prvi objekat ali writtingIsOnTheWall ne mora biti 0 za prvi!!!
+ - (M) hard texture line on egdes
+ - (M) pixel align on edges
+ - (D) boy face
+ - (CHECK) onfirstload not called?
+ - monster on level 5 -> load to level 5 from main menu and there is error undefined IDLE animation var
+ - IDLE_ANIM_DURATION mora da ide u monster niz, inace, ako se odma ucita neki kasniji nivo gde to nije definisano, a da ne govorim ako na novou ima vise monstera sa razlicitim vrednostima...
+ - monster add IDLE_ANIM_DURATION to monster property not level property
+ - (CHECK) try to save with item at hand
+ - (CHECK) try to hit monster with rock.
+ - save load da sacuva nishe koje su zatvorene?
+ - throwing item on plate in the distance
+ - (BUG) load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
+ - (BUG) load saved game na drugom nivou i klikni na monstera - kaze OnClick is not a function.
+ - (BUG) prop click not working on level 5 if load directly, and functions not defined in level5 js
+ - (BUG) in function mainMenuMouseOverLoad audio_click undefined appears on main menu. maybe when hovering right on very start.
+ - (BUG) new game -> load to second level with rock on the ground -> picking makes hands glow again.
+ - (BUG) namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
+ - (BUG) nicheUrr
+      //nicheUrr is hack to make first level new game load niche content.
+      //nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
+      //I anticipate this problem will not exist on following levels as this function is only called on first level
+      //var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
+
+
+New levels:
+ + make downstairs model
+ - (M) make downstairs model properly
+ - (M) door ropes are bad when opening
+ - (M) ropes or bushes
+ - making level 5
+
+
+Options screen:
+ + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
+ - pause game loop
+ - gray out inventory and players and don't allow item interaction and clicks
+ + new
+ + load
+ + save
+ - register (uh oh)
+ - donate (link to some cancer charity)
+ - settings (TODO, maybe just sound)
+ - credits should link to peoples pages
+ - help should link to facebook page and email
+
+
+Publishing tasks:
+ + preview picture on facegroup
+ - cuber code on mystic-peanut
+ - check in all browsers
+ - update MP news section
+ - make previous level link to next one
+ - reset counters
+ - notify registered users
+ - publish on facebook group
+ - game name? kregan krodgan krid krib walker rune heart
+ - make youtube video
+ 
+
+Make level editor:
  - make sqare borders transparent between neighboring squares
  - 0 index floor is not working in editor.. (20-0 = 20 -> array out of bounds)
  - make texture uploading
@@ -596,53 +556,67 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  - use same loading file as game
  - redesign editor site (combine game and demo?)
 
---- various game features todo: 
 
-+ change attack to left click..
-- make worm control 
-- dust spec particles..
-- make worm dig passage in ground..
-- make player draw map in game??
-~ make rope pickable item
-- make two handed weapons (add shovel), or not?? 
-- player grunts, golem wound and attack are not sounded, 
-- revise door loading to optimize and support different doors on one level!
-- sound off/on button
-- money, experience, leveling, skills
-- magic
-- fight music
-- php session
-- php login 
-- make stairs sliding motion up/down
-- save game in mysql for registered - they can login to play from another computer
-- record player movements (clicks and keypresses) and time, and reproduce gameplay
-- registration fail: your email was wrong should have printed the wrong mail, and offer re-registration.
-- drink potion sound
-- secrets found checks win array :)
-- add glowing worm harth?
-- magic atlas book of maps flies to special slot and particles sprinkle
-- compass flies to its special slot. it turns to show north.
-- lantern flies to its slot. lantern is refiled with light stones
-- loading screen to show percentage linearly - make it calculate total byte size being downloaded
-~ make item combining
-~ (M) make smaller worms give soft hearth
-~ (M) make big worm give hard hearth
-~ (P) make hard heart glow when rubbed
-~ (M) make wall torches with hard worm earth hearts - glow when rubbed
-/ add tips dialog: "press i to open inventory"
-+ item info on mouse pause
-+ make speech bubbles for boy
-+ when item is picked, appropriate hand slots glow
-- rss feed
+New functionality (wishlist):
+ - character hud
+  - functionality for other slots
+  - character name
+  - more tabs
+ - icon stack in inventory
+ - make player walk to wall move camera a bit then pull it back
+ - experience, levels
+ - teleport rewrite [rewrite teleport code]
+ - thrown item is automatically picked up??? (animation of picking)
+ - item combine. mix to items to create new ones.
+ - make worm control 
+ - dust spec particles..
+ - make worm dig passage in ground..
+ - make player draw map in game??
+ ~ make rope pickable item
+ - make two handed weapons (add shovel), or not?? 
+ - player grunts, golem wound and attack are not sounded, 
+ - revise door loading to optimize and support different doors on one level!
+ - sound off/on button
+ - money, experience, leveling, skills
+ - magic
+ - fight music
+ - php session
+ - php login 
+ - make stairs sliding motion up/down
+ - save game in mysql for registered - they can login to play from another computer
+ - record player movements (clicks and keypresses) and time, and reproduce gameplay
+ - registration fail: your email was wrong should have printed the wrong mail, and offer re-registration.
+ - drink potion sound
+ - secrets found checks win array :)
+ - add glowing worm harth?
+ - magic atlas book of maps flies to special slot and particles sprinkle
+ - compass flies to its special slot. it turns to show north.
+ - lantern flies to its slot. lantern is refiled with light stones
+ - loading screen to show percentage linearly - make it calculate total byte size being downloaded
+ ~ make item combining
+ ~ (M) make smaller worms give soft hearth
+ ~ (M) make big worm give hard hearth
+ ~ (P) make hard heart glow when rubbed
+ ~ (M) make wall torches with hard worm earth hearts - glow when rubbed
+ / add tips dialog: "press i to open inventory"
+ - rss feed
 
-- big code reorganization
+
+Big code reorganization and optimizations
  - (O) merge static geometries, increase in performance! http://learningthreejs.com/blog/2011/10/05/performance-merging-geometry/
  - (O) two "new game" functions are two much
  - (O) sounds reorganize
  - (O) use JSHint for all code
  - (O) all models from js to binary! this will reduce download size by 10!
  + remove pickable from array when picked from the ground. put it back to array when dropped on the ground.
+ - [event file - mouse and key events in separate js file]
+ - [floors and walls file]
 
-- add new team members instructions
+
+Add new members instructions:
+ - make game tutorial (for playing)
+ - make tutorial for new level creation
+ - code documentation 
+
 
 console.log(": " + );
