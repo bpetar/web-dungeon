@@ -22,6 +22,11 @@ function level5WormOnClick1()
 	console.log("level5WormOnClick1");
 }
 
+function level5WormOnItemClick1()
+{
+	console.log("level5WormOnItemClick1");
+}
+
 var IDLE_ANIM_DURATION = 3300;
 var MONSTER_ATTACK_FRAME = 40;
 

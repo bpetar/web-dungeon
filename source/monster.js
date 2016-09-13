@@ -282,8 +282,27 @@ function loadMonsterDataFromLevelArray(monsterObj, levelObj, id) {
 	monsterObj.attack = monsterArr[8];
 	monsterObj.dmg = monsterArr[9];
 	monsterObj.pickables = [];
-	monsterObj.OnClick = monsterArr[11];
-	monsterObj.OnItemClick = monsterArr[12];
+
+	//get js function from string
+	var onPressFn = window[monsterArr[11]];
+	if(typeof onPressFn === 'function') 
+	{
+		monsterObj.OnClick = onPressFn;
+	}
+	else
+	{
+		monsterObj.OnClick = missing_click_function;
+	}
+	//get js function from string
+	var onPressItemFn = window[monsterArr[12]];
+	if(typeof onPressItemFn === 'function') 
+	{
+		monsterObj.OnItemClick = onPressItemFn;
+	}
+	else
+	{
+		monsterObj.OnItemClick = missing_click_function;
+	}
 
 	for (var mp = 0; mp < monsterArr[10].length; mp++)
 	{
