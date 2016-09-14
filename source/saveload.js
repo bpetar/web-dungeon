@@ -1040,7 +1040,7 @@ function loadLevelJsonSavedGameMainMenu(nextlevelObj,levelId,saved_data)
 	current_level = levelId;
 
 	//load level walls and floors etc..
-	load_level_obj_saved(currentlevelObj,saved_data);
+	load_level_obj_saved(currentlevelObj, saved_data, true);
 
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
@@ -1113,7 +1113,7 @@ function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
 	current_rotation = nextlevelObj.levelEntrances[entrance][2];
     
 	//load level walls and floors etc..
-	load_level_obj_saved(currentlevelObj,saved_data);
+	load_level_obj_saved(currentlevelObj, saved_data, false);
 
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
@@ -1146,7 +1146,7 @@ function loadLevelJsonSavedGame(nextlevelObj,levelId,entrance,saved_data)
 }
 
 //load floors and walls and holes and niches and all basic and static level elements
-function load_level_obj_saved(level_obj,saved_data)
+function load_level_obj_saved(level_obj, saved_data, calledFromMainMenu)
 {	
 	//load lights specific for each level
 	load_level_lights(level_obj);
@@ -1231,7 +1231,8 @@ function load_level_obj_saved(level_obj,saved_data)
     // 
     //so here we are sure level is loaded, and we call it here, 
     //but it would be better to somehow call it from main loading function and make it run after this..
-    loadInventory(saved_data.inventory);
+    if(calledFromMainMenu)
+    	loadInventory(saved_data.inventory);
     
     if(saved_data.left_hand_item)
     {

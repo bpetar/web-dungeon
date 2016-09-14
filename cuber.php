@@ -972,7 +972,8 @@
                 
 				//load inventory moved to after level is loaded (it is async so we cant call it here)
                 //its moved to saveload.js: load_level_obj_MainGame...
-				clear_inventory();
+				//also no need to clear on fresh load from menu
+				//clear_inventory();
 
 				loadCharacter();
 				
