@@ -27,4 +27,19 @@ function level5WormOnItemClick1()
 	console.log("level5WormOnItemClick1");
 }
 
+//TODO: remove this from level js and give it to niche no?
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider
+
+//props
+
+function level5PropOnClick1()
+{
+	console.log("level5PropOnClick1");
+	DisplayInfoDiv("These traps were set right beneath the battlefield.");
+}
+
+function level5PropOnClick2()
+{
+	console.log("level5PropOnClick2");
+	DisplayInfoDiv("Who set this up? The worms? Surely not the worms!");
+}
