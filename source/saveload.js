@@ -498,9 +498,9 @@ function newGameOnSameLevel()
 			currentlevelObj.array_of_containers[c].array_of_chest_pickables[cp].gObject = 0;
 		}
 	}
-	//load saved container content
-	load_saved_containers_content(globalJSONloader, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].containers, level_obj);
 
+	//load saved container content
+	load_saved_containers_content(globalJSONloader, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].containers, currentlevelObj);
 
 	//clear current pickables
 	for(var i=0; i<currentlevelObj.array_of_pickables.length;i++)
@@ -520,11 +520,11 @@ function newGameOnSameLevel()
 		{
 			//for(var j=0; j<currentlevelObj.array_of_pickables.length;j++)
 			{
-				//if(currentlevelObj.array_of_pickables[j].gameID == niche_pickables[i])
+				//if(currentlevelObj.array_of_pickables[j].gameID == niche_pickables[i].gameID)
 				{
 					var nicki = create_game_object();
-					nicki.gameID = niche_pickables[i];
-					nicki.itemID =all_items_array[niche_pickables[i]];
+					nicki.gameID = niche_pickables[i].gameID;
+					nicki.itemID =all_items_array[niche_pickables[i].gameID];
 
 					var item = get_item_by_id(nicki.itemID);
 					nicki.name = item.name;

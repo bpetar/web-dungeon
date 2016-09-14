@@ -29,6 +29,9 @@ Monster = function ( ) {
 	this.walk_startKeyframe = 140;
 	this.walk_endKeyframe = 179;
 	this.current_anim = 0; //idle
+
+	this.idle_anim_duration = 0;
+	this.monster_attack_frame = 0;
 	
 	this.move_speed = 0;
 	this.attack_speed = 0;
@@ -213,7 +216,7 @@ Monster.prototype.loadObject = function ( munster ) {
 		munster.mesh.name = munster.name;
 		munster.id = munster.mesh.id;
 		munster.mesh.visible = munster.visible;
-		munster.mesh.duration = IDLE_ANIM_DURATION;
+		munster.mesh.duration = munster.idle_anim_duration;
 		munster.mesh.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 		munster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		//console.log("adding monstere " + munster.mesh.name);
@@ -233,7 +236,7 @@ Monster.prototype.loadObject = function ( munster ) {
 				clone.rotation = new THREE.Vector3(0, monsterWaiter.rotation*Math.PI/2, 0);
 				
 				clone.visible = munster.visible;
-				clone.duration = IDLE_ANIM_DURATION;
+				clone.duration = munster.idle_anim_duration;
 				clone.setFrameRange(munster.idle_startKeyframe,munster.idle_endKeyframe);
 				clone.scale.set( 1.2, 1.2, 1.2 );
 
@@ -344,7 +347,9 @@ function loadMonsterDataFromLevelArray(monsterObj, levelObj, id) {
 	source_monster_click.src = monsterArr[24];
 	monsterObj.audio_monster_click.appendChild(source_monster_click);
 
-	
+	monsterObj.idle_anim_duration = monsterArr[25];
+	monsterObj.monster_attack_frame = monsterArr[26];
+
 	//console.log("loading monstere " + i);
 	
 }
@@ -463,6 +468,8 @@ function load_monsters (loader, levelObj)
 		source_monster_click.src = levelObj.monsterArr[i][24];
 		munster.audio_monster_click.appendChild(source_monster_click);
 
+		munster.idle_anim_duration = levelObj.monsterArr[25];
+		munster.monster_attack_frame = levelObj.monsterArr[26];
 		//console.log("loading monstere " + i);
 		
 		loadMonsterCheck(loader,munster);
@@ -485,7 +492,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 	if(playerDead)
 	{
 		console.log("player is dead, lets idle");
-		this.mesh.duration = IDLE_ANIM_DURATION;
+		this.mesh.duration = this.idle_anim_duration;
 		this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		return;
 	}
@@ -748,7 +755,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 			else
 			{
 				console.log("diagonal, stuck");
-				this.mesh.duration = IDLE_ANIM_DURATION;
+				this.mesh.duration = this.idle_anim_duration;
 				this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 			}
 		}
@@ -756,7 +763,7 @@ Monster.prototype.find_player = function ( player_pos ) {
 		{
 			//player is too far away to draw attention of monster... so idle around
 			//console.log("diagonal, too far away");
-			this.mesh.duration = IDLE_ANIM_DURATION;
+			this.mesh.duration = this.idle_anim_duration;
 			this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 		}
 	}
@@ -943,7 +950,7 @@ Monster.prototype.find_path = function ( destination_position ) {
 				if(this.rotation == 2)
 				{
 					this.mood = MONSTER_IDLE;
-					this.mesh.duration = IDLE_ANIM_DURATION;
+					this.mesh.duration = this.idle_anim_duration;
 					this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 				}
 				else
@@ -960,7 +967,7 @@ Monster.prototype.find_path = function ( destination_position ) {
 			else
 			{
 				console.log("stuck, but don't go to idle but keep walking (so that player realizes he should move :)");
-				//this.mesh.duration = IDLE_ANIM_DURATION;
+				//this.mesh.duration = this.idle_anim_duration;
 				//this.mesh.setFrameRange(this.idle_startKeyframe,this.idle_endKeyframe);
 			}
 		}
@@ -978,7 +985,7 @@ Monster.prototype.move = function ( delta ) {
 	if(this.should_attack)
 	{
 		//if the moment is right, make some attack roll
-		if(this.mesh.currentKeyframe == MONSTER_ATTACK_FRAME)
+		if(this.mesh.currentKeyframe == this.monster_attack_frame)
 		{
 			this.should_attack = false;
 			console.log("attack!" + delta);

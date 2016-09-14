@@ -27,7 +27,4 @@ function level5WormOnItemClick1()
 	console.log("level5WormOnItemClick1");
 }
 
-var IDLE_ANIM_DURATION = 3300;
-var MONSTER_ATTACK_FRAME = 40;
-
 var niche_item_offset = new THREE.Vector3(-1, -0.5, 0); //deeper, lower, sider

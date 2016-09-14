@@ -20,8 +20,6 @@ function level1OnFirstLoad()
 
 
 //monsters
-var IDLE_ANIM_DURATION = 3300;
-var MONSTER_ATTACK_FRAME = 40;
 
 //on click script functions
 function level1MonsterOnClick1()
