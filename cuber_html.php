@@ -75,6 +75,78 @@
 			#preload-04 { background: url(media/console-big-middle.png) no-repeat -9999px -9999px; }
 
 		</style>
+
+		<script>
+		
+		function mainMenuMouseOut()
+		{
+			remove_element_class("id-main-menu-new","shadow");
+			remove_element_class("id-main-menu-load","shadow");
+			remove_element_class("id-main-menu-settings","shadow");
+			remove_element_class("id-main-menu-register","shadow");
+			remove_element_class("id-main-menu-credits","shadow");
+			remove_element_class("id-main-menu-credits-back","shadow");
+			remove_element_class("id-main-menu-todo-back","shadow");
+			audio_maintheme.volume = 0.2;
+		}
+		
+		function mainMenuMouseOverNew()
+		{
+			add_element_class("id-main-menu-new","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+			audio_change_volume(audio_maintheme,0.7);
+		}
+		
+		function mainMenuMouseOverLoad()
+		{
+			if(saved_game)
+			{
+				add_element_class("id-main-menu-load","shadow");
+				audio_click.currentTime = 0;
+				audio_click.play();
+				//cursor pointer
+				document.getElementById("id-main-menu-load").style.cursor = "pointer";
+			}
+		}
+		
+		function mainMenuMouseOverSettings()
+		{
+			add_element_class("id-main-menu-settings","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverRegister()
+		{
+			add_element_class("id-main-menu-register","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverCredits()
+		{
+			add_element_class("id-main-menu-credits","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		function mainMenuMouseOverCreditsBack()
+		{
+			add_element_class("id-main-menu-credits-back","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		function mainMenuMouseOverTodoBack()
+		{
+			add_element_class("id-main-menu-todo-back","shadow");
+			audio_click.currentTime = 0;
+			audio_click.play();
+		}
+		
+		</script>
+
+
 	</head>
 	
 	<body onload="onPageLoad()">
@@ -253,75 +325,3 @@
 			</div>
 		</div>
 		
-		
-
-		
-		<script>
-		
-		function mainMenuMouseOut()
-		{
-			remove_element_class("id-main-menu-new","shadow");
-			remove_element_class("id-main-menu-load","shadow");
-			remove_element_class("id-main-menu-settings","shadow");
-			remove_element_class("id-main-menu-register","shadow");
-			remove_element_class("id-main-menu-credits","shadow");
-			remove_element_class("id-main-menu-credits-back","shadow");
-			remove_element_class("id-main-menu-todo-back","shadow");
-			audio_maintheme.volume = 0.2;
-		}
-		
-		function mainMenuMouseOverNew()
-		{
-			add_element_class("id-main-menu-new","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-			audio_change_volume(audio_maintheme,0.7);
-		}
-		
-		function mainMenuMouseOverLoad()
-		{
-			if(saved_game)
-			{
-				add_element_class("id-main-menu-load","shadow");
-				audio_click.currentTime = 0;
-				audio_click.play();
-				//cursor pointer
-				document.getElementById("id-main-menu-load").style.cursor = "pointer";
-			}
-		}
-		
-		function mainMenuMouseOverSettings()
-		{
-			add_element_class("id-main-menu-settings","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-		}
-		
-		function mainMenuMouseOverRegister()
-		{
-			add_element_class("id-main-menu-register","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-		}
-		
-		function mainMenuMouseOverCredits()
-		{
-			add_element_class("id-main-menu-credits","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-		}
-		
-		function mainMenuMouseOverCreditsBack()
-		{
-			add_element_class("id-main-menu-credits-back","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-		}
-		function mainMenuMouseOverTodoBack()
-		{
-			add_element_class("id-main-menu-todo-back","shadow");
-			audio_click.currentTime = 0;
-			audio_click.play();
-		}
-		
-		</script>

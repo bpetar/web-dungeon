@@ -15,7 +15,30 @@
 	//echo "Views=". $_SESSION['views'];
 	
 	echo "<script src='./source/three.min.js'></script>";
-	
+	echo "<script src='./source/pickables.js'></script>";
+	echo "<script src='./source/tapestries.js'></script>";
+	echo "<script src='./source/plate.js'></script>";
+	echo "<script src='./source/containers.js'></script>";
+	echo "<script src='./source/game_object.js'></script>";
+	echo "<script src='./source/inventory.js'></script>";
+	echo "<script src='./source/niche.js'></script>";
+	echo "<script src='./source/audio.js'></script>";
+	echo "<script src='./source/monster.js'></script>";
+	echo "<script src='./source/stats.min.js'></script>";
+	echo "<script src='./source/particles.js'></script>";
+	echo "<script src='./source/Detector.js'></script>";
+	echo "<script src='./source/button.js'></script>";
+	echo "<script src='./source/prop.js'></script>";
+	echo "<script src='./source/keyholes.js'></script>";
+	echo "<script src='./source/utils.js'></script>";
+	echo "<script src='./source/level.js'></script>";
+	echo "<script src='./source/scripts.js'></script>";
+	echo "<script src='./source/saveload.js'></script>";
+	echo "<script src='./source/doors.js'></script>";
+	echo "<script src='./source/lights.js'></script>";
+	echo "<script src='./source/main_game_loop.js'></script>";
+
+
 	if (isset($_COOKIE["cubish_user"]))
 	{
 		echo "<script>var first_time_user = false; var cubish_user_id = " . $_COOKIE["cubish_user"] . "; </script> ";
@@ -62,30 +85,6 @@
 ?>
 
     
-	
-		<script src="./source/pickables.js"></script>
-		<script src="./source/tapestries.js"></script>
-		<script src="./source/plate.js"></script>
-		<script src="./source/containers.js"></script>
-		<script src="./source/game_object.js"></script>
-		<script src="./source/inventory.js"></script>
-		<script src="./source/niche.js"></script>
-		<script src="./source/audio.js"></script>
-		<script src="./source/monster.js"></script>
-		<script src="./source/stats.min.js"></script>
-		<script src="./source/particles.js"></script>
-		<script src="./source/Detector.js"></script>
-		<script src="./source/button.js"></script>
-		<script src="./source/prop.js"></script>
-		<script src="./source/keyholes.js"></script>
-		<script src="./source/utils.js"></script>
-		<script src="./source/level.js"></script>
-		<script src="./source/scripts.js"></script>
-		<script src="./source/saveload.js"></script>
-		<script src="./source/doors.js"></script>
-		<script src="./source/lights.js"></script>
-		<script src="./source/main_game_loop.js"></script>
-
 		<script>
 		
 			if ( ! Detector.webgl ) 

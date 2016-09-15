@@ -439,8 +439,6 @@ function newGameMainMenu()
 	
 	updatePlayerHealthBar();
 
-	show_message("(you wake up)" + " <br><br> <div id='info_dialog_button' style='cursor: pointer; margin:auto; padding-top:9px; font-size:14px; width:94px; height: 25px; background: #00c url(media/gui/buttons.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </div>", 600, 200, "url(media/gui/dialog2.png)", "Copperplate, 'Copperplate Gothic Light', Papyrus, Garamond, Baskerville", "#ddddd0", "400", "20px");
-
 }
 
 //new game
@@ -609,6 +607,12 @@ function newGameOnSameLevel()
 		console.log("restart ambient music on new game on same level");
 	}
 
+	//call on first load
+	var onFirstLoadFn = window[currentlevelObj.levelOnFirstLoad];
+	if(typeof onFirstLoadFn === 'function') 
+	{
+		onFirstLoadFn(currentlevelObj);
+	}
 	
 	//doors
 	if(currentlevelObj.array_of_doors[0].open == 1)

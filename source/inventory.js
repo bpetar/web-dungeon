@@ -138,10 +138,6 @@ function add_to_inventory (gObject, slot) {
 	gObject.mesh.noremove = true;
 }
 
-document.getElementById("player1-inventory").onmousedown = function () {
-    console.log("User clicked inventory");
-    //return true; // Not needed, as long as you don't return false
-};
 
 function inventory_clicked_in_slot(x_pos,y_pos) {
 	var pos = get_element_position_in_viewport("player1-inventory");

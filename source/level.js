@@ -1530,6 +1530,12 @@ function load_level_obj(level_obj)
 		onLoadFn(level_obj);
 	}
 
+	var onFirstLoadFn = window[level_obj.levelOnFirstLoad];
+	if(typeof onFirstLoadFn === 'function') 
+	{
+		onFirstLoadFn(level_obj);
+	}
+
 	//if level is entered and players is standing on pressure plate, active it
 	var plateID = standing_on_plate(level_obj);
 	if(plateID>-1)
