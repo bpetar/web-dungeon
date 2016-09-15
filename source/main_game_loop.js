@@ -326,6 +326,10 @@ function game_loop() {
 						thrownWeaponIsFlying = false;
 						//drop item on the ground
 						thrownWeapon.mesh.position.y = 0;
+
+						//check if item dropped on the plate
+						//check if monster is hit
+						//check if item falls in the hole
 					}
 				}
 				else

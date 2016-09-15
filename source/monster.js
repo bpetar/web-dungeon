@@ -468,8 +468,8 @@ function load_monsters (loader, levelObj)
 		source_monster_click.src = levelObj.monsterArr[i][24];
 		munster.audio_monster_click.appendChild(source_monster_click);
 
-		munster.idle_anim_duration = levelObj.monsterArr[25];
-		munster.monster_attack_frame = levelObj.monsterArr[26];
+		munster.idle_anim_duration = levelObj.monsterArr[i][25];
+		munster.monster_attack_frame = levelObj.monsterArr[i][26];
 		//console.log("loading monstere " + i);
 		
 		loadMonsterCheck(loader,munster);

@@ -489,13 +489,13 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  - (M) pixel align on edges
  - (D) boy face
  - (CHECK) try to save with item at hand
- - (CHECK) try to hit monster with rock.
  - save load da sacuva nishe koje su zatvorene?
  - throwing item on plate in the distance
+ - hit monster with rock.
  - (BUG) new game -> load to second level with rock on the ground -> picking makes hands glow again.
  - (BUG) namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
- - (BUG) all monsters are stiff
  - (IMP) close dialog after third move or so, or at least when changing levels.
+ + (BUG) all monsters are stiff
  + (CHECK) onfirstload not called?
  + monster add IDLE_ANIM_DURATION to monster property not level property
  + (BUG) load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
@@ -515,6 +515,7 @@ New levels:
  - making level 7
  - make door that can only be opened from the outside (or using special item)
  - item combine. mix to items to create new ones. (rock rope stick)
+ - make player bump into walls
 
 
 Options screen:
@@ -540,7 +541,7 @@ Publishing tasks:
  - reset counters
  - notify registered users
  - publish on facebook group
- - game name? kregan krodgan krid krib walker rune heart
+ - game name? kregan krodgan krid krib walker rune heart to backstab a dragon
  - make youtube video
  
 
@@ -563,7 +564,6 @@ New functionality (wishlist):
   - character name
   - more tabs
  - icon stack in inventory
- - make player walk to wall move camera a bit then pull it back
  - experience, levels
  - teleport rewrite [rewrite teleport code]
  - thrown item is automatically picked up??? (animation of picking)
