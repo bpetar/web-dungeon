@@ -13,6 +13,7 @@ function level3OnLoad(levelObj)
 
 function level3OnFirstLoad(levelObj)
 {
+	console.log("level3OnFirstLoad");
 }
 
 //level specific functions

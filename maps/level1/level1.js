@@ -16,6 +16,7 @@ function level1OnLoad(levelObj)
 function level1OnFirstLoad()
 {
 	//info_dialog_div.style.display = "inline";
+	console.log("level1OnFirstLoad");
 }
 
 

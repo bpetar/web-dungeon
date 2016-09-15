@@ -489,24 +489,18 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  - (M) pixel align on edges
  - (D) boy face
  - (CHECK) onfirstload not called?
- - monster on level 5 -> load to level 5 from main menu and there is error undefined IDLE animation var
- - IDLE_ANIM_DURATION mora da ide u monster niz, inace, ako se odma ucita neki kasniji nivo gde to nije definisano, a da ne govorim ako na novou ima vise monstera sa razlicitim vrednostima...
- - monster add IDLE_ANIM_DURATION to monster property not level property
+ + monster add IDLE_ANIM_DURATION to monster property not level property
  - (CHECK) try to save with item at hand
  - (CHECK) try to hit monster with rock.
  - save load da sacuva nishe koje su zatvorene?
  - throwing item on plate in the distance
- - (BUG) load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
+ + (BUG) load saved game (svi nivoi izmenjeni i sacuvani), ispremestaj inventar, predji na drugi nivo - inventar ce se opet ispremestati - ponovo ga ucitava iz neke snimljene pozicije. Solution: inventar, equipment, hp, itd. ne treba da reucitava kad samo prelazis sa nivoa na nivo.
  + (BUG) load saved game na drugom nivou i klikni na monstera - kaze OnClick is not a function.
- - (BUG) prop click not working on level 5 if load directly, and functions not defined in level5 js
+ + (BUG) prop click not working on level 5 if load directly, and functions not defined in level5 js
  - (BUG) in function mainMenuMouseOverLoad audio_click undefined appears on main menu. maybe when hovering right on very start.
  - (BUG) new game -> load to second level with rock on the ground -> picking makes hands glow again.
  - (BUG) namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
- - (BUG) nicheUrr
-      //nicheUrr is hack to make first level new game load niche content.
-      //nicheArr gets modified when you take item out of niche, so new game does not load initial state (which is now duplicated in nicheUrr)
-      //I anticipate this problem will not exist on following levels as this function is only called on first level
-      //var niche_pickables = currentlevelObj.nicheUrr[0][3]; 
+ + (HACK) nicheUrr is hack to make first level new game load niche content.
 
 
 New levels:
@@ -515,6 +509,10 @@ New levels:
  - (M) door ropes are bad when opening
  - (M) ropes or bushes
  - making level 5
+ - making level 6
+ - making level 7
+ - make door that can only be opened from the outside (or using special item)
+ - item combine. mix to items to create new ones. (rock rope stick)
 
 
 Options screen:
@@ -567,7 +565,6 @@ New functionality (wishlist):
  - experience, levels
  - teleport rewrite [rewrite teleport code]
  - thrown item is automatically picked up??? (animation of picking)
- - item combine. mix to items to create new ones.
  - make worm control 
  - dust spec particles..
  - make worm dig passage in ground..
@@ -600,6 +597,11 @@ New functionality (wishlist):
  ~ (M) make wall torches with hard worm earth hearts - glow when rubbed
  / add tips dialog: "press i to open inventory"
  - rss feed
+ - dialogs with multiple NPCs at the same time: inn keeper talks and the maid is interrupting in.
+ - sleeping troll tavern is teleported to the dungeon by frustrated witch. bussiness is going slow since then.
+
+Jokes:
+ - healing blade: made by combining sword and healing potion - automatically heals 1d4 points of given damage.
 
 
 Big code reorganization and optimizations

@@ -14,5 +14,5 @@ function level4OnLoad(levelObj)
 function level4OnFirstLoad(levelObj)
 {
 	show_speech_bubble("&nbsp;Up is good. It makes me closer to the surface.", 300, 110, 0, "url(media/speech_bubble.png)", "Lucida Console, Baskerville", "#ffffff", "300", "14px");
-	console.log("first time lvl4");
+	console.log("level4OnFirstLoad");
 }
