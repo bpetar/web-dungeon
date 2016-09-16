@@ -1619,6 +1619,9 @@ function loadLevel(id,entrance)
 	modelNumber = 0;
 	relativeLevelModelCount = 0;
 
+	hide_bubble();
+	hide_message();
+
 	//stop ambient music of current level
 	if(typeof currentlevelObj.audio_ambient != 'undefined')
 	{

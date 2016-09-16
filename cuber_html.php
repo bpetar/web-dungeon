@@ -151,11 +151,11 @@
 	
 	<body onload="onPageLoad()">
     
-		<img id="pickable_at_hand_id" src="media/none.png" style="display:none; position:absolute; left:-170px; z-index:4;" />
+		<img id="pickable_at_hand_id" src="media/none.png" style="display:none; position:absolute; left:-170px; z-index:3;" />
 
 
 
-		<div id="id-main-menu" style="position:absolute; width:100%; height:100%; top:0; margin: auto; background-color: #000000; z-index:4;">
+		<div id="id-main-menu" style="position:absolute; width:100%; height:100%; top:0; margin: auto; background-color: #000000; z-index:5;">
 
 			<div id="id-main-menu-sub" style="position:absolute; width:400px; height:600px; background: url(media/dragon_sep.png); background-size: 100% 100%; left:0; right:0; top:0; bottom:0; margin: auto;">
 				<span id="main_menu_message" style="font-size:14px; color:#988455;">Great earthquake awoke the dragon. Or was it the other way around? It was not the mindless beast, the dragon, but ancient malice with wit and wisdom that no man could match.</span> <br>
@@ -316,7 +316,7 @@
 			</div>
 		</div>
 
-		<div id="loading_progress" style="position:absolute; font-size:14px; width:100%; height:100%; background-color: #050500; top:0; bottom: 0; left: 0; right: 0; margin: auto; z-index:3;">
+		<div id="loading_progress" style="position:absolute; font-size:14px; width:100%; height:100%; background-color: #050500; top:0; bottom: 0; left: 0; right: 0; margin: auto; z-index:4;">
 
 			<div style="position:absolute; width:300px; height:200px; top:0; bottom: 0; left: 0; right: 0; margin: auto;">
 				<span id="loading_message_text" style="font-size:14px;">Good King Richard called to arms when spawn of darkness rallied around the dragons mountain. Orcs, goblins, even untameable trolls came out of forest to serve the New Lord. But humans stood tall and proud, and they had no fear in the eyes of battle.</span> <br><br><br>

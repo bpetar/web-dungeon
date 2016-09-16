@@ -488,6 +488,8 @@
 			var info_tip_div_top_lift = 0;
 			var info_tip_div_top = 0;
 			var speech_bubble_div = 0;
+			var speech_bubble_shown = 0;
+			var info_message_shown = 0;
 
 			var mesh, mesh2, mesh3, light;
 
@@ -606,6 +608,7 @@
 			var gui_left_div = 0;
 			var gui_right_div = 0;
 
+
 			init();
 			animate();
 
@@ -624,7 +627,7 @@
 				info_dialog_div.style.display = "none";
 				//play sound 
 				audio_click.play();
-				//console.log("gasimo?");
+				info_message_shown = 0;
 			}
 			
 			function hide_bubble()
@@ -634,6 +637,7 @@
 				//document.getElementById( "gui-speech" ).style.display = "none";
 				//play sound 
 				audio_click.play();
+				speech_bubble_shown = 0;
 			}
 			
 			function show_speech_bubble(message, width, height, pos, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
@@ -642,6 +646,8 @@
 				//if(speech_bubble_div.style.display == "none")
 				audio_click.currentTime = 0;
 				audio_click.play();
+
+				speech_bubble_shown = 1;
 							
 				{
 					speech_bubble_div.innerHTML = message;
@@ -681,6 +687,8 @@
 			
 			function show_message(message, width, height, silly_background, fonty_face, fonty_color, fonty_weight, fonty_size) {
 				
+				info_message_shown = 1;
+
 				//this check prevents us to go from one message to another..
 				//if(info_dialog_div.style.display == "none")
 				var dialogSize = container3d.offsetHeight;
@@ -1279,6 +1287,26 @@
 				if(cameraMove || cameraRotate || m_GamePaused)
 					return;
 					
+				//close dialogs feature
+				if(speech_bubble_shown > 0)
+				{
+					speech_bubble_shown++;
+					if(speech_bubble_shown > 3)
+					{
+						//hide speech bubble
+						hide_bubble(); //this function sets speech_bubble_shown to 0 again
+					}
+				}
+				if(info_message_shown > 0)
+				{
+					info_message_shown++;
+					if(info_message_shown > 3)
+					{
+						//hide info message
+						hide_message(); //this function sets info_message_shown to 0 again
+					}
+				}
+
 				//Movement:
 				var looker = new THREE.Vector3(0, 0, 0).add(camera.look);
 				looker.sub(camera.position);

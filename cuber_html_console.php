@@ -107,17 +107,42 @@
 					</div>
 					<div id="id-options-content-settings" style="display:none; margin: auto; margin-top:184px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>TODO: settings.</span>
 					</div>
-					<div id="id-options-content-help" style="display:none; margin: auto; margin-top:244px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>For support, write to our email or facebook page.</span>
-					</div>
-					<div id="id-options-content-credits" style="display:none; margin: auto; margin-top:4px; height:454px;  text-align:left; padding-left:10px; border:1px solid #003300;"><span style='display: block; width:100%; text-align:center; border:0px solid white;'>Thanks to all the people who contributed the game so far:</span>
+					<div id="id-options-content-help" style="display:none; margin: auto; margin-top:244px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;">
 						<br><br>
-						<span style='display: block; width:100%; text-align:center; border:0px solid white;'>Dragan Kurbalija</span>
+						<span>This is a dungeon crawling game. Movement is divided in square steps and rotation is by half a Pi. Move around with WASD keys and turn around with QE keys. Mouse left is for picking and clicking stuff, right click can be used to activate item in inventory. Inventory are those squares on the right. If you click player face you get player config screen where you can equip items and such.</span>
+						<br><br>
+						<span>Controls:</span><br>
+						<span>W = Forward</span><br>
+						<span>S = Backward</span><br>
+						<span>A = Strafe Left</span><br>
+						<span>D = Strafe Right</span><br>
+						<span>Q = Turn Left</span><br>
+						<span>E = Turn Right</span><br>
+						<span>X = Character Explodes</span>
+						<br><br>
+						<span>For more support, write to our email info@mystic-peanut.com or facebook page: https://www.facebook.com/mysticpeanutentertainment</span>
+					</div>
+					<div id="id-options-content-credits" style="display:none; margin: auto; margin-top:4px; text-align:left; padding-left:10px; border:1px solid #003300;">
+						<br><br>
+						<span style='display: block; width:100%;  border:0px solid white;'>Thanks to all the people who contributed the game, specifically:</span>
+						<br><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'>Dragan Kurbalija</span>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'>BirdaoGwra Basumatary</span>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'>Zorana Markovic</span>
+						<br><br>
+						<span style='display: block; width:100%; border:0px solid white;'>These are the tools used for making this game:</span>
 						<br>
-						<span style='display: block; width:100%; text-align:center; border:0px solid white;'>BirdaoGwra Basumatary</span>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="http://www.threejs.org/">Three.js</a></span><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="http://www.blender.org/">Blender</a></span><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="http://www.gimp.org/">Gimp</a></span><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="http://www.notepad-plus-plus.org/">Notepad++</a></span><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="https://www.sublimetext.com/3">Sublime</a></span><br>
+						<span style='display: block; width:100%; padding-left:10px; border:0px solid white;'><a href="http://www.blendswap.com/">BlendSwap</a></span><br>
+						<br>
 					</div>
-					<div id="id-options-content-donate" style="display:none; margin: auto; margin-top:364px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>Nothing says I love you like 5 bucks.</span>
+					<div id="id-options-content-donate" style="display:none; margin: auto; margin-top:364px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>TODO: donate/purchase</span>
 					</div>
-					<div id="id-options-content-register" style="display:none; margin: auto; margin-top:424px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>Register.</span>
+					<div id="id-options-content-register" style="display:none; margin: auto; margin-top:424px; height:54px; text-align:left; padding-left:10px; line-height:54px; border:1px solid #003300;"><span>TODO: register.</span>
 					</div>
 					<div id="id-options-content-return" style="position:absolute; margin: auto; bottom:0px; height:64px; text-align:left; padding-left:10px; line-height:64px; border:1px solid #003300;"><span>Game loop is paused while in options screen.</span>
 					</div>

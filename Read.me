@@ -488,13 +488,18 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  - (M) hard texture line on egdes
  - (M) pixel align on edges
  - (D) boy face
- - (CHECK) try to save with item at hand
- - save load da sacuva nishe koje su zatvorene?
- - throwing item on plate in the distance
+ - (BUG) move to level with item at hand -> goes but does not drop. 
+ - save load da sacuva nishe koje su zatvorene? - introduce level quirks!
+ - throwing item on plate in the distance.
  - hit monster with rock.
  - (BUG) new game -> load to second level with rock on the ground -> picking makes hands glow again.
  - (BUG) namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
  - (IMP) close dialog after third move or so, or at least when changing levels.
+ - Help screen should list game controls
+ + Credits mismatch on options screen and main menu
+ + pickable item at hand is visible over loading screen.
+ + (CHECK) try to save with item at hand -> item drops - ok behavior until quicksave (on hotkey) introduced
+ + (CHECK) try to load with item at hand -> item drops - ok behavior until quickload (on hotkey) introduced
  + (BUG) all monsters are stiff
  + (CHECK) onfirstload not called?
  + monster add IDLE_ANIM_DURATION to monster property not level property
@@ -581,6 +586,7 @@ New functionality (wishlist):
  - fight music
  - php session
  - php login 
+ - quicksave/quickload on hotkey (make sure to handle situation when pickable at hand)
  - make stairs sliding motion up/down
  - save game in mysql for registered - they can login to play from another computer
  - record player movements (clicks and keypresses) and time, and reproduce gameplay
