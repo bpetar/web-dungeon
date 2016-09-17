@@ -179,8 +179,10 @@
 						Birdao Basumataru<br>
 						Zorana Markovic<br>
 						<br>
-						<a href="http://threejs.org/">Three.js</a><br>
-						<a href="http://www.blendswap.com/">BlendSwap</a><br>
+						<a href="http://threejs.org/" target="_blank">Three.js</a><br>
+						<a href="http://www.gimp.org/" target="_blank">Gimp</a><br>
+						<a href="http://www.blender.org/" target="_blank">Blender</a><br>
+						<a href="http://www.blendswap.com/" target="_blank">BlendSwap</a><br>
 						<br>
 						Big thanks to my family and all of you who bother playing it :)<br>
 						<br>
