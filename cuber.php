@@ -942,7 +942,7 @@
 				martin_defence = arrayOfGameStories[0][0].martin_defence;
 				
 				//quirks
-				game_quirks = arrayOfGameStories[0][0].quirks;
+				copy_game_quirks(game_quirks,arrayOfGameStories[0][0].quirks); //its important to copy quirks
 				
 				//equipment
 				//equipped items moved to after level is loaded (it is async so we cant call it here)

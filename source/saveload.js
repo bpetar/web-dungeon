@@ -1289,7 +1289,14 @@ function loadGame()
 	martin_defence = arrayOfGameStories[0][0].martin_defence;
 	
 	//quirks
-	game_quirks = arrayOfGameStories[0][0].quirks;
+	copy_game_quirks(game_quirks,arrayOfGameStories[0][0].quirks);
+	remove_element_class("player1-hand-r","shadow");
+	remove_element_class("player1-hand-l","shadow");
+	remove_element_class("id-character-screen-weapon-r-icon","shadow");
+	remove_element_class("id-character-screen-weapon-l-icon","shadow");
+	remove_element_class("player1-inventory","shadow");
+	document.getElementById('id-character-screen-container').style.display='none';
+	characterHudOpened = false;
 	
 	//camera
 	if((current_rotation==0)||(current_rotation==2)) camera.position.x = current_position.x*10;
@@ -1358,6 +1365,8 @@ function newGame()
 	remove_element_class("player1-hand-r","shadow");
 	remove_element_class("player1-hand-l","shadow");
 	remove_element_class("player1-inventory","shadow");
+	remove_element_class("id-character-screen-weapon-r-icon","shadow");
+	remove_element_class("id-character-screen-weapon-l-icon","shadow");
 	document.getElementById('id-character-screen-container').style.display='none';
 	characterHudOpened = false;
 

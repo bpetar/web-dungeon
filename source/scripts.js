@@ -13,6 +13,20 @@ game_quirks.q8 = 0;
 game_quirks.q9 = 0;
 game_quirks.q10 = 0;
 
+function copy_game_quirks(gq1, gq2)
+{
+	gq1.q1 = gq2.q1;
+	gq1.q2 = gq2.q2;
+	gq1.q3 = gq2.q3;
+	gq1.q4 = gq2.q4;
+	gq1.q5 = gq2.q5;
+	gq1.q6 = gq2.q6;
+	gq1.q7 = gq2.q7;
+	gq1.q8 = gq2.q8;
+	gq1.q9 = gq2.q9;
+	gq1.q10 = gq2.q10;
+}
+
 function script_showScroll_lvl3_map()
 {
 	console.log("Showing scroll content!");
