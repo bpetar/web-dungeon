@@ -1522,6 +1522,9 @@ function load_level_obj(level_obj)
 	//load pressure plates (plynths)
 	load_plates(globalJSONloader, level_obj);
 	
+	//get level quirks
+	level_obj.array_of_level_quirks = level_obj.level_quirks.slice();
+
 	//level specific action on load
 	//levelOnLoad(); level3OnLoad(level_obj);
 	var onLoadFn = window[level_obj.levelOnLoad];

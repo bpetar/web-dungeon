@@ -166,6 +166,9 @@ function save_position()
             }
         }
 
+		//quirks
+		save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["level_quirks"] = arrayOfVisitedLevels[vli].array_of_level_quirks.slice();
+
         //win areas 
         save_data["levels"]["id"+arrayOfVisitedLevels[vli].id]["win_area"] = [];
         var windex = 0;
@@ -282,6 +285,9 @@ function save_position()
                 j++;
             }
         }
+
+		//quirks
+		save_data["levels"]["id"+currentlevelObj.id]["level_quirks"] = currentlevelObj.array_of_level_quirks.slice();
 
         //win areas 
         save_data["levels"]["id"+currentlevelObj.id]["win_area"] = [];
@@ -887,6 +893,9 @@ function loadGameOnSameLevel()
 	//load saved plate state
 	load_saved_plate_state(globalJSONloader, currentlevelObj, arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].plates);
 
+	//load niche array
+	//load_just_niches(currentlevelObj);
+
 	//reset win areas
 	for(var i = 0; i < currentlevelObj.win_area.length; i++)
 	{
@@ -913,6 +922,24 @@ function loadGameOnSameLevel()
 	loadInventory(arrayOfGameStories[0][0].inventory)
 	
 	
+	//restart music
+	if(typeof currentlevelObj.audio_ambient != 'undefined')
+	{
+		currentlevelObj.audio_ambient.currentTime = 0;
+		currentlevelObj.audio_ambient.pause();
+		console.log("restart ambient music on new game on same level");
+	}
+
+	//get saved level quirks
+	currentlevelObj.array_of_level_quirks = arrayOfGameStories[0][0].levels["id"+currentlevelObj.id].level_quirks.slice();
+
+	//call on load no?
+	var onLoadFn = window[currentlevelObj.levelOnLoad];
+	if(typeof onLoadFn === 'function') 
+	{
+		onLoadFn(currentlevelObj);
+	}
+
 	//equipment
 	//equipped items 
 	
@@ -1221,6 +1248,12 @@ function load_level_obj_saved(level_obj, saved_data, calledFromMainMenu)
 	//load saved pressure plates (plynths)
 	load_saved_plates(globalJSONloader, level_obj, saved_data.levels["id"+current_level].plates);
 	
+	//load niche array
+	load_just_niches(currentlevelObj);
+
+	//get saved level quirks
+	level_obj.array_of_level_quirks = saved_data.levels["id"+current_level].level_quirks.slice();
+
 	//level specific action on load
 	//levelOnLoad(); level3OnLoad(level_obj);
 	var onLoadFn = window[level_obj.levelOnLoad];

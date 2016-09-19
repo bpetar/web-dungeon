@@ -12,6 +12,89 @@ function level2OnLoad(levelObj)
 	levelObj.audio_ambient.loop = false;
 	levelObj.audio_ambient.play();
 
+	var newNicheCount = 0;
+
+	if(levelObj.array_of_niches[1].coverModel)
+		scene.remove(levelObj.array_of_niches[1].coverModel);
+	if(levelObj.array_of_niches[2].coverModel)
+		scene.remove(levelObj.array_of_niches[2].coverModel);
+	if(levelObj.array_of_niches[3].coverModel)
+		scene.remove(levelObj.array_of_niches[3].coverModel);
+
+	if(levelObj.array_of_level_quirks[0] == 1)
+	{
+		//close the niche 2
+		var nichi = levelObj.array_of_niches[1];
+		//draw wall over niche
+		var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
+		map.wrapS = map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 16;
+		var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+		nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+		//nichi.coverModel.receiveShadow = true;
+		nichi.coverModel.position.y = 0.4*SQUARE_SIZE; //y
+		//if(nichi.orientation == 0) 
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.1; //z
+		nichi.coverModel.rotation.set(0, 0, 0);
+		scene.add( nichi.coverModel );
+
+		newNicheCount++;
+	}
+
+	if(levelObj.array_of_level_quirks[1] == 1)
+	{
+		//close the niche 3
+		var nichi = levelObj.array_of_niches[2];
+		//draw wall over niche
+		var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
+		map.wrapS = map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 16;
+		var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+		nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+		//nichi.coverModel.receiveShadow = true;
+		nichi.coverModel.position.y = 0.4*SQUARE_SIZE;
+		//if(nichi.orientation == 3) 
+		nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.1; //x
+		nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
+		nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
+		scene.add( nichi.coverModel );
+
+		newNicheCount++;
+	}
+
+	if(levelObj.array_of_level_quirks[2] == 1)
+	{
+		//close the niche 4
+		var nichi = levelObj.array_of_niches[3];
+		//draw wall over niche
+		var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
+		map.wrapS = map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 16;
+		var material = new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: map, side: THREE.DoubleSide } );	
+		nichi.coverModel = new THREE.Mesh( new THREE.PlaneGeometry( SQUARE_SIZE, 0.8*SQUARE_SIZE, 10, 10 ), material );
+		nichi.coverModel.rotation.set(0, Math.PI/2, 0);
+		//nichi.coverModel.receiveShadow = true;
+		nichi.coverModel.position.y = 0.4*SQUARE_SIZE; 
+		//if(nichi.orientation == 2) 
+		nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
+		nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE+0.1; //z
+		nichi.coverModel.rotation.set(0, Math.PI, 0);
+		scene.add( nichi.coverModel );
+
+		newNicheCount++;
+
+	}
+
+	GLOBAL_LEVEL2_NICHES_CLOSED = newNicheCount; 
+
+	if (GLOBAL_LEVEL2_NICHES_CLOSED == 3)
+	{
+		//open portal...
+		console.log("open portal...");
+	}
 }
 
 function level2OnFirstLoad()
@@ -105,7 +188,7 @@ function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
 	console.log("niche2 added item: " + gObject.name);
 
 	//change state to closed
-	nichi.opened = 0;
+	levelObj.array_of_level_quirks[0] = 1;
 
 	//draw wall over niche
 	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
@@ -118,7 +201,7 @@ function level2Niche2_OnItemAdd(levelObj, nichi, gObject)
 	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; //y
 	//if(nichi.orientation == 0) 
 	nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
-	nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.2; //z
+	nichi.coverModel.position.z = (nichi.map_position.z+0.5)*SQUARE_SIZE-0.1; //z
 	nichi.coverModel.rotation.set(0, 0, 0);
 	scene.add( nichi.coverModel );
 	
@@ -165,7 +248,7 @@ function level2Niche3_OnItemAdd(levelObj, nichi, gObject)
 	console.log("niche3 added item: " + gObject.name);
 
 	//change state to closed
-	nichi.opened = 0;
+	levelObj.array_of_level_quirks[1] = 1;
 
 	//draw wall over niche
 	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
@@ -177,7 +260,7 @@ function level2Niche3_OnItemAdd(levelObj, nichi, gObject)
 	//nichi.coverModel.receiveShadow = true;
 	nichi.coverModel.position.y = 0.4*SQUARE_SIZE;
 	//if(nichi.orientation == 3) 
-	nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.3; //x
+	nichi.coverModel.position.x = (nichi.map_position.x+0.5)*SQUARE_SIZE-0.1; //x
 	nichi.coverModel.position.z = (nichi.map_position.z)*SQUARE_SIZE; //z
 	nichi.coverModel.rotation.set(0, -Math.PI/2, 0);
 	scene.add( nichi.coverModel );
@@ -224,7 +307,7 @@ function level2Niche4_OnItemAdd(levelObj, nichi, gObject)
 	console.log("niche4 added item: " + gObject.name);
 
 	//change state to closed
-	nichi.opened = 0;
+	levelObj.array_of_level_quirks[2] = 1;
 
 	//draw wall over niche
 	var map = THREE.ImageUtils.loadTexture( levelObj.wall_texture_file );
@@ -237,7 +320,7 @@ function level2Niche4_OnItemAdd(levelObj, nichi, gObject)
 	nichi.coverModel.position.y = 0.4*SQUARE_SIZE; 
 	//if(nichi.orientation == 2) 
 	nichi.coverModel.position.x = (nichi.map_position.x)*SQUARE_SIZE; //x
-	nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE; //z
+	nichi.coverModel.position.z = (nichi.map_position.z-0.5)*SQUARE_SIZE+0.1; //z
 	nichi.coverModel.rotation.set(0, Math.PI, 0);
 	scene.add( nichi.coverModel );
 	

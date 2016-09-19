@@ -60,6 +60,7 @@
 		"point_light_color":"ffffaa",
 		"point_light_intensity":0.9,
 		"fog_color":[0.076,0.076,0.62],
-		"fog_density":0.018525
+		"fog_density":0.018525,
+		"level_quirks":[]
 	}
 }

@@ -11,6 +11,53 @@ function reload_niches(levelObj)
 	}
 }
 
+///load all niches but not pickables
+function load_just_niches(levelObj) {
+	
+	//nicheArr
+	for(var n=0; n<levelObj.nicheArr.length; n++)
+	{
+		var nichi = create_game_object();
+		nichi.onItemAddFn = missing_niche_add_function;
+		nichi.onItemRemoveFn = missing_niche_remove_function;
+		nichi.onToggleOpenCloseFn = missing_niche_toggle_function;
+
+		nichi.map_position.x = levelObj.nicheArr[n][0];
+		nichi.map_position.z = levelObj.nicheArr[n][1];
+		nichi.orientation = levelObj.nicheArr[n][2];
+
+		if(levelObj.nicheArr[n].length>4)
+		{
+			//new niche atributes
+			nichi.id = n;
+			nichi.gameID = levelObj.nicheArr[n][4];
+			nichi.name = "niche" + n;
+			nichi.coverModel = levelObj.nicheArr[n][5]; //if empty string "" use default niche model for that level
+			
+			//nichi.opened = levelObj.nicheArr[n][6]; //not used anymore
+
+			//get js function from string
+			var onItemAddFn = window[levelObj.nicheArr[n][7]];
+			if(typeof onItemAddFn === 'function')
+			{
+				nichi.onItemAddFn = onItemAddFn;
+			}
+			var onItemRemoveFn = window[levelObj.nicheArr[n][8]];
+			if(typeof onItemRemoveFn === 'function')
+			{
+				nichi.onItemRemoveFn = onItemRemoveFn;
+			}
+			var onToggleOpenCloseFn = window[levelObj.nicheArr[n][9]];
+			if(typeof onToggleOpenCloseFn === 'function')
+			{
+				nichi.onToggleOpenCloseFn = onToggleOpenCloseFn;
+			}
+		}
+
+		levelObj.array_of_niches.push(nichi);
+	}
+}
+
 //load all niche pickables content
 function load_niches(loader, levelObj) {
 	
@@ -33,7 +80,8 @@ function load_niches(loader, levelObj) {
 			nichi.gameID = levelObj.nicheArr[n][4];
 			nichi.name = "niche" + n;
 			nichi.coverModel = levelObj.nicheArr[n][5]; //if empty string "" use default niche model for that level
-			nichi.opened = levelObj.nicheArr[n][6];
+			
+			//nichi.opened = levelObj.nicheArr[n][6]; //not used anymore
 
 			//get js function from string
 			var onItemAddFn = window[levelObj.nicheArr[n][7]];

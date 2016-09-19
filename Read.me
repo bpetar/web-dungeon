@@ -489,7 +489,11 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  - (M) pixel align on edges
  - (D) boy face
  - (BUG) move to level with item at hand -> goes but does not drop. 
- - save load da sacuva nishe koje su zatvorene? - introduce level quirks!
+ + save load da sacuva nishe koje su zatvorene? - introduce level quirks!
+  + ako su tri nise zatvorene, a ucitamo poziciju gde je samo jedna zatvorena - dve se nece otvoriti.
+  + Load game from Main Menu (or any other load) does not call loadNiches at all!! array of niches is empty and what can we do here? we should make function that loadsNiches but not pickables. array of niches is used only for calling function OnNicheAdd.
+  + level OnLoad not called when load/new on same level maybe that is ok, but we need to place level quirks loading somewhere else then.
+ - go to level 2 and kill monster, click new game and go to level 2 again - monster is high speed or at least starts looping all anims
  - throwing item on plate in the distance.
  - throw rock towards stairs - ode u picku materinu
  - hit monster with rock.
