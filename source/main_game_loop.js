@@ -313,23 +313,55 @@ function game_loop() {
 					//moving to next cube if its possible
 					if(canMoveTo(0, thrownWeaponNewPosition.x, thrownWeaponNewPosition.z))
 					{
-						//keep moving
-						console.log("flying one more step");
-						var deltaThrowMoveVector = thrownWeaponDirection.clone();
-						deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
-						thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
-						thrownWeaponPosition = thrownWeaponNewPosition.clone();
+						if(steppedOnStairs(currentlevelObj, thrownWeaponNewPosition))
+						{
+							//dont throw up the stairs
+							console.log("no more flying because stairs");
+							thrownWeaponIsFlying = false;
+						}
+						else
+						{
+							//keep moving
+							console.log("flying one more step");
+							var deltaThrowMoveVector = thrownWeaponDirection.clone();
+							deltaThrowMoveVector.multiplyScalar(deltaThrowMove);
+							thrownWeapon.mesh.position = deltaThrowMoveVector.add(thrownWeapon.mesh.position);
+							thrownWeaponPosition = thrownWeaponNewPosition.clone();
+						}
 					}
 					else
 					{
 						console.log("no more flying");
 						thrownWeaponIsFlying = false;
-						//drop item on the ground
-						thrownWeapon.mesh.position.y = 0;
+					}
 
+					if(!thrownWeaponIsFlying)
+					{
 						//check if item dropped on the plate
+						var itemFallingOnPlate = standingOnPlatePos(thrownWeaponPosition.x, thrownWeaponPosition.z, currentlevelObj);
+						if(itemFallingOnPlate > -1)
+						{
+							if (currentlevelObj.array_of_plates[itemFallingOnPlate].pressed == 0)
+							{
+								//call pressure plate onPress function..
+								console.log("plate pressed!");
+								currentlevelObj.array_of_plates[itemFallingOnPlate].pressed = 1;
+								currentlevelObj.array_of_plates[itemFallingOnPlate].mesh.position.y -=0.2;
+								plate_click_audio.play();
+								currentlevelObj.array_of_plates[itemFallingOnPlate].onPressFunc();
+							}
+							//make item plated, and adjust its position
+							thrownWeapon.plated = itemFallingOnPlate;
+							var deltaThrowMoveVector = thrownWeaponDirection.clone();
+							thrownWeapon.mesh.position.sub(deltaThrowMoveVector.multiplyScalar(0.3));
+						}
+
+
 						//check if monster is hit
 						//check if item falls in the hole
+
+						//drop item on the ground
+						thrownWeapon.mesh.position.y = 0;
 					}
 				}
 				else

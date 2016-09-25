@@ -29,6 +29,25 @@ function levelIsSaved(id)
     return false;
 }
 
+//check if new position is some of the level stairs 
+function steppedOnStairs(levelObj, position)
+{
+	//if stepped on stairs..
+	if(typeof levelObj.stairsArr != 'undefined')
+	{
+		for(i=0; i < levelObj.stairsArr.length; i++)
+		{
+			if((levelObj.stairsArr[i][0] == position.x) && (levelObj.stairsArr[i][1] == position.z))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+
 //function audio_change_volume
 function audio_change_volume(audio_element, desired_volume)
 {

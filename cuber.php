@@ -2741,26 +2741,15 @@
 					}
 					else
 					{
-						plateID = clicking_on_plate(currentlevelObj);
 						//if not standing on plate, check if clicking on plate
+						plateID = clicking_on_plate(currentlevelObj);
 						if(plateID>-1)
 						{
 							looker.multiplyScalar(1.52);
 							pickable_at_hand.plated = plateID;
 
 							//check if more items are on the plate
-							var moreItemsAreLyingOnThisParticularPlate = 0;
-
-							for(var pp=0; pp < currentlevelObj.array_of_pickables.length; pp++)
-							{
-								if(currentlevelObj.array_of_pickables[pp].plated == pickable_at_hand.plated)
-								{
-									moreItemsAreLyingOnThisParticularPlate++;
-									break;
-								}
-							}
-
-							if(moreItemsAreLyingOnThisParticularPlate ==0)
+							if(currentlevelObj.array_of_plates[plateID].pressed == 0)
 							{
 								currentlevelObj.array_of_plates[plateID].mesh.position.y -=0.2;
 								plate_click_audio.play();
