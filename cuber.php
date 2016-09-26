@@ -1745,18 +1745,20 @@
 				mouse_over_keyhole = -1;
 				mouse_over_container = -1;
 				mouse_over_monster = -1;
-				mouse_over_item_in_inventory = -1;
+				//mouse_over_item_in_inventory = -1;
 				mouse_over_item_in_container = -1;
 				item_over_keyhole = -1;
 				item_over_monster = -1
-				mouse_over_left_hand = -1;
-				mouse_over_right_hand = -1;
-				item_over_left_hand = -1;
-				item_over_right_hand = -1;
+				//mouse_over_left_hand = -1;
+				//mouse_over_right_hand = -1;
+				//item_over_left_hand = -1;
+				//item_over_right_hand = -1;
 				mouse_over_char_hud_left_hand_slot = -1;
 				mouse_over_char_hud_right_hand_slot = -1;
 				mouse_over_char_hud = -1;
-				setCursor('auto');
+
+				if((mouse_over_item_in_inventory == -1)&&(mouse_over_left_hand == -1)&&(mouse_over_right_hand == -1))
+					setCursor('auto');
 			}
 			
 			function onDocumentMouseMove( event )
@@ -2497,6 +2499,10 @@
 							audio_click.currentTime = 0;
 							audio_click.play();
 							add_to_inventory(pickable_at_hand, slot_index);
+							//make item rightclickable right away
+							mouse_over_item_in_inventory = pickable_at_hand;
+							setCursor('pointer');
+							//reset pickable at hand
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
 							pickable_at_hand = 0;
