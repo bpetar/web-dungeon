@@ -2858,7 +2858,7 @@
 							attackClickTimer = setInterval(function(){removeWeaponFromHand(true)}, 1000);
 						}
 						
-						mouse_over_left_hand = -1;
+						//mouse_over_left_hand = -1;
 						return;
 					}
 
@@ -2891,7 +2891,7 @@
 							player_attack(false);
 							attackClickTimer = setInterval(function(){removeWeaponFromHand(false)}, 1000);
 						}
-						mouse_over_right_hand = -1;
+						//mouse_over_right_hand = -1;
 						return;
 					}
 
