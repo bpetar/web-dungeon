@@ -2572,9 +2572,11 @@
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								martin_equipment.left_hand_item = pickable_at_hand;
 								martin_equipment.left_hand_item.mesh.noremove = true;
-								//pickable at hand is gone
+								mouse_over_left_hand = 1;
+								setCursor('pointer');
 								audio_click.currentTime = 0;
 								audio_click.play();
+								//pickable at hand is gone
 								pickable_at_hand_icon.style.display = "none";
 								pickable_at_hand_icon = 0;
 								pickable_at_hand = 0;
@@ -2627,6 +2629,8 @@
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								martin_equipment.right_hand_item = pickable_at_hand;
 								martin_equipment.right_hand_item.mesh.noremove = true;
+								mouse_over_right_hand = 1;
+								setCursor('pointer');
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is gone
