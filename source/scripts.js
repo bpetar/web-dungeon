@@ -69,3 +69,33 @@ function script_healingScript()
 	}
 	updatePlayerHealthBar();	
 }
+
+
+
+function script_CombineItems(item1, item2)
+{
+	//ground rock and rope
+	if(((item1.itemID == 12)&&(item2.itemID == 5))||((item1.itemID == 5)&&(item2.itemID == 12)))
+	{
+		//consume ingredients
+		inventory_item_remove(item2);
+			//safe to remove from scene
+			item2.mesh.noremove = false;
+			item1.mesh.noremove = false;
+
+		//make a rock on the rope thingy
+		var picki = load_item_by_id(18, "gui"); //18? this gonna be a problem
+		//picki.visible = false;
+		//currentlevelObj.array_of_pickables.push(picki);
+		pickable_at_hand = picki;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = picki.icon;
+
+		audio_win1.play();
+		DisplayInfoDiv("Successful combine of these two items!");
+		return;
+	}
+
+	DisplayInfoDiv("Can't combine these two items..");
+
+}

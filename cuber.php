@@ -414,6 +414,30 @@
 					currentlevelObj.array_of_pickables.push(thrownWeapon);
 				}
 			}
+
+			function set_equipment_items_noremove_flag()
+			{
+				if(martin_equipment.helmet.mesh)
+					martin_equipment.helmet.mesh.noremove = true;
+				if(martin_equipment.boots.mesh)
+					martin_equipment.boots.mesh.noremove = true;
+				if(martin_equipment.pants.mesh)
+					martin_equipment.pants.mesh.noremove = true;
+				if(martin_equipment.armour.mesh)
+					martin_equipment.armour.mesh.noremove = true;
+				if(martin_equipment.necklace.mesh)
+					martin_equipment.necklace.mesh.noremove = true;
+				if(martin_equipment.bracers.mesh)
+					martin_equipment.bracers.mesh.noremove = true;
+				if(martin_equipment.ring_left.mesh)
+					martin_equipment.ring_left.mesh.noremove = true;
+				if(martin_equipment.ring_right.mesh)
+					martin_equipment.ring_right.mesh.noremove = true;
+				if(martin_equipment.left_hand_item.mesh)
+					martin_equipment.left_hand_item.mesh.noremove = true;
+				if(martin_equipment.right_hand_item.mesh)
+					martin_equipment.right_hand_item.mesh.noremove = true;
+			}
 			
 			
 			function hide(param) {
@@ -426,6 +450,8 @@
 
 			var holeFallen = false;
 			var cameraMove = false;
+			var cameraBump = false;
+			var cameraBumpIn = false;
 			var cameraRotate = false;
 			var cameraRotateMover = new THREE.Vector3(0,0,0);
 			var cameraRotateTurner = new THREE.Vector3(0,0,0);
@@ -1284,7 +1310,7 @@
 				if(gameState != GAME_STATE_IN_GAME)
 					return;
 
-				if(cameraMove || cameraRotate || m_GamePaused)
+				if(cameraMove || cameraBump || cameraRotate || m_GamePaused)
 					return;
 					
 				//close dialogs feature
@@ -1492,7 +1518,16 @@
 					else
 					{
 						//console.log("move audio w");
+						//bump
 						audio.play();
+
+						cameraLooker.add(looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+
+						cameraBump = true;
+						cameraBumpIn = true;
 					}
 				} else if ((event.keyCode == 40) || (event.keyCode == 83)) {
 					// Down cursor key or S
@@ -1524,6 +1559,14 @@
 					else
 					{
 						audio.play();
+
+						cameraLooker.sub(looker);
+						cameraLookie.sub(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+
+						cameraBump = true;
+						cameraBumpIn = true;
 					}
 				} else if ((event.keyCode == 37) || (event.keyCode == 65)) {
 					// Left cursor key or A
@@ -1561,6 +1604,14 @@
 					else
 					{
 						audio.play();
+
+						cameraLooker.add(left_looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+
+						cameraBump = true;
+						cameraBumpIn = true;
 					}
 				} else if ((event.keyCode == 39) || (event.keyCode == 68)) {
 					// Right cursor key or D
@@ -1598,6 +1649,14 @@
 					else
 					{
 						audio.play();
+
+						cameraLooker.add(right_looker);
+						cameraLookie.add(lookie);
+						cameraOriginalPosition.add(camera.position);
+						cameraOriginalLook.add(camera.look);
+
+						cameraBump = true;
+						cameraBumpIn = true;
 					}
 				}
 
@@ -1689,7 +1748,15 @@
 				//console.log("update loading screen");
 				//remove loading screen
 				if(perc==100)
+				{
 					setTimeout(function(){remove_loading_screen()}, 400);
+
+					//go through inventory/hand items and set their mesh noremove flag to true
+					//its unfortunate to do it here, but at this point we have all meshes loaded
+					//im sick and im tired of this optimization i dont know any more what is where
+					inventory_items_set_noremove();
+					set_equipment_items_noremove_flag();
+				}
 				
 				var roundPercentage = Math.round(perc);
 				var loadingPoint = Math.round(perc/10); 
@@ -2357,6 +2424,7 @@
 				clearInterval(attackClickTimer);
 			}
 			
+			//called when player holds left click down for a second
 			function removeWeaponFromHand(left) {
 			
 				//take item from players hand
@@ -2367,7 +2435,6 @@
 						document.getElementById("player1-hand-l-main").style.backgroundImage = "url(media/lhand.png)";
 						document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
-						martin_equipment.left_hand_item.mesh.noremove = false;
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 						pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
 						pickable_at_hand = martin_equipment.left_hand_item;
@@ -2385,7 +2452,6 @@
 						document.getElementById("player1-hand-r-main").style.backgroundImage = "url(media/rhand.png)";
 						document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 						// pickable at hand becomes hand item
-						martin_equipment.right_hand_item.mesh.noremove = false;
 						pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 						pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
 						pickable_at_hand = martin_equipment.right_hand_item;
@@ -2465,9 +2531,7 @@
 								console.log("combining " + pickable_at_hand.name + " with " + slot_item.name);
 								m_RMBEventWasUsed = true;
 								//combine items
-								//pickable_at_hand.combineScript()
-								
-								DisplayInfoDiv("Can't combine these two item..");
+								script_CombineItems(pickable_at_hand,slot_item);
 								return;
 							}
 							
@@ -2558,20 +2622,17 @@
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								martin_equipment.left_hand_item = pickable_at_hand;
-								martin_equipment.left_hand_item.mesh.noremove = true;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
-								pickable_at_hand.mesh.noremove = false;
 							}
 							else
 							{
 								document.getElementById("player1-hand-l-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-l-main").style.backgroundSize = "100% 100%";
 								martin_equipment.left_hand_item = pickable_at_hand;
-								martin_equipment.left_hand_item.mesh.noremove = true;
 								mouse_over_left_hand = 1;
 								setCursor('pointer');
 								audio_click.currentTime = 0;
@@ -2615,20 +2676,17 @@
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								martin_equipment.right_hand_item = pickable_at_hand;
-								martin_equipment.right_hand_item.mesh.noremove = true;
 								audio_click.currentTime = 0;
 								audio_click.play();
 								//pickable at hand is replaced with hand item
 								pickable_at_hand_icon.src = tmp_hand_item.icon;
 								pickable_at_hand = tmp_hand_item;
-								pickable_at_hand.mesh.noremove = false;
 							}
 							else
 							{
 								document.getElementById("player1-hand-r-main").style.backgroundImage = "url("+pickable_at_hand.icon+")";
 								document.getElementById("player1-hand-r-main").style.backgroundSize = "100% 100%";
 								martin_equipment.right_hand_item = pickable_at_hand;
-								martin_equipment.right_hand_item.mesh.noremove = true;
 								mouse_over_right_hand = 1;
 								setCursor('pointer');
 								audio_click.currentTime = 0;
@@ -2659,6 +2717,7 @@
 						//add pickable at hand to niche
 						DisplayInfoDiv(pickable_at_hand.name + " placed in niche..");
 						add_to_niche(currentlevelObj,nicheID,pickable_at_hand);
+						pickable_at_hand.mesh.noremove = false;
 						pickable_at_hand = 0;
 						pickable_at_hand_icon.style.display = "none";
 						pickable_at_hand_icon = 0;	
@@ -2680,7 +2739,7 @@
 						{
 							pickable_at_hand_icon.style.display = "none";
 							pickable_at_hand_icon = 0;
-                            pickable_at_hand.mesh.visible = false;
+                            //pickable_at_hand.mesh.visible = false;
 							pickable_at_hand = 0;
 						}
 						return;
@@ -2813,8 +2872,9 @@
                     {
                         currentlevelObj.array_of_pickables.push(pickable_at_hand);
                     }
-					pickable_at_hand = 0;
+                    pickable_at_hand.mesh.noremove = false;
 
+					pickable_at_hand = 0;
 					pickable_at_hand_icon.style.display = "none";
 					pickable_at_hand_icon = 0;
 					
@@ -2845,7 +2905,6 @@
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = martin_equipment.left_hand_item.icon;
-								martin_equipment.left_hand_item.mesh.noremove = false;
 								pickable_at_hand = martin_equipment.left_hand_item;
 								martin_equipment.left_hand_item = 0;
 								audio_click.currentTime = 0;
@@ -2880,7 +2939,6 @@
 								// pickable at hand becomes hand item
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								pickable_at_hand_icon.src = martin_equipment.right_hand_item.icon;
-								martin_equipment.right_hand_item.mesh.noremove = false;
 								pickable_at_hand = martin_equipment.right_hand_item;
 								martin_equipment.right_hand_item = 0;
 								audio_click.currentTime = 0;
@@ -2916,6 +2974,8 @@
 							if(mouse_over_item_in_inventory.consumable)
 							{
 								inventory_item_remove(mouse_over_item_in_inventory);
+								//safe to remove from scene
+								mouse_over_item_in_inventory.mesh.noremove = false;
 								//hide item info dialog
 								document.getElementById("id-item-info-container").style.display = "none";
 								itemInfoShown = false;
@@ -3090,6 +3150,7 @@
 								pickable_at_hand = currentlevelObj.array_of_pickables[i];
                                 remove_pickable_from_array(currentlevelObj.array_of_pickables,pickable_at_hand);
                                 pickable_at_hand.mesh.visible = false;
+                                pickable_at_hand.mesh.noremove = true;
 								pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 								var from_where = "from the ground..";
 								if(pickable_at_hand.niched > -1) from_where = "from niche in the wall";

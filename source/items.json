@@ -76,7 +76,7 @@
 		"icon":"media/key.png",
 		"icon2":"media/gui/key_icon.png",
 		"useHint":"...",
-		"useScript":"",
+		"useScript":"0",
 		"type":"reusable"
 	},
 	"9":{
@@ -97,8 +97,8 @@
 		"model":"models/ring.js",
 		"icon":"media/ring.png",
 		"icon2":"media/gui/ring.png",
-		"useHint":"<span style='color:#5BE44C;'> HP +15. </span> One ring to make you look jewelry oriented.",
-		"useScript":"",
+		"useHint":"One ring to make you look jewelry oriented.",
+		"useScript":"0",
 		"type":"unusable"
 	},
 	"11":{
@@ -111,5 +111,28 @@
 		"useHint":"...",
 		"useScript":"script_showScroll_lvl2_msg",
 		"type":"reusable"
+	},
+	"12":{
+		"id":12,
+		"name":"Rope",
+		"desc":"Type: <span style='color:yellow;'>Rope can be usefull.</span>",
+		"model":"models/rope.js",
+		"icon":"media/rope.png",
+		"icon2":"media/gui/rope_icon.png",
+		"useHint":"...",
+		"useScript":"0",
+		"type":"reusable"
+	},
+	"13":{
+		"id":13,
+		"name":"Rock on the Rope",
+		"desc":"Type: <span style='color:yellow;'>Rock is dangling on the Rope.</span>",
+		"model":"models/rockyrope.js",
+		"icon":"media/rockyrope.png",
+		"icon2":"media/gui/rockyrope_icon.png",
+		"useHint":"...",
+		"useScript":"0",
+		"type":"weapon",
+		"weapon_prop":{"type":"melee", "hand":"one", "damage_type":"bludgeoning", "speed":6, "damage":4, "damage_bonus":0, "attack_bonus":0}
 	}
 }

@@ -78,7 +78,12 @@ function loadGameObjectCheck(loader, gobject)
 		gobject.mesh.rotation.set(gobject.rotation.x,gobject.rotation.y,gobject.rotation.z);// = gobject.rotation;
 		gobject.id=gobject.mesh.id;
 		gobject.mesh.visible = gobject.visible;
-		scene.add( gobject.mesh );		
+		scene.add( gobject.mesh );
+		if(gobject.isGui)
+		{
+			gobject.mesh.noremove = true;
+			gobject.isGui = false;
+		}
 	}
 	else
 	{
@@ -152,10 +157,18 @@ function loadObject( gobject ) {
 			gobject.mesh.name = gobject.name;
 			gobject.id = gobject.mesh.id;
 			gobject.mesh.visible = gobject.visible;
+
 			//TODO: revise this writting peculiarity
-			if(gobject.name == "writting") currentlevelObj.writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
-			scene.add( gobject.mesh );
+			if(gobject.name == "writting") 
+				currentlevelObj.writtingsArr[gobject.writtingIsOnTheWall][4] = gobject.mesh;
 			
+			scene.add( gobject.mesh );
+
+			if(gobject.isGui)
+			{
+				gobject.mesh.noremove = true;
+				gobject.isGui = false;
+			}
 		
 			if(typeof modelWaiters[gobject.model] != 'undefined')
 			{
@@ -169,8 +182,22 @@ function loadObject( gobject ) {
 					clone.rotation.set(waitingGobject.rotation.x,waitingGobject.rotation.y,waitingGobject.rotation.z);// = waitingGobject.rotation;
 					waitingGobject.mesh = clone;
 					waitingGobject.id = clone.id;
-					if(waitingGobject.name == "writting") currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
-					scene.add( clone );
+
+					if(waitingGobject.name == "writting") 
+						currentlevelObj.writtingsArr[waitingGobject.writtingIsOnTheWall][4] = waitingGobject.mesh;
+					
+					scene.add( waitingGobject.mesh );
+					
+					if(waitingGobject.isGui)
+					{
+						waitingGobject.mesh.noremove = true;
+						waitingGobject.isGui = false;
+					}
+					else
+					{
+						//need else because we might have cloned noremove flag from original mesh
+						waitingGobject.mesh.noremove = false;
+					}
 				}
 			}
 			

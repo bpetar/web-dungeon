@@ -82,6 +82,62 @@ function game_loop() {
 				}
 			}
 
+			//animate camera bump
+			if(cameraBump)
+			{
+				var deltaMove = elapsed/STEP_MOVE_DURATION;
+				var deltaLooker = new THREE.Vector3(0,0,0).add(cameraLooker);
+				deltaLooker.multiplyScalar(deltaMove);
+
+				//if going formward move camera till some distance reached
+				if(cameraBumpIn)
+				{
+					//increase camera total delta by delta
+					cameraDelta+=deltaMove*SQUARE_SIZE;
+
+					//increase camera position
+					camera.position.add(deltaLooker);
+					camera.look.add(deltaLooker);
+					camera.lookAt(camera.look);
+
+					if (cameraDelta >= SQUARE_SIZE/4)
+					{
+						cameraBumpIn = false;
+					}
+				}
+				//else if going backward move camera back to original position
+				else
+				{
+					//decrease camera total delta by delta
+					cameraDelta-=deltaMove*SQUARE_SIZE;
+
+					//decrease camera position
+					camera.position.sub(deltaLooker);
+					camera.look.sub(deltaLooker);
+					camera.lookAt(camera.look);
+
+					if (cameraDelta < 0.3)
+					{
+						cameraBump = false;
+
+						camera.position.multiplyScalar(0);
+						camera.position.add(cameraOriginalPosition);
+						camera.look.multiplyScalar(0);
+						camera.look.add(cameraOriginalLook);
+						camera.lookAt(camera.look);
+
+						cameraLooker.multiplyScalar(0);
+						cameraLookie.multiplyScalar(0);
+						cameraOriginalPosition.multiplyScalar(0);
+						cameraOriginalLook.multiplyScalar(0);
+
+						cameraDelta = 0;
+
+					}
+				}
+				
+			}
+
 			//animate camera move
 			if(cameraMove)
 			{
@@ -90,7 +146,7 @@ function game_loop() {
 				var deltaLooker = new THREE.Vector3(0,0,0).add(cameraLooker);
 				deltaLooker.multiplyScalar(deltaMove/10); //i don't know why i have to divide here by 10?
 				
-				//set camera position to delta
+				//increase camera position by delta
 				cameraDelta+=deltaMove;
 				camera.position.add(deltaLooker);
 				camera.look.add(deltaLooker);
