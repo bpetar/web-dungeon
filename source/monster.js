@@ -171,8 +171,12 @@ function loadMonsterCheck(loader, monster)
 		monster.mesh.position.z = monster.position.z*SQUARE_SIZE;
 		monster.mesh.position.y = 0;
 		monster.mesh.rotation = new THREE.Vector3(0, monster.rotation*Math.PI/2, 0);
-		monster.id=monster.mesh.id;
+		monster.mesh.name = monster.name;
+		monster.id = monster.mesh.id;
 		monster.mesh.visible = monster.visible;
+		monster.mesh.duration = monster.idle_anim_duration;
+		monster.mesh.setFrameRange(monster.idle_startKeyframe,monster.idle_endKeyframe);
+		monster.mesh.scale.set( 1.2, 1.2, 1.2 );
 		scene.add( monster.mesh );		
 	}
 	else
