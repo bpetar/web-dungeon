@@ -85,7 +85,7 @@ function game_loop() {
 			//animate camera bump
 			if(cameraBump)
 			{
-				var deltaMove = elapsed/STEP_MOVE_DURATION;
+				var deltaMove = elapsed/STEP_MOVE_DURATION/4; //divide by 4 more to make it more smoother
 				var deltaLooker = new THREE.Vector3(0,0,0).add(cameraLooker);
 				deltaLooker.multiplyScalar(deltaMove);
 
@@ -100,7 +100,7 @@ function game_loop() {
 					camera.look.add(deltaLooker);
 					camera.lookAt(camera.look);
 
-					if (cameraDelta >= SQUARE_SIZE/4)
+					if (cameraDelta >= SQUARE_SIZE/8)
 					{
 						cameraBumpIn = false;
 					}
@@ -116,7 +116,7 @@ function game_loop() {
 					camera.look.sub(deltaLooker);
 					camera.lookAt(camera.look);
 
-					if (cameraDelta < 0.3)
+					if (cameraDelta < 0.1)
 					{
 						cameraBump = false;
 
