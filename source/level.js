@@ -1694,7 +1694,7 @@ function loadTempLevel(nextlevelObj,entrance)
 		}
 		else
 		{
-			//console.log("skipping " + tmpobj.name);
+			console.log("skipping " + tmpobj.name);
 		}
 	}
 

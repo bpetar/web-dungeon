@@ -170,6 +170,7 @@ function containerItemPut(slot)
 	{
 		//get item
 		item = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
+		item.mesh.noremove = true;
 		//remove from container
 		//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.splice(i,1);
 		//document.getElementById("container_slots" + slot + "_item_icon").src = "media/gui/slot.png";
@@ -177,6 +178,7 @@ function containerItemPut(slot)
 	}
 	
 	//var container_array_item = new Object();
+	pickable_at_hand.mesh.noremove = false;
 	currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].slot = slot;
 	currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject = pickable_at_hand;
 	//currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables.push(container_array_item);
@@ -225,6 +227,7 @@ function containerItemClick(slot)
 	if(currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject)
 	{
 		pickable_at_hand = currentlevelObj.array_of_containers[currently_opened_container].array_of_chest_pickables[slot-1].gObject;
+		pickable_at_hand.mesh.noremove = true;
 		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
 		pickable_at_hand_icon.src = pickable_at_hand.icon;
 		//remove from container

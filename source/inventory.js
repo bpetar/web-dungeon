@@ -116,12 +116,6 @@ function inventory_to_post()
 //add item to inventory
 function add_to_inventory (gObject, slot) {
 
-	//TODO check if inventory slot is occupied
-	//if occupied, make switch between object in hand and object in inventory
-	//alert("pera " + gObject.icon);
-	
-	//if inventory slot is free, place object in inventory
-	
 	var inventory_array_item = new Object();
 	inventory_array_item.slot = slot;
 	inventory_array_item.gObject = gObject;
@@ -133,7 +127,6 @@ function add_to_inventory (gObject, slot) {
 	slot_icon.style.backgroundSize = "100% 100%";
 	
 	console.log("pera added inventory item: " + gObject.icon);
-	//TODO: start timer for automatic inventory draw back at later time..
 	
 	gObject.mesh.noremove = true;
 }
@@ -204,10 +197,18 @@ function inventory_item_remove(item)
 			var slot_icon = document.getElementById("gui_slot" + inventory_array[i].slot + "_item_icon");
 			//slot_icon.src = "media/none.png";
 			slot_icon.style.backgroundImage = "";
-			inventory_array[i].gObject.mesh.noremove = false;
 			inventory_array.splice(i,1);
 			break;
 		}
+	}
+}
+
+//set noremove flag for all inventory items
+function inventory_items_set_noremove()
+{
+	for (var i=0; i<inventory_array.length; i++)
+	{
+		inventory_array[i].gObject.mesh.noremove = true;
 	}
 }
 

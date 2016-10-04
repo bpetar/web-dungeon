@@ -24,7 +24,7 @@
 		"pillarsArr":[],
 		"propsArr":[[511, 3, 14, 0, "models/spears.js", "level5PropOnClick1"], [512, 5, 17, 1, "models/spears.js", "level5PropOnClick2"], [513, 8, 14, 0, "models/spears.js", "level5PropOnClick2"], [513, 7, 12, 1, "models/spears.js", "level5PropOnClick1"], [513, 4, 11, 0, "models/spears.js", "level5PropOnClick2"]],
 		"animatedPropsArr":[],
-		"nicheArr":[],
+		"nicheArr":[[10, 4, 1, [{"gameID":21}]]],
 		"monsterArr":[[523,"Giant Worm","maps/level3/models/worm.js", 9,16,2, 20, 15, 10, 5, [], "level5WormOnClick1", "level5WormOnItemClick1",1,24,25,49,50,74,1,"media/monsters/worm_wound.mp3","media/monsters/worm_death.mp3","media/monsters/worm_roar.mp3","media/monsters/worm_attack.mp3","media/monsters/worm_click.mp3", 3300, 40]],
 		"pickablesArr":[{"gameID":2,"itemID":2,"x":100,"y":5,"z":73,"niched":-1,"plated":-1}],
 		"lightsArr":[],
@@ -55,7 +55,7 @@
 		"doorway_model":"maps/level3/models/doorway.js",
 		"door_model":"maps/level3/models/door.js",
 
-		"ambient_music_file":"maps/level4/media/eastwood.mp3",
+		"ambient_music_file":"maps/level3/media/wormhole.mp3",
 	
 		"point_light_color":"efeffa",
 		"point_light_intensity":0.7,

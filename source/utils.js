@@ -157,7 +157,10 @@ function load_item_by_id(gameID, position)
 	console.log("position: " + position);
 	if(typeof position != 'undefined')
 	{
-		game_item.position = position;
+		if(position == "gui")
+			game_item.isGui = true;
+		else
+			game_item.position = position;
 	}
 
 	//game_item.position.x = 0;

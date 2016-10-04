@@ -29,9 +29,30 @@ function copy_game_quirks(gq1, gq2)
 
 function script_showScroll_lvl3_map()
 {
-	console.log("Showing scroll content!");
+	console.log("Showing scroll content 3!");
 	audio_scroll.play();
 	show_message(" <img src='maps/level3/media/map3.png' style='max-width:100%; max-height:30%;'><br><br> <div id='info_dialog_button' style='cursor: pointer; width:85px; height: 25px; padding-top:3px; position:absolute; right:20%; bottom:9%; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", "fit3d", "fit3d", "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
+}
+
+function script_showScroll_lvl5_map()
+{
+	console.log("Showing scroll content 5!");
+	audio_scroll.play();
+	show_message(" <img src='maps/level5/media/map5.png' style='max-width:100%; max-height:30%;'><br><br> <div id='info_dialog_button' style='cursor: pointer; width:85px; height: 25px; padding-top:3px; position:absolute; right:20%; bottom:9%; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", "fit3d", "fit3d", "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
+}
+
+function script_showScroll_lvl6_map()
+{
+	console.log("Showing scroll content 6!");
+	audio_scroll.play();
+	show_message(" <img src='maps/level6/media/map6.png' style='max-width:100%; max-height:30%;'><br><br> <div id='info_dialog_button' style='cursor: pointer; width:85px; height: 25px; padding-top:3px; position:absolute; right:20%; bottom:9%; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", "fit3d", "fit3d", "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
+}
+
+function script_showScroll_lvl7_map()
+{
+	console.log("Showing scroll content 7!");
+	audio_scroll.play();
+	show_message(" <img src='maps/level7/media/map7.png' style='max-width:100%; max-height:30%;'><br><br> <div id='info_dialog_button' style='cursor: pointer; width:85px; height: 25px; padding-top:3px; position:absolute; right:20%; bottom:9%; background: #00c url(media/button_scroll.png); background-size: 100% 100%;' onclick='hide_message();'> Ok </button>", "fit3d", "fit3d", "url(media/scroll.png)", "Papyrus, Garamond, Baskerville", "#001100", "800", "20px");
 }
 
 function script_showScroll_lvl2_msg()
@@ -68,4 +89,100 @@ function script_healingScript()
 		playerHPcurrent = playerHPmax;
 	}
 	updatePlayerHealthBar();	
+}
+
+
+
+function script_CombineItems(item1, item2)
+{
+	//ground rock and rope
+	if(((item1.itemID == 12)&&(item2.itemID == 5))||((item1.itemID == 5)&&(item2.itemID == 12)))
+	{
+		//consume ingredients
+		inventory_item_remove(item2);
+			//safe to remove from scene
+			item2.mesh.noremove = false;
+			item1.mesh.noremove = false;
+
+		//make a rock on the rope thingy
+		var picki = load_item_by_id(18, "gui"); //18 is item id of rock and rope item
+		//picki.visible = false;
+		//currentlevelObj.array_of_pickables.push(picki);
+		pickable_at_hand = picki;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = picki.icon;
+
+		audio_win1.play();
+		DisplayInfoDiv("Successful combine of these two items!");
+		return;
+	}
+
+	//stick and rope
+	if(((item1.itemID == 12)&&(item2.itemID == 3))||((item1.itemID == 3)&&(item2.itemID == 12)))
+	{
+		//consume ingredients
+		inventory_item_remove(item2);
+			//safe to remove from scene
+			item2.mesh.noremove = false;
+			item1.mesh.noremove = false;
+
+		//make a rock on the rope thingy
+		var picki = load_item_by_id(19, "gui"); //19 is item id of stick and rope
+		//picki.visible = false;
+		//currentlevelObj.array_of_pickables.push(picki);
+		pickable_at_hand = picki;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = picki.icon;
+
+		audio_win1.play();
+		DisplayInfoDiv("Successful combine of these two items!");
+		return;
+	}
+
+	//stick and rope and then ground rock
+	if(((item1.itemID == 19)&&(item2.itemID == 5))||((item1.itemID == 5)&&(item2.itemID == 19)))
+	{
+		//consume ingredients
+		inventory_item_remove(item2);
+			//safe to remove from scene
+			item2.mesh.noremove = false;
+			item1.mesh.noremove = false;
+
+		//make a rock on the rope thingy
+		var picki = load_item_by_id(20, "gui"); //20 is item id of stick and rope and rock
+		//picki.visible = false;
+		//currentlevelObj.array_of_pickables.push(picki);
+		pickable_at_hand = picki;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = picki.icon;
+
+		audio_win1.play();
+		DisplayInfoDiv("Successful combine of these two items!");
+		return;
+	}
+
+	//rock and rope and then stake
+	if(((item1.itemID == 18)&&(item2.itemID == 3))||((item1.itemID == 3)&&(item2.itemID == 18)))
+	{
+		//consume ingredients
+		inventory_item_remove(item2);
+			//safe to remove from scene
+			item2.mesh.noremove = false;
+			item1.mesh.noremove = false;
+
+		//make a rock on the rope thingy
+		var picki = load_item_by_id(20, "gui"); //20 is item id of stick and rope and rock
+		//picki.visible = false;
+		//currentlevelObj.array_of_pickables.push(picki);
+		pickable_at_hand = picki;
+		pickable_at_hand_icon = document.getElementById("pickable_at_hand_id");
+		pickable_at_hand_icon.src = picki.icon;
+
+		audio_win1.play();
+		DisplayInfoDiv("Successful combine of these two items!");
+		return;
+	}
+
+	DisplayInfoDiv("Can't combine these two items..");
+
 }
