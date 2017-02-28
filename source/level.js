@@ -270,6 +270,18 @@ function load_walls_level(loader, level_obj)
 					{
 						backWall = false;
 					}
+
+					//left stairs
+					if((level_obj.stairsArr[s][0] == xTile+1) && (level_obj.stairsArr[s][1] == yTile))
+					{
+						leftWall = false;
+					}
+
+					//right stairs
+					if((level_obj.stairsArr[s][0] == xTile-1) && (level_obj.stairsArr[s][1] == yTile))
+					{
+						rightWall = false;
+					}
 					
 				}
 			}

@@ -17,7 +17,7 @@
 		"writtingsArr":[[5,12,1,"Punishment for killing a worm is work in the kitchen!",0]],
 		"secretWallsArr":[],
 		"doorsArr":[[7,8,1,0,"maps/level3/models/gate.js","maps/level3/models/gatesup.js",1,7,"media/creak.mp3"]],
-		"stairsArr":[[5,13,0,"maps/level3/models/slope.js",0,4,0]],
+		"stairsArr":[[5,13,0,"maps/level3/models/slope_up.json",0,4,0]],
 		"buttonsArr":[],
 		"keyholesArr":[],
 		"containersArr":[],

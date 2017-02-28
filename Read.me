@@ -495,10 +495,8 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
   + level OnLoad not called when load/new on same level maybe that is ok, but we need to place level quirks loading somewhere else then.
  + go to level 2 and kill monster, click new game and go to level 2 again - monster is high speed or at least starts looping all anims
  + throwing item on plate in the distance.
- + throw rock towards stairs - ode u picku materinu
- - hit monster with rock.
+ + throw rock towards stairs - ode u nedogled
  - item sinks in niche on second level
- - if change browser tab while doors are opening, or rock throwing?, doors go up to the sky
  - (BUG) namami monstera do stepenica, idi na drugi nivo, vrati se, monster ide kroz zid.
  + (BUG) cursor pointer reverts to default when move, but its problem while over inventory or hands
  + (BUG) cursor pointer should be changed to hand when item is put in inventory
@@ -521,11 +519,14 @@ inventory items meshes need to be kept in the scene with //gObject.mesh.noremove
  + (HACK) nicheUrr is hack to make first level new game load niche content.
 
 
-New levels:
+First release fixup GRAND OPENING:
  + make downstairs model
  - (M) make downstairs model properly
  - (M) door ropes are bad when opening
  - (M) ropes or bushes
+ - hit monster with rock.
+ ~ make rope pickable item
+ ~ make item combining
  - (M) rope on a stick
  - (M) rock on the rope
  - (M) rock on the rope on the stick
@@ -533,10 +534,15 @@ New levels:
  - making level 6
  - making level 7
  - make four level maps on scrolls in niches
+ - make four wall writtings
  - make door that can only be opened from the outside (or using special item)
  - item combine. mix to items to create new ones. (rock rope stick). new item should have noremove flag.
+ - make dialog for finishing first stage
  + make player bump into walls
 
+New levels:
+ - (M) Goblin monster
+ - (M) New Square wooden pillars
 
 Options screen:
  + add menu icon and dialog! exit, help, save, load, keys, register, donate, credits ..!
@@ -591,7 +597,6 @@ New functionality (wishlist):
  - dust spec particles..
  - make worm dig passage in ground..
  - make player draw map in game??
- ~ make rope pickable item
  - make two handed weapons (add shovel), or not?? 
  - player grunts, golem wound and attack are not sounded, 
  - revise door loading to optimize and support different doors on one level!
@@ -613,20 +618,21 @@ New functionality (wishlist):
  - compass flies to its special slot. it turns to show north.
  - lantern flies to its slot. lantern is refiled with light stones
  - loading screen to show percentage linearly - make it calculate total byte size being downloaded
- ~ make item combining
  ~ (M) make smaller worms give soft hearth
  ~ (M) make big worm give hard hearth
  ~ (P) make hard heart glow when rubbed
  ~ (M) make wall torches with hard worm earth hearts - glow when rubbed
- / add tips dialog: "press i to open inventory"
  - rss feed
  - if game gives you pickable item at hand out of the blue by some magic usecase, make it noremove true
  - dialogs with multiple NPCs at the same time: inn keeper talks and the maid is interrupting in.
  - sleeping troll tavern is teleported to the dungeon by frustrated witch. bussiness is going slow since then.
  - monster standing on plate?
+
+ROBUSTNESS:
  - save/load while item is flying
  - change level (stairs, hole, teleport) while item is flying
  - change level while door is closing/opening
+ - if change browser tab while doors are opening, or rock throwing?, doors go up to the sky
 
 Jokes:
  - healing blade: made by combining sword and healing potion - automatically heals 1d4 points of given damage.
